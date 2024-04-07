@@ -7,10 +7,9 @@ int main(int argc, char* argv[]) {
     iniciar_memoria();
 
     // Levantar Server Memoria
-    int fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, "Server de Memoria Iniciado");
-
+   // int fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, "Server de Memoria Iniciado");
 
     // Finalizar Memoria
-    finalizar_memoria();
+   finalizar_memoria();
     return 0;
 }

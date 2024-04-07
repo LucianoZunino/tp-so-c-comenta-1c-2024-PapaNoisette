@@ -6,6 +6,11 @@
 #include <utils/hello.h>
 #include <utils/utils.h>
 #include "iniciar_memoria.h"
-extern char* PUERTO_ESCUCHA;
+
+int puerto_escucha;
+int tam_memoria;
+int tam_pagina;
+char* path_instrucciones;
+int retardo_respuesta;
 
 #endif
