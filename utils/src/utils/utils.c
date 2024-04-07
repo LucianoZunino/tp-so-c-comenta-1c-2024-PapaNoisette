@@ -48,7 +48,7 @@ void liberar_conexion(int socket_cliente){
 	close(socket_cliente);
 }
 
-int iniciar_servidor(char* ip, char* puerto, t_log* logger){
+int iniciar_servidor(char* puerto, t_log* logger, char* mensaje_servidor){
 	// Quitar esta línea cuando hayamos terminado de implementar la funcion
 	//assert(!"no implementado!");
 
@@ -61,7 +61,7 @@ int iniciar_servidor(char* ip, char* puerto, t_log* logger){
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 
-	getaddrinfo(ip, puerto, &hints, &servinfo); // IP o NULL?
+	getaddrinfo(NULL, puerto, &hints, &servinfo); // IP o NULL?
 
 	// Creamos el socket de escucha del servidor
 	socket_servidor = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
@@ -71,7 +71,7 @@ int iniciar_servidor(char* ip, char* puerto, t_log* logger){
 	listen(socket_servidor, SOMAXCONN); // falta chequear si esto da error
 
 	freeaddrinfo(servinfo);
-	log_info(logger, "Listo para escuchar a mi cliente");
+	log_info(logger, mensaje_servidor);
 
 	return socket_servidor;
 }

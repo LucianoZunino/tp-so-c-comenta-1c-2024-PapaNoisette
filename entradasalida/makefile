@@ -59,3 +59,7 @@ memcheck: debug
 .PHONY: helgrind
 helgrind: debug
 	valgrind --tool=helgrind $(HELGRIND_FLAGS) ./$(BIN) $(ARGS)
+
+entradasalida:
+	make
+	./bin/entradasalida
