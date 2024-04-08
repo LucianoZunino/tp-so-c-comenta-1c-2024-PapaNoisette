@@ -95,3 +95,12 @@ int recibir_operacion(int socket_cliente){
 		return -1;
 	}
 }
+
+//para los arrays de kernel
+int largo_array(char**array) { 
+	int largo = 0;
+	while (array[largo] != NULL) {
+		largo++;
+	}
+	return largo;
+}
