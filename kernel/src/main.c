@@ -7,6 +7,7 @@
 int main(int argc, char* argv[]) {
     decir_hola("Kernel");
     iniciar_kernel();
-  
+    log_info(logger_kernel, "Arranca el modulo  KERNEL");
+
     return 0;
 }

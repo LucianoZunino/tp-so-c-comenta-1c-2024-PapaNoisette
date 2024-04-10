@@ -7,6 +7,8 @@
 #include <utils/utils.h>
 #include "iniciar_memoria.h"
 
+t_log* logger_memoria;
+
 int puerto_escucha;
 int tam_memoria;
 int tam_pagina;

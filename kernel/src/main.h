@@ -7,6 +7,8 @@
 #include <utils/utils.h>
 #include "iniciar_kernel.h"
 
+t_log* logger_kernel;
+
 int puerto_escucha;
 char* ip_memoria;
 int puerto_memoria;

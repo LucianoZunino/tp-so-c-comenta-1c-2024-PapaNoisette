@@ -1,7 +1,6 @@
 #include "iniciar_cpu.h"
 
 
-t_log* logger_cpu;
 t_config* config_cpu;
 
 
@@ -21,11 +20,7 @@ void iniciar_config_cpu(){
     algoritmo_tlb = config_get_string_value(config_cpu, "ALGORITMO_TLB");
 }
 
-void iniciar_cpu(){
-    iniciar_logger_cpu();
-    iniciar_config_cpu();
-    print_config();
-}
+
 
 void print_config(){
     printf("ip_memoria:%s\n",ip_memoria);
@@ -34,10 +29,13 @@ void print_config(){
     printf("puerto_escucha_interrupt:%d\n",puerto_escucha_interrupt);
     printf("cantidad_entradas_tlb:%d\n",cantidad_entradas_tlb);
     printf("algoritmo_tlb:%s\n",algoritmo_tlb);
-    
-
 }
 
+void iniciar_cpu(){
+    iniciar_logger_cpu();
+    iniciar_config_cpu();
+    print_config();
+}
 void finalizar_cpu(){ 
     log_destroy(logger_cpu);
     config_destroy(config_cpu);

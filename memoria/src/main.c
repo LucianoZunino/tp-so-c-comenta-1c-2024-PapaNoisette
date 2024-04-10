@@ -5,6 +5,7 @@ int main(int argc, char* argv[]) {
 
     // Iniciar Memoria
     iniciar_memoria();
+  	log_info(logger_memoria, "Arranca el modulo  MEMORIA");
 
     // Levantar Server Memoria
    // int fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, "Server de Memoria Iniciado");

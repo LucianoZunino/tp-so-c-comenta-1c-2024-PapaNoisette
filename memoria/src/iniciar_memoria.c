@@ -1,6 +1,5 @@
 #include "iniciar_memoria.h"
 
-t_log* logger_memoria;
 t_config* config_memoria;
 
 

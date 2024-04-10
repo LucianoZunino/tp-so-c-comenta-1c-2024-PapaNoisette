@@ -5,7 +5,6 @@
 #include <utils/utils.h>
 
 
-
 void iniciar_cpu();
 void finalizar_cpu();
 #endif

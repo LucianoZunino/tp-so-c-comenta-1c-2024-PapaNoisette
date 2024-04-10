@@ -1,7 +1,6 @@
 #include "iniciar_kernel.h"
 
 
-t_log* logger_kernel;
 t_config* config_kernel;
 
 

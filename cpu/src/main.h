@@ -7,6 +7,7 @@
 #include <utils/utils.h>
 #include "iniciar_cpu.h"
 
+t_log* logger_cpu;
 
 char* ip_memoria;
 int puerto_memoria;
