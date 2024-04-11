@@ -16,6 +16,13 @@ void iniciar_config_memoria(){
     retardo_respuesta = config_get_int_value(config_memoria, "RETARDO_RESPUESTA");;
 
 }
+void print_config(){
+    printf("puerto_escucha:%d\n",puerto_escucha);
+    printf("tam_memoria:%d\n",tam_memoria);
+    printf("tam_pagina:%d\n",tam_pagina);
+    printf("path_instrucciones:%s\n",path_instrucciones);
+    printf("retardo_respuesta:%d\n",retardo_respuesta);
+}
 
 void iniciar_memoria(){
     iniciar_logger_memoria();
@@ -24,13 +31,6 @@ void iniciar_memoria(){
 
 }
 
-void print_config(){
-    printf("puerto_escucha:%d\n",puerto_escucha);
-    printf("tam_memoria:%d\n",tam_memoria);
-    printf("tam_pagina:%d\n",tam_pagina);
-    printf("path_instrucciones:%s\n",path_instrucciones);
-    printf("retardo_respuesta:%d\n",retardo_respuesta);
-}
 void finalizar_memoria(){ // capaz debería estar en otro archivo?
     log_destroy(logger_memoria);
     config_destroy(config_memoria);

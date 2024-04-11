@@ -26,12 +26,6 @@ void iniciar_config_entradasalida(){
 
 }
 
-void iniciar_entradasalida(){
-    iniciar_logger_entradasalida();
-    iniciar_config_entradasalida();
-    print_config();
-}
-
 void print_config(){
 
     printf("tipo_interfaz:%s\n",tipo_interfaz);
@@ -43,8 +37,11 @@ void print_config(){
     printf("path_base_dialfs:%s\n",path_base_dialfs);
     printf("block_size:%d\n",block_size);
     printf("block_count:%d\n",block_count);
-
-
+}
+void iniciar_entradasalida(){
+    iniciar_logger_entradasalida();
+    iniciar_config_entradasalida();
+    print_config();
 }
 
 void finalizar_entradasalida(){ // capaz debería estar en otro archivo?//no asi esta ok(nacho)

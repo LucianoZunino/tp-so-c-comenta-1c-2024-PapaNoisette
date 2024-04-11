@@ -25,12 +25,6 @@ void iniciar_config_kernel(){
 
 }
 
-void iniciar_kernel(){
-    iniciar_logger_kernel();
-    iniciar_config_kernel();
-    print_config();
-}
-
 void print_config(){
     printf("puerto_escucha:%d\n",puerto_escucha);
     printf("ip_memoria:%s\n",ip_memoria);
@@ -49,6 +43,13 @@ void print_config(){
     printf("grado_multiprogramacion:%d\n",grado_multiprogramacion);
 
 }
+
+void iniciar_kernel(){
+    iniciar_logger_kernel();
+    iniciar_config_kernel();
+    print_config();
+}
+
 
 void finalizar_kernel(){ // capaz debería estar en otro archivo?//no asi esta ok(nacho)
     log_destroy(logger_kernel);

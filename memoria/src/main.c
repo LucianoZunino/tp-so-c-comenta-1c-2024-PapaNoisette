@@ -1,5 +1,13 @@
 #include "main.h"
 
+t_log* logger_memoria;
+
+int puerto_escucha;
+int tam_memoria;
+int tam_pagina;
+char* path_instrucciones;
+int retardo_respuesta;
+
 int main(int argc, char* argv[]) {
     decir_hola("Memoria");
 

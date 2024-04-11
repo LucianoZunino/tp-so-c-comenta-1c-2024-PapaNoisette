@@ -7,18 +7,18 @@
 #include <utils/utils.h>
 #include "iniciar_kernel.h"
 
-t_log* logger_kernel;
+extern t_log* logger_kernel;
 
-int puerto_escucha;
-char* ip_memoria;
-int puerto_memoria;
-char* ip_cpu;
-int puerto_cpu_dispatch;
-int puerto_cpu_interrupt;
-char* algoritmo_planificacion;
-int quantum;
-char** recursos;
-char** instancias_recursos;
-int grado_multiprogramacion;
+extern int puerto_escucha;
+extern char* ip_memoria;
+extern int puerto_memoria;
+extern char* ip_cpu;
+extern int puerto_cpu_dispatch;
+extern int puerto_cpu_interrupt;
+extern char* algoritmo_planificacion;
+extern int quantum;
+extern char** recursos;
+extern char** instancias_recursos;
+extern int grado_multiprogramacion;
 
 #endif

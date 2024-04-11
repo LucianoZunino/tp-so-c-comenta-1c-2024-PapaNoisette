@@ -7,12 +7,12 @@
 #include <utils/utils.h>
 #include "iniciar_memoria.h"
 
-t_log* logger_memoria;
+extern t_log* logger_memoria;
 
-int puerto_escucha;
-int tam_memoria;
-int tam_pagina;
-char* path_instrucciones;
-int retardo_respuesta;
+extern int puerto_escucha;
+extern int tam_memoria;
+extern int tam_pagina;
+extern char* path_instrucciones;
+extern int retardo_respuesta;
 
 #endif

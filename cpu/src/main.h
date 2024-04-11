@@ -7,13 +7,13 @@
 #include <utils/utils.h>
 #include "iniciar_cpu.h"
 
-t_log* logger_cpu;
+extern t_log* logger_cpu;
 
-char* ip_memoria;
-int puerto_memoria;
-int puerto_escucha_dispatch;
-int puerto_escucha_interrupt;
-int cantidad_entradas_tlb;
-char* algoritmo_tlb;
+extern char* ip_memoria;
+extern int puerto_memoria;
+extern int puerto_escucha_dispatch;
+extern int puerto_escucha_interrupt;
+extern int cantidad_entradas_tlb;
+extern char* algoritmo_tlb;
 
 #endif

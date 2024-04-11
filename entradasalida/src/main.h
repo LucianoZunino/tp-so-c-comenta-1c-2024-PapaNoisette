@@ -7,18 +7,18 @@
 #include <utils/utils.h>
 #include "iniciar_entradasalida.h"
 
-t_log* logger_entradasalida;
+extern t_log* logger_entradasalida;
 
 
-char* tipo_interfaz;
-int tiempo_unidad_trabajo;
-char* ip_kernel;
-int puerto_kernel;
-char* ip_memoria;
-int puerto_memoria;
-char* path_base_dialfs;
-int block_size;
-int block_count;
+extern char* tipo_interfaz;
+extern int tiempo_unidad_trabajo;
+extern char* ip_kernel;
+extern int puerto_kernel;
+extern char* ip_memoria;
+extern int puerto_memoria;
+extern char* path_base_dialfs;
+extern int block_size;
+extern int block_count;
 
 
 #endif
