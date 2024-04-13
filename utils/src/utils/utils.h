@@ -16,8 +16,7 @@ t_log* iniciar_logger(char* ruta_logger, char* nombre_logger);
 int crear_conexion(char *ip, char* puerto);
 void liberar_conexion(int socket_cliente);
 int iniciar_servidor(char* puerto, t_log* logger, char* mensaje_servidor);
-int esperar_cliente(int socket_servidor, t_log* logger);
+int esperar_cliente(int socket_servidor, t_log* logger,char* cliente);
 int recibir_operacion(int socket_cliente);
 int largo_array(char**array);
-
 #endif

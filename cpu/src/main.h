@@ -10,9 +10,9 @@
 extern t_log* logger_cpu;
 
 extern char* ip_memoria;
-extern int puerto_memoria;
-extern int puerto_escucha_dispatch;
-extern int puerto_escucha_interrupt;
+extern char * puerto_memoria;
+extern char * puerto_escucha_dispatch;
+extern char * puerto_escucha_interrupt;
 extern int cantidad_entradas_tlb;
 extern char* algoritmo_tlb;
 

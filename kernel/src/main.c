@@ -6,12 +6,12 @@
 
 t_log* logger_kernel;
 
-int puerto_escucha;
+char* puerto_escucha;
 char* ip_memoria;
-int puerto_memoria;
+char* puerto_memoria;
 char* ip_cpu;
-int puerto_cpu_dispatch;
-int puerto_cpu_interrupt;
+char* puerto_cpu_dispatch;
+char* puerto_cpu_interrupt;
 char* algoritmo_planificacion;
 int quantum;
 char** recursos;

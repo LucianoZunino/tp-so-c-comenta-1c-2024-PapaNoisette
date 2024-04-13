@@ -9,7 +9,7 @@
 
 extern t_log* logger_memoria;
 
-extern int puerto_escucha;
+extern char* puerto_escucha;
 extern int tam_memoria;
 extern int tam_pagina;
 extern char* path_instrucciones;

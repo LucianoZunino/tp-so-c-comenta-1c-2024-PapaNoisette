@@ -18,7 +18,7 @@ t_log* iniciar_logger(char* ruta_logger, char* nombre_logger){
 
 	return nuevo_logger;
 }
-
+// FUNCIONES DE CONEXION DE CLIENTE
 int crear_conexion(char *ip, char* puerto){
 	struct addrinfo hints;
 	struct addrinfo *server_info;
@@ -48,9 +48,8 @@ void liberar_conexion(int socket_cliente){
 	close(socket_cliente);
 }
 
+// FUNCIONES DE CONEXION DE SERVIDOR
 int iniciar_servidor(char* puerto, t_log* logger, char* mensaje_servidor){
-	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	//assert(!"no implementado!");
 
 	int socket_servidor;
 
@@ -61,7 +60,7 @@ int iniciar_servidor(char* puerto, t_log* logger, char* mensaje_servidor){
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 
-	getaddrinfo(NULL, puerto, &hints, &servinfo); // IP o NULL?
+	getaddrinfo(NULL, puerto, &hints, &servinfo); 
 
 	// Creamos el socket de escucha del servidor
 	socket_servidor = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
@@ -76,11 +75,11 @@ int iniciar_servidor(char* puerto, t_log* logger, char* mensaje_servidor){
 	return socket_servidor;
 }
 
-int esperar_cliente(int socket_servidor, t_log* logger){
+int esperar_cliente(int socket_servidor, t_log* logger,char * cliente){
 
 	// Aceptamos un nuevo cliente
 	int socket_cliente = accept(socket_servidor, NULL, NULL);
-	log_info(logger, "Se conecto un cliente!");
+	log_info(logger, "Se conecto el cliente:",cliente);
 
 	return socket_cliente;
 }
@@ -104,3 +103,4 @@ int largo_array(char**array) {
 	}
 	return largo;
 }
+

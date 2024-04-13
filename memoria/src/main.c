@@ -2,7 +2,7 @@
 
 t_log* logger_memoria;
 
-int puerto_escucha;
+char* puerto_escucha;
 int tam_memoria;
 int tam_pagina;
 char* path_instrucciones;

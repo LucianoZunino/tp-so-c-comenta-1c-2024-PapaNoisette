@@ -13,9 +13,9 @@ void iniciar_config_cpu(){
 
      
     ip_memoria = config_get_string_value(config_cpu, "IP_MEMORIA");
-    puerto_memoria = config_get_int_value(config_cpu, "PUERTO_MEMORIA");
-    puerto_escucha_dispatch = config_get_int_value(config_cpu, "PUERTO_ESCUCHA_DISPATCH");
-    puerto_escucha_interrupt = config_get_int_value(config_cpu, "PUERTO_ESCUCHA_INTERRUPT");
+    puerto_memoria = config_get_string_value(config_cpu, "PUERTO_MEMORIA");
+    puerto_escucha_dispatch = config_get_string_value(config_cpu, "PUERTO_ESCUCHA_DISPATCH");
+    puerto_escucha_interrupt = config_get_string_value(config_cpu, "PUERTO_ESCUCHA_INTERRUPT");
     cantidad_entradas_tlb = config_get_int_value(config_cpu, "CANTIDAD_ENTRADAS_TLB");
     algoritmo_tlb = config_get_string_value(config_cpu, "ALGORITMO_TLB");
 }
@@ -24,9 +24,9 @@ void iniciar_config_cpu(){
 
 void print_config(){
     printf("ip_memoria:%s\n",ip_memoria);
-    printf("puerto_memoria:%d\n",puerto_memoria);
-    printf("puerto_escucha_dispatch:%d\n",puerto_escucha_dispatch);
-    printf("puerto_escucha_interrupt:%d\n",puerto_escucha_interrupt);
+    printf("puerto_memoria:%s\n",puerto_memoria);
+    printf("puerto_escucha_dispatch:%s\n",puerto_escucha_dispatch);
+    printf("puerto_escucha_interrupt:%s\n",puerto_escucha_interrupt);
     printf("cantidad_entradas_tlb:%d\n",cantidad_entradas_tlb);
     printf("algoritmo_tlb:%s\n",algoritmo_tlb);
 }
