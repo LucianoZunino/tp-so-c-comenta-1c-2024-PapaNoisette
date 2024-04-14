@@ -23,14 +23,13 @@ int main(int argc, char* argv[]) {
 
     // Iniciar Kernel
     iniciar_kernel();
-    log_info(logger_kernel, "Arranca el modulo  KERNEL");
+    log_info(logger_kernel, "Arranca el modulo KERNEL");
 
     // Levantar Server Kernel (para que E/S se conecte)
-    int fd_kernel = iniciar_servidor(puerto_escucha, logger_kernel, ">>>SERVER KERNEL INICIADO");
+    int fd_kernel = iniciar_servidor(puerto_escucha, logger_kernel, ">>> SERVER KERNEL INICIADO");
 
     // Conectarme como cliente a CPU-Dispatch (o debería ser a Interrupt?)
     int fd_cpu_dispatch = crear_conexion(ip_cpu, puerto_cpu_dispatch);
-
 
     // Conectarme como cliente a Memoria
     int fd_memoria = crear_conexion(ip_memoria, puerto_memoria);

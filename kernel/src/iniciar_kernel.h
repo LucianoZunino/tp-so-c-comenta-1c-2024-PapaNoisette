@@ -4,13 +4,6 @@
 #include "main.h"
 #include <utils/utils.h>
 
-
-
 void iniciar_kernel();
 void finalizar_kernel();
 #endif
-
-
-
-
-
