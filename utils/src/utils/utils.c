@@ -75,11 +75,12 @@ int iniciar_servidor(char* puerto, t_log* logger, char* mensaje_servidor){
 	return socket_servidor;
 }
 
-int esperar_cliente(int socket_servidor, t_log* logger,char * cliente){
+int esperar_cliente(int socket_servidor, t_log* logger, char* cliente){
 
 	// Aceptamos un nuevo cliente
 	int socket_cliente = accept(socket_servidor, NULL, NULL);
-	log_info(logger, "Se conecto el cliente:",cliente);
+	log_info(logger, "Se conecto el cliente:", cliente);
+	printf("(PRINTF) Se conecto el cliente: %s\n", cliente);
 
 	return socket_cliente;
 }
