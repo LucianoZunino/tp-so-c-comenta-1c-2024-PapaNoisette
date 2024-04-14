@@ -2,6 +2,12 @@
 
 t_config* config_kernel;
 
+void iniciar_kernel(){
+    iniciar_logger_kernel();
+    iniciar_config_kernel();
+    imprimir_config_kernel();
+}
+
 void iniciar_logger_kernel(){
     logger_kernel = iniciar_logger("kernel.log", "kernel");
 }
@@ -22,7 +28,7 @@ void iniciar_config_kernel(){
     grado_multiprogramacion = config_get_int_value(config_kernel, "GRADO_MULTIPROGRAMACION");
 }
 
-void print_config(){
+void imprimir_config_kernel(){
     printf("PUERTO_ESCUCHA: %s\n",puerto_escucha);
     printf("IP_MEMORIA: %s\n",ip_memoria);
     printf("PUERTO_MEMORIA: %s\n",puerto_memoria);
@@ -39,13 +45,6 @@ void print_config(){
     }
     printf("GRADO_MULTIPROGRAMACION: %d\n",grado_multiprogramacion);
 }
-
-void iniciar_kernel(){
-    iniciar_logger_kernel();
-    iniciar_config_kernel();
-    print_config();
-}
-
 
 void finalizar_kernel(){
     log_destroy(logger_kernel);

@@ -2,6 +2,12 @@
 
 t_config* config_entradasalida;
 
+void iniciar_entradasalida(){
+    iniciar_logger_entradasalida();
+    iniciar_config_entradasalida();
+    imprimir_config_entradasalida();
+}
+
 void iniciar_logger_entradasalida(){
     logger_entradasalida = iniciar_logger("entradasalida.log", "entradasalida");
 }
@@ -20,7 +26,7 @@ void iniciar_config_entradasalida(){
     block_count = config_get_int_value(config_entradasalida, "BLOCK_COUNT");
 }
 
-void print_config(){
+void imprimir_config_entradasalida(){
     printf("TIPO_INTERFAZ:%s\n",tipo_interfaz);
     printf("TIEMPO_UNIDAD_TRABAJO:%d\n",tiempo_unidad_trabajo);
     printf("IP_KERNEL:%s\n",ip_kernel);
@@ -30,12 +36,6 @@ void print_config(){
     printf("PATH_BASE_DIALFS:%s\n",path_base_dialfs);
     printf("BLOCK_SIZE:%d\n",block_size);
     printf("BLOCK_COUNT:%d\n",block_count);
-}
-
-void iniciar_entradasalida(){
-    iniciar_logger_entradasalida();
-    iniciar_config_entradasalida();
-    print_config();
 }
 
 void finalizar_entradasalida(){

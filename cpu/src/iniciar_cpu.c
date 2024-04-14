@@ -2,6 +2,12 @@
 
 t_config* config_cpu;
 
+void iniciar_cpu(){
+    iniciar_logger_cpu();
+    iniciar_config_cpu();
+    imprimir_config_cpu();
+}
+
 void iniciar_logger_cpu(){
     logger_cpu = iniciar_logger("cpu.log", "cpu");
 }
@@ -17,9 +23,7 @@ void iniciar_config_cpu(){
     algoritmo_tlb = config_get_string_value(config_cpu, "ALGORITMO_TLB");
 }
 
-
-
-void print_config(){
+void imprimir_config_cpu(){
     printf("IP_MEMORIA:%s\n",ip_memoria);
     printf("PUERTO_MEMORIA:%s\n",puerto_memoria);
     printf("PUERTO_ESCUCHA_DISPATCH:%s\n",puerto_escucha_dispatch);
@@ -28,11 +32,6 @@ void print_config(){
     printf("ALGORITMO_TLB:%s\n",algoritmo_tlb);
 }
 
-void iniciar_cpu(){
-    iniciar_logger_cpu();
-    iniciar_config_cpu();
-    print_config();
-}
 void finalizar_cpu(){ 
     log_destroy(logger_cpu);
     config_destroy(config_cpu);
