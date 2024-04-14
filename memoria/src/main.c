@@ -16,9 +16,15 @@ int main(int argc, char* argv[]) {
   	log_info(logger_memoria, "Arranca el modulo  MEMORIA");
 
     // Levantar Server Memoria
-   // int fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, "Server de Memoria Iniciado");
+   	int fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, ">>>SERVER MEMORIA INICIADO");
+
+	// Esperar conexion de CPU
+	// Esperar conexion de E/S
+
+	// Esperar conexion de KERNEL
+    int fd_kernel = esperar_cliente(fd_memoria, logger_memoria, "KERNEL");
 
     // Finalizar Memoria
-   finalizar_memoria();
+   	finalizar_memoria();
     return 0;
 }

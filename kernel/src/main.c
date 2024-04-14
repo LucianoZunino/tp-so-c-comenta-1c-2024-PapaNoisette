@@ -31,14 +31,14 @@ int main(int argc, char* argv[]) {
     // Conectarme como cliente a CPU-Dispatch (o debería ser a Interrupt?)
     int fd_cpu_dispatch = crear_conexion(ip_cpu, puerto_cpu_dispatch);
 
-    // TODO: cuando esté funcionando memoria
+
     // Conectarme como cliente a Memoria
-    // int fd_memoria = crear_conexion(ip_memoria, puerto_memoria);
+    int fd_memoria = crear_conexion(ip_memoria, puerto_memoria);
 
     // Esperar conexion de E/S
     int fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
 
     // Finalizar Kernel
-    //finalizar_kernel();
+    finalizar_kernel();
     return 0;
 }
