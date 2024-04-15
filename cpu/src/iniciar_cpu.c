@@ -22,7 +22,7 @@ void iniciar_config_cpu(){
 
 
 
-void print_config(){
+void imprimir_config_cpu(){
     printf("ip_memoria:%s\n",ip_memoria);
     printf("puerto_memoria:%s\n",puerto_memoria);
     printf("puerto_escucha_dispatch:%s\n",puerto_escucha_dispatch);
@@ -34,9 +34,10 @@ void print_config(){
 void iniciar_cpu(){
     iniciar_logger_cpu();
     iniciar_config_cpu();
-    print_config();
+    imprimir_config_cpu();
 }
 void finalizar_cpu(){ 
-    log_destroy(logger_cpu);
     config_destroy(config_cpu);
+    log_destroy(logger_cpu);
+
 }
