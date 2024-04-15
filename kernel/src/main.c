@@ -35,13 +35,13 @@ int main(int argc, char* argv[]){
     fd_kernel = iniciar_servidor(puerto_escucha, logger_kernel, ">>> Server Kernel escuchando... <<<");
 
     // Se conecta como cliente a CPU-Dispatch
-    fd_cpu_dispatch = crear_conexion(ip_cpu, puerto_cpu_dispatch);
+    fd_cpu_dispatch = crear_conexion(ip_cpu, puerto_cpu_dispatch, logger_kernel);
 
     // Se conecta como cliente a CPU-Interrupt
-    fd_cpu_interrupt = crear_conexion(ip_cpu, puerto_cpu_interrupt);
+    fd_cpu_interrupt = crear_conexion(ip_cpu, puerto_cpu_interrupt, logger_kernel);
 
     // Se conecta como cliente a MEMORIA
-    fd_memoria = crear_conexion(ip_memoria, puerto_memoria);
+    fd_memoria = crear_conexion(ip_memoria, puerto_memoria, logger_kernel);
 
     // Esperar conexion de E/S
     log_info(logger_kernel, "Esperando conexion de Interfaz E/S");

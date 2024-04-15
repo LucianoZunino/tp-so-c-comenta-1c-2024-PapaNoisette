@@ -20,7 +20,7 @@ t_log* iniciar_logger(char* ruta_logger, char* nombre_logger){
 
 // ----- FUNCION DE CONEXION DE CLIENTE -> SERVIDOR -----
 
-int crear_conexion(char *ip, char* puerto,t_log* logger){
+int crear_conexion(char *ip, char* puerto, t_log* logger){
 	struct addrinfo hints;
 	struct addrinfo *server_info;
 
