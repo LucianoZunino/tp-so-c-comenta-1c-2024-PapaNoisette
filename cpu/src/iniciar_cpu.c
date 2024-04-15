@@ -33,6 +33,7 @@ void imprimir_config_cpu(){
 }
 
 void finalizar_cpu(){ 
-    log_destroy(logger_cpu);
     config_destroy(config_cpu);
+    log_destroy(logger_cpu);
+
 }

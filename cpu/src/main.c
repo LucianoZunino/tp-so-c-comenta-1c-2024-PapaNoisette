@@ -32,14 +32,14 @@ int main(int argc, char* argv[]){
 	// Iniciar el server de cpu interrupt 
 	fd_cpu_interrupt = iniciar_servidor(puerto_escucha_interrupt, logger_cpu, ">>> Server CPU-Interrupt escuchando... <<<");
 
-	// Se conecta como cliente a MEMORIA
-	fd_memoria = crear_conexion(ip_memoria, puerto_memoria);
+	fd_memoria = crear_conexion(ip_memoria, puerto_memoria, logger_cpu);
+	log_info(logger_cpu,">>>CPU se conecta al server MEMORIA");
 
-    // Esperar al cliente Kernel en dispatch
+  	// Esperar al cliente Kernel en dispatch
     log_info(logger_cpu, "Esperando conexion de Kernel en Dispatch");
     fd_kernel_dispatch = esperar_cliente(fd_cpu_dispatch, logger_cpu, "Kernel-Dispatch");
 
-    // Esperar al cliente Kernel en interrupt
+  	// Esperar al cliente Kernel en interrupt
 	log_info(logger_cpu, "Esperando conexion de Kernel en Interrupt");
 	fd_kernel_interrupt = esperar_cliente(fd_cpu_interrupt, logger_cpu, "Kernel-Interrupt");
 

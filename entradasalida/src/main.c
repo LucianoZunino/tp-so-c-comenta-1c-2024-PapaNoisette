@@ -33,7 +33,6 @@ int main(int argc, char* argv[]){
 	pthread_create(&hilo_memoria_entradasalida, NULL, (void*)escuchar_mensajes_memoria_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	pthread_detach(hilo_memoria_entradasalida); // Hace que el hilo se desacople del principal y se ejecute en paralelo
 
-
     // Escucha los mensajes Kernel-E/S
     pthread_t hilo_kernel_entradasalida;
 	pthread_create(&hilo_kernel_entradasalida, NULL, (void*)escuchar_mensajes_kernel_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse

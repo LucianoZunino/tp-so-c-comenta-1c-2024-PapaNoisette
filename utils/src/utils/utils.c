@@ -20,7 +20,7 @@ t_log* iniciar_logger(char* ruta_logger, char* nombre_logger){
 
 // ----- FUNCION DE CONEXION DE CLIENTE -> SERVIDOR -----
 
-int crear_conexion(char *ip, char* puerto){
+int crear_conexion(char *ip, char* puerto,t_log* logger){
 	struct addrinfo hints;
 	struct addrinfo *server_info;
 
@@ -36,7 +36,13 @@ int crear_conexion(char *ip, char* puerto){
                     server_info->ai_socktype,
                     server_info->ai_protocol);
 
-	connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen); // Ahora que tenemos el socket, vamos a conectarlo
+	// Ahora que tenemos el socket, vamos a conectarlo
+	//continuando sobre cuando creamos elp socket del cliente
+
+	if(connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen)!=0){
+		  log_error(logger,"Error conectando al Servidor,apagado o invalido");
+		  socket_cliente= -1;
+	}
 
 	freeaddrinfo(server_info);
 	return socket_cliente;
@@ -62,18 +68,28 @@ int iniciar_servidor(char* puerto, t_log* logger, char* mensaje_servidor){
 	getaddrinfo(NULL, puerto, &hints, &servinfo); 
 
 	// Creamos el socket de escucha del servidor
-	socket_servidor = socket(servinfo->ai_family,
-							servinfo->ai_socktype,
-							servinfo->ai_protocol);
+	socket_servidor = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
+	if (socket_servidor==-1){
+		  log_error(logger,"Error iniciando Servidor, fallo al crear el socket");
+	}
+     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//TODO//eliminar antes de la entrega, es para reutilizar los sockets y que no queden colgados al hacer pruebas
+    int activado=1;
+	setsockopt(socket_servidor,SOL_SOCKET,SO_REUSEADDR,&activado,sizeof(activado));
+
+
 
 	// Asociamos el socket a un puerto
-	bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen); // falta chequear si esto da error
-
+	if(bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen)!=0){
+		close(socket_servidor);
+		log_error(logger,"Error iniciando Servidor, fallo al bindear el socket");
+		return -1;
+	} 
 	// Escuchamos las conexiones entrantes
-	listen(socket_servidor, SOMAXCONN); // falta chequear si esto da error
+	listen(socket_servidor, SOMAXCONN); 
 
-	freeaddrinfo(servinfo); // Libera la memoria del puntero
-	log_info(logger, mensaje_servidor);
+	freeaddrinfo(servinfo);
+	log_info(logger, "%s",mensaje_servidor);
 
 	return socket_servidor;
 }
