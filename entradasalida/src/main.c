@@ -20,10 +20,10 @@ int main(int argc, char* argv[]){
     log_info(logger_entradasalida, "Arranca el modulo  Entrada/Salida");
 
     // Se conecta como cliente a MEMORIA
-    int fd_memoria = crear_conexion(ip_memoria, puerto_memoria);
+    int fd_memoria = crear_conexion(ip_memoria, puerto_memoria,logger_entradasalida);
 
     // Se conecta como cliente a KERNEL
-    int fd_kernel = crear_conexion(ip_kernel, puerto_kernel);
+    int fd_kernel = crear_conexion(ip_kernel, puerto_kernel,logger_entradasalida);
 
     // Finalizar Interfaz E/S
     finalizar_entradasalida();
