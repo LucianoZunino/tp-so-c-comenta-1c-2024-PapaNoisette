@@ -5,7 +5,7 @@ t_config* config_kernel;
 void iniciar_kernel(){
     iniciar_logger_kernel();
     iniciar_config_kernel();
-    imprimir_config_kernel();
+    //imprimir_config_kernel();
 }
 
 void iniciar_logger_kernel(){

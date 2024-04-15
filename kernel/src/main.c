@@ -18,7 +18,7 @@ char** recursos;
 char** instancias_recursos;
 int grado_multiprogramacion;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]){
     decir_hola("Kernel");
 
     // Iniciar Kernel
@@ -26,18 +26,23 @@ int main(int argc, char* argv[]) {
     log_info(logger_kernel, "Arranca el modulo KERNEL");
 
     // Levantar Server Kernel (para que E/S se conecte)
-    int fd_kernel = iniciar_servidor(puerto_escucha, logger_kernel, ">>> SERVER KERNEL INICIADO");
+    int fd_kernel = iniciar_servidor(puerto_escucha, logger_kernel, ">>> Server Kernel escuchando... <<<");
 
-    // Conectarme como cliente a CPU-Dispatch (o debería ser a Interrupt?)
+    // Se conecta como cliente a CPU-Dispatch
     int fd_cpu_dispatch = crear_conexion(ip_cpu, puerto_cpu_dispatch);
 
-    // Conectarme como cliente a Memoria
+    // Se conecta como cliente a CPU-Interrupt
+    int fd_cpu_interrupt = crear_conexion(ip_cpu, puerto_cpu_interrupt);
+
+    // Se conecta como cliente a MEMORIA
     int fd_memoria = crear_conexion(ip_memoria, puerto_memoria);
 
     // Esperar conexion de E/S
+    log_info(logger_kernel, "Esperando conexion de Interfaz E/S");
     int fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
 
     // Finalizar Kernel
     finalizar_kernel();
+    
     return 0;
 }

@@ -5,7 +5,7 @@ t_config* config_cpu;
 void iniciar_cpu(){
     iniciar_logger_cpu();
     iniciar_config_cpu();
-    imprimir_config_cpu();
+    //imprimir_config_cpu();
 }
 
 void iniciar_logger_cpu(){

@@ -5,7 +5,7 @@ t_config* config_entradasalida;
 void iniciar_entradasalida(){
     iniciar_logger_entradasalida();
     iniciar_config_entradasalida();
-    imprimir_config_entradasalida();
+    //imprimir_config_entradasalida();
 }
 
 void iniciar_logger_entradasalida(){

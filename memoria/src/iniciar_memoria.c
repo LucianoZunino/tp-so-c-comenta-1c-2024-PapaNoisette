@@ -5,7 +5,7 @@ t_config* config_memoria;
 void iniciar_memoria(){
     iniciar_logger_memoria();
     iniciar_config_memoria();
-    imprimir_config_memoria();
+    //imprimir_config_memoria();
 }
 
 void iniciar_logger_memoria(){

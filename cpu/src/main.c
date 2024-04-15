@@ -20,27 +20,32 @@ int fd_kernel_dispatch;
 int fd_kernel_interrupt;
 
 
-int main(int argc, char* argv[]) {
-    decir_hola("cpu");
+int main(int argc, char* argv[]){
+    decir_hola("CPU");
+
+	// Iniciar CPU
     iniciar_cpu();
-  	log_info(logger_cpu, "Arranca el modulo CPUUUU");
-    //iniciar server de cpu dispatch
-	fd_cpu_dispatch= iniciar_servidor(puerto_escucha_dispatch,logger_cpu,">>> SERVER CPU-DISPATCH INICIADO");
+  	log_info(logger_cpu, "Arranca el modulo CPU");
+
+    // Inicia el server de cpu dispatch
+	fd_cpu_dispatch = iniciar_servidor(puerto_escucha_dispatch, logger_cpu, ">>> Server CPU-Dispatch escuchando... <<<");
  
-	// iniciar server de cpu interrupt 
-	fd_cpu_interrupt= iniciar_servidor(puerto_escucha_interrupt,logger_cpu,">>> SERVER CPU-INTERRUPT INICIADO");
+	// Iniciar el server de cpu interrupt 
+	fd_cpu_interrupt = iniciar_servidor(puerto_escucha_interrupt, logger_cpu, ">>> Server CPU-Interrupt escuchando... <<<");
 
-    //Esperar al cliente Kernel en dispatch
-    log_info(logger_cpu, "Esperando conexion de Kernel en Dispatch");
-    fd_kernel_dispatch=esperar_cliente(fd_cpu_dispatch,logger_cpu, "Kernel-Dispatch");
-
-    //Esperar al cliente Kernel en interrupt
-	fd_kernel_interrupt=esperar_cliente(fd_cpu_interrupt,logger_cpu, "Kernel-Interrupt");
-
-	//conectar como CLIENTE a memoria
+	// Se conecta como cliente a MEMORIA
 	fd_memoria = crear_conexion(ip_memoria, puerto_memoria);
+
+    // Esperar al cliente Kernel en dispatch
+    log_info(logger_cpu, "Esperando conexion de Kernel en Dispatch");
+    fd_kernel_dispatch = esperar_cliente(fd_cpu_dispatch, logger_cpu, "Kernel-Dispatch");
+
+    // Esperar al cliente Kernel en interrupt
+	log_info(logger_cpu, "Esperando conexion de Kernel en Interrupt");
+	fd_kernel_interrupt = esperar_cliente(fd_cpu_interrupt, logger_cpu, "Kernel-Interrupt");
+
+	// Finalizar CPU
+	finalizar_cpu();
 	
-	//log_info(logger_cpu,">>>CPU se conecta al server MEMORIA");
-	log_info(logger_cpu,">>>>>FINALIZA CPU<<<<<");
 	return 0;
 }
