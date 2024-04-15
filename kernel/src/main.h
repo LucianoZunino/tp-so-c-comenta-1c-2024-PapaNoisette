@@ -3,9 +3,13 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
 #include <utils/hello.h>
 #include <utils/utils.h>
 #include "iniciar_kernel.h"
+#include "escuchar_cpu_kernel.h"
+#include "escuchar_entradasalida_kernel.h"
+#include "escuchar_memoria_kernel.h"
 
 extern t_log* logger_kernel;
 
@@ -20,5 +24,11 @@ extern int quantum;
 extern char** recursos;
 extern char** instancias_recursos;
 extern int grado_multiprogramacion;
+
+extern int fd_kernel;
+extern int fd_cpu_dispatch;
+extern int fd_cpu_interrupt;
+extern int fd_memoria;
+extern int fd_entradasalida;
 
 #endif

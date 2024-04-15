@@ -3,9 +3,13 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
 #include <utils/hello.h>
 #include <utils/utils.h>
 #include "iniciar_memoria.h"
+#include "escuchar_cpu_memoria.h"
+#include "escuchar_entradasalida_memoria.h"
+#include "escuchar_kernel_memoria.h"
 
 extern t_log* logger_memoria;
 
@@ -14,5 +18,10 @@ extern int tam_memoria;
 extern int tam_pagina;
 extern char* path_instrucciones;
 extern int retardo_respuesta;
+
+extern int fd_memoria;
+extern int fd_cpu;
+extern int fd_kernel;
+extern int fd_entradasalida;
 
 #endif
