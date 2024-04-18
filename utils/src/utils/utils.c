@@ -113,6 +113,155 @@ int recibir_operacion(int socket_cliente){
 	}
 }
 
+/*void crear_buffer(t_paquete* paquete){
+	paquete->buffer = malloc(sizeof(t_buffer));
+	paquete->buffer->size = 0;
+	paquete->buffer->stream = NULL;
+}*/
+
+t_buffer* crear_buffer(){
+	t_buffer* buffer = malloc(sizeof(t_buffer));
+	buffer->size = 0;
+	buffer->stream = NULL;
+	return buffer;
+}
+
+void destruir_buffer(t_buffer* buffer){
+	if(buffer->stream != NULL){
+		free(buffer->stream);
+	}
+	free(buffer);
+}
+
+void cargar_datos_al_buffer(t_buffer* buffer, void* datos, int size_datos){
+	if(buffer->size == 0){
+		buffer->stream = malloc(sizeof(int) + size_datos);
+		memcpy(buffer->stream, &size_datos, sizeof(int));
+		memcpy(buffer->stream + sizeof(int), datos, size_datos); // Desplaza '+ sizeof(int)' para que no pise lo que ya esta
+	}
+	else{
+		buffer->stream = realloc(buffer->stream, buffer->size + sizeof(int) + size_datos);
+		memcpy(buffer->stream + buffer->size, &size_datos, sizeof(int));
+		memcpy(buffer->stream + buffer->size + sizeof(int), datos, size_datos);
+	}
+	buffer->size += sizeof(int);
+	buffer->size += size_datos;
+}
+
+void cargar_int_al_buffer(t_buffer* buffer, int valor_int){
+	cargar_datos_al_buffer(buffer, &valor_int, sizeof(int));
+}
+
+void cargar_string_al_buffer(t_buffer* buffer, char* valor_string){
+	cargar_datos_al_buffer(buffer, &valor_string, strlen(valor_string) + 1); // +1 por el /0
+}
+
+/*void* recibir_buffer(int* size, int socket_cliente){
+	void * buffer;
+
+	recv(socket_cliente, size, sizeof(int), MSG_WAITALL);
+	buffer = malloc(*size);
+	recv(socket_cliente, buffer, *size, MSG_WAITALL);
+
+	return buffer;
+}*/
+
+t_buffer* recibir_buffer_completo(int socket_cliente){
+	t_buffer *buffer = malloc(sizeof(t_buffer));
+
+	if(recv(socket_cliente, &(buffer->size), sizeof(int), MSG_WAITALL) > 0){
+		buffer->stream = malloc(buffer->size);
+		if(recv(socket_cliente, buffer->stream, buffer->size, MSG_WAITALL) > 0){
+			return buffer;
+		}
+		else{
+			printf("Error al recibir el buffer");
+			exit(EXIT_FAILURE);
+		}
+	}
+	else{
+		printf("Error el recibir el tamaño del buffer");
+		exit(EXIT_FAILURE);
+	}
+	return buffer;
+}
+
+void* extraer_datos_del_buffer(t_buffer* buffer){
+	if(buffer->size == 0){
+		printf("El buffer está vacio");
+		exit(EXIT_FAILURE);
+	}
+	int size_datos;
+	memcpy(&size_datos, buffer->stream, sizeof(int));
+	void* datos = malloc(size_datos);
+	memcpy(datos, buffer->stream + sizeof(int), size_datos);
+
+	int nuevo_size = buffer->size - sizeof(int) - size_datos;
+
+	if(nuevo_size == 0){ // Se extrajeron todos los datos
+		buffer->size = 0;
+		free(buffer->stream);
+		buffer->stream = NULL;
+		return datos;
+	}
+
+	void* nuevo_stream = malloc(nuevo_size);
+	memcpy(nuevo_stream, buffer->stream + sizeof(int) + size_datos, nuevo_size);
+	free(buffer->stream);
+	buffer->size = nuevo_size;
+	buffer->stream = nuevo_stream;
+	
+	return datos;
+}
+
+int extraer_int_del_buffer(t_buffer* buffer){
+	int* valor_int = extraer_datos_del_buffer(buffer);
+	int valor_int_retornado = *valor_int;
+	free(valor_int); // Libera la memoria que reservo extraer_datos_del_buffer
+	return valor_int_retornado;
+}
+
+char* extraer_string_del_buffer(t_buffer* buffer){
+	char* valor_string = extraer_datos_del_buffer(buffer);
+	return valor_string;
+}
+
+t_paquete* crear_paquete(op_code code_op, t_buffer* buffer){
+	t_paquete* paquete = malloc(sizeof(t_paquete));
+	paquete->codigo_operacion = code_op;
+	paquete->buffer = buffer;
+	return paquete;
+}
+
+void eliminar_paquete(t_paquete* paquete){
+	destruir_buffer(paquete->buffer);
+	free(paquete);
+}
+
+void* serializar_paquete(t_paquete* paquete){
+	int size_datos = paquete->buffer->size + 2*sizeof(int);
+	void* magic = malloc(size_datos);
+	int desplazamiento = 0;
+
+	memcpy(magic + desplazamiento, &(paquete->codigo_operacion), sizeof(int));
+	desplazamiento+= sizeof(int);
+	memcpy(magic + desplazamiento, &(paquete->buffer->size), sizeof(int));
+	desplazamiento+= sizeof(int);
+	memcpy(magic + desplazamiento, paquete->buffer->stream, paquete->buffer->size);
+	desplazamiento+= paquete->buffer->size;
+
+	return magic;
+}
+
+void enviar_paquete(t_paquete* paquete, int socket_cliente){
+	int bytes = paquete->buffer->size + 2*sizeof(int);
+	void* a_enviar = serializar_paquete(paquete);
+
+	send(socket_cliente, a_enviar, bytes, 0);
+
+	free(a_enviar);
+}
+
 //para los arrays de kernel
 int largo_array(char**array) { 
 	int largo = 0;
