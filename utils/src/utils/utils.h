@@ -10,12 +10,11 @@
 #include <string.h>
 #include <commons/log.h>
 #include <commons/config.h>
+#include <commons/string.h>
 
 // Codigos de operaciones
 typedef enum{
-    MENSAJE,
-    PAQUETE,
-    HANDSHAKE
+    MENSAJE_A_MEMORIA,
 } op_code;
 
 typedef struct{

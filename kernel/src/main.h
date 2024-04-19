@@ -10,6 +10,7 @@
 #include "escuchar_cpu_kernel.h"
 #include "escuchar_entradasalida_kernel.h"
 #include "escuchar_memoria_kernel.h"
+#include "consola_interactiva.h"
 
 extern t_log* logger_kernel;
 

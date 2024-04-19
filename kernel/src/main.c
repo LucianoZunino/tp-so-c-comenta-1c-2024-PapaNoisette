@@ -65,8 +65,13 @@ int main(int argc, char* argv[]){
     // Escuchar los mensajes de E/S-Kernel
     pthread_t hilo_entradasalida_kernel;
 	pthread_create(&hilo_entradasalida_kernel, NULL, (void*)escuchar_mensajes_entradasalida_kernel, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
-	pthread_join(hilo_entradasalida_kernel, NULL); // Frena el hilo principal hasta que el hilo_entradasalida_kernel no finalice
-	// Porque si se el hilo_entradasalida_kernel se desacopla del principal termina el modulo Kernel
+	pthread_detach(hilo_entradasalida_kernel); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+
+    // Inicia la consola interactiva
+    pthread_t hilo_consola_interactiva;
+    pthread_create(&hilo_consola_interactiva, NULL, (void*)iniciar_consola_interactiva, NULL);
+    pthread_join(hilo_consola_interactiva, NULL); // Frena el hilo principal hasta que el hilo_consola_interactiva no finalice
+	// Porque si se el hilo_consola_interactiva se desacopla del principal termina el modulo Kernel
 
     // Finalizar Kernel
     finalizar_kernel();

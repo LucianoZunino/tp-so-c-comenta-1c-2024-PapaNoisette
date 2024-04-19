@@ -153,7 +153,7 @@ void cargar_int_al_buffer(t_buffer* buffer, int valor_int){
 }
 
 void cargar_string_al_buffer(t_buffer* buffer, char* valor_string){
-	cargar_datos_al_buffer(buffer, &valor_string, strlen(valor_string) + 1); // +1 por el /0
+	cargar_datos_al_buffer(buffer, valor_string, strlen(valor_string) + 1); // +1 por el /0
 }
 
 /*void* recibir_buffer(int* size, int socket_cliente){
@@ -166,12 +166,12 @@ void cargar_string_al_buffer(t_buffer* buffer, char* valor_string){
 	return buffer;
 }*/
 
-t_buffer* recibir_buffer_completo(int socket_cliente){
+t_buffer* recibir_buffer_completo(int socket_cliente){ // Recibe todo lo enviado despues del OP_CODE ([cod_op][size][void*......])
 	t_buffer *buffer = malloc(sizeof(t_buffer));
 
-	if(recv(socket_cliente, &(buffer->size), sizeof(int), MSG_WAITALL) > 0){
+	if(recv(socket_cliente, &(buffer->size), sizeof(int), MSG_WAITALL) > 0){ // Guardo el [size]
 		buffer->stream = malloc(buffer->size);
-		if(recv(socket_cliente, buffer->stream, buffer->size, MSG_WAITALL) > 0){
+		if(recv(socket_cliente, buffer->stream, buffer->size, MSG_WAITALL) > 0){ // Guardo el [void*.......]
 			return buffer;
 		}
 		else{
@@ -263,11 +263,10 @@ void enviar_paquete(t_paquete* paquete, int socket_cliente){
 }
 
 //para los arrays de kernel
-int largo_array(char**array) { 
+int largo_array(char**array){ 
 	int largo = 0;
-	while (array[largo] != NULL) {
+	while (array[largo] != NULL){
 		largo++;
 	}
 	return largo;
 }
-
