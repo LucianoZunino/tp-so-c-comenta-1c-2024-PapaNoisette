@@ -72,7 +72,17 @@ int main(int argc, char* argv[]){
     if (realizar_handshake(logger_kernel, fd_cpu_dispatch, HANDSHAKE_KERNEL) == -1){
         return EXIT_FAILURE;
     }
-    
+
+    // HANDSHAKE KERNEL - CPU INTERRUPT
+    if (realizar_handshake(logger_kernel, fd_cpu_interrupt, HANDSHAKE_KERNEL) == -1){
+        return EXIT_FAILURE;
+    }
+
+    // HANDSHAKE KERNEL - CPU MEMORIA
+    if (realizar_handshake(logger_kernel, fd_memoria, HANDSHAKE_KERNEL) == -1){
+        return EXIT_FAILURE;
+    }
+    printf("ASD\n");
     // Inicia la consola interactiva
     pthread_t hilo_consola_interactiva;
     pthread_create(&hilo_consola_interactiva, NULL, (void*)iniciar_consola_interactiva, NULL);

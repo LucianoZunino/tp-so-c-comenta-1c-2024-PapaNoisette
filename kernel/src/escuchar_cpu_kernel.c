@@ -6,6 +6,8 @@ void escuchar_mensajes_dispatch_kernel(){
 		int cod_op = recibir_operacion(fd_cpu_dispatch); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
+			case HANDSHAKE_OK:
+				return;
 			//	break;
 			
 			case -1:
