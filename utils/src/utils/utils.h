@@ -12,6 +12,15 @@
 #include <commons/config.h>
 #include <commons/string.h>
 
+//Linea de instruccion, si no usa algun argumento,se deja empty
+typedef struct
+{
+	char instruccion[20];
+	char arg1[20];
+	char arg2[20];
+	char arg3[20];
+} t_instruccion;
+
 // Codigos de operaciones
 typedef enum{
     MENSAJE_A_MEMORIA,

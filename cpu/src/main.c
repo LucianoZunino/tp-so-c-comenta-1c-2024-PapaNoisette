@@ -4,8 +4,8 @@
 //#include <utils/utils.h>
 #include "main.h"
 
+//Variables de la config
 t_log* logger_cpu;
-
 char* ip_memoria;
 char * puerto_memoria;
 char* puerto_escucha_dispatch;
@@ -13,11 +13,28 @@ char * puerto_escucha_interrupt;
 int cantidad_entradas_tlb;
 char* algoritmo_tlb;
 
+//Variables de socket
 int fd_cpu_dispatch;
 int fd_cpu_interrupt;
 int fd_memoria;
 int fd_kernel_dispatch;
 int fd_kernel_interrupt;
+
+//Variables de los registros de la CPU
+uint32_t PROGRAM_COUNTER=0;
+uint8_t AX;
+uint8_t BX;
+uint8_t CX;
+uint8_t DX;
+uint32_t EAX;
+uint32_t EBX;
+uint32_t ECX;
+uint32_t EDX;
+uint32_t SI;
+uint32_t DI;
+
+extern t_list* INSTRUCTION_LIST;
+
 
 int main(int argc, char* argv[]){
     decir_hola("CPU");
