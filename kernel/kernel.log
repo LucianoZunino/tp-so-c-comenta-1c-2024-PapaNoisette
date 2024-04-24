@@ -1,4 +1,122 @@
-[INFO] 19:01:46:572 Kernel/(9143:9143): Leí la IP_MEMORIA 127.0.0.1, la IP_CPU 127.0.0.1, y el PUERTO_ESCUCHA 8003
+[INFO] 12:29:17:157 kernel/(2625:2625): Arranca el modulo KERNEL
+[INFO] 12:29:17:158 kernel/(2625:2625): >>> Server Kernel escuchando... <<<
+[INFO] 12:29:17:158 kernel/(2625:2625): Esperando conexion de Interfaz E/S
+[INFO] 12:29:26:862 kernel/(2625:2625): Se conecto el cliente: E/S
 
-[INFO] 13:08:10:107 Kernel/(2326:2326): Leí la IP_MEMORIA 127.0.0.1, la IP_CPU 127.0.0.1, y el PUERTO_ESCUCHA 8003
+[ERROR] 12:29:40:338 kernel/(2625:2760): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[INFO] 12:33:05:286 kernel/(3234:3234): Arranca el modulo KERNEL
+[INFO] 12:33:05:286 kernel/(3234:3234): >>> Server Kernel escuchando... <<<
+[INFO] 12:33:05:286 kernel/(3234:3234): Esperando conexion de Interfaz E/S
+[INFO] 12:33:07:199 kernel/(3234:3234): Se conecto el cliente: E/S
 
+[INFO] 12:36:32:209 kernel/(3734:3734): Arranca el modulo KERNEL
+[INFO] 12:36:32:210 kernel/(3734:3734): >>> Server Kernel escuchando... <<<
+[INFO] 12:36:32:212 kernel/(3734:3734): Esperando conexion de Interfaz E/S
+[INFO] 12:36:33:844 kernel/(3734:3734): Se conecto el cliente: E/S
+
+[ERROR] 12:36:36:414 kernel/(3734:3827): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 12:36:36:415 kernel/(3734:3825): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 12:36:55:938 kernel/(3734:3829): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 12:37:26:593 kernel/(3734:3831): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[INFO] 12:37:41:153 kernel/(4230:4230): Arranca el modulo KERNEL
+[INFO] 12:37:41:156 kernel/(4230:4230): >>> Server Kernel escuchando... <<<
+[INFO] 12:37:41:157 kernel/(4230:4230): Esperando conexion de Interfaz E/S
+[INFO] 12:37:43:149 kernel/(4230:4230): Se conecto el cliente: E/S
+
+[ERROR] 12:37:45:206 kernel/(4230:4322): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 12:37:45:206 kernel/(4230:4321): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 12:37:46:562 kernel/(4230:4324): La Memoria se desconecto de Kernel. Terminando servidor.
+[INFO] 19:06:16:072 kernel/(3621:3621): Arranca el modulo KERNEL
+[INFO] 19:06:16:073 kernel/(3621:3621): >>> Server Kernel escuchando... <<<
+[INFO] 19:06:16:073 kernel/(3621:3621): Esperando conexion de Interfaz E/S
+[INFO] 19:06:20:845 kernel/(3621:3621): Se conecto el cliente: E/S
+
+[ERROR] 19:06:30:642 kernel/(3621:3757): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:06:30:643 kernel/(3621:3755): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:06:30:644 kernel/(3621:3754): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:06:30:644 kernel/(3621:3753): El Dispatch se desconecto de Kernel. Terminando servidor.
+[INFO] 19:12:34:802 kernel/(4577:4577): Arranca el modulo KERNEL
+[INFO] 19:12:34:803 kernel/(4577:4577): >>> Server Kernel escuchando... <<<
+[INFO] 19:12:34:804 kernel/(4577:4577): Esperando conexion de Interfaz E/S
+[INFO] 19:12:39:166 kernel/(4577:4577): Se conecto el cliente: E/S
+
+[ERROR] 19:15:47:722 kernel/(4577:4673): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:15:47:726 kernel/(4577:4670): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:15:47:726 kernel/(4577:4669): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:15:48:939 kernel/(4577:4674): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[INFO] 19:16:05:025 kernel/(5163:5163): Arranca el modulo KERNEL
+[INFO] 19:16:05:025 kernel/(5163:5163): >>> Server Kernel escuchando... <<<
+[INFO] 19:16:05:027 kernel/(5163:5163): Esperando conexion de Interfaz E/S
+[INFO] 19:16:12:809 kernel/(5163:5163): Se conecto el cliente: E/S
+
+[ERROR] 19:23:58:062 kernel/(5163:5292): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:23:58:062 kernel/(5163:5290): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:23:58:065 kernel/(5163:5288): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:23:58:065 kernel/(5163:5286): El Dispatch se desconecto de Kernel. Terminando servidor.
+[INFO] 19:23:58:065 kernel/(5163:5163): Handshake OK
+[INFO] 19:24:15:695 kernel/(6220:6220): Arranca el modulo KERNEL
+[INFO] 19:24:15:695 kernel/(6220:6220): >>> Server Kernel escuchando... <<<
+[INFO] 19:24:15:696 kernel/(6220:6220): Esperando conexion de Interfaz E/S
+[INFO] 19:24:18:497 kernel/(6220:6220): Se conecto el cliente: E/S
+
+[WARNING] 19:24:18:502 kernel/(6220:6311): Operacion desconocida de Dispatch-Kernel.
+[INFO] 19:31:44:108 kernel/(6906:6906): Arranca el modulo KERNEL
+[INFO] 19:31:44:108 kernel/(6906:6906): >>> Server Kernel escuchando... <<<
+[INFO] 19:31:44:109 kernel/(6906:6906): Esperando conexion de Interfaz E/S
+[INFO] 19:31:47:379 kernel/(6906:6906): Se conecto el cliente: E/S
+
+[WARNING] 19:31:47:381 kernel/(6906:7033): Operacion desconocida de Dispatch-Kernel.
+[INFO] 19:31:47:381 kernel/(6906:7033): Cop: 0
+[INFO] 19:52:45:019 kernel/(34658:34658): Arranca el modulo KERNEL
+[INFO] 19:52:45:019 kernel/(34658:34658): >>> Server Kernel escuchando... <<<
+[INFO] 19:52:45:019 kernel/(34658:34658): Esperando conexion de Interfaz E/S
+[INFO] 19:52:48:639 kernel/(34658:34658): Se conecto el cliente: E/S
+
+[INFO] 19:52:48:639 kernel/(34658:34658): Handshake OK
+[ERROR] 19:54:33:701 kernel/(34658:34939): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:54:33:702 kernel/(34658:34938): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:54:33:702 kernel/(34658:34937): El Dispatch se desconecto de Kernel. Terminando servidor.
+[INFO] 19:54:43:452 kernel/(40235:40235): Arranca el modulo KERNEL
+[INFO] 19:54:43:452 kernel/(40235:40235): >>> Server Kernel escuchando... <<<
+[INFO] 19:54:43:453 kernel/(40235:40235): Esperando conexion de Interfaz E/S
+[INFO] 19:54:45:103 kernel/(40235:40235): Se conecto el cliente: E/S
+
+[WARNING] 19:54:45:104 kernel/(40235:40421): Operacion desconocida de Dispatch-Kernel.
+[INFO] 19:54:45:105 kernel/(40235:40421): Cop: 0
+[ERROR] 19:54:56:092 kernel/(40235:40425): La Memoria se desconecto de Kernel. Terminando servidor.
+[INFO] 19:54:56:094 kernel/(40235:40235): Handshake OK
+[ERROR] 19:54:56:094 kernel/(40235:40423): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 19:54:56:094 kernel/(40235:40421): El Dispatch se desconecto de Kernel. Terminando servidor.
+[INFO] 19:55:19:136 kernel/(42654:42654): Arranca el modulo KERNEL
+[INFO] 19:55:19:137 kernel/(42654:42654): >>> Server Kernel escuchando... <<<
+[INFO] 19:55:19:137 kernel/(42654:42654): Esperando conexion de Interfaz E/S
+[INFO] 19:55:21:911 kernel/(42654:42654): Se conecto el cliente: E/S
+
+[WARNING] 19:55:21:918 kernel/(42654:42816): Operacion desconocida de Dispatch-Kernel.
+[INFO] 19:55:21:918 kernel/(42654:42816): Cop: 0
+[INFO] 20:01:23:718 kernel/(43448:43448): Arranca el modulo KERNEL
+[INFO] 20:01:23:718 kernel/(43448:43448): >>> Server Kernel escuchando... <<<
+[INFO] 20:01:23:719 kernel/(43448:43448): Esperando conexion de Interfaz E/S
+[INFO] 20:01:26:413 kernel/(43448:43448): Se conecto el cliente: E/S
+
+[WARNING] 20:01:26:415 kernel/(43448:43606): Operacion desconocida de Dispatch-Kernel.
+[INFO] 20:01:26:416 kernel/(43448:43606): Cop: 0
+[ERROR] 20:04:36:385 kernel/(43448:43608): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 20:04:36:386 kernel/(43448:43607): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 20:04:36:386 kernel/(43448:43606): El Dispatch se desconecto de Kernel. Terminando servidor.
+[INFO] 20:04:36:386 kernel/(43448:43448): Handshake OK
+[INFO] 20:05:43:787 kernel/(44596:44596): Arranca el modulo KERNEL
+[INFO] 20:05:43:787 kernel/(44596:44596): >>> Server Kernel escuchando... <<<
+[INFO] 20:05:43:788 kernel/(44596:44596): Esperando conexion de Interfaz E/S
+[INFO] 20:05:47:915 kernel/(44596:44596): Se conecto el cliente: E/S
+
+[INFO] 20:05:47:918 kernel/(44596:44596): Handshake OK
+[INFO] 20:06:55:364 kernel/(45215:45215): Arranca el modulo KERNEL
+[INFO] 20:06:55:369 kernel/(45215:45215): >>> Server Kernel escuchando... <<<
+[INFO] 20:06:55:379 kernel/(45215:45215): Esperando conexion de Interfaz E/S
+[INFO] 20:06:58:622 kernel/(45215:45215): Se conecto el cliente: E/S
+
+[INFO] 20:06:58:623 kernel/(45215:45215): Handshake OK
+[ERROR] 20:07:03:425 kernel/(45215:45342): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 20:07:03:426 kernel/(45215:45339): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 20:07:03:426 kernel/(45215:45338): El Dispatch se desconecto de Kernel. Terminando servidor.

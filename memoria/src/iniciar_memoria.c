@@ -1,12 +1,12 @@
 #include "iniciar_memoria.h"
 
-t_log* logger_memoria;
 t_config* config_memoria;
-char* puerto_escucha;
-int tam_memoria;
-int tam_pagina;
-char* path_instrucciones;
-int retardo_respuesta;
+
+void iniciar_memoria(){
+    iniciar_logger_memoria();
+    iniciar_config_memoria();
+    //imprimir_config_memoria();
+}
 
 void iniciar_logger_memoria(){
     logger_memoria = iniciar_logger("memoria.log", "Memoria");
@@ -14,6 +14,7 @@ void iniciar_logger_memoria(){
 
 void iniciar_config_memoria(){
     config_memoria = iniciar_config("memoria.config");
+    
     puerto_escucha = config_get_string_value(config_memoria, "PUERTO_ESCUCHA");
     tam_memoria = config_get_int_value(config_memoria, "TAM_MEMORIA");
     tam_pagina = config_get_int_value(config_memoria, "TAM_PAGINA");;
@@ -21,13 +22,15 @@ void iniciar_config_memoria(){
     retardo_respuesta = config_get_int_value(config_memoria, "RETARDO_RESPUESTA");;
 }
 
-void iniciar_memoria(){
-    iniciar_logger_memoria();
-    iniciar_config_memoria();
-    //imprimir_config()?
+void imprimir_config_memoria(){
+    printf("PUERTO_ESCUCHA:%s\n",puerto_escucha);
+    printf("TAM_MEMORIA:%d\n",tam_memoria);
+    printf("TAM_PAGINA:%d\n",tam_pagina);
+    printf("PATH_INSTRUCCIONES:%s\n",path_instrucciones);
+    printf("RETARDO_RESPUESTA:%d\n",retardo_respuesta);
 }
 
-void finalizar_memoria(){ // capaz debería estar en otro archivo?
+void finalizar_memoria(){
     log_destroy(logger_memoria);
     config_destroy(config_memoria);
 }
