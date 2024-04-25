@@ -88,6 +88,7 @@ int main(int argc, char* argv[]){
     // Inicia la consola interactiva
     pthread_t hilo_consola_interactiva;
     pthread_create(&hilo_consola_interactiva, NULL, (void*)iniciar_consola_interactiva, NULL);
+    log_info(logger_kernel, "CONSOLA INTERACTIVA INICIADA");
     pthread_join(hilo_consola_interactiva, NULL); // Frena el hilo principal hasta que el hilo_consola_interactiva no finalice
 	// Porque si se el hilo_consola_interactiva se desacopla del principal termina el modulo Kernel
 

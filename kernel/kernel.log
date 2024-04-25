@@ -401,3 +401,173 @@
 [INFO] 04:12:29:281 kernel/(9911:9911): Esperando conexion de Interfaz E/S
 [INFO] 04:12:29:282 kernel/(9911:9911): Se conecto el cliente: E/S
 
+[INFO] 14:02:17:978 kernel/(3294:3294): Arranca el modulo KERNEL
+[INFO] 14:02:17:979 kernel/(3294:3294): >>> Server Kernel escuchando... <<<
+[ERROR] 14:02:17:979 kernel/(3294:3294): Error conectando al Servidor,apagado o invalido
+[ERROR] 14:02:17:979 kernel/(3294:3294): Error conectando al Servidor,apagado o invalido
+[ERROR] 14:02:17:979 kernel/(3294:3294): Error conectando al Servidor,apagado o invalido
+[INFO] 14:02:17:980 kernel/(3294:3294): Esperando conexion de Interfaz E/S
+[INFO] 14:02:38:303 kernel/(3294:3294): Se conecto el cliente: E/S
+
+[INFO] 14:02:38:303 kernel/(3294:3294): Handshake OK
+[INFO] 14:02:38:303 kernel/(3294:3294): Handshake OK
+[INFO] 14:02:38:303 kernel/(3294:3294): Handshake OK
+[INFO] 14:02:38:309 kernel/(3294:3353): Recibido handshake (null).
+[ERROR] 14:02:38:311 kernel/(3294:3352): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 14:02:38:314 kernel/(3294:3351): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 14:02:38:315 kernel/(3294:3350): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 14:06:38:039 kernel/(3294:3353): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[INFO] 14:13:38:540 kernel/(3650:3650): Arranca el modulo KERNEL
+[INFO] 14:13:38:541 kernel/(3650:3650): >>> Server Kernel escuchando... <<<
+[INFO] 14:13:38:543 kernel/(3650:3650): Esperando conexion de Interfaz E/S
+[INFO] 14:13:44:377 kernel/(3650:3650): Se conecto el cliente: E/S
+
+[INFO] 14:13:44:378 kernel/(3650:3650): Handshake OK
+[INFO] 14:13:44:378 kernel/(3650:3650): Handshake OK
+[INFO] 14:13:44:378 kernel/(3650:3650): Handshake OK
+[INFO] 14:13:44:379 kernel/(3650:3692): Recibido handshake (null).
+[ERROR] 14:14:39:143 kernel/(3650:3693): Comando no reconocido
+[ERROR] 14:14:39:143 kernel/(3650:3693): Comando no válido
+[INFO] 14:43:45:568 kernel/(15545:15545): Arranca el modulo KERNEL
+[INFO] 14:43:45:569 kernel/(15545:15545): >>> Server Kernel escuchando... <<<
+[INFO] 14:43:45:573 kernel/(15545:15545): Esperando conexion de Interfaz E/S
+[INFO] 14:43:54:407 kernel/(15545:15545): Se conecto el cliente: E/S
+
+[INFO] 14:43:54:417 kernel/(15545:15545): Handshake OK
+[INFO] 14:43:54:417 kernel/(15545:15545): Handshake OK
+[INFO] 14:43:54:417 kernel/(15545:15545): Handshake OK
+[INFO] 14:43:54:417 kernel/(15545:15592): Recibido handshake (null).
+[INFO] 15:14:55:116 kernel/(64926:64926): Arranca el modulo KERNEL
+[INFO] 15:14:55:117 kernel/(64926:64926): >>> Server Kernel escuchando... <<<
+[INFO] 15:14:55:121 kernel/(64926:64926): Esperando conexion de Interfaz E/S
+[INFO] 15:14:57:166 kernel/(64926:64926): Se conecto el cliente: E/S
+
+[INFO] 15:14:57:173 kernel/(64926:64926): Handshake OK
+[INFO] 15:14:57:180 kernel/(64926:64926): Handshake OK
+[INFO] 15:14:57:181 kernel/(64926:64926): Handshake OK
+[INFO] 15:14:57:181 kernel/(64926:64926): CONSOLA INTERACTIVA INICIADA
+[INFO] 15:14:57:182 kernel/(64926:64984): Recibido handshake (null).
+[INFO] 15:15:39:559 kernel/(64926:64985): FUERA DEL WHILE
+[INFO] 15:15:39:559 kernel/(64926:64985): DENTRO DEL WHILE
+[INFO] 15:15:39:559 kernel/(64926:64985): DENTRO DEL VALIDACION
+[INFO] 15:15:39:559 kernel/(64926:64985): VALIDACION CORRECTA
+[INFO] 15:15:39:559 kernel/(64926:64985): POR EJECUTAR INSTRUCCION
+[INFO] 15:15:39:559 kernel/(64926:64985): DENTRO DEL IF DE EJECUTAR INSTRUCCION
+[INFO] 15:29:13:416 kernel/(118624:118624): Arranca el modulo KERNEL
+[INFO] 15:29:13:421 kernel/(118624:118624): >>> Server Kernel escuchando... <<<
+[INFO] 15:29:13:423 kernel/(118624:118624): Esperando conexion de Interfaz E/S
+[INFO] 15:29:15:745 kernel/(118624:118624): Se conecto el cliente: E/S
+
+[INFO] 15:29:15:751 kernel/(118624:118624): Handshake OK
+[INFO] 15:29:15:761 kernel/(118624:118624): Handshake OK
+[INFO] 15:29:15:761 kernel/(118624:118624): Handshake OK
+[INFO] 15:29:15:762 kernel/(118624:118624): CONSOLA INTERACTIVA INICIADA
+[INFO] 15:29:15:762 kernel/(118624:119336): Recibido handshake (null).
+[INFO] 15:29:32:748 kernel/(118624:119337): FUERA DEL WHILE
+[INFO] 15:29:32:752 kernel/(118624:119337): DENTRO DEL WHILE
+[INFO] 15:29:32:752 kernel/(118624:119337): DENTRO DEL VALIDACION
+[INFO] 15:29:32:752 kernel/(118624:119337): VALIDACION CORRECTA
+[INFO] 15:29:32:752 kernel/(118624:119337): POR EJECUTAR INSTRUCCION
+[INFO] 15:29:32:752 kernel/(118624:119337): DENTRO DEL IF DE EJECUTAR INSTRUCCION
+[INFO] 15:30:09:671 kernel/(118624:119337): DENTRO DEL WHILE
+[INFO] 15:30:09:671 kernel/(118624:119337): DENTRO DEL VALIDACION
+[INFO] 15:30:09:671 kernel/(118624:119337): VALIDACION CORRECTA
+[INFO] 15:30:09:671 kernel/(118624:119337): POR EJECUTAR INSTRUCCION
+[INFO] 15:30:09:672 kernel/(118624:119337): DENTRO DEL IF DE EJECUTAR INSTRUCCION
+[ERROR] 15:31:22:786 kernel/(118624:119335): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 15:31:22:793 kernel/(118624:119333): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 15:31:22:794 kernel/(118624:119334): El Interrupt se desconecto de Kernel. Terminando servidor.
+[INFO] 16:16:37:912 kernel/(4202:4202): Arranca el modulo KERNEL
+[INFO] 16:16:37:914 kernel/(4202:4202): >>> Server Kernel escuchando... <<<
+[ERROR] 16:16:37:914 kernel/(4202:4202): Error conectando al Servidor,apagado o invalido
+[ERROR] 16:16:37:915 kernel/(4202:4202): Error conectando al Servidor,apagado o invalido
+[ERROR] 16:16:37:915 kernel/(4202:4202): Error conectando al Servidor,apagado o invalido
+[INFO] 16:16:37:915 kernel/(4202:4202): Esperando conexion de Interfaz E/S
+[INFO] 16:19:45:142 kernel/(4536:4536): Arranca el modulo KERNEL
+[INFO] 16:19:45:143 kernel/(4536:4536): >>> Server Kernel escuchando... <<<
+[INFO] 16:19:45:144 kernel/(4536:4536): Esperando conexion de Interfaz E/S
+[INFO] 16:19:51:333 kernel/(4536:4536): Se conecto el cliente: E/S
+
+[INFO] 16:19:51:334 kernel/(4536:4536): Handshake OK
+[INFO] 16:19:51:334 kernel/(4536:4536): Handshake OK
+[INFO] 16:19:51:335 kernel/(4536:4536): Handshake OK
+[INFO] 16:19:51:335 kernel/(4536:4536): CONSOLA INTERACTIVA INICIADA
+[INFO] 16:19:51:335 kernel/(4536:4578): Recibido handshake (null).
+[INFO] 16:20:10:043 kernel/(4536:4579): FUERA DEL WHILE
+[INFO] 16:20:10:043 kernel/(4536:4579): DENTRO DEL WHILE
+[INFO] 16:20:10:043 kernel/(4536:4579): DENTRO DEL VALIDACION
+[ERROR] 16:20:10:043 kernel/(4536:4579): Comando no reconocido
+[ERROR] 16:20:10:043 kernel/(4536:4579): Comando no válido
+[INFO] 16:21:03:002 kernel/(4536:4579): DENTRO DEL WHILE
+[INFO] 16:21:03:002 kernel/(4536:4579): DENTRO DEL VALIDACION
+[ERROR] 16:21:03:002 kernel/(4536:4579): Comando no reconocido
+[ERROR] 16:21:03:002 kernel/(4536:4579): Comando no válido
+[INFO] 16:28:31:034 kernel/(5114:5114): Arranca el modulo KERNEL
+[INFO] 16:28:31:035 kernel/(5114:5114): >>> Server Kernel escuchando... <<<
+[INFO] 16:28:31:036 kernel/(5114:5114): Esperando conexion de Interfaz E/S
+[INFO] 16:28:32:968 kernel/(5114:5114): Se conecto el cliente: E/S
+
+[INFO] 16:28:32:968 kernel/(5114:5114): Handshake OK
+[INFO] 16:28:32:969 kernel/(5114:5114): Handshake OK
+[INFO] 16:28:32:969 kernel/(5114:5114): Handshake OK
+[INFO] 16:28:32:969 kernel/(5114:5114): CONSOLA INTERACTIVA INICIADA
+[INFO] 16:28:32:969 kernel/(5114:5156): Recibido handshake (null).
+[INFO] 16:28:46:332 kernel/(5114:5157): FUERA DEL WHILE
+[INFO] 16:28:46:332 kernel/(5114:5157): DENTRO DEL WHILE
+[INFO] 16:28:46:332 kernel/(5114:5157): DENTRO DEL VALIDACION
+[ERROR] 16:28:46:332 kernel/(5114:5157): Comando no reconocido
+[ERROR] 16:28:46:332 kernel/(5114:5157): Comando no válido
+[INFO] 16:29:07:296 kernel/(5114:5157): DENTRO DEL WHILE
+[INFO] 16:29:07:296 kernel/(5114:5157): DENTRO DEL VALIDACION
+[INFO] 16:29:07:296 kernel/(5114:5157): VALIDACION CORRECTA
+[INFO] 16:29:07:296 kernel/(5114:5157): POR EJECUTAR INSTRUCCION
+[ERROR] 16:29:07:296 kernel/(5114:5157): Comando no reconocido
+[INFO] 16:30:59:764 kernel/(5418:5418): Arranca el modulo KERNEL
+[INFO] 16:30:59:764 kernel/(5418:5418): >>> Server Kernel escuchando... <<<
+[INFO] 16:30:59:769 kernel/(5418:5418): Esperando conexion de Interfaz E/S
+[INFO] 16:31:02:300 kernel/(5418:5418): Se conecto el cliente: E/S
+
+[INFO] 16:31:02:301 kernel/(5418:5418): Handshake OK
+[INFO] 16:31:02:301 kernel/(5418:5418): Handshake OK
+[INFO] 16:31:02:302 kernel/(5418:5418): Handshake OK
+[INFO] 16:31:02:302 kernel/(5418:5418): CONSOLA INTERACTIVA INICIADA
+[INFO] 16:31:02:302 kernel/(5418:5460): Recibido handshake (null).
+[INFO] 16:31:21:758 kernel/(5418:5461): FUERA DEL WHILE
+[INFO] 16:31:21:758 kernel/(5418:5461): DENTRO DEL WHILE
+[INFO] 16:31:21:758 kernel/(5418:5461): DENTRO DEL VALIDACION
+[ERROR] 16:31:21:758 kernel/(5418:5461): Comando no reconocido
+[ERROR] 16:31:21:759 kernel/(5418:5461): Comando no válido
+[INFO] 16:49:02:190 kernel/(6595:6595): Arranca el modulo KERNEL
+[ERROR] 16:49:02:196 kernel/(6595:6595): Error iniciando Servidor, fallo al bindear el socket
+[INFO] 16:49:02:196 kernel/(6595:6595): Esperando conexion de Interfaz E/S
+[INFO] 16:49:02:196 kernel/(6595:6595): Se conecto el cliente: E/S
+
+[INFO] 16:49:14:184 kernel/(6595:6595): Handshake OK
+[INFO] 16:49:14:185 kernel/(6595:6595): Handshake OK
+[INFO] 16:49:14:186 kernel/(6595:6595): Handshake OK
+[ERROR] 16:49:14:201 kernel/(6595:6648): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 16:49:14:212 kernel/(6595:6649): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 16:49:14:217 kernel/(6595:6650): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 16:49:14:227 kernel/(6595:6651): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[INFO] 16:49:14:235 kernel/(6595:6595): CONSOLA INTERACTIVA INICIADA
+[INFO] 16:49:34:231 kernel/(6799:6799): Arranca el modulo KERNEL
+[INFO] 16:49:34:231 kernel/(6799:6799): >>> Server Kernel escuchando... <<<
+[INFO] 16:49:34:232 kernel/(6799:6799): Esperando conexion de Interfaz E/S
+[INFO] 16:49:36:518 kernel/(6799:6799): Se conecto el cliente: E/S
+
+[INFO] 16:49:36:519 kernel/(6799:6799): Handshake OK
+[INFO] 16:49:36:519 kernel/(6799:6799): Handshake OK
+[INFO] 16:49:36:519 kernel/(6799:6799): Handshake OK
+[INFO] 16:49:36:519 kernel/(6799:6799): CONSOLA INTERACTIVA INICIADA
+[INFO] 16:49:36:519 kernel/(6799:6841): Recibido handshake (null).
+[INFO] 16:49:49:629 kernel/(6799:6842): FUERA DEL WHILE
+[INFO] 16:49:49:629 kernel/(6799:6842): DENTRO DEL WHILE
+[INFO] 16:49:49:629 kernel/(6799:6842): DENTRO DEL VALIDACION
+[INFO] 16:49:49:629 kernel/(6799:6842): VALIDACION CORRECTA
+[INFO] 16:49:49:629 kernel/(6799:6842): POR EJECUTAR INSTRUCCION
+[INFO] 16:49:49:629 kernel/(6799:6842): FUERA DEL IF DE EJECUTAR INSTRUCCION
+[INFO] 16:49:49:629 kernel/(6799:6842): HOLA ENTRASTE A I.PROCESO
+
+[ERROR] 16:52:29:698 kernel/(6799:6838): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 16:52:29:698 kernel/(6799:6839): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 16:52:35:067 kernel/(6799:6840): La Memoria se desconecto de Kernel. Terminando servidor.
