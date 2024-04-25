@@ -16,7 +16,10 @@
 typedef enum{
 	HANDSHAKE_OK,                 // CPU DISPATCH -> KERNEL (aunque podríamos usarlo para todos?) 
     MENSAJE_A_MEMORIA,
-	HANDSHAKE_KERNEL            // KERNEL -> CPU DISPATCH
+	HANDSHAKE_KERNEL,             // KERNEL -> CPU DISPATCH
+	HANDSHAKE_ENTRADASALIDA,	  
+	HANDSHAKE_MEMORIA,
+	HANDSHAKE_CPU
 } op_code;
 
 typedef struct{

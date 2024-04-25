@@ -56,7 +56,7 @@ int main(int argc, char* argv[]){
         return EXIT_FAILURE;
     }
 
-    // HANDSHAKE KERNEL - CPU MEMORIA
+    // HANDSHAKE KERNEL - MEMORIA
     if (realizar_handshake(logger_kernel, fd_memoria, HANDSHAKE_KERNEL) == -1){
         return EXIT_FAILURE;
     }

@@ -87,3 +87,11 @@
 [ERROR] 00:30:43:427 entradasalida/(23195:23197): El Kernel se desconecto de Entradasalida. Terminando servidor.
 [INFO] 00:33:01:786 entradasalida/(23873:23873): Arranca el modulo  Entrada/Salida
 [ERROR] 00:33:12:024 entradasalida/(23873:23876): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 03:13:42:876 entradasalida/(7234:7234): Arranca el modulo  Entrada/Salida
+[ERROR] 03:13:42:877 entradasalida/(7234:7234): Error conectando al Servidor,apagado o invalido
+[ERROR] 03:13:42:878 entradasalida/(7234:7240): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[INFO] 03:14:53:981 entradasalida/(7421:7421): Arranca el modulo  Entrada/Salida
+[ERROR] 03:25:07:027 entradasalida/(7421:7425): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[INFO] 04:06:56:636 entradasalida/(9469:9469): Arranca el modulo  Entrada/Salida
+[INFO] 04:11:54:100 entradasalida/(9780:9780): Arranca el modulo  Entrada/Salida
+[ERROR] 04:11:54:100 entradasalida/(9780:9780): Error conectando al Servidor,apagado o invalido

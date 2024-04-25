@@ -43,6 +43,12 @@ int main(int argc, char* argv[]){
 	log_info(logger_cpu, "Esperando conexion de Kernel en Interrupt");
 	fd_kernel_interrupt = esperar_cliente(fd_cpu_interrupt, logger_cpu, "Kernel-Interrupt");
 
+
+	// Handshake CPU - Memoria
+	if (realizar_handshake(logger_cpu, fd_memoria, HANDSHAKE_CPU) == -1){
+        return EXIT_FAILURE;
+    }
+
 	// Escuchar los mensajes de Kernel-Dispatch
 	pthread_t hilo_kernel_dispatch;
 	pthread_create(&hilo_kernel_dispatch, NULL, (void*)escuchar_mensajes_kernel_dispatch, NULL); // Crea el hilo y le pasa la funcion a ejecutarse

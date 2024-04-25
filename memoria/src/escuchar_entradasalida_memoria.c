@@ -7,6 +7,9 @@ void escuchar_mensajes_entradasalida_memoria(){
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
+			case HANDSHAKE_ENTRADASALIDA:
+				aceptar_handshake(logger_memoria, fd_entradasalida, cod_op);
+				break;
 			case -1:
 				log_error(logger_memoria, "La Entradasalida se desconecto de Memoria. Terminando servidor.");
 				desconexion_entradasalida_memoria = 1;

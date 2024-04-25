@@ -331,3 +331,73 @@
 [INFO] 00:33:01:788 kernel/(23753:23753): Handshake OK
 [INFO] 00:33:01:788 kernel/(23753:23753): Handshake OK
 [INFO] 00:33:01:789 kernel/(23753:23753): Handshake OK
+[INFO] 03:09:59:287 kernel/(6970:6970): Arranca el modulo KERNEL
+[INFO] 03:09:59:288 kernel/(6970:6970): >>> Server Kernel escuchando... <<<
+[ERROR] 03:09:59:288 kernel/(6970:6970): Error conectando al Servidor,apagado o invalido
+[ERROR] 03:09:59:288 kernel/(6970:6970): Error conectando al Servidor,apagado o invalido
+[ERROR] 03:09:59:288 kernel/(6970:6970): Error conectando al Servidor,apagado o invalido
+[INFO] 03:09:59:288 kernel/(6970:6970): Esperando conexion de Interfaz E/S
+[INFO] 03:11:41:388 kernel/(7097:7097): Arranca el modulo KERNEL
+[INFO] 03:11:41:388 kernel/(7097:7097): >>> Server Kernel escuchando... <<<
+[ERROR] 03:11:41:389 kernel/(7097:7097): Error conectando al Servidor,apagado o invalido
+[INFO] 03:11:41:389 kernel/(7097:7097): Esperando conexion de Interfaz E/S
+[INFO] 03:13:42:877 kernel/(7097:7097): Se conecto el cliente: E/S
+
+[INFO] 03:13:42:877 kernel/(7097:7097): Handshake OK
+[INFO] 03:13:42:877 kernel/(7097:7097): Handshake OK
+[INFO] 03:13:42:877 kernel/(7097:7097): Handshake OK
+[ERROR] 03:13:42:878 kernel/(7097:7235): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 03:13:42:878 kernel/(7097:7237): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 03:13:42:878 kernel/(7097:7236): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 03:14:08:182 kernel/(7097:7238): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[INFO] 03:14:36:201 kernel/(7386:7386): Arranca el modulo KERNEL
+[ERROR] 03:14:36:201 kernel/(7386:7386): Error iniciando Servidor, fallo al bindear el socket
+[INFO] 03:14:36:202 kernel/(7386:7386): Esperando conexion de Interfaz E/S
+[INFO] 03:14:36:202 kernel/(7386:7386): Se conecto el cliente: E/S
+
+[INFO] 03:14:36:202 kernel/(7386:7386): Handshake OK
+[INFO] 03:14:36:202 kernel/(7386:7386): Handshake OK
+[INFO] 03:14:53:982 kernel/(7386:7386): Handshake OK
+[ERROR] 03:14:53:982 kernel/(7386:7430): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[ERROR] 03:15:25:417 kernel/(7386:7431): Comando no reconocido
+[ERROR] 03:15:25:417 kernel/(7386:7431): Comando no válido
+[INFO] 04:06:46:054 kernel/(9300:9300): Arranca el modulo KERNEL
+[ERROR] 04:06:46:055 kernel/(9300:9300): Error iniciando Servidor, fallo al bindear el socket
+[ERROR] 04:06:46:055 kernel/(9300:9300): Error conectando al Servidor,apagado o invalido
+[ERROR] 04:06:46:055 kernel/(9300:9300): Error conectando al Servidor,apagado o invalido
+[ERROR] 04:06:46:055 kernel/(9300:9300): Error conectando al Servidor,apagado o invalido
+[INFO] 04:06:46:055 kernel/(9300:9300): Esperando conexion de Interfaz E/S
+[INFO] 04:06:46:055 kernel/(9300:9300): Se conecto el cliente: E/S
+
+[INFO] 04:06:46:055 kernel/(9300:9300): Handshake OK
+[INFO] 04:06:46:055 kernel/(9300:9300): Handshake OK
+[INFO] 04:06:46:056 kernel/(9300:9300): Handshake OK
+[ERROR] 04:06:46:056 kernel/(9300:9301): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 04:06:46:056 kernel/(9300:9304): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[ERROR] 04:06:46:056 kernel/(9300:9302): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 04:06:46:056 kernel/(9300:9303): La Memoria se desconecto de Kernel. Terminando servidor.
+[INFO] 04:11:03:647 kernel/(9646:9646): Arranca el modulo KERNEL
+[ERROR] 04:11:03:647 kernel/(9646:9646): Error iniciando Servidor, fallo al bindear el socket
+[ERROR] 04:11:03:648 kernel/(9646:9646): Error conectando al Servidor,apagado o invalido
+[ERROR] 04:11:03:649 kernel/(9646:9646): Error conectando al Servidor,apagado o invalido
+[ERROR] 04:11:03:649 kernel/(9646:9646): Error conectando al Servidor,apagado o invalido
+[INFO] 04:11:03:649 kernel/(9646:9646): Esperando conexion de Interfaz E/S
+[INFO] 04:11:03:649 kernel/(9646:9646): Se conecto el cliente: E/S
+
+[INFO] 04:11:03:649 kernel/(9646:9646): Handshake OK
+[INFO] 04:11:03:649 kernel/(9646:9646): Handshake OK
+[INFO] 04:11:03:649 kernel/(9646:9646): Handshake OK
+[ERROR] 04:11:03:651 kernel/(9646:9647): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 04:11:03:651 kernel/(9646:9650): La Entradasalida se desconecto de Kernel. Terminando servidor.
+[ERROR] 04:11:03:651 kernel/(9646:9649): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 04:11:03:651 kernel/(9646:9648): El Interrupt se desconecto de Kernel. Terminando servidor.
+[INFO] 04:12:11:114 kernel/(9879:9879): Arranca el modulo KERNEL
+[ERROR] 04:12:11:114 kernel/(9879:9879): Error iniciando Servidor, fallo al bindear el socket
+[INFO] 04:12:11:115 kernel/(9879:9879): Esperando conexion de Interfaz E/S
+[INFO] 04:12:11:115 kernel/(9879:9879): Se conecto el cliente: E/S
+
+[INFO] 04:12:29:281 kernel/(9911:9911): Arranca el modulo KERNEL
+[ERROR] 04:12:29:281 kernel/(9911:9911): Error iniciando Servidor, fallo al bindear el socket
+[INFO] 04:12:29:281 kernel/(9911:9911): Esperando conexion de Interfaz E/S
+[INFO] 04:12:29:282 kernel/(9911:9911): Se conecto el cliente: E/S
+

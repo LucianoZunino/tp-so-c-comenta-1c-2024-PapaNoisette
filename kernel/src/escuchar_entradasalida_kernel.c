@@ -7,6 +7,9 @@ void escuchar_mensajes_entradasalida_kernel(){
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
+			case HANDSHAKE_ENTRADASALIDA:
+				aceptar_handshake(logger_kernel, fd_entradasalida, cod_op);
+				break;
 			case -1:
 				log_error(logger_kernel, "La Entradasalida se desconecto de Kernel. Terminando servidor.");
 				desconexion_entradasalida_kernel = 1;
