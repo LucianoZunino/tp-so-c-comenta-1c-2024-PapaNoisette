@@ -32,6 +32,19 @@ typedef struct{
 	t_buffer* buffer;
 } t_paquete;
 
+// COMANDOS QUE VA A UTILIZAR LA CONSOLA, SIRVE PARA VALIDACION Y EJECUCION DE COMANDOS EN KERNEL
+typedef enum{
+	EJECUTAR_SCRIPT,
+	INICIAR_PROCESO,
+	FINALIZAR_PROCESO,
+	INICIAR_PLANIFICACION,
+	DETENER_PLANIFICACION,
+	PROCESO_ESTADO,
+	MULTIPROGRAMACION,
+	MENSAJE_A_MEMORIA1,
+	COMANDO_INVALIDO
+}comando_consola;
+
 // Funciones de init
 t_config* iniciar_config(char* ruta_config);
 t_log* iniciar_logger(char* ruta_logger, char* nombre_logger);
