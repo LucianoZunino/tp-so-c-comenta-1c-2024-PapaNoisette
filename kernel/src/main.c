@@ -47,6 +47,24 @@ int main(int argc, char* argv[]){
     log_info(logger_kernel, "Esperando conexion de Interfaz E/S");
     fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
 
+    if (realizar_handshake(logger_kernel, fd_cpu_dispatch, HANDSHAKE_KERNEL) == -1){
+        printf("IF1\n");
+        return EXIT_FAILURE;
+    }
+
+    // HANDSHAKE KERNEL - CPU INTERRUPT
+    if (realizar_handshake(logger_kernel, fd_cpu_interrupt, HANDSHAKE_KERNEL) == -1){
+        printf("IF2\n");
+        return EXIT_FAILURE;
+    }
+
+    // HANDSHAKE KERNEL - CPU MEMORIA
+    if (realizar_handshake(logger_kernel, fd_memoria, HANDSHAKE_KERNEL) == -1){
+        printf("IF3\n");
+        return EXIT_FAILURE;
+    }
+    printf("ASD\n");
+    
     // Escuchar los mensajes de Dispatch-Kernel
     pthread_t hilo_dispatch_kernel;
 	pthread_create(&hilo_dispatch_kernel, NULL, (void*)escuchar_mensajes_dispatch_kernel, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
@@ -69,20 +87,8 @@ int main(int argc, char* argv[]){
 
     // Kernel se conectó con CPU (Dispatch e Interrupt) y con Memoria. Ahora se hacen los handshakes.
     // HANDSHAKE KERNEL - CPU DISPATCH
-    if (realizar_handshake(logger_kernel, fd_cpu_dispatch, HANDSHAKE_KERNEL) == -1){
-        return EXIT_FAILURE;
-    }
-
-    // HANDSHAKE KERNEL - CPU INTERRUPT
-    if (realizar_handshake(logger_kernel, fd_cpu_interrupt, HANDSHAKE_KERNEL) == -1){
-        return EXIT_FAILURE;
-    }
-
-    // HANDSHAKE KERNEL - CPU MEMORIA
-    if (realizar_handshake(logger_kernel, fd_memoria, HANDSHAKE_KERNEL) == -1){
-        return EXIT_FAILURE;
-    }
-    printf("ASD\n");
+    
+    
     // Inicia la consola interactiva
     pthread_t hilo_consola_interactiva;
     pthread_create(&hilo_consola_interactiva, NULL, (void*)iniciar_consola_interactiva, NULL);

@@ -6,10 +6,7 @@ void escuchar_mensajes_dispatch_kernel(){
 		int cod_op = recibir_operacion(fd_cpu_dispatch); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
-			case HANDSHAKE_OK:
-				return;
-			//	break;
-			
+			//	break;			
 			case -1:
 				log_error(logger_kernel, "El Dispatch se desconecto de Kernel. Terminando servidor.");
 				desconexion_dispatch_kernel = 1;

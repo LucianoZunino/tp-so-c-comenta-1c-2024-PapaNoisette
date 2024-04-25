@@ -305,3 +305,302 @@
 [INFO] 23:38:22:159 cpu/(8332:8458): Recibido handshake HANDSHAKE_KERNEL.
 [INFO] 23:38:22:159 cpu/(8332:8459): Recibido handshake HANDSHAKE_KERNEL.
 [ERROR] 23:39:04:953 cpu/(8332:8460): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 23:49:08:630 cpu/(10717:10717): Arranca el modulo CPU
+[INFO] 23:49:08:630 cpu/(10717:10717): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 23:49:08:630 cpu/(10717:10717): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 23:49:08:630 cpu/(10717:10717): >>>CPU se conecta al server MEMORIA
+[INFO] 23:49:08:630 cpu/(10717:10717): Esperando conexion de Kernel en Dispatch
+[INFO] 23:49:11:580 cpu/(10717:10717): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:49:11:580 cpu/(10717:10717): Esperando conexion de Kernel en Interrupt
+[INFO] 23:49:11:580 cpu/(10717:10717): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:49:16:201 cpu/(10717:10812): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:49:16:208 cpu/(10717:10813): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 23:50:14:720 cpu/(10717:10814): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 23:50:24:688 cpu/(11344:11344): Arranca el modulo CPU
+[INFO] 23:50:24:689 cpu/(11344:11344): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 23:50:24:690 cpu/(11344:11344): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 23:50:24:690 cpu/(11344:11344): >>>CPU se conecta al server MEMORIA
+[INFO] 23:50:24:690 cpu/(11344:11344): Esperando conexion de Kernel en Dispatch
+[INFO] 23:50:26:514 cpu/(11344:11344): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:50:26:514 cpu/(11344:11344): Esperando conexion de Kernel en Interrupt
+[INFO] 23:50:26:514 cpu/(11344:11344): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:50:28:587 cpu/(11344:11471): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:50:28:588 cpu/(11344:11472): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 23:51:50:465 cpu/(11344:11473): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 23:54:20:360 cpu/(12331:12331): Arranca el modulo CPU
+[INFO] 23:54:20:360 cpu/(12331:12331): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 23:54:20:360 cpu/(12331:12331): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 23:54:20:360 cpu/(12331:12331): >>>CPU se conecta al server MEMORIA
+[INFO] 23:54:20:360 cpu/(12331:12331): Esperando conexion de Kernel en Dispatch
+[INFO] 23:54:22:985 cpu/(12331:12331): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:54:22:985 cpu/(12331:12331): Esperando conexion de Kernel en Interrupt
+[INFO] 23:54:22:985 cpu/(12331:12331): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:54:25:345 cpu/(12331:12457): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 23:54:49:085 cpu/(12331:12457): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 23:54:49:085 cpu/(12331:12458): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 23:54:49:088 cpu/(12331:12459): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 23:55:36:431 cpu/(12988:12988): Arranca el modulo CPU
+[INFO] 23:55:36:432 cpu/(12988:12988): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 23:55:36:432 cpu/(12988:12988): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 23:55:36:433 cpu/(12988:12988): >>>CPU se conecta al server MEMORIA
+[INFO] 23:55:36:433 cpu/(12988:12988): Esperando conexion de Kernel en Dispatch
+[INFO] 23:55:38:562 cpu/(12988:12988): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:55:38:565 cpu/(12988:12988): Esperando conexion de Kernel en Interrupt
+[INFO] 23:55:38:565 cpu/(12988:12988): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:55:39:929 cpu/(12988:13114): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 23:56:22:740 cpu/(12988:13114): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 23:56:22:740 cpu/(12988:13115): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 23:56:22:743 cpu/(12988:13116): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 23:56:27:341 cpu/(13606:13606): Arranca el modulo CPU
+[INFO] 23:56:27:341 cpu/(13606:13606): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 23:56:27:342 cpu/(13606:13606): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 23:56:27:342 cpu/(13606:13606): >>>CPU se conecta al server MEMORIA
+[INFO] 23:56:27:342 cpu/(13606:13606): Esperando conexion de Kernel en Dispatch
+[INFO] 23:56:28:773 cpu/(13606:13606): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:56:28:773 cpu/(13606:13606): Esperando conexion de Kernel en Interrupt
+[INFO] 23:56:28:773 cpu/(13606:13606): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:56:30:451 cpu/(13606:13732): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 23:56:44:304 cpu/(13606:13733): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 23:56:44:304 cpu/(13606:13732): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 23:56:44:306 cpu/(13606:13734): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 23:59:40:277 cpu/(14403:14403): Arranca el modulo CPU
+[INFO] 23:59:40:277 cpu/(14403:14403): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 23:59:40:278 cpu/(14403:14403): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 23:59:40:278 cpu/(14403:14403): >>>CPU se conecta al server MEMORIA
+[INFO] 23:59:40:278 cpu/(14403:14403): Esperando conexion de Kernel en Dispatch
+[INFO] 23:59:42:137 cpu/(14403:14403): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:59:42:140 cpu/(14403:14403): Esperando conexion de Kernel en Interrupt
+[INFO] 23:59:42:140 cpu/(14403:14403): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:59:44:859 cpu/(14403:14532): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:01:02:881 cpu/(14403:14533): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:01:02:882 cpu/(14403:14532): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:01:02:885 cpu/(14403:14534): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:01:06:714 cpu/(15233:15233): Arranca el modulo CPU
+[INFO] 00:01:06:715 cpu/(15233:15233): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:01:06:715 cpu/(15233:15233): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:01:06:716 cpu/(15233:15233): >>>CPU se conecta al server MEMORIA
+[INFO] 00:01:06:716 cpu/(15233:15233): Esperando conexion de Kernel en Dispatch
+[INFO] 00:01:08:483 cpu/(15233:15233): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:01:08:483 cpu/(15233:15233): Esperando conexion de Kernel en Interrupt
+[INFO] 00:01:08:483 cpu/(15233:15233): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:01:09:851 cpu/(15233:15362): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:01:22:608 cpu/(15233:15363): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:01:22:608 cpu/(15233:15362): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:01:22:619 cpu/(15233:15364): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:02:11:140 cpu/(15855:15855): Arranca el modulo CPU
+[INFO] 00:02:11:141 cpu/(15855:15855): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:02:11:141 cpu/(15855:15855): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:02:11:141 cpu/(15855:15855): >>>CPU se conecta al server MEMORIA
+[INFO] 00:02:11:141 cpu/(15855:15855): Esperando conexion de Kernel en Dispatch
+[INFO] 00:02:14:026 cpu/(15855:15855): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:02:14:026 cpu/(15855:15855): Esperando conexion de Kernel en Interrupt
+[INFO] 00:02:14:026 cpu/(15855:15855): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:02:16:016 cpu/(15855:15981): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:02:16:016 cpu/(15855:15982): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:02:30:633 cpu/(15855:15982): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:02:30:633 cpu/(15855:15981): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:02:30:634 cpu/(15855:15983): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:06:30:961 cpu/(16429:16429): Arranca el modulo CPU
+[INFO] 00:06:30:961 cpu/(16429:16429): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:06:30:965 cpu/(16429:16429): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:06:30:965 cpu/(16429:16429): >>>CPU se conecta al server MEMORIA
+[INFO] 00:06:30:965 cpu/(16429:16429): Esperando conexion de Kernel en Dispatch
+[INFO] 00:06:32:870 cpu/(16429:16429): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:06:32:870 cpu/(16429:16429): Esperando conexion de Kernel en Interrupt
+[INFO] 00:06:32:871 cpu/(16429:16429): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:06:34:138 cpu/(16429:16555): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:06:34:141 cpu/(16429:16556): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:06:36:690 cpu/(16429:16556): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:06:36:690 cpu/(16429:16555): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:06:36:693 cpu/(16429:16557): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:06:49:297 cpu/(17031:17031): Arranca el modulo CPU
+[INFO] 00:06:49:297 cpu/(17031:17031): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:06:49:297 cpu/(17031:17031): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:06:49:297 cpu/(17031:17031): >>>CPU se conecta al server MEMORIA
+[INFO] 00:06:49:297 cpu/(17031:17031): Esperando conexion de Kernel en Dispatch
+[INFO] 00:06:51:606 cpu/(17031:17031): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:06:51:606 cpu/(17031:17031): Esperando conexion de Kernel en Interrupt
+[INFO] 00:06:51:606 cpu/(17031:17031): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:06:53:185 cpu/(17031:17157): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:07:00:566 cpu/(17031:17158): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:07:00:566 cpu/(17031:17157): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:07:00:571 cpu/(17031:17159): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:07:10:485 cpu/(17411:17411): Arranca el modulo CPU
+[INFO] 00:07:10:487 cpu/(17411:17411): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:07:10:488 cpu/(17411:17411): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:07:10:494 cpu/(17411:17411): >>>CPU se conecta al server MEMORIA
+[INFO] 00:07:10:495 cpu/(17411:17411): Esperando conexion de Kernel en Dispatch
+[INFO] 00:07:15:577 cpu/(17411:17411): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:07:15:577 cpu/(17411:17411): Esperando conexion de Kernel en Interrupt
+[INFO] 00:07:15:577 cpu/(17411:17411): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:07:17:502 cpu/(17411:17475): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:07:20:845 cpu/(17411:17476): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:07:20:845 cpu/(17411:17475): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:07:20:852 cpu/(17411:17477): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:07:25:970 cpu/(17788:17788): Arranca el modulo CPU
+[INFO] 00:07:25:970 cpu/(17788:17788): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:07:25:970 cpu/(17788:17788): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:07:25:971 cpu/(17788:17788): >>>CPU se conecta al server MEMORIA
+[INFO] 00:07:25:971 cpu/(17788:17788): Esperando conexion de Kernel en Dispatch
+[INFO] 00:07:27:865 cpu/(17788:17788): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:07:27:865 cpu/(17788:17788): Esperando conexion de Kernel en Interrupt
+[INFO] 00:07:27:865 cpu/(17788:17788): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:07:29:614 cpu/(17788:17914): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:07:29:615 cpu/(17788:17915): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:07:34:939 cpu/(17788:17916): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:08:38:788 cpu/(18555:18555): Arranca el modulo CPU
+[INFO] 00:08:38:788 cpu/(18555:18555): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:08:38:788 cpu/(18555:18555): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:08:38:789 cpu/(18555:18555): >>>CPU se conecta al server MEMORIA
+[INFO] 00:08:38:789 cpu/(18555:18555): Esperando conexion de Kernel en Dispatch
+[INFO] 00:08:40:376 cpu/(18555:18555): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:08:40:376 cpu/(18555:18555): Esperando conexion de Kernel en Interrupt
+[INFO] 00:08:40:376 cpu/(18555:18555): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:08:42:288 cpu/(18555:18649): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:08:47:933 cpu/(18555:18650): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:08:47:933 cpu/(18555:18649): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:08:47:937 cpu/(18555:18651): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:23:22:853 cpu/(19341:19341): Arranca el modulo CPU
+[INFO] 00:23:22:853 cpu/(19341:19341): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:23:22:853 cpu/(19341:19341): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:23:22:857 cpu/(19341:19341): >>>CPU se conecta al server MEMORIA
+[INFO] 00:23:22:857 cpu/(19341:19341): Esperando conexion de Kernel en Dispatch
+[INFO] 00:23:24:257 cpu/(19341:19341): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:23:24:257 cpu/(19341:19341): Esperando conexion de Kernel en Interrupt
+[INFO] 00:23:24:257 cpu/(19341:19341): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:23:25:125 cpu/(19341:19435): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:23:38:444 cpu/(19341:19436): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:23:38:444 cpu/(19341:19435): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:23:38:445 cpu/(19341:19437): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:24:02:925 cpu/(19955:19955): Arranca el modulo CPU
+[INFO] 00:24:02:925 cpu/(19955:19955): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:24:02:926 cpu/(19955:19955): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:24:02:926 cpu/(19955:19955): >>>CPU se conecta al server MEMORIA
+[INFO] 00:24:02:926 cpu/(19955:19955): Esperando conexion de Kernel en Dispatch
+[INFO] 00:24:04:245 cpu/(19955:19955): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:24:04:245 cpu/(19955:19955): Esperando conexion de Kernel en Interrupt
+[INFO] 00:24:04:245 cpu/(19955:19955): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:24:05:638 cpu/(19955:20049): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:24:05:639 cpu/(19955:20050): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:24:57:540 cpu/(19955:20050): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:24:57:540 cpu/(19955:20049): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:24:57:542 cpu/(19955:20051): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:25:27:560 cpu/(20578:20578): Arranca el modulo CPU
+[INFO] 00:25:27:560 cpu/(20578:20578): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:25:27:560 cpu/(20578:20578): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:25:27:562 cpu/(20578:20578): >>>CPU se conecta al server MEMORIA
+[INFO] 00:25:27:564 cpu/(20578:20578): Esperando conexion de Kernel en Dispatch
+[INFO] 00:25:30:676 cpu/(20578:20578): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:25:30:676 cpu/(20578:20578): Esperando conexion de Kernel en Interrupt
+[INFO] 00:25:30:677 cpu/(20578:20578): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:25:35:234 cpu/(20578:20704): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:25:35:237 cpu/(20578:20705): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:25:53:048 cpu/(20578:20705): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:25:53:050 cpu/(20578:20704): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:25:53:051 cpu/(20578:20706): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:26:00:918 cpu/(21071:21071): Arranca el modulo CPU
+[INFO] 00:26:00:918 cpu/(21071:21071): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:26:00:919 cpu/(21071:21071): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:26:00:919 cpu/(21071:21071): >>>CPU se conecta al server MEMORIA
+[INFO] 00:26:00:919 cpu/(21071:21071): Esperando conexion de Kernel en Dispatch
+[INFO] 00:26:03:248 cpu/(21071:21071): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:26:03:248 cpu/(21071:21071): Esperando conexion de Kernel en Interrupt
+[INFO] 00:26:03:248 cpu/(21071:21071): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:26:06:056 cpu/(21071:21197): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:26:13:544 cpu/(21071:21197): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:26:13:544 cpu/(21071:21198): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:26:13:550 cpu/(21071:21199): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:29:57:046 cpu/(21919:21919): Arranca el modulo CPU
+[INFO] 00:29:57:046 cpu/(21919:21919): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:29:57:048 cpu/(21919:21919): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:29:57:048 cpu/(21919:21919): >>>CPU se conecta al server MEMORIA
+[INFO] 00:29:57:049 cpu/(21919:21919): Esperando conexion de Kernel en Dispatch
+[INFO] 00:29:59:401 cpu/(21919:21919): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:29:59:401 cpu/(21919:21919): Esperando conexion de Kernel en Interrupt
+[INFO] 00:29:59:402 cpu/(21919:21919): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:30:01:547 cpu/(21919:22013): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:30:01:550 cpu/(21919:22014): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:30:16:643 cpu/(21919:22013): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:30:16:643 cpu/(21919:22014): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:30:16:647 cpu/(21919:22015): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:30:21:881 cpu/(22348:22348): Arranca el modulo CPU
+[INFO] 00:30:21:883 cpu/(22348:22348): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:30:21:883 cpu/(22348:22348): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:30:21:883 cpu/(22348:22348): >>>CPU se conecta al server MEMORIA
+[INFO] 00:30:21:883 cpu/(22348:22348): Esperando conexion de Kernel en Dispatch
+[INFO] 00:30:23:742 cpu/(22348:22348): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:30:23:742 cpu/(22348:22348): Esperando conexion de Kernel en Interrupt
+[INFO] 00:30:23:742 cpu/(22348:22348): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:30:25:676 cpu/(22348:22474): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:30:25:676 cpu/(22348:22475): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:30:28:874 cpu/(22348:22475): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:30:28:874 cpu/(22348:22474): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:30:28:876 cpu/(22348:22476): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:30:37:320 cpu/(22947:22947): Arranca el modulo CPU
+[INFO] 00:30:37:320 cpu/(22947:22947): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:30:37:320 cpu/(22947:22947): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:30:37:320 cpu/(22947:22947): >>>CPU se conecta al server MEMORIA
+[INFO] 00:30:37:320 cpu/(22947:22947): Esperando conexion de Kernel en Dispatch
+[INFO] 00:30:39:260 cpu/(22947:22947): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:30:39:260 cpu/(22947:22947): Esperando conexion de Kernel en Interrupt
+[INFO] 00:30:39:260 cpu/(22947:22947): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:30:41:121 cpu/(22947:23076): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:30:41:126 cpu/(22947:23077): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:30:43:427 cpu/(22947:23077): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:30:43:427 cpu/(22947:23076): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:30:43:432 cpu/(22947:23078): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 00:32:57:961 cpu/(23625:23625): Arranca el modulo CPU
+[INFO] 00:32:57:963 cpu/(23625:23625): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:32:57:967 cpu/(23625:23625): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 00:32:57:970 cpu/(23625:23625): >>>CPU se conecta al server MEMORIA
+[INFO] 00:32:57:970 cpu/(23625:23625): Esperando conexion de Kernel en Dispatch
+[INFO] 00:33:00:179 cpu/(23625:23625): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 00:33:00:179 cpu/(23625:23625): Esperando conexion de Kernel en Interrupt
+[INFO] 00:33:00:179 cpu/(23625:23625): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 00:33:01:788 cpu/(23625:23754): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 00:33:01:788 cpu/(23625:23755): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:33:12:024 cpu/(23625:23755): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 00:33:12:024 cpu/(23625:23754): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 00:33:12:025 cpu/(23625:23756): La Memoria se desconecto de CPU. Terminando servidor.

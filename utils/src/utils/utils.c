@@ -1,6 +1,6 @@
 #include "utils.h"
 
-char* op_code_desc[] = {"MENSAJE_A_MEMORIA", "HANDSHAKE_KERNEL", "HANDSHAKE_OK"};
+char* op_code_desc[] = {"HANDSHAKE_OK", "MENSAJE_A_MEMORIA", "HANDSHAKE_KERNEL"};
 
 t_config* iniciar_config(char* ruta_config){
 	t_config* nuevo_config = config_create(ruta_config);

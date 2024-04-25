@@ -14,9 +14,9 @@
 
 // Codigos de operaciones
 typedef enum{
+	HANDSHAKE_OK,                 // CPU DISPATCH -> KERNEL (aunque podríamos usarlo para todos?) 
     MENSAJE_A_MEMORIA,
-	HANDSHAKE_KERNEL,            // KERNEL -> CPU DISPATCH
-	HANDSHAKE_OK                 // CPU DISPATCH -> KERNEL (aunque podríamos usarlo para todos?) 
+	HANDSHAKE_KERNEL            // KERNEL -> CPU DISPATCH
 } op_code;
 
 typedef struct{

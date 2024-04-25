@@ -176,3 +176,158 @@
 [ERROR] 23:39:04:953 kernel/(8457:8585): La Memoria se desconecto de Kernel. Terminando servidor.
 [ERROR] 23:39:04:955 kernel/(8457:8584): El Interrupt se desconecto de Kernel. Terminando servidor.
 [ERROR] 23:39:04:955 kernel/(8457:8583): El Dispatch se desconecto de Kernel. Terminando servidor.
+[INFO] 23:49:11:577 kernel/(10811:10811): Arranca el modulo KERNEL
+[INFO] 23:49:11:577 kernel/(10811:10811): >>> Server Kernel escuchando... <<<
+[INFO] 23:49:11:580 kernel/(10811:10811): Esperando conexion de Interfaz E/S
+[INFO] 23:49:16:197 kernel/(10811:10811): Se conecto el cliente: E/S
+
+[INFO] 23:49:16:206 kernel/(10811:10811): Handshake OK
+[WARNING] 23:49:16:208 kernel/(10811:10945): Operacion desconocida de Interrupt-Kernel.
+[ERROR] 23:50:14:720 kernel/(10811:10946): La Memoria se desconecto de Kernel. Terminando servidor.
+[INFO] 23:50:14:720 kernel/(10811:10811): Handshake OK
+[INFO] 23:50:14:720 kernel/(10811:10811): Handshake OK
+[ERROR] 23:50:14:720 kernel/(10811:10944): El Dispatch se desconecto de Kernel. Terminando servidor.
+[ERROR] 23:50:14:720 kernel/(10811:10945): El Interrupt se desconecto de Kernel. Terminando servidor.
+[INFO] 23:50:26:514 kernel/(11470:11470): Arranca el modulo KERNEL
+[INFO] 23:50:26:514 kernel/(11470:11470): >>> Server Kernel escuchando... <<<
+[INFO] 23:50:26:521 kernel/(11470:11470): Esperando conexion de Interfaz E/S
+[INFO] 23:50:28:586 kernel/(11470:11470): Se conecto el cliente: E/S
+
+[INFO] 23:50:28:588 kernel/(11470:11470): Handshake OK
+[WARNING] 23:50:28:588 kernel/(11470:11597): Operacion desconocida de Interrupt-Kernel.
+[ERROR] 23:51:50:465 kernel/(11470:11598): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 23:51:50:466 kernel/(11470:11597): El Interrupt se desconecto de Kernel. Terminando servidor.
+[ERROR] 23:51:50:469 kernel/(11470:11594): El Dispatch se desconecto de Kernel. Terminando servidor.
+[INFO] 23:51:50:468 kernel/(11470:11470): Handshake OK
+[INFO] 23:51:50:470 kernel/(11470:11470): Handshake OK
+[INFO] 23:54:22:984 kernel/(12456:12456): Arranca el modulo KERNEL
+[INFO] 23:54:22:984 kernel/(12456:12456): >>> Server Kernel escuchando... <<<
+[INFO] 23:54:22:985 kernel/(12456:12456): Esperando conexion de Interfaz E/S
+[INFO] 23:54:25:345 kernel/(12456:12456): Se conecto el cliente: E/S
+
+[INFO] 23:55:38:561 kernel/(13113:13113): Arranca el modulo KERNEL
+[INFO] 23:55:38:562 kernel/(13113:13113): >>> Server Kernel escuchando... <<<
+[INFO] 23:55:38:562 kernel/(13113:13113): Esperando conexion de Interfaz E/S
+[INFO] 23:55:39:929 kernel/(13113:13113): Se conecto el cliente: E/S
+
+[INFO] 23:56:28:772 kernel/(13731:13731): Arranca el modulo KERNEL
+[INFO] 23:56:28:772 kernel/(13731:13731): >>> Server Kernel escuchando... <<<
+[INFO] 23:56:28:773 kernel/(13731:13731): Esperando conexion de Interfaz E/S
+[INFO] 23:56:30:449 kernel/(13731:13731): Se conecto el cliente: E/S
+
+[INFO] 23:59:42:136 kernel/(14531:14531): Arranca el modulo KERNEL
+[INFO] 23:59:42:137 kernel/(14531:14531): >>> Server Kernel escuchando... <<<
+[INFO] 23:59:42:138 kernel/(14531:14531): Esperando conexion de Interfaz E/S
+[INFO] 23:59:44:858 kernel/(14531:14531): Se conecto el cliente: E/S
+
+[INFO] 00:01:08:480 kernel/(15361:15361): Arranca el modulo KERNEL
+[INFO] 00:01:08:481 kernel/(15361:15361): >>> Server Kernel escuchando... <<<
+[INFO] 00:01:08:483 kernel/(15361:15361): Esperando conexion de Interfaz E/S
+[INFO] 00:01:09:851 kernel/(15361:15361): Se conecto el cliente: E/S
+
+[INFO] 00:02:14:025 kernel/(15980:15980): Arranca el modulo KERNEL
+[INFO] 00:02:14:026 kernel/(15980:15980): >>> Server Kernel escuchando... <<<
+[INFO] 00:02:14:027 kernel/(15980:15980): Esperando conexion de Interfaz E/S
+[INFO] 00:02:16:015 kernel/(15980:15980): Se conecto el cliente: E/S
+
+[INFO] 00:02:16:016 kernel/(15980:15980): Handshake OK
+[INFO] 00:02:16:017 kernel/(15980:15980): Handshake OK
+[WARNING] 00:02:16:017 kernel/(15980:16108): Operacion desconocida de Memoria-Kernel.
+[INFO] 00:06:32:869 kernel/(16554:16554): Arranca el modulo KERNEL
+[INFO] 00:06:32:869 kernel/(16554:16554): >>> Server Kernel escuchando... <<<
+[INFO] 00:06:32:870 kernel/(16554:16554): Esperando conexion de Interfaz E/S
+[INFO] 00:06:34:134 kernel/(16554:16554): Se conecto el cliente: E/S
+
+[INFO] 00:06:34:138 kernel/(16554:16554): Handshake OK
+[INFO] 00:06:34:148 kernel/(16554:16554): Handshake OK
+[WARNING] 00:06:34:154 kernel/(16554:16681): Operacion desconocida de Memoria-Kernel.
+[INFO] 00:06:51:604 kernel/(17156:17156): Arranca el modulo KERNEL
+[INFO] 00:06:51:606 kernel/(17156:17156): >>> Server Kernel escuchando... <<<
+[INFO] 00:06:51:606 kernel/(17156:17156): Esperando conexion de Interfaz E/S
+[INFO] 00:06:53:185 kernel/(17156:17156): Se conecto el cliente: E/S
+
+[WARNING] 00:06:53:186 kernel/(17156:17282): Operacion desconocida de Dispatch-Kernel.
+[INFO] 00:06:53:186 kernel/(17156:17282): Cop: 0
+[INFO] 00:07:15:577 kernel/(17474:17474): Arranca el modulo KERNEL
+[INFO] 00:07:15:577 kernel/(17474:17474): >>> Server Kernel escuchando... <<<
+[INFO] 00:07:15:577 kernel/(17474:17474): Esperando conexion de Interfaz E/S
+[INFO] 00:07:17:501 kernel/(17474:17474): Se conecto el cliente: E/S
+
+[WARNING] 00:07:17:503 kernel/(17474:17546): Operacion desconocida de Dispatch-Kernel.
+[INFO] 00:07:17:503 kernel/(17474:17546): Cop: 0
+[INFO] 00:07:27:865 kernel/(17913:17913): Arranca el modulo KERNEL
+[INFO] 00:07:27:865 kernel/(17913:17913): >>> Server Kernel escuchando... <<<
+[INFO] 00:07:27:865 kernel/(17913:17913): Esperando conexion de Interfaz E/S
+[INFO] 00:07:29:614 kernel/(17913:17913): Se conecto el cliente: E/S
+
+[INFO] 00:07:29:614 kernel/(17913:17913): Handshake OK
+[WARNING] 00:07:29:615 kernel/(17913:18040): Operacion desconocida de Interrupt-Kernel.
+[ERROR] 00:07:34:939 kernel/(17913:18041): La Memoria se desconecto de Kernel. Terminando servidor.
+[ERROR] 00:07:34:941 kernel/(17913:18040): El Interrupt se desconecto de Kernel. Terminando servidor.
+[INFO] 00:07:34:941 kernel/(17913:17913): Handshake OK
+[INFO] 00:07:34:941 kernel/(17913:17913): Handshake OK
+[ERROR] 00:07:34:941 kernel/(17913:18039): El Dispatch se desconecto de Kernel. Terminando servidor.
+[INFO] 00:08:40:376 kernel/(18648:18648): Arranca el modulo KERNEL
+[INFO] 00:08:40:376 kernel/(18648:18648): >>> Server Kernel escuchando... <<<
+[INFO] 00:08:40:379 kernel/(18648:18648): Esperando conexion de Interfaz E/S
+[INFO] 00:08:42:285 kernel/(18648:18648): Se conecto el cliente: E/S
+
+[WARNING] 00:08:42:293 kernel/(18648:18740): Operacion desconocida de Dispatch-Kernel.
+[INFO] 00:08:42:293 kernel/(18648:18740): Cop: 0
+[INFO] 00:23:24:254 kernel/(19434:19434): Arranca el modulo KERNEL
+[INFO] 00:23:24:254 kernel/(19434:19434): >>> Server Kernel escuchando... <<<
+[INFO] 00:23:24:257 kernel/(19434:19434): Esperando conexion de Interfaz E/S
+[INFO] 00:23:25:121 kernel/(19434:19434): Se conecto el cliente: E/S
+
+[INFO] 00:24:04:237 kernel/(20048:20048): Arranca el modulo KERNEL
+[INFO] 00:24:04:240 kernel/(20048:20048): >>> Server Kernel escuchando... <<<
+[INFO] 00:24:04:250 kernel/(20048:20048): Esperando conexion de Interfaz E/S
+[INFO] 00:24:05:638 kernel/(20048:20048): Se conecto el cliente: E/S
+
+[INFO] 00:24:05:638 kernel/(20048:20048): Handshake OK
+[WARNING] 00:24:05:639 kernel/(20048:20143): Operacion desconocida de Interrupt-Kernel.
+[INFO] 00:25:30:674 kernel/(20703:20703): Arranca el modulo KERNEL
+[INFO] 00:25:30:676 kernel/(20703:20703): >>> Server Kernel escuchando... <<<
+[INFO] 00:25:30:677 kernel/(20703:20703): Esperando conexion de Interfaz E/S
+[INFO] 00:25:35:234 kernel/(20703:20703): Se conecto el cliente: E/S
+
+[INFO] 00:25:35:237 kernel/(20703:20703): Handshake OK
+[INFO] 00:25:35:243 kernel/(20703:20703): Handshake OK
+[INFO] 00:25:35:245 kernel/(20703:20703): Handshake OK
+[INFO] 00:26:03:247 kernel/(21196:21196): Arranca el modulo KERNEL
+[INFO] 00:26:03:247 kernel/(21196:21196): >>> Server Kernel escuchando... <<<
+[INFO] 00:26:03:248 kernel/(21196:21196): Esperando conexion de Interfaz E/S
+[INFO] 00:26:06:055 kernel/(21196:21196): Se conecto el cliente: E/S
+
+[INFO] 00:29:59:398 kernel/(22012:22012): Arranca el modulo KERNEL
+[INFO] 00:29:59:400 kernel/(22012:22012): >>> Server Kernel escuchando... <<<
+[INFO] 00:29:59:402 kernel/(22012:22012): Esperando conexion de Interfaz E/S
+[INFO] 00:30:01:547 kernel/(22012:22012): Se conecto el cliente: E/S
+
+[INFO] 00:30:01:548 kernel/(22012:22012): Handshake OK
+[INFO] 00:30:01:553 kernel/(22012:22012): Handshake OK
+[INFO] 00:30:01:554 kernel/(22012:22012): Handshake OK
+[INFO] 00:30:23:742 kernel/(22473:22473): Arranca el modulo KERNEL
+[INFO] 00:30:23:742 kernel/(22473:22473): >>> Server Kernel escuchando... <<<
+[INFO] 00:30:23:742 kernel/(22473:22473): Esperando conexion de Interfaz E/S
+[INFO] 00:30:25:675 kernel/(22473:22473): Se conecto el cliente: E/S
+
+[INFO] 00:30:25:676 kernel/(22473:22473): Handshake OK
+[INFO] 00:30:25:676 kernel/(22473:22473): Handshake OK
+[INFO] 00:30:25:678 kernel/(22473:22473): Handshake OK
+[INFO] 00:30:39:260 kernel/(23075:23075): Arranca el modulo KERNEL
+[INFO] 00:30:39:260 kernel/(23075:23075): >>> Server Kernel escuchando... <<<
+[INFO] 00:30:39:260 kernel/(23075:23075): Esperando conexion de Interfaz E/S
+[INFO] 00:30:41:117 kernel/(23075:23075): Se conecto el cliente: E/S
+
+[INFO] 00:30:41:124 kernel/(23075:23075): Handshake OK
+[INFO] 00:30:41:126 kernel/(23075:23075): Handshake OK
+[INFO] 00:30:41:127 kernel/(23075:23075): Handshake OK
+[INFO] 00:33:00:178 kernel/(23753:23753): Arranca el modulo KERNEL
+[INFO] 00:33:00:179 kernel/(23753:23753): >>> Server Kernel escuchando... <<<
+[INFO] 00:33:00:179 kernel/(23753:23753): Esperando conexion de Interfaz E/S
+[INFO] 00:33:01:788 kernel/(23753:23753): Se conecto el cliente: E/S
+
+[INFO] 00:33:01:788 kernel/(23753:23753): Handshake OK
+[INFO] 00:33:01:788 kernel/(23753:23753): Handshake OK
+[INFO] 00:33:01:789 kernel/(23753:23753): Handshake OK

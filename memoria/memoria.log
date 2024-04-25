@@ -269,3 +269,277 @@
 
 [INFO] 23:38:22:159 Memoria/(8202:8580): Recibido handshake HANDSHAKE_KERNEL.
 [ERROR] 23:39:04:950 Memoria/(8202:8581): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 23:49:05:756 Memoria/(10628:10628): Arranca el modulo MEMORIA
+[INFO] 23:49:05:757 Memoria/(10628:10628): >>> Server Memoria escuchando... <<<
+[INFO] 23:49:05:757 Memoria/(10628:10628): Esperando conexión de CPU
+[INFO] 23:49:08:630 Memoria/(10628:10628): Se conecto el cliente: CPU
+
+[INFO] 23:49:08:630 Memoria/(10628:10628): Esperando conexión de Kernel
+[INFO] 23:49:11:580 Memoria/(10628:10628): Se conecto el cliente: KERNEL
+
+[INFO] 23:49:11:580 Memoria/(10628:10628): Esperando conexión de E/S
+[INFO] 23:49:16:193 Memoria/(10628:10628): Se conecto el cliente: E/S
+
+[INFO] 23:50:22:759 Memoria/(11227:11227): Arranca el modulo MEMORIA
+[INFO] 23:50:22:760 Memoria/(11227:11227): >>> Server Memoria escuchando... <<<
+[INFO] 23:50:22:764 Memoria/(11227:11227): Esperando conexión de CPU
+[INFO] 23:50:24:690 Memoria/(11227:11227): Se conecto el cliente: CPU
+
+[INFO] 23:50:24:690 Memoria/(11227:11227): Esperando conexión de Kernel
+[INFO] 23:50:26:520 Memoria/(11227:11227): Se conecto el cliente: KERNEL
+
+[INFO] 23:50:26:521 Memoria/(11227:11227): Esperando conexión de E/S
+[INFO] 23:50:28:586 Memoria/(11227:11227): Se conecto el cliente: E/S
+
+[INFO] 23:54:17:461 Memoria/(12202:12202): Arranca el modulo MEMORIA
+[INFO] 23:54:17:461 Memoria/(12202:12202): >>> Server Memoria escuchando... <<<
+[INFO] 23:54:17:461 Memoria/(12202:12202): Esperando conexión de CPU
+[INFO] 23:54:20:360 Memoria/(12202:12202): Se conecto el cliente: CPU
+
+[INFO] 23:54:20:360 Memoria/(12202:12202): Esperando conexión de Kernel
+[INFO] 23:54:22:985 Memoria/(12202:12202): Se conecto el cliente: KERNEL
+
+[INFO] 23:54:22:985 Memoria/(12202:12202): Esperando conexión de E/S
+[INFO] 23:54:25:345 Memoria/(12202:12202): Se conecto el cliente: E/S
+
+[ERROR] 23:54:49:085 Memoria/(12202:12581): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 23:54:49:086 Memoria/(12202:12582): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 23:55:33:857 Memoria/(12871:12871): Arranca el modulo MEMORIA
+[INFO] 23:55:33:857 Memoria/(12871:12871): >>> Server Memoria escuchando... <<<
+[INFO] 23:55:33:857 Memoria/(12871:12871): Esperando conexión de CPU
+[INFO] 23:55:36:433 Memoria/(12871:12871): Se conecto el cliente: CPU
+
+[INFO] 23:55:36:433 Memoria/(12871:12871): Esperando conexión de Kernel
+[INFO] 23:55:38:562 Memoria/(12871:12871): Se conecto el cliente: KERNEL
+
+[INFO] 23:55:38:562 Memoria/(12871:12871): Esperando conexión de E/S
+[INFO] 23:55:39:929 Memoria/(12871:12871): Se conecto el cliente: E/S
+
+[ERROR] 23:56:22:740 Memoria/(12871:13241): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 23:56:22:741 Memoria/(12871:13242): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 23:56:25:292 Memoria/(13477:13477): Arranca el modulo MEMORIA
+[INFO] 23:56:25:293 Memoria/(13477:13477): >>> Server Memoria escuchando... <<<
+[INFO] 23:56:25:293 Memoria/(13477:13477): Esperando conexión de CPU
+[INFO] 23:56:27:342 Memoria/(13477:13477): Se conecto el cliente: CPU
+
+[INFO] 23:56:27:342 Memoria/(13477:13477): Esperando conexión de Kernel
+[INFO] 23:56:28:773 Memoria/(13477:13477): Se conecto el cliente: KERNEL
+
+[INFO] 23:56:28:773 Memoria/(13477:13477): Esperando conexión de E/S
+[INFO] 23:56:30:449 Memoria/(13477:13477): Se conecto el cliente: E/S
+
+[ERROR] 23:56:44:303 Memoria/(13477:13855): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 23:56:44:304 Memoria/(13477:13856): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 23:59:38:246 Memoria/(14277:14277): Arranca el modulo MEMORIA
+[INFO] 23:59:38:246 Memoria/(14277:14277): >>> Server Memoria escuchando... <<<
+[INFO] 23:59:38:246 Memoria/(14277:14277): Esperando conexión de CPU
+[INFO] 23:59:40:278 Memoria/(14277:14277): Se conecto el cliente: CPU
+
+[INFO] 23:59:40:278 Memoria/(14277:14277): Esperando conexión de Kernel
+[INFO] 23:59:42:138 Memoria/(14277:14277): Se conecto el cliente: KERNEL
+
+[INFO] 23:59:42:139 Memoria/(14277:14277): Esperando conexión de E/S
+[INFO] 23:59:44:857 Memoria/(14277:14277): Se conecto el cliente: E/S
+
+[ERROR] 00:01:02:881 Memoria/(14277:14653): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:01:02:884 Memoria/(14277:14654): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:01:05:282 Memoria/(15107:15107): Arranca el modulo MEMORIA
+[INFO] 00:01:05:283 Memoria/(15107:15107): >>> Server Memoria escuchando... <<<
+[INFO] 00:01:05:283 Memoria/(15107:15107): Esperando conexión de CPU
+[INFO] 00:01:06:716 Memoria/(15107:15107): Se conecto el cliente: CPU
+
+[INFO] 00:01:06:716 Memoria/(15107:15107): Esperando conexión de Kernel
+[INFO] 00:01:08:483 Memoria/(15107:15107): Se conecto el cliente: KERNEL
+
+[INFO] 00:01:08:483 Memoria/(15107:15107): Esperando conexión de E/S
+[INFO] 00:01:09:850 Memoria/(15107:15107): Se conecto el cliente: E/S
+
+[ERROR] 00:01:22:608 Memoria/(15107:15483): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:01:22:610 Memoria/(15107:15484): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:02:09:400 Memoria/(15726:15726): Arranca el modulo MEMORIA
+[INFO] 00:02:09:401 Memoria/(15726:15726): >>> Server Memoria escuchando... <<<
+[INFO] 00:02:09:401 Memoria/(15726:15726): Esperando conexión de CPU
+[INFO] 00:02:11:141 Memoria/(15726:15726): Se conecto el cliente: CPU
+
+[INFO] 00:02:11:141 Memoria/(15726:15726): Esperando conexión de Kernel
+[INFO] 00:02:14:027 Memoria/(15726:15726): Se conecto el cliente: KERNEL
+
+[INFO] 00:02:14:027 Memoria/(15726:15726): Esperando conexión de E/S
+[INFO] 00:02:16:014 Memoria/(15726:15726): Se conecto el cliente: E/S
+
+[INFO] 00:02:16:017 Memoria/(15726:16102): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:02:30:633 Memoria/(15726:16102): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:02:30:633 Memoria/(15726:16103): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:06:28:766 Memoria/(16311:16311): Arranca el modulo MEMORIA
+[INFO] 00:06:28:773 Memoria/(16311:16311): >>> Server Memoria escuchando... <<<
+[INFO] 00:06:28:773 Memoria/(16311:16311): Esperando conexión de CPU
+[INFO] 00:06:30:965 Memoria/(16311:16311): Se conecto el cliente: CPU
+
+[INFO] 00:06:30:965 Memoria/(16311:16311): Esperando conexión de Kernel
+[INFO] 00:06:32:870 Memoria/(16311:16311): Se conecto el cliente: KERNEL
+
+[INFO] 00:06:32:870 Memoria/(16311:16311): Esperando conexión de E/S
+[INFO] 00:06:34:134 Memoria/(16311:16311): Se conecto el cliente: E/S
+
+[INFO] 00:06:34:153 Memoria/(16311:16678): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:06:36:690 Memoria/(16311:16678): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:06:36:692 Memoria/(16311:16680): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:06:47:300 Memoria/(16914:16914): Arranca el modulo MEMORIA
+[INFO] 00:06:47:300 Memoria/(16914:16914): >>> Server Memoria escuchando... <<<
+[INFO] 00:06:47:300 Memoria/(16914:16914): Esperando conexión de CPU
+[INFO] 00:06:49:297 Memoria/(16914:16914): Se conecto el cliente: CPU
+
+[INFO] 00:06:49:297 Memoria/(16914:16914): Esperando conexión de Kernel
+[INFO] 00:06:51:606 Memoria/(16914:16914): Se conecto el cliente: KERNEL
+
+[INFO] 00:06:51:606 Memoria/(16914:16914): Esperando conexión de E/S
+[INFO] 00:06:53:182 Memoria/(16914:16914): Se conecto el cliente: E/S
+
+[ERROR] 00:07:00:566 Memoria/(16914:17278): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:07:00:570 Memoria/(16914:17279): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:07:06:702 Memoria/(17348:17348): Arranca el modulo MEMORIA
+[INFO] 00:07:06:702 Memoria/(17348:17348): >>> Server Memoria escuchando... <<<
+[INFO] 00:07:06:702 Memoria/(17348:17348): Esperando conexión de CPU
+[INFO] 00:07:10:494 Memoria/(17348:17348): Se conecto el cliente: CPU
+
+[INFO] 00:07:10:494 Memoria/(17348:17348): Esperando conexión de Kernel
+[INFO] 00:07:15:577 Memoria/(17348:17348): Se conecto el cliente: KERNEL
+
+[INFO] 00:07:15:577 Memoria/(17348:17348): Esperando conexión de E/S
+[INFO] 00:07:17:501 Memoria/(17348:17348): Se conecto el cliente: E/S
+
+[ERROR] 00:07:20:845 Memoria/(17348:17545): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:07:20:847 Memoria/(17348:17549): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:07:23:934 Memoria/(17671:17671): Arranca el modulo MEMORIA
+[INFO] 00:07:23:935 Memoria/(17671:17671): >>> Server Memoria escuchando... <<<
+[INFO] 00:07:23:935 Memoria/(17671:17671): Esperando conexión de CPU
+[INFO] 00:07:25:971 Memoria/(17671:17671): Se conecto el cliente: CPU
+
+[INFO] 00:07:25:973 Memoria/(17671:17671): Esperando conexión de Kernel
+[INFO] 00:07:27:865 Memoria/(17671:17671): Se conecto el cliente: KERNEL
+
+[INFO] 00:07:27:865 Memoria/(17671:17671): Esperando conexión de E/S
+[INFO] 00:07:29:614 Memoria/(17671:17671): Se conecto el cliente: E/S
+
+[INFO] 00:08:36:567 Memoria/(18470:18470): Arranca el modulo MEMORIA
+[INFO] 00:08:36:568 Memoria/(18470:18470): >>> Server Memoria escuchando... <<<
+[INFO] 00:08:36:573 Memoria/(18470:18470): Esperando conexión de CPU
+[INFO] 00:08:38:789 Memoria/(18470:18470): Se conecto el cliente: CPU
+
+[INFO] 00:08:38:789 Memoria/(18470:18470): Esperando conexión de Kernel
+[INFO] 00:08:40:380 Memoria/(18470:18470): Se conecto el cliente: KERNEL
+
+[INFO] 00:08:40:380 Memoria/(18470:18470): Esperando conexión de E/S
+[INFO] 00:08:42:285 Memoria/(18470:18470): Se conecto el cliente: E/S
+
+[ERROR] 00:08:47:933 Memoria/(18470:18741): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:08:47:934 Memoria/(18470:18742): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:23:21:663 Memoria/(19256:19256): Arranca el modulo MEMORIA
+[INFO] 00:23:21:667 Memoria/(19256:19256): >>> Server Memoria escuchando... <<<
+[INFO] 00:23:21:667 Memoria/(19256:19256): Esperando conexión de CPU
+[INFO] 00:23:22:853 Memoria/(19256:19256): Se conecto el cliente: CPU
+
+[INFO] 00:23:22:857 Memoria/(19256:19256): Esperando conexión de Kernel
+[INFO] 00:23:24:257 Memoria/(19256:19256): Se conecto el cliente: KERNEL
+
+[INFO] 00:23:24:257 Memoria/(19256:19256): Esperando conexión de E/S
+[INFO] 00:23:25:120 Memoria/(19256:19256): Se conecto el cliente: E/S
+
+[ERROR] 00:23:38:444 Memoria/(19256:19524): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:23:38:445 Memoria/(19256:19525): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:24:02:122 Memoria/(19870:19870): Arranca el modulo MEMORIA
+[INFO] 00:24:02:123 Memoria/(19870:19870): >>> Server Memoria escuchando... <<<
+[INFO] 00:24:02:124 Memoria/(19870:19870): Esperando conexión de CPU
+[INFO] 00:24:02:926 Memoria/(19870:19870): Se conecto el cliente: CPU
+
+[INFO] 00:24:02:926 Memoria/(19870:19870): Esperando conexión de Kernel
+[INFO] 00:24:04:249 Memoria/(19870:19870): Se conecto el cliente: KERNEL
+
+[INFO] 00:24:04:252 Memoria/(19870:19870): Esperando conexión de E/S
+[INFO] 00:24:05:638 Memoria/(19870:19870): Se conecto el cliente: E/S
+
+[ERROR] 00:24:57:540 Memoria/(19870:20140): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:24:57:541 Memoria/(19870:20141): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:25:23:759 Memoria/(20461:20461): Arranca el modulo MEMORIA
+[INFO] 00:25:23:759 Memoria/(20461:20461): >>> Server Memoria escuchando... <<<
+[INFO] 00:25:23:759 Memoria/(20461:20461): Esperando conexión de CPU
+[INFO] 00:25:27:562 Memoria/(20461:20461): Se conecto el cliente: CPU
+
+[INFO] 00:25:27:565 Memoria/(20461:20461): Esperando conexión de Kernel
+[INFO] 00:25:30:678 Memoria/(20461:20461): Se conecto el cliente: KERNEL
+
+[INFO] 00:25:30:678 Memoria/(20461:20461): Esperando conexión de E/S
+[INFO] 00:25:35:234 Memoria/(20461:20461): Se conecto el cliente: E/S
+
+[INFO] 00:25:35:243 Memoria/(20461:20829): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:25:53:048 Memoria/(20461:20829): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:25:53:050 Memoria/(20461:20831): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:25:57:970 Memoria/(20954:20954): Arranca el modulo MEMORIA
+[INFO] 00:25:57:970 Memoria/(20954:20954): >>> Server Memoria escuchando... <<<
+[INFO] 00:25:57:970 Memoria/(20954:20954): Esperando conexión de CPU
+[INFO] 00:26:00:919 Memoria/(20954:20954): Se conecto el cliente: CPU
+
+[INFO] 00:26:00:919 Memoria/(20954:20954): Esperando conexión de Kernel
+[INFO] 00:26:03:248 Memoria/(20954:20954): Se conecto el cliente: KERNEL
+
+[INFO] 00:26:03:248 Memoria/(20954:20954): Esperando conexión de E/S
+[INFO] 00:26:06:055 Memoria/(20954:20954): Se conecto el cliente: E/S
+
+[ERROR] 00:26:13:544 Memoria/(20954:21320): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:26:13:549 Memoria/(20954:21321): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:29:53:910 Memoria/(21834:21834): Arranca el modulo MEMORIA
+[INFO] 00:29:53:911 Memoria/(21834:21834): >>> Server Memoria escuchando... <<<
+[INFO] 00:29:53:915 Memoria/(21834:21834): Esperando conexión de CPU
+[INFO] 00:29:57:048 Memoria/(21834:21834): Se conecto el cliente: CPU
+
+[INFO] 00:29:57:049 Memoria/(21834:21834): Esperando conexión de Kernel
+[INFO] 00:29:59:402 Memoria/(21834:21834): Se conecto el cliente: KERNEL
+
+[INFO] 00:29:59:402 Memoria/(21834:21834): Esperando conexión de E/S
+[INFO] 00:30:01:546 Memoria/(21834:21834): Se conecto el cliente: E/S
+
+[INFO] 00:30:01:554 Memoria/(21834:22102): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:30:16:643 Memoria/(21834:22102): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:30:16:645 Memoria/(21834:22103): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:30:20:197 Memoria/(22231:22231): Arranca el modulo MEMORIA
+[INFO] 00:30:20:201 Memoria/(22231:22231): >>> Server Memoria escuchando... <<<
+[INFO] 00:30:20:201 Memoria/(22231:22231): Esperando conexión de CPU
+[INFO] 00:30:21:883 Memoria/(22231:22231): Se conecto el cliente: CPU
+
+[INFO] 00:30:21:883 Memoria/(22231:22231): Esperando conexión de Kernel
+[INFO] 00:30:23:742 Memoria/(22231:22231): Se conecto el cliente: KERNEL
+
+[INFO] 00:30:23:742 Memoria/(22231:22231): Esperando conexión de E/S
+[INFO] 00:30:25:674 Memoria/(22231:22231): Se conecto el cliente: E/S
+
+[INFO] 00:30:25:677 Memoria/(22231:22597): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:30:28:874 Memoria/(22231:22597): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:30:28:875 Memoria/(22231:22598): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:30:35:409 Memoria/(22821:22821): Arranca el modulo MEMORIA
+[INFO] 00:30:35:409 Memoria/(22821:22821): >>> Server Memoria escuchando... <<<
+[INFO] 00:30:35:409 Memoria/(22821:22821): Esperando conexión de CPU
+[INFO] 00:30:37:320 Memoria/(22821:22821): Se conecto el cliente: CPU
+
+[INFO] 00:30:37:320 Memoria/(22821:22821): Esperando conexión de Kernel
+[INFO] 00:30:39:260 Memoria/(22821:22821): Se conecto el cliente: KERNEL
+
+[INFO] 00:30:39:260 Memoria/(22821:22821): Esperando conexión de E/S
+[INFO] 00:30:41:119 Memoria/(22821:22821): Se conecto el cliente: E/S
+
+[INFO] 00:30:41:127 Memoria/(22821:23199): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:30:43:427 Memoria/(22821:23199): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:30:43:428 Memoria/(22821:23200): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 00:32:56:012 Memoria/(23499:23499): Arranca el modulo MEMORIA
+[INFO] 00:32:56:013 Memoria/(23499:23499): >>> Server Memoria escuchando... <<<
+[INFO] 00:32:56:013 Memoria/(23499:23499): Esperando conexión de CPU
+[INFO] 00:32:57:969 Memoria/(23499:23499): Se conecto el cliente: CPU
+
+[INFO] 00:32:57:970 Memoria/(23499:23499): Esperando conexión de Kernel
+[INFO] 00:33:00:179 Memoria/(23499:23499): Se conecto el cliente: KERNEL
+
+[INFO] 00:33:00:179 Memoria/(23499:23499): Esperando conexión de E/S
+[INFO] 00:33:01:786 Memoria/(23499:23499): Se conecto el cliente: E/S
+
+[INFO] 00:33:01:788 Memoria/(23499:23877): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 00:33:12:024 Memoria/(23499:23877): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 00:33:12:025 Memoria/(23499:23878): La Entradasalida se desconecto de Memoria. Terminando servidor.
