@@ -821,3 +821,13 @@
 [INFO] 21:54:21:035 kernel/(10191:10234): HOLA ENVIANDO MENSAJE
 [INFO] 21:54:44:921 kernel/(10191:10234): HOLA ENTRASTE A I.PROCESO
 
+[INFO] 03:05:53:686 kernel/(4285:4285): Arranca el modulo KERNEL
+[INFO] 03:05:53:686 kernel/(4285:4285): >>> Server Kernel escuchando... <<<
+[INFO] 03:05:53:687 kernel/(4285:4285): Esperando conexion de Interfaz E/S
+[INFO] 03:06:28:542 kernel/(4285:4285): Se conecto el cliente: E/S
+
+[INFO] 03:06:28:543 kernel/(4285:4285): Handshake OK
+[INFO] 03:06:28:544 kernel/(4285:4285): Handshake OK
+[INFO] 03:06:28:544 kernel/(4285:4285): Handshake OK
+[INFO] 03:06:28:544 kernel/(4285:4285): CONSOLA INTERACTIVA INICIADA
+[INFO] 03:06:28:544 kernel/(4285:4348): Recibido handshake (null).

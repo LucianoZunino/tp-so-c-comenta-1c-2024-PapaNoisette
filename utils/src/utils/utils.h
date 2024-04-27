@@ -11,6 +11,7 @@
 #include <commons/log.h>
 #include <commons/config.h>
 #include <commons/string.h>
+#include <time.h>
 
 // Codigos de operaciones
 typedef enum{
@@ -44,6 +45,32 @@ typedef enum{
 	MENSAJE_A_MEMORIA1,
 	COMANDO_INVALIDO
 }comando_consola;
+
+typedef struct
+{
+ uint8_t AX;
+ uint8_t BX;
+ uint8_t CX;
+ uint8_t DX;
+ uint32_t EAX;
+ uint32_t EBX;
+ uint32_t ECX;
+ uint32_t EDX;
+ uint32_t SI;
+ uint32_t DI;
+
+} t_registros_cpu;
+
+typedef struct
+{
+  uint32_t pid;
+  uint32_t program_counter;
+  t_registros_cpu *registros_cpu;
+  time_t quantum;
+  
+} t_pcb;
+
+
 
 // Funciones de init
 t_config* iniciar_config(char* ruta_config);

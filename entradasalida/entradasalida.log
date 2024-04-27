@@ -182,3 +182,7 @@
 [INFO] 21:53:11:287 entradasalida/(10223:10223): Handshake OK
 [INFO] 21:53:11:290 entradasalida/(10223:10223): Handshake OK
 [ERROR] 21:55:20:225 entradasalida/(10223:10236): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 03:06:28:542 entradasalida/(4338:4338): Arranca el modulo  Entrada/Salida
+[INFO] 03:06:28:545 entradasalida/(4338:4338): Handshake OK
+[INFO] 03:06:28:545 entradasalida/(4338:4338): Handshake OK
+[ERROR] 03:06:36:495 entradasalida/(4338:4351): El Kernel se desconecto de Entradasalida. Terminando servidor.
