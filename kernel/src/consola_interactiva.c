@@ -29,7 +29,7 @@ comando_consola validar_entrada(char* codigo){
 }
 
 void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando){
-    //char** comando_desde_consola = string_split(leido, " ");
+    //char** comando_desde_c = string_split(comando_desde_consola, " ");
     t_buffer* buffer_a_enviar = crear_buffer();
 
       switch(comando){
@@ -41,6 +41,7 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
 
         case INICIAR_PROCESO:
             log_info(logger_kernel,"HOLA ENTRASTE A I.PROCESO\n");
+            crear_proceso(comando_desde_consola[1]);
             break;
         
 

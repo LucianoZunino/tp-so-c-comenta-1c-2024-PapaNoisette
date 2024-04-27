@@ -11,6 +11,7 @@
 #include "escuchar_entradasalida_kernel.h"
 #include "escuchar_memoria_kernel.h"
 #include "consola_interactiva.h"
+#include "acciones_proceso.h"
 
 extern t_log* logger_kernel;
 
@@ -31,5 +32,24 @@ extern int fd_cpu_dispatch;
 extern int fd_cpu_interrupt;
 extern int fd_memoria;
 extern int fd_entradasalida;
+
+// HILO PARA EL NEXT_PID
+extern uint32_t next_pid;
+extern pthread_mutex_t mutex_next_pid;
+
+// LISTAS DE ESTADOS, DEBEMOS USARLAS COMO FIFO
+extern t_list *NEW;
+extern t_list *READY;
+extern t_list *BLOCKED;
+extern t_pcb *RUNNING;
+extern t_list *EXIT;
+
+// HILOS MUTEX PARA AGREGAR CON MUTUA EXCLUSION PARA QUE NO HAYA SUPERPOSICION
+// EN LOS PROCESOS QUE COMPARTAN DICHAS COLAS DE ESTADOS.
+extern pthread_mutex_t mutex_NEW;
+extern pthread_mutex_t mutex_READY;
+extern pthread_mutex_t mutex_BLOCKED;
+extern pthread_mutex_t mutex_RUNNING;
+extern pthread_mutex_t mutex_EXIT;
 
 #endif

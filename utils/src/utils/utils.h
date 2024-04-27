@@ -11,6 +11,7 @@
 #include <commons/log.h>
 #include <commons/config.h>
 #include <commons/string.h>
+#include <commons/collections/list.h>
 #include <time.h>
 
 // Codigos de operaciones
@@ -46,6 +47,7 @@ typedef enum{
 	COMANDO_INVALIDO
 }comando_consola;
 
+
 typedef struct
 {
  uint8_t AX;
@@ -64,10 +66,12 @@ typedef struct
 typedef struct
 {
   uint32_t pid;
+  t_list *instrucciones;
   uint32_t program_counter;
   t_registros_cpu *registros_cpu;
   time_t quantum;
-  
+
+
 } t_pcb;
 
 
