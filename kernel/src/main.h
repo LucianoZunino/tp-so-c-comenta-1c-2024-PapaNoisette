@@ -6,12 +6,14 @@
 #include <pthread.h>
 #include <utils/hello.h>
 #include <utils/utils.h>
+#include <semaphore.h>
 #include "iniciar_kernel.h"
 #include "escuchar_cpu_kernel.h"
 #include "escuchar_entradasalida_kernel.h"
 #include "escuchar_memoria_kernel.h"
 #include "consola_interactiva.h"
 #include "acciones_proceso.h"
+#include "planificador_largo_plazo.h"
 
 extern t_log* logger_kernel;
 
@@ -32,6 +34,8 @@ extern int fd_cpu_dispatch;
 extern int fd_cpu_interrupt;
 extern int fd_memoria;
 extern int fd_entradasalida;
+
+extern int grado_actual_multiprogramacion;
 
 // HILO PARA EL NEXT_PID
 extern uint32_t next_pid;

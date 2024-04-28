@@ -996,3 +996,35 @@
 [INFO] 18:00:40:886 Memoria/(6879:7105): Recibido handshake HANDSHAKE_ENTRADASALIDA.
 [ERROR] 18:01:43:831 Memoria/(6879:7104): El Kernel se desconecto de Memoria. Terminando servidor.
 [ERROR] 18:01:43:833 Memoria/(6879:7105): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 22:56:00:008 Memoria/(4054:4054): Arranca el modulo MEMORIA
+[INFO] 22:56:00:009 Memoria/(4054:4054): >>> Server Memoria escuchando... <<<
+[INFO] 22:56:00:009 Memoria/(4054:4054): Esperando conexión de CPU
+[INFO] 22:56:04:907 Memoria/(4054:4054): Se conecto el cliente: CPU
+
+[INFO] 22:56:04:907 Memoria/(4054:4054): Esperando conexión de Kernel
+[INFO] 22:56:16:421 Memoria/(4054:4054): Se conecto el cliente: KERNEL
+
+[INFO] 22:56:16:421 Memoria/(4054:4054): Esperando conexión de E/S
+[INFO] 22:56:21:841 Memoria/(4054:4054): Se conecto el cliente: E/S
+
+[INFO] 22:56:21:841 Memoria/(4054:4397): Recibido handshake HANDSHAKE_CPU.
+[INFO] 22:56:21:846 Memoria/(4054:4398): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:56:21:847 Memoria/(4054:4399): Recibido handshake HANDSHAKE_ENTRADASALIDA.
+[ERROR] 22:56:31:062 Memoria/(4054:4398): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 22:56:31:066 Memoria/(4054:4399): La Entradasalida se desconecto de Memoria. Terminando servidor.
+[INFO] 23:07:01:994 Memoria/(5544:5544): Arranca el modulo MEMORIA
+[INFO] 23:07:01:994 Memoria/(5544:5544): >>> Server Memoria escuchando... <<<
+[INFO] 23:07:01:994 Memoria/(5544:5544): Esperando conexión de CPU
+[INFO] 23:07:03:550 Memoria/(5544:5544): Se conecto el cliente: CPU
+
+[INFO] 23:07:03:550 Memoria/(5544:5544): Esperando conexión de Kernel
+[INFO] 23:07:06:341 Memoria/(5544:5544): Se conecto el cliente: KERNEL
+
+[INFO] 23:07:06:341 Memoria/(5544:5544): Esperando conexión de E/S
+[INFO] 23:07:08:361 Memoria/(5544:5544): Se conecto el cliente: E/S
+
+[INFO] 23:07:08:361 Memoria/(5544:5785): Recibido handshake HANDSHAKE_CPU.
+[INFO] 23:07:08:365 Memoria/(5544:5786): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:07:08:368 Memoria/(5544:5787): Recibido handshake HANDSHAKE_ENTRADASALIDA.
+[ERROR] 23:07:25:983 Memoria/(5544:5786): El Kernel se desconecto de Memoria. Terminando servidor.
+[ERROR] 23:07:25:983 Memoria/(5544:5787): La Entradasalida se desconecto de Memoria. Terminando servidor.

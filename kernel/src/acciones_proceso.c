@@ -1,7 +1,6 @@
 #include "acciones_proceso.h"
 uint32_t next_pid;
 pthread_mutex_t mutex_next_pid;
-t_list *NEW;
 pthread_mutex_t mutex_NEW;
 
 void crear_proceso(char* path){

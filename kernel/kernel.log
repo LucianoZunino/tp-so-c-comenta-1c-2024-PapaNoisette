@@ -871,3 +871,29 @@
 [INFO] 18:00:40:883 kernel/(7039:7039): Handshake OK
 [INFO] 18:00:40:885 kernel/(7039:7039): CONSOLA INTERACTIVA INICIADA
 [INFO] 18:00:40:886 kernel/(7039:7112): Recibido handshake HANDSHAKE_ENTRADASALIDA.
+[INFO] 22:55:15:423 kernel/(3768:3768): Arranca el modulo KERNEL
+[INFO] 22:55:15:424 kernel/(3768:3768): >>> Server Kernel escuchando... <<<
+[ERROR] 22:55:15:424 kernel/(3768:3768): Error conectando al Servidor,apagado o invalido
+[ERROR] 22:55:15:424 kernel/(3768:3768): Error conectando al Servidor,apagado o invalido
+[ERROR] 22:55:15:424 kernel/(3768:3768): Error conectando al Servidor,apagado o invalido
+[INFO] 22:55:15:425 kernel/(3768:3768): Esperando conexion de Interfaz E/S
+[INFO] 22:56:16:421 kernel/(4273:4273): Arranca el modulo KERNEL
+[INFO] 22:56:16:421 kernel/(4273:4273): >>> Server Kernel escuchando... <<<
+[INFO] 22:56:16:421 kernel/(4273:4273): Esperando conexion de Interfaz E/S
+[INFO] 22:56:21:841 kernel/(4273:4273): Se conecto el cliente: E/S
+
+[INFO] 22:56:21:843 kernel/(4273:4273): Handshake OK
+[INFO] 22:56:21:846 kernel/(4273:4273): Handshake OK
+[INFO] 22:56:21:847 kernel/(4273:4273): Handshake OK
+[INFO] 22:56:21:847 kernel/(4273:4273): CONSOLA INTERACTIVA INICIADA
+[INFO] 22:56:21:847 kernel/(4273:4407): Recibido handshake HANDSHAKE_ENTRADASALIDA.
+[INFO] 23:07:06:332 kernel/(5721:5721): Arranca el modulo KERNEL
+[INFO] 23:07:06:338 kernel/(5721:5721): >>> Server Kernel escuchando... <<<
+[INFO] 23:07:06:341 kernel/(5721:5721): Esperando conexion de Interfaz E/S
+[INFO] 23:07:08:361 kernel/(5721:5721): Se conecto el cliente: E/S
+
+[INFO] 23:07:08:365 kernel/(5721:5721): Handshake OK
+[INFO] 23:07:08:365 kernel/(5721:5721): Handshake OK
+[INFO] 23:07:08:365 kernel/(5721:5721): Handshake OK
+[INFO] 23:07:08:367 kernel/(5721:5721): CONSOLA INTERACTIVA INICIADA
+[INFO] 23:07:08:367 kernel/(5721:5795): Recibido handshake HANDSHAKE_ENTRADASALIDA.

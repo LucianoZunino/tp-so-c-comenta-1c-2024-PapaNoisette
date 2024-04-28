@@ -1,11 +1,17 @@
 #include "iniciar_kernel.h"
 
 t_config* config_kernel;
+t_list *NEW;
+t_list *READY;
+t_list *BLOCKED;
+t_list *EXIT; 
+// falta running
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
     iniciar_config_kernel();
     iniciar_semaforos();
+    iniciar_colas_estados();
     //imprimir_config_kernel();
 }
 
@@ -48,7 +54,19 @@ void imprimir_config_kernel(){
 }
 
 void iniciar_semaforos(){
-    
+    if (pthread_mutex_init(&mutex_NEW, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el semaforo para la cola de NEW");
+        exit(-1);
+    }
+    printf("Mutex NEW inicializado\n");
+
+}
+
+void iniciar_colas_estados() {
+    NEW = list_create();
+    READY = list_create();
+    BLOCKED = list_create();
+    EXIT = list_create();
 }
 
 void finalizar_kernel(){

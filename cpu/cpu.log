@@ -1055,3 +1055,35 @@
 [ERROR] 18:01:43:831 cpu/(6942:7106): El Kernel se desconecto de Dispatch. Terminando servidor.
 [ERROR] 18:01:43:831 cpu/(6942:7107): El Kernel se desconecto de Interrupt. Terminando servidor.
 [ERROR] 18:01:43:834 cpu/(6942:7108): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 22:56:04:904 cpu/(4139:4139): Arranca el modulo CPU
+[INFO] 22:56:04:905 cpu/(4139:4139): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 22:56:04:905 cpu/(4139:4139): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 22:56:04:907 cpu/(4139:4139): >>>CPU se conecta al server MEMORIA
+[INFO] 22:56:04:907 cpu/(4139:4139): Esperando conexion de Kernel en Dispatch
+[INFO] 22:56:16:421 cpu/(4139:4139): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:56:16:421 cpu/(4139:4139): Esperando conexion de Kernel en Interrupt
+[INFO] 22:56:16:421 cpu/(4139:4139): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:56:21:842 cpu/(4139:4139): Handshake OK
+[INFO] 22:56:21:843 cpu/(4139:4400): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:56:21:845 cpu/(4139:4401): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 22:56:31:062 cpu/(4139:4401): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 22:56:31:062 cpu/(4139:4400): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 22:56:31:067 cpu/(4139:4402): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 23:07:03:547 cpu/(5607:5607): Arranca el modulo CPU
+[INFO] 23:07:03:547 cpu/(5607:5607): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 23:07:03:548 cpu/(5607:5607): >>> Server CPU-Interrupt escuchando... <<<
+[INFO] 23:07:03:550 cpu/(5607:5607): >>>CPU se conecta al server MEMORIA
+[INFO] 23:07:03:550 cpu/(5607:5607): Esperando conexion de Kernel en Dispatch
+[INFO] 23:07:06:341 cpu/(5607:5607): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:07:06:341 cpu/(5607:5607): Esperando conexion de Kernel en Interrupt
+[INFO] 23:07:06:342 cpu/(5607:5607): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:07:08:362 cpu/(5607:5607): Handshake OK
+[INFO] 23:07:08:362 cpu/(5607:5788): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:07:08:365 cpu/(5607:5789): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 23:07:25:983 cpu/(5607:5789): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 23:07:25:983 cpu/(5607:5788): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 23:07:25:986 cpu/(5607:5790): La Memoria se desconecto de CPU. Terminando servidor.

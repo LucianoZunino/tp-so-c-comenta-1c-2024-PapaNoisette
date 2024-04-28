@@ -24,6 +24,8 @@ int fd_cpu_interrupt;
 int fd_memoria;
 int fd_entradasalida;
 
+int grado_actual_multiprogramacion = 0;
+
 int main(int argc, char* argv[]){
     decir_hola("Kernel");
 
@@ -58,6 +60,13 @@ int main(int argc, char* argv[]){
 
     // HANDSHAKE KERNEL - MEMORIA
     if (realizar_handshake(logger_kernel, fd_memoria, HANDSHAKE_KERNEL) == -1){
+        return EXIT_FAILURE;
+    }
+
+    // Planificadores
+    pthread_t hilo_planificacion_largo;
+    if (pthread_create(&hilo_planificacion_largo, NULL, (void *)(planificador_largo_plazo), NULL) == -1) {
+        log_error(logger_kernel, "No se pudo crear el hilo del planificador de largo plazo.");
         return EXIT_FAILURE;
     }
 
