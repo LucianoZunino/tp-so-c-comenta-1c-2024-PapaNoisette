@@ -5,6 +5,7 @@ t_config* config_kernel;
 void iniciar_kernel(){
     iniciar_logger_kernel();
     iniciar_config_kernel();
+    iniciar_semaforos();
     //imprimir_config_kernel();
 }
 
@@ -44,6 +45,10 @@ void imprimir_config_kernel(){
         printf("INSTANCIAS_RECURSOS: %s\n",instancias_recursos[i]);
     }
     printf("GRADO_MULTIPROGRAMACION: %d\n",grado_multiprogramacion);
+}
+
+void iniciar_semaforos(){
+    
 }
 
 void finalizar_kernel(){

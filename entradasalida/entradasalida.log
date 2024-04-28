@@ -186,3 +186,19 @@
 [INFO] 03:06:28:545 entradasalida/(4338:4338): Handshake OK
 [INFO] 03:06:28:545 entradasalida/(4338:4338): Handshake OK
 [ERROR] 03:06:36:495 entradasalida/(4338:4351): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 17:53:28:054 entradasalida/(5254:5254): Arranca el modulo  Entrada/Salida
+[INFO] 17:53:28:063 entradasalida/(5254:5254): Handshake OK
+[INFO] 17:53:28:065 entradasalida/(5254:5254): Handshake OK
+[ERROR] 17:53:56:223 entradasalida/(5254:5267): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 17:55:31:000 entradasalida/(5899:5899): Arranca el modulo  Entrada/Salida
+[INFO] 17:55:31:009 entradasalida/(5899:5899): Handshake OK
+[INFO] 17:55:31:014 entradasalida/(5899:5899): Handshake OK
+[ERROR] 17:55:48:648 entradasalida/(5899:5912): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 18:00:13:191 entradasalida/(6752:6752): Arranca el modulo  Entrada/Salida
+[INFO] 18:00:13:198 entradasalida/(6752:6752): Handshake OK
+[INFO] 18:00:13:199 entradasalida/(6752:6752): Handshake OK
+[ERROR] 18:00:31:583 entradasalida/(6752:6765): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 18:00:40:872 entradasalida/(7102:7102): Arranca el modulo  Entrada/Salida
+[INFO] 18:00:40:886 entradasalida/(7102:7102): Handshake OK
+[INFO] 18:00:40:886 entradasalida/(7102:7102): Handshake OK
+[ERROR] 18:01:43:831 entradasalida/(7102:7115): El Kernel se desconecto de Entradasalida. Terminando servidor.

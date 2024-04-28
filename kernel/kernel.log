@@ -831,3 +831,43 @@
 [INFO] 03:06:28:544 kernel/(4285:4285): Handshake OK
 [INFO] 03:06:28:544 kernel/(4285:4285): CONSOLA INTERACTIVA INICIADA
 [INFO] 03:06:28:544 kernel/(4285:4348): Recibido handshake (null).
+[INFO] 17:53:23:503 kernel/(5131:5131): Arranca el modulo KERNEL
+[INFO] 17:53:23:508 kernel/(5131:5131): >>> Server Kernel escuchando... <<<
+[INFO] 17:53:23:509 kernel/(5131:5131): Esperando conexion de Interfaz E/S
+[INFO] 17:53:28:055 kernel/(5131:5131): Se conecto el cliente: E/S
+
+[INFO] 17:53:28:056 kernel/(5131:5131): Handshake OK
+[INFO] 17:53:28:061 kernel/(5131:5131): Handshake OK
+[INFO] 17:53:28:062 kernel/(5131:5131): Handshake OK
+[INFO] 17:53:28:062 kernel/(5131:5131): CONSOLA INTERACTIVA INICIADA
+[INFO] 17:53:28:062 kernel/(5131:5264): Recibido handshake (null).
+[INFO] 17:55:28:713 kernel/(5816:5816): Arranca el modulo KERNEL
+[INFO] 17:55:28:714 kernel/(5816:5816): >>> Server Kernel escuchando... <<<
+[INFO] 17:55:28:714 kernel/(5816:5816): Esperando conexion de Interfaz E/S
+[INFO] 17:55:31:002 kernel/(5816:5816): Se conecto el cliente: E/S
+
+[INFO] 17:55:31:007 kernel/(5816:5816): Handshake OK
+[INFO] 17:55:31:008 kernel/(5816:5816): Handshake OK
+[INFO] 17:55:31:008 kernel/(5816:5816): Handshake OK
+[INFO] 17:55:31:009 kernel/(5816:5816): CONSOLA INTERACTIVA INICIADA
+[INFO] 17:55:31:009 kernel/(5816:5909): Recibido handshake HANDSHAKE_ENTRADASALIDA.
+[INFO] 18:00:09:012 kernel/(6629:6629): Arranca el modulo KERNEL
+[INFO] 18:00:09:012 kernel/(6629:6629): >>> Server Kernel escuchando... <<<
+[INFO] 18:00:09:013 kernel/(6629:6629): Esperando conexion de Interfaz E/S
+[INFO] 18:00:13:191 kernel/(6629:6629): Se conecto el cliente: E/S
+
+[INFO] 18:00:13:193 kernel/(6629:6629): Handshake OK
+[INFO] 18:00:13:194 kernel/(6629:6629): Handshake OK
+[INFO] 18:00:13:195 kernel/(6629:6629): Handshake OK
+[INFO] 18:00:13:197 kernel/(6629:6629): CONSOLA INTERACTIVA INICIADA
+[INFO] 18:00:13:198 kernel/(6629:6762): Recibido handshake HANDSHAKE_ENTRADASALIDA.
+[INFO] 18:00:39:355 kernel/(7039:7039): Arranca el modulo KERNEL
+[INFO] 18:00:39:355 kernel/(7039:7039): >>> Server Kernel escuchando... <<<
+[INFO] 18:00:39:356 kernel/(7039:7039): Esperando conexion de Interfaz E/S
+[INFO] 18:00:40:873 kernel/(7039:7039): Se conecto el cliente: E/S
+
+[INFO] 18:00:40:874 kernel/(7039:7039): Handshake OK
+[INFO] 18:00:40:875 kernel/(7039:7039): Handshake OK
+[INFO] 18:00:40:883 kernel/(7039:7039): Handshake OK
+[INFO] 18:00:40:885 kernel/(7039:7039): CONSOLA INTERACTIVA INICIADA
+[INFO] 18:00:40:886 kernel/(7039:7112): Recibido handshake HANDSHAKE_ENTRADASALIDA.

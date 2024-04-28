@@ -1,11 +1,12 @@
 #include "consola_interactiva.h"
 
-char** comando_consola_desc[8] = {"EJECUTAR_SCRIPT", "INICIAR_PROCESO", "FINALIZAR_PROCESO", "INICIAR_PLANIFICACION", "DETENER_PLANIFICACION",
+char** comando_consola_desc[9] = {"EJECUTAR_SCRIPT", "INICIAR_PROCESO", "FINALIZAR_PROCESO", "INICIAR_PLANIFICACION", "DETENER_PLANIFICACION",
 							      "PROCESO_ESTADO", "MULTIPROGRAMACION", "MENSAJE_A_MEMORIA1", "COMANDO_INVALIDO"};
 
 
 void iniciar_consola_interactiva(){
     char* leido;
+    imprimir_comandos_validos();
 	leido = readline("> ");
     comando_consola comando;
 	while(strcmp(leido, "\0") != 0){
@@ -19,6 +20,14 @@ void iniciar_consola_interactiva(){
 		leido = readline("> ");
 	}
 	free(leido);
+}
+
+void imprimir_comandos_validos() {
+    printf("\nComandos validos: \n");
+    for (unsigned i = 0; i < 9; i++) {
+        printf("%s ", comando_consola_desc[i]);
+    }
+    printf("; \n\n");
 }
 
 comando_consola validar_entrada(char* codigo){
