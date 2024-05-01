@@ -14,6 +14,7 @@
 #include "consola_interactiva.h"
 #include "acciones_proceso.h"
 #include "planificador_largo_plazo.h"
+#include <utils/mensajes.h>
 
 extern t_log* logger_kernel;
 
@@ -38,7 +39,7 @@ extern int fd_entradasalida;
 extern int grado_actual_multiprogramacion;
 
 // HILO PARA EL NEXT_PID
-extern uint32_t next_pid;
+extern uint32_t next_pid; //creo que falta inicializar
 extern pthread_mutex_t mutex_next_pid;
 
 // LISTAS DE ESTADOS, DEBEMOS USARLAS COMO FIFO
@@ -55,5 +56,8 @@ extern pthread_mutex_t mutex_READY;
 extern pthread_mutex_t mutex_BLOCKED;
 extern pthread_mutex_t mutex_RUNNING;
 extern pthread_mutex_t mutex_EXIT;
+
+// SE USA PARA EL CREAR_PROCESO
+extern pthread_mutex_t socket_memoria_mutex;
 
 #endif

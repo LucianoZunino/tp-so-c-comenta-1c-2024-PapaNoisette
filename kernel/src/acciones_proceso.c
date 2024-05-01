@@ -2,6 +2,7 @@
 uint32_t next_pid;
 pthread_mutex_t mutex_next_pid;
 pthread_mutex_t mutex_NEW;
+pthread_mutex_t socket_memoria_mutex;
 
 void crear_proceso(char* path){
     
@@ -12,7 +13,7 @@ void crear_proceso(char* path){
         return;
     }
     
-    t_list* instrucciones_del_path = list_create();
+    char* instrucciones_del_path = list_create();
     
     char* linea[100]; 
     
@@ -30,12 +31,27 @@ void crear_proceso(char* path){
 
     t_pcb *nuevo_pcb = crear_pcb(instrucciones_del_path);
 
+    nuevo_pcb->estado = E_NEW;
     
     pthread_mutex_lock(&mutex_NEW);
     list_add(NEW, &nuevo_pcb);
-    log_info(logger_kernel, "Se crea el proceso %d en NEW", nuevo_pcb->pid);
-    //falta chequear el grado de multiprogramacion y si pasa NEW -> READY
+    pthread_mutex_unlock(&mutex_NEW);
 
+    pthread_mutex_lock(&socket_memoria_mutex);
+    enviar_memoria_solicitar_inicializar_estructuras(nuevo_pcb, instrucciones_del_path, fd_memoria);
+
+    op_code codigo_operacion = recibir_codigo_operacion(fd_memoria);
+    if(codigo_operacion != KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS)
+    {
+        log_error(logger_kernel, "PID %i - No se pudo inicializar estructuras", nuevo_pcb->pid);
+        return;
+    }
+    recibir_kernel_respuesta_inicializar_estructuras(fd_memoria);
+    pthread_mutex_unlock(&socket_memoria_mutex);
+
+
+    // TODO: Revisar tema del PID para tener el log bien hecho
+    log_info(logger_kernel, "Se crea el proceso %i en NEW", nuevo_pcb->pid);
 
 }
 
@@ -65,8 +81,7 @@ t_pcb *crear_pcb(t_list *instrucciones){
 
     pcb->registros_cpu = registros_cpu;
 
-    pcb->quantum = 1;
-
+    //pcb->quantum = quantum;
 
     
 

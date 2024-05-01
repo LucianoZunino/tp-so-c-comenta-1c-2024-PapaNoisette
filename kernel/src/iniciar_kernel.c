@@ -58,7 +58,17 @@ void iniciar_semaforos(){
         log_error(logger_kernel, "No se pudo inicializar el semaforo para la cola de NEW");
         exit(-1);
     }
-    printf("Mutex NEW inicializado\n");
+    printf("socket_memoria_mutex inicializado\n");
+    if (pthread_mutex_init(&socket_memoria_mutex, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el socket_memoria_mutex");
+        exit(-1);
+    }
+    printf("socket_memoria_mutex inicializado\n");
+    if (pthread_mutex_init(&mutex_next_pid, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el mutex_next_pid");
+        exit(-1);
+    }
+    printf("mutex_next_pid inicializado\n");
 
 }
 
