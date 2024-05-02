@@ -19,7 +19,7 @@ op_code recibir_codigo_operacion(int socket)
 /// @param archivo_pseudocodigo
 
 /// @param socket
-void enviar_memoria_solicitar_inicializar_estructuras(t_pcb *pcb, t_list *archivo_pseudocodigo, int socket)
+/*void enviar_memoria_solicitar_inicializar_estructuras(t_pcb *pcb, t_list *archivo_pseudocodigo, int socket)
 {
     t_buffer* buffer_a_enviar = crear_buffer();
     t_paquete *paquete = crear_paquete(MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS, buffer_a_enviar);
@@ -29,7 +29,7 @@ void enviar_memoria_solicitar_inicializar_estructuras(t_pcb *pcb, t_list *archiv
     enviar_paquete(paquete, socket);
     eliminar_paquete(paquete);
 }
-
+*/
 void agregar_pcb (t_paquete *paquete, t_pcb *pcb)
 {
     cargar_datos_al_buffer(paquete->buffer, pcb->pid, sizeof(uint32_t));
@@ -43,7 +43,7 @@ void agregar_pcb (t_paquete *paquete, t_pcb *pcb)
 /// @param paquete
 /// @param lista
 void agregar_intrucciones(t_paquete *paquete, t_list* lista)
-{
+{   if(lista != NULL){
     int longitud = list_size(lista);
     char* cadena[100];
     int i = 0;
@@ -54,7 +54,8 @@ void agregar_intrucciones(t_paquete *paquete, t_list* lista)
 
     cargar_int_al_buffer(paquete->buffer, longitud);
     cargar_datos_al_buffer(paquete->buffer, cadena, sizeof(char) * longitud);
-}
+    }
+}   
 
 void recibir_ok(int socket)
 {
@@ -69,4 +70,17 @@ void recibir_ok(int socket)
 void recibir_kernel_respuesta_inicializar_estructuras(int socket)
 {
     recibir_ok(socket);
+}
+
+/// @brief envia proceso a el corto plazo a cpu
+/// @param pcb
+/// @param socket
+void enviar_proceso_por_paquete(t_pcb *pcb,t_list *archivo_pseudocodigo, int socket, op_code op_code)
+{
+    t_buffer* buffer_a_enviar = crear_buffer();
+    t_paquete *paquete = crear_paquete(op_code, buffer_a_enviar);
+    agregar_pcb(paquete, pcb);
+    agregar_intrucciones(paquete, archivo_pseudocodigo);
+    enviar_paquete(paquete, socket);
+    eliminar_paquete(paquete);    
 }

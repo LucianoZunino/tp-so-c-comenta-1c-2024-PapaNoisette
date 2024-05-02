@@ -6,6 +6,7 @@ t_queue *READY;
 t_list *BLOCKED;
 t_list *EXIT; 
 // falta running
+sem_t sem_NEW;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
@@ -69,8 +70,21 @@ void iniciar_semaforos(){
         exit(-1);
     }
     printf("mutex_next_pid inicializado\n");
+    if (sem_init(&sem_NEW, 0, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_NEW");
+        exit(-1);
+    }
+    if (pthread_mutex_init(&mutex_multiprogramacion, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el mutex_multiprogramacion");
+        exit(-1);
+    }
+    if (sem_init(&sem_EXEC, 1, 1) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_EXEC");
+        exit(-1);
+    }
 
 }
+
 
 void iniciar_colas_estados() {
     NEW = list_create();

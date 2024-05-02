@@ -3,6 +3,7 @@ uint32_t next_pid;
 pthread_mutex_t mutex_next_pid;
 pthread_mutex_t mutex_NEW;
 pthread_mutex_t socket_memoria_mutex;
+//sem_t sem_NEW;
 
 void crear_proceso(char* path){
     
@@ -36,9 +37,10 @@ void crear_proceso(char* path){
     pthread_mutex_lock(&mutex_NEW);
     list_add(NEW, &nuevo_pcb);
     pthread_mutex_unlock(&mutex_NEW);
+    sem_post(&sem_NEW);
 
-    pthread_mutex_lock(&socket_memoria_mutex);
-    enviar_memoria_solicitar_inicializar_estructuras(nuevo_pcb, instrucciones_del_path, fd_memoria);
+    //pthread_mutex_lock(&socket_memoria_mutex); SUPONEMOS QUE SE TRABAJA EN PARALELO AL SOCKET PARA VER SI NECESITA MUTEX
+    enviar_proceso_por_paquete(nuevo_pcb, instrucciones_del_path, fd_memoria, MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS);
 
     op_code codigo_operacion = recibir_codigo_operacion(fd_memoria);
     if(codigo_operacion != KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS)
@@ -47,7 +49,7 @@ void crear_proceso(char* path){
         return;
     }
     recibir_kernel_respuesta_inicializar_estructuras(fd_memoria);
-    pthread_mutex_unlock(&socket_memoria_mutex);
+    //pthread_mutex_unlock(&socket_memoria_mutex);
 
 
     // TODO: Revisar tema del PID para tener el log bien hecho
@@ -81,9 +83,9 @@ t_pcb *crear_pcb(t_list *instrucciones){
 
     pcb->registros_cpu = registros_cpu;
 
-    //pcb->quantum = quantum;
+    pcb->quantum = quantum;
 
-    
+    // ESTA MEMORIA SE ELIMINA EN ELIMINAR_PROCESO
 
     return pcb;
 }

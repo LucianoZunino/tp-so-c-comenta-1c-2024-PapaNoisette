@@ -24,7 +24,8 @@ typedef enum{
 	HANDSHAKE_MEMORIA,
 	HANDSHAKE_CPU,
 	KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, // PIDE A MEMORIA INICIALIZAR ESTRUCTURA Y LO HACE CORRECTAMENTE.
-	MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS
+	MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS,
+	ENVIAR_PROCESO_A_EXEC
 } op_code;
 
 typedef struct{
@@ -79,7 +80,7 @@ typedef struct
   t_list *instrucciones;
   uint32_t program_counter;
   t_registros_cpu *registros_cpu;
- // time_t quantum;
+  time_t quantum;
   estado_pcb estado;
 
 } t_pcb;

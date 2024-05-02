@@ -25,7 +25,7 @@ int fd_memoria;
 int fd_entradasalida;
 
 int grado_actual_multiprogramacion = 0;
-pthread_mutex_t mutex_multiprogramacion;
+
 
 int main(int argc, char* argv[]){
     decir_hola("Kernel");
@@ -73,17 +73,10 @@ int main(int argc, char* argv[]){
         return EXIT_FAILURE;
     }
 
-    pthread_t hilo_planificacion_corto;
-    if (strcmp(algoritmo_planificacion, "FIFO")){
-        //pthread_create(&hilo_planificacion_corto, NULL, (void *)(planificador_corto_plazo_FIFO), NULL);
-    } else if(strcmp(algoritmo_planificacion, "Round Robin")){
-        //pthread_create(&hilo_planificacion_corto, NULL, (void *)(planificador_corto_plazo_RR);
-    } else if(strcmp(algoritmo_planificacion, "Virtual Round Robin")){
-        //pthread_create(&hilo_planificacion_corto, NULL, (void *)(planificador_corto_plazo_VRR);
-    } else {
-        log_error(logger_kernel, "El algoritmo de planificacion no es valido.");
-        return EXIT_FAILURE;
-    }
+    pthread_t hilo_planificacion_corto_plazo;
+    pthread_create(&hilo_planificacion_corto_plazo, NULL, (void *)(planificador_corto_plazo), NULL);
+    pthread_detach(hilo_planificacion_corto_plazo);
+
 
     // Escuchar los mensajes de Dispatch-Kernel
     pthread_t hilo_dispatch_kernel;

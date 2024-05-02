@@ -14,6 +14,7 @@
 #include "consola_interactiva.h"
 #include "acciones_proceso.h"
 #include "planificador_largo_plazo.h"
+#include "planificador_corto_plazo.h"
 #include <utils/mensajes.h>
 
 extern t_log* logger_kernel;
@@ -41,10 +42,11 @@ extern int grado_actual_multiprogramacion;
 // HILO PARA EL NEXT_PID
 extern uint32_t next_pid; //creo que falta inicializar
 extern pthread_mutex_t mutex_next_pid;
+extern pthread_mutex_t mutex_multiprogramacion;
 
 // LISTAS DE ESTADOS, DEBEMOS USARLAS COMO FIFO
 extern t_list *NEW;
-extern t_list *READY;
+extern t_queue *READY;
 extern t_list *BLOCKED;
 extern t_pcb *RUNNING;
 extern t_list *EXIT;
@@ -57,7 +59,13 @@ extern pthread_mutex_t mutex_BLOCKED;
 extern pthread_mutex_t mutex_RUNNING;
 extern pthread_mutex_t mutex_EXIT;
 
+// SEMAFOROS DE BINARIOS
+extern sem_t sem_NEW;
+extern sem_t sem_EXEC;
+
+
 // SE USA PARA EL CREAR_PROCESO
 extern pthread_mutex_t socket_memoria_mutex;
+
 
 #endif
