@@ -2,7 +2,7 @@
 
 t_config* config_kernel;
 t_list *NEW;
-t_list *READY;
+t_queue *READY;
 t_list *BLOCKED;
 t_list *EXIT; 
 // falta running
@@ -74,7 +74,7 @@ void iniciar_semaforos(){
 
 void iniciar_colas_estados() {
     NEW = list_create();
-    READY = list_create();
+    READY = queue_create();
     BLOCKED = list_create();
     EXIT = list_create();
 }

@@ -1,5 +1,7 @@
 #include "planificador_largo_plazo.h"
 
+
+
 void planificador_largo_plazo() {
     while (true){
         //sem_wait(&semaforo_NEW);
@@ -14,6 +16,8 @@ void planificador_largo_plazo() {
             //pthread_mutex_unlock(&mutex_mp);
             t_pcb *new_pcb = list_remove(NEW, 0);
             pthread_mutex_unlock(&mutex_NEW);
+
+            pthread_mutex_lock(&mutex_multiprogramacion);
             //new_pcb->tabla_segmentos = solicitar_tabla_segmentos(new_pcb->pid);
             //encolar_proceso(new_pcb, READY, &mutex_READY, "NEW", "READY");
         }
