@@ -33,13 +33,13 @@ op_code recibir_codigo_operacion(int socket)
 void agregar_pcb (t_paquete *paquete, t_pcb *pcb)
 {
     cargar_datos_al_buffer(paquete->buffer, pcb->pid, sizeof(uint32_t));
-    cargar_datos_al_buffer(paquete->buffer, pcb->instrucciones, sizeof(pcb->instrucciones));
+    //cargar_datos_al_buffer(paquete->buffer, pcb->instrucciones, sizeof(pcb->instrucciones));
     cargar_datos_al_buffer(paquete->buffer, pcb->program_counter, sizeof(uint32_t));
     cargar_datos_al_buffer(paquete->buffer, pcb->registros_cpu, sizeof(pcb->registros_cpu));
     cargar_datos_al_buffer(paquete->buffer, &pcb->estado, sizeof(pcb->estado));
 }
 
-/// @brief Agrega longitud y la intrucciones al buffer del paquete
+/*/// @brief Agrega longitud y la intrucciones al buffer del paquete
 /// @param paquete
 /// @param lista
 void agregar_intrucciones(t_paquete *paquete, t_list* lista)
@@ -55,7 +55,9 @@ void agregar_intrucciones(t_paquete *paquete, t_list* lista)
     cargar_int_al_buffer(paquete->buffer, longitud);
     cargar_datos_al_buffer(paquete->buffer, cadena, sizeof(char) * longitud);
     }
-}   
+}   // PUEDE SERVIR PARA MEMORIA AL MOMENTO DE SACAR LAS INSTRUCCIONES DEL PATH
+*/
+
 
 void recibir_ok(int socket)
 {
@@ -75,12 +77,24 @@ void recibir_kernel_respuesta_inicializar_estructuras(int socket)
 /// @brief envia proceso a el corto plazo a cpu
 /// @param pcb
 /// @param socket
-void enviar_proceso_por_paquete(t_pcb *pcb,t_list *archivo_pseudocodigo, int socket, op_code op_code)
+void enviar_proceso_por_paquete(t_pcb *pcb,char *archivo_pseudocodigo, int socket, op_code op_code)
 {
     t_buffer* buffer_a_enviar = crear_buffer();
     t_paquete *paquete = crear_paquete(op_code, buffer_a_enviar);
     agregar_pcb(paquete, pcb);
-    agregar_intrucciones(paquete, archivo_pseudocodigo);
+    cargar_string_al_buffer(paquete->buffer, archivo_pseudocodigo);
     enviar_paquete(paquete, socket);
     eliminar_paquete(paquete);    
+}
+
+/// @brief Envia CPU_INTERRUPT y el pcb al socket indicado
+/// @param pcb
+/// @param socket
+void enviar_cpu_interrupt(t_pcb *pcb, motivo_interrupcion motivo, int socket){   
+    t_buffer* buffer_a_enviar = crear_buffer();
+    t_paquete *paquete = crear_paquete(CPU_INTERRUPT, buffer_a_enviar);
+    agregar_pcb(paquete, pcb);
+    cargar_datos_al_buffer(paquete->buffer, &motivo, sizeof(motivo));
+    enviar_paquete(paquete, socket);
+    eliminar_paquete(paquete);
 }

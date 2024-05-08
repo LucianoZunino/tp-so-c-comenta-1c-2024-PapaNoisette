@@ -1,6 +1,7 @@
 #include "planificador_largo_plazo.h"
 pthread_mutex_t mutex_multiprogramacion;
 pthread_mutex_t mutex_READY;
+//sem_t sem_READY;
 
 
 void planificador_largo_plazo() {
@@ -27,7 +28,7 @@ void planificador_largo_plazo() {
             pthread_mutex_lock(&mutex_READY);
             queue_push(READY, new_pcb);
             pthread_mutex_unlock(&mutex_READY);
-
+            sem_post(&sem_READY);
             //encolar_proceso(new_pcb, READY, &mutex_READY, "NEW", "READY");
         }
         else

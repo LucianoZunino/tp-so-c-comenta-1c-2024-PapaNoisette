@@ -16,6 +16,7 @@
 #include "planificador_largo_plazo.h"
 #include "planificador_corto_plazo.h"
 #include <utils/mensajes.h>
+#include "utils_kernel.h"
 
 extern t_log* logger_kernel;
 
@@ -62,6 +63,7 @@ extern pthread_mutex_t mutex_EXIT;
 // SEMAFOROS DE BINARIOS
 extern sem_t sem_NEW;
 extern sem_t sem_EXEC;
+extern sem_t sem_READY;
 
 
 // SE USA PARA EL CREAR_PROCESO

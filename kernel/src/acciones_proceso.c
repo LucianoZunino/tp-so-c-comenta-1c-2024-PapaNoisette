@@ -7,7 +7,7 @@ pthread_mutex_t socket_memoria_mutex;
 
 void crear_proceso(char* path){
     
-    FILE* archivo = fopen(path, "r");
+    /*FILE* archivo = fopen(path, "r");
 
     if (archivo == NULL) {
         printf("Error: No se pudo abrir el archivo %s\n", path);
@@ -29,8 +29,8 @@ void crear_proceso(char* path){
     }
 
     fclose(archivo);
-
-    t_pcb *nuevo_pcb = crear_pcb(instrucciones_del_path);
+*/ //PUEDE SERVIR PARA MEMORIA
+    t_pcb *nuevo_pcb = crear_pcb();
 
     nuevo_pcb->estado = E_NEW;
     
@@ -40,7 +40,7 @@ void crear_proceso(char* path){
     sem_post(&sem_NEW);
 
     //pthread_mutex_lock(&socket_memoria_mutex); SUPONEMOS QUE SE TRABAJA EN PARALELO AL SOCKET PARA VER SI NECESITA MUTEX
-    enviar_proceso_por_paquete(nuevo_pcb, instrucciones_del_path, fd_memoria, MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS);
+    enviar_proceso_por_paquete(nuevo_pcb, path, fd_memoria, MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS);
 
     op_code codigo_operacion = recibir_codigo_operacion(fd_memoria);
     if(codigo_operacion != KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS)
@@ -57,7 +57,7 @@ void crear_proceso(char* path){
 
 }
 
-t_pcb *crear_pcb(t_list *instrucciones){
+t_pcb *crear_pcb(){
 
      t_pcb *pcb = malloc(sizeof(t_pcb));
 
@@ -66,23 +66,15 @@ t_pcb *crear_pcb(t_list *instrucciones){
     next_pid++;
     pthread_mutex_unlock(&mutex_next_pid);
 
-    pcb->instrucciones = instrucciones;
     pcb->program_counter = 0;
 
     t_registros_cpu *registros_cpu = malloc(sizeof(t_registros_cpu));
-    memset(registros_cpu->AX, 0, sizeof(registros_cpu->AX));
-    memset(registros_cpu->BX, 0, sizeof(registros_cpu->BX));
-    memset(registros_cpu->CX, 0, sizeof(registros_cpu->CX));
-    memset(registros_cpu->DX, 0, sizeof(registros_cpu->DX));
-    memset(registros_cpu->EAX, 0, sizeof(registros_cpu->EAX));
-    memset(registros_cpu->EBX, 0, sizeof(registros_cpu->EBX));
-    memset(registros_cpu->ECX, 0, sizeof(registros_cpu->ECX));
-    memset(registros_cpu->EDX, 0, sizeof(registros_cpu->EDX));
-    memset(registros_cpu->SI, 0, sizeof(registros_cpu->SI));
-    memset(registros_cpu->DI, 0, sizeof(registros_cpu->DI));
+    
 
     pcb->registros_cpu = registros_cpu;
 
+    int quantum = malloc(sizeof(int));
+    
     pcb->quantum = quantum;
 
     // ESTA MEMORIA SE ELIMINA EN ELIMINAR_PROCESO

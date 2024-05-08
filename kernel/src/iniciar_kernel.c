@@ -7,6 +7,7 @@ t_list *BLOCKED;
 t_list *EXIT; 
 // falta running
 sem_t sem_NEW;
+sem_t sem_READY;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
@@ -70,7 +71,7 @@ void iniciar_semaforos(){
         exit(-1);
     }
     printf("mutex_next_pid inicializado\n");
-    if (sem_init(&sem_NEW, 0, 0) != 0) {
+    if (sem_init(&sem_NEW, 1, 0) != 0) {
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_NEW");
         exit(-1);
     }
@@ -80,6 +81,10 @@ void iniciar_semaforos(){
     }
     if (sem_init(&sem_EXEC, 1, 1) != 0) {
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_EXEC");
+        exit(-1);
+    }
+    if (sem_init(&sem_READY, 1, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_READY");
         exit(-1);
     }
 

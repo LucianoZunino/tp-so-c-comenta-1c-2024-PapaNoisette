@@ -25,7 +25,8 @@ typedef enum{
 	HANDSHAKE_CPU,
 	KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, // PIDE A MEMORIA INICIALIZAR ESTRUCTURA Y LO HACE CORRECTAMENTE.
 	MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS,
-	ENVIAR_PROCESO_A_EXEC
+	ENVIAR_PROCESO_A_EXEC,
+	CPU_INTERRUPT
 } op_code;
 
 typedef struct{
@@ -77,13 +78,21 @@ typedef enum {
 typedef struct
 {
   uint32_t pid;
-  t_list *instrucciones;
   uint32_t program_counter;
   t_registros_cpu *registros_cpu;
-  time_t quantum;
+  int quantum;
   estado_pcb estado;
 
 } t_pcb;
+
+// MOTIVOS DE INTERRUPCION
+typedef enum
+{
+    FIN_DE_QUANTUM,
+    ELIMINAR_PROCESO
+
+} motivo_interrupcion;
+
 
 
 

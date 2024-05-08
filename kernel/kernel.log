@@ -921,3 +921,9 @@
 [ERROR] 20:33:14:845 kernel/(19297:19297): Error conectando al Servidor,apagado o invalido
 [ERROR] 20:33:14:849 kernel/(19297:19297): Error conectando al Servidor,apagado o invalido
 [INFO] 20:33:14:850 kernel/(19297:19297): Esperando conexion de Interfaz E/S
+[INFO] 03:12:55:832 kernel/(12580:12580): Arranca el modulo KERNEL
+[INFO] 03:12:55:834 kernel/(12580:12580): >>> Server Kernel escuchando... <<<
+[ERROR] 03:12:55:834 kernel/(12580:12580): Error conectando al Servidor,apagado o invalido
+[ERROR] 03:12:55:835 kernel/(12580:12580): Error conectando al Servidor,apagado o invalido
+[ERROR] 03:12:55:835 kernel/(12580:12580): Error conectando al Servidor,apagado o invalido
+[INFO] 03:12:55:835 kernel/(12580:12580): Esperando conexion de Interfaz E/S

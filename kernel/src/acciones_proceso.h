@@ -8,7 +8,7 @@
 
 
 void crear_proceso(char* path);
-t_pcb* crear_pcb(t_list *instrucciones);
+t_pcb* crear_pcb();
 
 
 #endif
