@@ -10,6 +10,9 @@ void escuchar_mensajes_kernel_memoria(){
 				buffer = recibir_buffer_completo(fd_kernel);
 				obtener_mensaje(buffer);
 				break;
+			case HANDSHAKE_KERNEL:
+				aceptar_handshake(logger_memoria, fd_kernel, cod_op);
+				break;
 			case -1:
 				log_error(logger_memoria, "El Kernel se desconecto de Memoria. Terminando servidor.");
 				desconexion_kernel_memoria = 1;

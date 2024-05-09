@@ -4,8 +4,11 @@
 #include "main.h"
 #include <readline/readline.h>
 
+//extern char** comando_consola_desc;
+
+
 void iniciar_consola_interactiva();
-bool validacion_de_instruccion_de_consola(char* leido);
-void ejecutar_instruccion(char* leido);
+comando_consola validar_entrada(char* codigo);
+void ejecutar_instruccion(char** leido, comando_consola comando);
 
 #endif

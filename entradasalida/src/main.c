@@ -28,6 +28,14 @@ int main(int argc, char* argv[]){
     // Se conecta como cliente a KERNEL
     fd_kernel = crear_conexion(ip_kernel, puerto_kernel, logger_entradasalida);
 
+    if (realizar_handshake(logger_entradasalida, fd_kernel, HANDSHAKE_ENTRADASALIDA) == -1){
+        return EXIT_FAILURE;
+    }
+
+    if (realizar_handshake(logger_entradasalida, fd_memoria, HANDSHAKE_ENTRADASALIDA) == -1){
+        return EXIT_FAILURE;
+    }
+
     // Escucha los mensajes Memoria-E/S
     pthread_t hilo_memoria_entradasalida;
 	pthread_create(&hilo_memoria_entradasalida, NULL, (void*)escuchar_mensajes_memoria_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse

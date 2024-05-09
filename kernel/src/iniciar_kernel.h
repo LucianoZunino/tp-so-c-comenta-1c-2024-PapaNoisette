@@ -8,5 +8,6 @@ void iniciar_kernel();
 void iniciar_logger_kernel();
 void iniciar_config_kernel();
 void imprimir_config_kernel();
+void iniciar_semaforos();
 void finalizar_kernel();
 #endif

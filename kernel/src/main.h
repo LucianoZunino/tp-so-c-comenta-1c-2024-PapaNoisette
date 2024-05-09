@@ -6,11 +6,17 @@
 #include <pthread.h>
 #include <utils/hello.h>
 #include <utils/utils.h>
+#include <semaphore.h>
 #include "iniciar_kernel.h"
 #include "escuchar_cpu_kernel.h"
 #include "escuchar_entradasalida_kernel.h"
 #include "escuchar_memoria_kernel.h"
 #include "consola_interactiva.h"
+#include "acciones_proceso.h"
+#include "planificador_largo_plazo.h"
+#include "planificador_corto_plazo.h"
+#include <utils/mensajes.h>
+#include "utils_kernel.h"
 
 extern t_log* logger_kernel;
 
@@ -31,5 +37,37 @@ extern int fd_cpu_dispatch;
 extern int fd_cpu_interrupt;
 extern int fd_memoria;
 extern int fd_entradasalida;
+
+extern int grado_actual_multiprogramacion;
+
+// HILO PARA EL NEXT_PID
+extern uint32_t next_pid; //creo que falta inicializar
+extern pthread_mutex_t mutex_next_pid;
+extern pthread_mutex_t mutex_multiprogramacion;
+
+// LISTAS DE ESTADOS, DEBEMOS USARLAS COMO FIFO
+extern t_list *NEW;
+extern t_queue *READY;
+extern t_list *BLOCKED;
+extern t_pcb *RUNNING;
+extern t_list *EXIT;
+
+// HILOS MUTEX PARA AGREGAR CON MUTUA EXCLUSION PARA QUE NO HAYA SUPERPOSICION
+// EN LOS PROCESOS QUE COMPARTAN DICHAS COLAS DE ESTADOS.
+extern pthread_mutex_t mutex_NEW;
+extern pthread_mutex_t mutex_READY;
+extern pthread_mutex_t mutex_BLOCKED;
+extern pthread_mutex_t mutex_RUNNING;
+extern pthread_mutex_t mutex_EXIT;
+
+// SEMAFOROS DE BINARIOS
+extern sem_t sem_NEW;
+extern sem_t sem_EXEC;
+extern sem_t sem_READY;
+
+
+// SE USA PARA EL CREAR_PROCESO
+extern pthread_mutex_t socket_memoria_mutex;
+
 
 #endif

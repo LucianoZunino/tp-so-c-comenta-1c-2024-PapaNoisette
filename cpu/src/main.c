@@ -20,9 +20,7 @@ int fd_memoria;
 int fd_kernel_dispatch;
 int fd_kernel_interrupt;
 
-//Variables de los registros de la CPU
 uint32_t PROGRAM_COUNTER=0;
-uint8_t AX;
 uint8_t BX;
 uint8_t CX;
 uint8_t DX;
@@ -37,10 +35,6 @@ extern t_list* INSTRUCTION_LIST;
 
 
 int main(int argc, char* argv[]){
-    decir_hola("CPU");
-
-	// Iniciar CPU
-    iniciar_cpu();
   	log_info(logger_cpu, "Arranca el modulo CPU");
 
     // Inicia el server de cpu dispatch
@@ -59,6 +53,12 @@ int main(int argc, char* argv[]){
   	// Esperar al cliente Kernel en interrupt
 	log_info(logger_cpu, "Esperando conexion de Kernel en Interrupt");
 	fd_kernel_interrupt = esperar_cliente(fd_cpu_interrupt, logger_cpu, "Kernel-Interrupt");
+
+
+	// Handshake CPU - Memoria
+	if (realizar_handshake(logger_cpu, fd_memoria, HANDSHAKE_CPU) == -1){
+        return EXIT_FAILURE;
+    }
 
 	// Escuchar los mensajes de Kernel-Dispatch
 	pthread_t hilo_kernel_dispatch;

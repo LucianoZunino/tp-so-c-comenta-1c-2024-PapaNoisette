@@ -1,10 +1,19 @@
 #include "iniciar_kernel.h"
 
 t_config* config_kernel;
+t_list *NEW;
+t_queue *READY;
+t_list *BLOCKED;
+t_list *EXIT; 
+// falta running
+sem_t sem_NEW;
+sem_t sem_READY;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
     iniciar_config_kernel();
+    iniciar_semaforos();
+    iniciar_colas_estados();
     //imprimir_config_kernel();
 }
 
@@ -42,11 +51,54 @@ void imprimir_config_kernel(){
     }
     for(int i=0; i<largo_array(instancias_recursos); i++){
         printf("INSTANCIAS_RECURSOS: %s\n",instancias_recursos[i]);
+
     }
     printf("GRADO_MULTIPROGRAMACION: %d\n",grado_multiprogramacion);
+
+void iniciar_semaforos(){
+    if (pthread_mutex_init(&mutex_NEW, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el semaforo para la cola de NEW");
+        exit(-1);
+    }
+    printf("socket_memoria_mutex inicializado\n");
+    if (pthread_mutex_init(&socket_memoria_mutex, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el socket_memoria_mutex");
+        exit(-1);
+    }
+    printf("socket_memoria_mutex inicializado\n");
+    if (pthread_mutex_init(&mutex_next_pid, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el mutex_next_pid");
+        exit(-1);
+    }
+    printf("mutex_next_pid inicializado\n");
+    if (sem_init(&sem_NEW, 1, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_NEW");
+        exit(-1);
+    }
+    if (pthread_mutex_init(&mutex_multiprogramacion, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el mutex_multiprogramacion");
+        exit(-1);
+    }
+    if (sem_init(&sem_EXEC, 1, 1) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_EXEC");
+        exit(-1);
+    }
+    if (sem_init(&sem_READY, 1, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_READY");
+        exit(-1);
+    }
+
 }
+
+
+void iniciar_colas_estados() {
+    NEW = list_create();
+    READY = queue_create();
+    BLOCKED = list_create();
+    EXIT = list_create();
+}
+
 
 void finalizar_kernel(){
     log_destroy(logger_kernel);
-    config_destroy(config_kernel);
 }

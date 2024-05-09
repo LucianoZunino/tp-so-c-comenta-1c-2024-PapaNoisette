@@ -10,6 +10,7 @@
 #include "escuchar_kernel_cpu.h"
 #include "escuchar_memoria_cpu.h"
 
+extern t_log* logger_cpu;
 
 //Variables de la config
 extern t_log* logger_cpu;

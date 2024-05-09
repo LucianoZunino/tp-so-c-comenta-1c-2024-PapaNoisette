@@ -7,6 +7,10 @@ void escuchar_mensajes_kernel_dispatch(){
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
+						
+			case HANDSHAKE_KERNEL:
+				aceptar_handshake(logger_cpu, fd_kernel_dispatch, cod_op);
+				break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Dispatch. Terminando servidor.");
 				desconexion_kernel_dispatch = 1;
@@ -24,6 +28,9 @@ void escuchar_mensajes_kernel_interrupt(){
 		int cod_op = recibir_operacion(fd_kernel_interrupt); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
+			case HANDSHAKE_KERNEL:
+				aceptar_handshake(logger_cpu, fd_kernel_interrupt, cod_op);
+				break;
 			//	break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Interrupt. Terminando servidor.");

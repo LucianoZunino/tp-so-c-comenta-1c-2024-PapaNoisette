@@ -1,5 +1,7 @@
 #include "utils.h"
 
+char* op_code_desc[] = {"HANDSHAKE_OK", "MENSAJE_A_MEMORIA", "HANDSHAKE_KERNEL", "HANDSHAKE_ENTRADASALIDA", "HANDSHAKE_MEMORIA", "HANDSHAKE_CPU"};
+
 t_config* iniciar_config(char* ruta_config){
 	t_config* nuevo_config = config_create(ruta_config);
 	if(nuevo_config == NULL){
@@ -269,4 +271,48 @@ int largo_array(char**array){
 		largo++;
 	}
 	return largo;
+}
+
+int enviar_handshake(t_log *logger, int socket_cliente, op_code handshake)
+{
+	int resultado;
+	send(socket_cliente, &handshake, sizeof(int), 0);
+	recv(socket_cliente, &resultado, sizeof(int), MSG_WAITALL);
+	if (resultado != -1)
+	{
+		log_info(logger, "Handshake OK");
+	}
+	else
+	{
+		log_error(logger, "Handshake rechazado");
+	}
+
+	return resultado;
+}
+
+int realizar_handshake(t_log *logger, int socket_servidor, op_code handshake)
+{
+
+	if (enviar_handshake(logger, socket_servidor, handshake) == -1)
+	{
+		close(socket_servidor);
+		log_error(logger, "No se pudo realizar el handshake con el servidor");
+		return -1;
+	}
+
+	return 0;
+}
+
+void aceptar_handshake(t_log *logger, int socket_cliente, op_code cop)
+{
+	int result_ok = 0;
+	log_info(logger, "Recibido handshake %s.", op_code_desc[cop]);
+	send(socket_cliente, &result_ok, sizeof(int), 0);
+}
+
+void rechazar_handshake(t_log *logger, int socket_cliente)
+{
+	int result_error = -1;
+	log_error(logger, "Recibido handshake de un modulo no autorizado, rechazando...");
+	send(socket_cliente, &result_error, sizeof(int), 0);
 }
