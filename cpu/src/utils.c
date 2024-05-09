@@ -1,19 +1,22 @@
 #include "utils.h"
 
-void loggear_ejecucion(t_instruccion *instruccion)
+void loggear_ejecucion(t_instruccion *instruccion)//log obligatorio
 {
-    log_info(logger_cpu, "PID: %d - Ejecutando: %s - arg1: %s, arg2: %s, arg3: %s", PID_RUNNING,
+    log_info(logger_cpu, "Ejecutando: %s - arg1: %s, arg2: %s, arg3: %s",
              instruccion->instruccion,
              instruccion->arg1,
              instruccion->arg2,
              instruccion->arg3);
 }
-ex_instruction decode(char *instruccion)
-{
 
-#include "utils.h"
-
-ex_instruction decode(char *instruccion)
+t_instruccion * fetch(){
+             //   void *buffer = recibir_buffer(cliente_socket);
+ //   send(cliente_socket, buffer, 5, NULL);
+t_instruccion * instruccion;
+return instruccion;
+    
+}
+t_instruction_code decode(char *instruccion)
     {
         if (strcmp(instruccion, "SET") == 0)
         {
@@ -35,14 +38,14 @@ ex_instruction decode(char *instruccion)
         {
             return SUB;
         }
-        else if (strcmp(instruccion, "INZ") == 0)
+        else if (strcmp(instruccion, "JNZ") == 0)
         {
-            return INZ;
+            return JNZ;
         }
         else if (strcmp(instruccion, "RESIZE") == 0)
         {
             return RESIZE;
-        
+        }
         else if (strcmp(instruccion, "COPY_STRING") == 0)
         {
             return COPY_STRING;
@@ -89,11 +92,14 @@ ex_instruction decode(char *instruccion)
         }
         else if (strcmp(instruccion, "EXIT") == 0)
         {
+
             return EXIT;
         }
         else
         {
-            log_error(logger_cpu, "La intrucción no es válida");
+            log_error(logger_cpu, "La intrucción no es válidaa");
+                                    printf("holaaa %s"),instruccion;
+
             return -1; // supuestamente las instrucciones nunca vienen incorrectas
         }
     }
@@ -102,43 +108,47 @@ void ejecutar_set(t_instruccion * instruccion)
     {
         if (strcmp(instruccion->arg1, "AX") == 0)
         {
-            strncpy(AX, instruccion->arg2, 4);
+        AX=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "BX") == 0)
         {
-            strncpy(BX, instruccion->arg2, 4);
+        BX=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "CX") == 0)
         {
-            strncpy(CX, instruccion->arg2, 4);
+        CX=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "DX") == 0)
         {
-            strncpy(DX, instruccion->arg2, 4);
+        DX=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "EAX") == 0)
         {
-            strncpy(EAX, instruccion->arg2, 32);
+        EAX=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "EBX") == 0)
         {
-            strncpy(EBX, instruccion->arg2, 32);
+        EBX=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "ECX") == 0)
         {
-            strncpy(ECX, instruccion->arg2, 32);
+        ECX=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "EDX") == 0)
         {
-            strncpy(EDX, instruccion->arg2, 32);
+        EDX=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "SI") == 0)
         {
-            strncpy(SI, instruccion->arg2, 32);
+        SI=atoi(instruccion->arg2);        
         }
         else if (strcmp(instruccion->arg1, "DI") == 0)
         {
-            strncpy(DI, instruccion->arg2, 32);
+        DI=atoi(instruccion->arg2);        
+        }
+        else if (strcmp(instruccion->arg1, "PC") == 0)
+        {
+        PROGRAM_COUNTER=atoi(instruccion->arg2);        
         }
         else
         {
@@ -146,31 +156,192 @@ void ejecutar_set(t_instruccion * instruccion)
         }
     }
 
-cod_op_kernel ejecutar_instrucciones()
+void ejecutar_sum(t_instruccion * instruccion)
     {
-
-        while (true)
+         int sum =atoi(instruccion->arg1)+atoi(instruccion->arg2);
+        printf ("sum: %d\n",sum);
+        if (strcmp(instruccion->arg1, "AX") == 0)
         {
-            t_instruccion *instruccion = list_get(INSTRUCTION_LIST, PROGRAM_COUNTER);
+            AX=sum;
+        }
+        else if (strcmp(instruccion->arg1, "BX") == 0)
+        {
+            BX=sum;
+        }
+        else if (strcmp(instruccion->arg1, "CX") == 0)
+        {
+            CX=sum;
+        }
+        else if (strcmp(instruccion->arg1, "DX") == 0)
+        {
+            DX=sum;
+        }
+        else if (strcmp(instruccion->arg1, "EAX") == 0)
+        {
+            EAX=sum;
+        }
+        else if (strcmp(instruccion->arg1, "EBX") == 0)
+        {
+            EBX=sum;
+        }
+        else if (strcmp(instruccion->arg1, "ECX") == 0)
+        {
+            ECX=sum;
+        }
+        else if (strcmp(instruccion->arg1, "EDX") == 0)
+        {
+            EDX=sum;
+        }
+        else if (strcmp(instruccion->arg1, "SI") == 0)
+        {
+            SI=sum;
+        }
+        else if (strcmp(instruccion->arg1, "DI") == 0)
+        {
+            DI=sum;
+        }
+        else if (strcmp(instruccion->arg1, "PROGRAM_COUNTER") == 0)
+        {
+        PROGRAM_COUNTER=sum;        
+        }
+        else
+        {
+            log_error(logger_cpu, "El argumento de la instrucción SUM es incorrecto");
+        }
+    }
+void ejecutar_sub(t_instruccion * instruccion)
+    {
+        int sub =atoi(instruccion->arg1)-atoi(instruccion->arg2);
+        printf ("sub: %d\n",sub);
+        if (strcmp(instruccion->arg1, "AX") == 0)
+        {
+            AX=sub;
+        }
+        else if (strcmp(instruccion->arg1, "BX") == 0)
+        {
+            BX=sub;
+        }
+        else if (strcmp(instruccion->arg1, "CX") == 0)
+        {
+            CX=sub;
+        }
+        else if (strcmp(instruccion->arg1, "DX") == 0)
+        {
+            DX=sub;
+        }
+        else if (strcmp(instruccion->arg1, "EAX") == 0)
+        {
+            EAX=sub;
+        }
+        else if (strcmp(instruccion->arg1, "EBX") == 0)
+        {
+            EBX=sub;
+        }
+        else if (strcmp(instruccion->arg1, "ECX") == 0)
+        {
+            ECX=sub;
+        }
+        else if (strcmp(instruccion->arg1, "EDX") == 0)
+        {
+            EDX=sub;
+        }
+        else if (strcmp(instruccion->arg1, "SI") == 0)
+        {
+            SI=sub;
+        }
+        else if (strcmp(instruccion->arg1, "DI") == 0)
+        {
+            DI=sub;
+        }
+        else if (strcmp(instruccion->arg1, "PROGRAM_COUNTER") == 0)
+        {
+        PROGRAM_COUNTER=sub;        
+        }
+        else
+        {
+            log_error(logger_cpu, "El argumento de la instrucción SUB es incorrecto");
+        }
+    }
+
+void ejecutar_jnz(t_instruccion* instruccion){
+
+    int new_program_counter=atoi(instruccion->arg2);
+        if (strcmp(instruccion->arg1, "AX") == 0 && AX ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter; 
+        }
+        else if (strcmp(instruccion->arg1, "BX") == 0 && BX ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;
+        }
+        else if (strcmp(instruccion->arg1, "CX") == 0 && CX ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;        
+        }
+        else if (strcmp(instruccion->arg1, "DX") == 0 && DX ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;
+        }
+        else if (strcmp(instruccion->arg1, "EAX") == 0 && EAX ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;
+        }
+        else if (strcmp(instruccion->arg1, "EBX") == 0 && EBX ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;
+        }
+        else if (strcmp(instruccion->arg1, "ECX") == 0 && ECX ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;
+        }
+        else if (strcmp(instruccion->arg1, "EDX") == 0 && EDX ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;
+        }
+        else if (strcmp(instruccion->arg1, "SI") == 0 && SI ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;
+        }
+        else if (strcmp(instruccion->arg1, "DI") == 0 && DI ==0)
+        {
+            PROGRAM_COUNTER=new_program_counter;
+        }
+        else
+        {
+            log_error(logger_cpu, "El argumento de la instrucción JNZ es incorrecto");
+        }
+}
+
+void  ejecutar_io_gen_sleep(t_instruccion * instruccion){
+//IO_GEN_SLEEP (Interfaz, Unidades de trabajo): Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.
+}
+
+//Es capaz de resolver las operaciones: SET, SUM, SUB, JNZ e IO_GEN_SLEEP.
+
+void ejecutar_instruccion(t_instruccion *instruccion ){// ver que debe retornar esta funcion...
+
             PROGRAM_COUNTER += 1;
-            as_instruction instruction_code = decode(instruccion);
+            t_instruction_code instruction_code = decode(instruccion->instruccion);
 
             loggear_ejecucion(instruccion);
 
             switch (instruction_code)
             {
-            case SET:
+            case SET://--------<>
                 ejecutar_set(instruccion);
                 break;
             case MOV_IN:
                 break;
             case MOV_OUT:
                 break;
-            case SUM:
+            case SUM://---------<>
+                ejecutar_sum(instruccion);
                 break;
-            case SUB:
+            case SUB://---------<>
+                ejecutar_sub(instruccion);
                 break;
-            case JNZ:
+            case JNZ://---------<>
+                ejecutar_jnz(instruccion);
                 break;
             case RESIZE:
                 break;
@@ -180,7 +351,8 @@ cod_op_kernel ejecutar_instrucciones()
                 break;
             case SIGNAL:
                 break;
-            case IO_GEN_SLEEP:
+            case IO_GEN_SLEEP://---------<>
+                ejecutar_io_gen_sleep(instruccion);
                 break;
             case IO_STDIN_READ:
                 break;
@@ -204,9 +376,5 @@ cod_op_kernel ejecutar_instrucciones()
 
             // imprimir_contexto_actual();
 
-            if (PROGRAM_COUNTER >= list_size(INSTRUCTION_LIST))
-            {
-                return CPU_EXIT; // o hacer otra cosa para manejar este error
-            }
         }
-    }
+    

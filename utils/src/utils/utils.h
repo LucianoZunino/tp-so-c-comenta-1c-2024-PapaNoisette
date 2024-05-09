@@ -18,11 +18,18 @@
 //Linea de instruccion, si no usa algun argumento,se deja empty
 typedef struct
 {
+	char * instruccion;
+	char * arg1;
+	char * arg2;
+	char * arg3;
+} t_instruccion;
+/*typedef struct
+{
 	char instruccion[20];
 	char arg1[20];
 	char arg2[20];
 	char arg3[20];
-} t_instruccion;
+} t_instruccion;*/
 
 
 // Codigos de operaciones
@@ -134,6 +141,9 @@ t_paquete* crear_paquete(op_code code_op, t_buffer* buffer);
 void eliminar_paquete(t_paquete* paquete);
 void* serializar_paquete(t_paquete* paquete);
 void enviar_paquete(t_paquete* paquete, int socket_cliente);
+void *serializar_instruccion(t_instruccion *instruccion);
+t_instruccion *deserializar_instruccion(void *stream);
+t_list *parsear_archivo_instrucciones(char *path_archivo, t_log *logger);
 
 // Funciones auxiliares
 int largo_array(char**array);
