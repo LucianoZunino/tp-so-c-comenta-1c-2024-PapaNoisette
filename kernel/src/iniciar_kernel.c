@@ -54,6 +54,7 @@ void imprimir_config_kernel(){
 
     }
     printf("GRADO_MULTIPROGRAMACION: %d\n",grado_multiprogramacion);
+}
 
 void iniciar_semaforos(){
     if (pthread_mutex_init(&mutex_NEW, NULL) != 0) {

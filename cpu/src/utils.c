@@ -1,5 +1,16 @@
 #include "utils.h"
 
+uint8_t AX;
+uint8_t BX;
+uint8_t CX;
+uint8_t DX;
+uint32_t EAX;
+uint32_t EBX;
+uint32_t ECX;
+uint32_t EDX;
+uint32_t SI;
+uint32_t DI;
+
 void loggear_ejecucion(t_instruccion *instruccion)//log obligatorio
 {
     log_info(logger_cpu, "Ejecutando: %s - arg1: %s, arg2: %s, arg3: %s",
@@ -10,12 +21,13 @@ void loggear_ejecucion(t_instruccion *instruccion)//log obligatorio
 }
 
 t_instruccion * fetch(){
-             //   void *buffer = recibir_buffer(cliente_socket);
- //   send(cliente_socket, buffer, 5, NULL);
-t_instruccion * instruccion;
-return instruccion;
+    //void *buffer = recibir_buffer(cliente_socket);
+    //send(cliente_socket, buffer, 5, NULL);
+    t_instruccion * instruccion;
+    return instruccion;
     
 }
+
 t_instruction_code decode(char *instruccion)
     {
         if (strcmp(instruccion, "SET") == 0)

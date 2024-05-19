@@ -21,15 +21,6 @@ int fd_kernel_dispatch;
 int fd_kernel_interrupt;
 
 uint32_t PROGRAM_COUNTER=0;
-uint8_t BX;
-uint8_t CX;
-uint8_t DX;
-uint32_t EAX;
-uint32_t EBX;
-uint32_t ECX;
-uint32_t EDX;
-uint32_t SI;
-uint32_t DI;
 
 extern t_list* INSTRUCTION_LIST;
 

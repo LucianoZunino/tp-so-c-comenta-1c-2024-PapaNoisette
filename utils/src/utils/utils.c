@@ -1,23 +1,18 @@
 #include "utils.h"
 
-<<<<<<< HEAD
 char* op_code_desc[] = {"HANDSHAKE_OK", "MENSAJE_A_MEMORIA", "HANDSHAKE_KERNEL", "HANDSHAKE_ENTRADASALIDA", "HANDSHAKE_MEMORIA", "HANDSHAKE_CPU"};
+
 
 t_config* iniciar_config(char* ruta_config){
 	t_config* nuevo_config = config_create(ruta_config);
-	if(nuevo_config == NULL){
-=======
-t_config *iniciar_config(char *ruta_config)
-{
-	t_config *nuevo_config = config_create(ruta_config);
-	if (nuevo_config == NULL)
+	if(nuevo_config == NULL)
 	{
->>>>>>> 7b7d65d320219bffdc1d8391a4a74fa604d3eaf9
 		printf("Error al cargar el config %s.\n", ruta_config);
 		exit(EXIT_FAILURE);
 	}
 	return nuevo_config;
 }
+
 
 t_log *iniciar_logger(char *ruta_logger, char *nombre_logger)
 {
