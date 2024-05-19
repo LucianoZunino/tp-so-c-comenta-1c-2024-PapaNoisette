@@ -23,9 +23,9 @@ void loggear_ejecucion(t_instruccion *instruccion)//log obligatorio
 t_instruccion * fetch(){
     //void *buffer = recibir_buffer(cliente_socket);
     //send(cliente_socket, buffer, 5, NULL);
-    t_instruccion * instruccion;
-    return instruccion;
     
+    t_instruccion * instruccion;
+    return instruccion; 
 }
 
 t_instruction_code decode(char *instruccion)

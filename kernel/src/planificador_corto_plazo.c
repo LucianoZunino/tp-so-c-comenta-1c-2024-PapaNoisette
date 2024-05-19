@@ -18,6 +18,7 @@ void planificador_corto_plazo(){
             t_pcb *pcb = queue_pop(READY);
             pcb->estado = E_EXEC;
             enviar_proceso_por_paquete(pcb, NULL ,fd_cpu_dispatch, ENVIAR_PROCESO_A_EXEC);
+            // recibir OK de CPU
             
             pthread_mutex_lock(&mutex_RUNNING);
             RUNNING = pcb;
@@ -26,8 +27,8 @@ void planificador_corto_plazo(){
             if(algoritmo_planificacion == "RR"){
                 iniciar_quantum(pcb);
             }
-        }//else{
-            // ROUND ROBIN VIRTUAL
+        } else {
+        // ROUND ROBIN VIRTUAL
         //}
 
         /* PSEUDOCODIGO DE LO QUE FALTA MAS O MENOS
@@ -39,6 +40,7 @@ void planificador_corto_plazo(){
         */
 
 
+        }
     }
 }
 

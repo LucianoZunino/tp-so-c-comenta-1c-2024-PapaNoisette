@@ -26,8 +26,9 @@ extern t_list* INSTRUCTION_LIST;
 
 
 int main(int argc, char* argv[]){
+	iniciar_cpu();
   	log_info(logger_cpu, "Arranca el modulo CPU");
-
+	
     // Inicia el server de cpu dispatch
 	fd_cpu_dispatch = iniciar_servidor(puerto_escucha_dispatch, logger_cpu, ">>> Server CPU-Dispatch escuchando... <<<");
  
@@ -50,6 +51,7 @@ int main(int argc, char* argv[]){
 	if (realizar_handshake(logger_cpu, fd_memoria, HANDSHAKE_CPU) == -1){
         return EXIT_FAILURE;
     }
+	
 
 	// Escuchar los mensajes de Kernel-Dispatch
 	pthread_t hilo_kernel_dispatch;
@@ -66,9 +68,14 @@ int main(int argc, char* argv[]){
 	pthread_create(&hilo_memoria_cpu, NULL, (void*)escuchar_mensajes_memoria_cpu, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	pthread_join(hilo_memoria_cpu, NULL); // Frena el hilo principal hasta que el hilo_memoria_cpu no finalice
 	// Porque si se el hilo_memoria_cpu se desacopla del principal termina el modulo CPU
+	
+	
+	
+
 
 	// Finalizar CPU
 	finalizar_cpu();
+	
 	
 	return 0;
 }

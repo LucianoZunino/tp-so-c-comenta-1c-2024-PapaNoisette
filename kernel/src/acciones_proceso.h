@@ -2,6 +2,7 @@
 #define ACCIONES_PROCESO
 
 #include "main.h"
+#include <utils/utils.h>
 #include <readline/readline.h>
 
 //extern char** comando_consola_desc;

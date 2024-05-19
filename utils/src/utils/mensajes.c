@@ -32,9 +32,11 @@ op_code recibir_codigo_operacion(int socket)
 */
 void agregar_pcb (t_paquete *paquete, t_pcb *pcb)
 {
-    cargar_datos_al_buffer(paquete->buffer, pcb->pid, sizeof(uint32_t));
+    //cargar_datos_al_buffer(paquete->buffer, pcb->pid, sizeof(int));
+    
+    cargar_int_al_buffer(paquete->buffer, pcb->pid);
     //cargar_datos_al_buffer(paquete->buffer, pcb->instrucciones, sizeof(pcb->instrucciones));
-    cargar_datos_al_buffer(paquete->buffer, pcb->program_counter, sizeof(uint32_t));
+    cargar_int_al_buffer(paquete->buffer, pcb->program_counter);
     cargar_datos_al_buffer(paquete->buffer, pcb->registros_cpu, sizeof(pcb->registros_cpu));
     cargar_datos_al_buffer(paquete->buffer, &pcb->estado, sizeof(pcb->estado));
 }
@@ -77,7 +79,7 @@ void recibir_kernel_respuesta_inicializar_estructuras(int socket)
 /// @brief envia proceso a el corto plazo a cpu
 /// @param pcb
 /// @param socket
-void enviar_proceso_por_paquete(t_pcb *pcb,char *archivo_pseudocodigo, int socket, op_code op_code)
+void enviar_proceso_por_paquete(t_pcb *pcb, char *archivo_pseudocodigo, int socket, op_code op_code)
 {
     t_buffer* buffer_a_enviar = crear_buffer();
     t_paquete *paquete = crear_paquete(op_code, buffer_a_enviar);

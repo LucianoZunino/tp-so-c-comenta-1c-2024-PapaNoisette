@@ -217,3 +217,44 @@
 [INFO] 13:43:52:593 entradasalida/(6988:6988): Handshake OK
 [ERROR] 13:43:52:596 entradasalida/(6988:6989): La Memoria se desconecto de Entradasalida. Terminando servidor.
 [ERROR] 13:43:52:598 entradasalida/(6988:6990): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 15:19:32:440 entradasalida/(14210:14210): Arranca el modulo  Entrada/Salida
+[INFO] 15:19:32:458 entradasalida/(14210:14210): Handshake OK
+[INFO] 15:19:32:458 entradasalida/(14210:14210): Handshake OK
+[ERROR] 15:19:50:594 entradasalida/(14210:14225): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 15:22:13:960 entradasalida/(14881:14881): Arranca el modulo  Entrada/Salida
+[INFO] 15:22:13:970 entradasalida/(14881:14881): Handshake OK
+[INFO] 15:22:13:972 entradasalida/(14881:14881): Handshake OK
+[ERROR] 15:22:26:631 entradasalida/(14881:14897): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 15:23:41:712 entradasalida/(15349:15349): Arranca el modulo  Entrada/Salida
+[INFO] 15:23:41:734 entradasalida/(15349:15349): Handshake OK
+[INFO] 15:23:41:737 entradasalida/(15349:15349): Handshake OK
+[ERROR] 15:23:53:895 entradasalida/(15349:15364): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 15:27:47:903 entradasalida/(15916:15916): Arranca el modulo  Entrada/Salida
+[INFO] 15:27:47:915 entradasalida/(15916:15916): Handshake OK
+[INFO] 15:27:47:915 entradasalida/(15916:15916): Handshake OK
+[ERROR] 15:28:00:280 entradasalida/(15916:15931): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 15:30:38:920 entradasalida/(16422:16422): Arranca el modulo  Entrada/Salida
+[INFO] 15:30:38:933 entradasalida/(16422:16422): Handshake OK
+[INFO] 15:30:38:933 entradasalida/(16422:16422): Handshake OK
+[ERROR] 15:30:46:845 entradasalida/(16422:16437): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 15:33:11:532 entradasalida/(16884:16884): Arranca el modulo  Entrada/Salida
+[INFO] 15:33:11:537 entradasalida/(16884:16884): Handshake OK
+[INFO] 15:33:11:537 entradasalida/(16884:16884): Handshake OK
+[ERROR] 15:33:19:681 entradasalida/(16884:16899): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 15:34:23:279 entradasalida/(17272:17272): Arranca el modulo  Entrada/Salida
+[INFO] 15:34:23:301 entradasalida/(17272:17272): Handshake OK
+[INFO] 15:34:23:301 entradasalida/(17272:17272): Handshake OK
+[ERROR] 15:34:31:910 entradasalida/(17272:17287): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 15:38:30:449 entradasalida/(18031:18031): Arranca el modulo  Entrada/Salida
+[INFO] 15:38:30:458 entradasalida/(18031:18031): Handshake OK
+[INFO] 15:38:30:461 entradasalida/(18031:18031): Handshake OK
+[ERROR] 15:38:35:859 entradasalida/(18031:18046): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 16:27:28:542 entradasalida/(27242:27242): Arranca el modulo  Entrada/Salida
+[INFO] 16:27:28:561 entradasalida/(27242:27242): Handshake OK
+[INFO] 16:27:28:562 entradasalida/(27242:27242): Handshake OK
+[ERROR] 16:30:16:235 entradasalida/(27242:27257): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 16:30:34:752 entradasalida/(28081:28081): Arranca el modulo  Entrada/Salida
+[INFO] 16:30:34:764 entradasalida/(28081:28081): Handshake OK
+[INFO] 16:30:34:766 entradasalida/(28081:28081): Handshake OK
+[ERROR] 16:31:00:603 entradasalida/(28081:28095): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 16:31:06:365 entradasalida/(28081:28096): El Kernel se desconecto de Entradasalida. Terminando servidor.
