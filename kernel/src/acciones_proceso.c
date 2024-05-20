@@ -14,6 +14,10 @@ void imprimir_new(){
        printf("PID: %i\n", pcb->pid);
     }
     printf("Cantidad de procesos en READY: %i\n", queue_size(READY));
+    if (RUNNING != NULL)
+        printf("Proceso en RUNNING: %i\n", RUNNING->pid);
+    else 
+        printf("Ningun proceso en RUNNING\n");
 }
 
 void crear_proceso(char* path){
@@ -25,12 +29,6 @@ void crear_proceso(char* path){
     pthread_mutex_lock(&mutex_NEW);
     list_add(NEW, nuevo_pcb);
     pthread_mutex_unlock(&mutex_NEW);
-
-    //t_pcb* pcb_index_0 = (t_pcb*) list_get(NEW, 0);
-    //printf("PID: %i\n", pcb_index_0->pid);
-
-    //t_pcb* pcb_index_00 = (t_pcb*) list_get(NEW, 0);
-    //printf("PID: %i\n", pcb_index_00->pid);
 
     imprimir_new();
 

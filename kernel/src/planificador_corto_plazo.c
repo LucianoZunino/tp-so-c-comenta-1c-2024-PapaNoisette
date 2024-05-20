@@ -2,7 +2,7 @@
 #include <pthread.h>
 
 
-t_pcb *RUNNING;
+t_pcb *RUNNING = NULL;
 pthread_mutex_t mutex_RUNNING;
 //pthread_mutex_t mutex_READY;
 sem_t sem_EXEC;
@@ -13,11 +13,13 @@ void planificador_corto_plazo(){
         sem_wait(&sem_READY);
         sem_wait(&sem_EXEC); // sem_signal deberia estar en EXEC (cpu) y que avise cuando desaloja el proceso en ejecucion
 
-        if( algoritmo_planificacion == "FIFO" || algoritmo_planificacion == "RR"){
-            
+
+        if( algoritmo_planificacion == "RR" || string_equals_ignore_case(algoritmo_planificacion, "FIFO")){
             t_pcb *pcb = queue_pop(READY);
             pcb->estado = E_EXEC;
-            enviar_proceso_por_paquete(pcb, NULL ,fd_cpu_dispatch, ENVIAR_PROCESO_A_EXEC);
+
+            // Lo comento para testear nomas, asi no rompe, pq falta implementarlo en cpu
+            //enviar_proceso_por_paquete(pcb, NULL ,fd_cpu_dispatch, ENVIAR_PROCESO_A_EXEC); 
             // recibir OK de CPU
             
             pthread_mutex_lock(&mutex_RUNNING);

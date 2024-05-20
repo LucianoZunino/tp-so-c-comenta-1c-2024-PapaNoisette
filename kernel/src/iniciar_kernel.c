@@ -77,7 +77,7 @@ void iniciar_semaforos(){
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_NEW");
         exit(-1);
     }
-    if (sem_init(&sem_MULTIPROGRAMACION, 0, grado_multiprogramacion) != 0) {
+    if (sem_init(&sem_MULTIPROGRAMACION, 1, grado_multiprogramacion) != 0) {
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_MULTIPROGRAMACION");
         exit(-1);
     }
