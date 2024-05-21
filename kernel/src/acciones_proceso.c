@@ -30,7 +30,6 @@ void crear_proceso(char* path){
     list_add(NEW, nuevo_pcb);
     pthread_mutex_unlock(&mutex_NEW);
 
-    imprimir_new();
 
     sem_post(&sem_NEW); // no deberia ser despues de recibir el ok de memoria?
 
@@ -56,6 +55,7 @@ void crear_proceso(char* path){
     log_info(logger_kernel, "Se crea el proceso %i en NEW", nuevo_pcb->pid);
 
 
+    imprimir_new();
 }
 
 

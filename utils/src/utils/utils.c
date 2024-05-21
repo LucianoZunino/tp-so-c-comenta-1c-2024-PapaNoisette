@@ -127,6 +127,19 @@ int recibir_operacion(int socket_cliente)
 	}
 }
 
+t_pcb* recibir_pcb(int socket_cliente)
+{
+	t_pcb* pcb;
+	if (recv(socket_cliente, &pcb, sizeof(t_pcb*), MSG_WAITALL) > 0)
+		return pcb;
+	else
+	{
+		close(socket_cliente);
+		return -1;
+	}
+}
+
+
 /*void crear_buffer(t_paquete* paquete){
 	paquete->buffer = malloc(sizeof(t_buffer));
 	paquete->buffer->size = 0;
