@@ -8,23 +8,26 @@ void escuchar_mensajes_kernel_memoria(){
 		switch(cod_op){
 			case MENSAJE_A_MEMORIA:
 				buffer = recibir_buffer_completo(fd_kernel);
-				obtener_mensaje(buffer);
+				//obtener_mensaje(buffer);
 				break;
 			case HANDSHAKE_KERNEL:
 				aceptar_handshake(logger_memoria, fd_kernel, cod_op);
 				break;
-			/*case XXX:{ // O el msj q sea
-				char* path;
-				int* pc;
-				usleep(retardo_respuesta *1000);
-				recv_fetch_instruccion(fd_kernel, &path,&pc); // DE KERNEL
-				leer_instruccion_por_pc_y_enviar(path,*pc, fd_cpu); // A CPU *Revisar*
-				free(path); // Liberar memoria de la variable path
-				free(pc); // Liberar memoria de la variable pc
-				//
+			case MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS:{ // O el msj q sea
+                printf("LLEGUE HASTA SOLICITAR INICIALIZAR ESTRUCTURAS \n");
+                buffer = recibir_buffer_completo(fd_kernel);
+                t_pcb *pcb = malloc(sizeof(t_pcb));
+                pcb->pid = extraer_int_del_buffer(buffer);
+                pcb->program_counter = extraer_int_del_buffer(buffer);
+                pcb->registros_cpu = extraer_datos_del_buffer(buffer);
+                pcb->quantum = extraer_int_del_buffer(buffer);
+                pcb->estado = extraer_int_del_buffer(buffer); //es un enum, si no funciona probar con int
+
+                printf("PID DEL PCB RECIBIDO EN MEMORIA: %i \n", pcb->pid);
+                char* path = extraer_string_del_buffer(buffer);
+                printf("path: %s \n" , path);
 				break;
-            }*/
-			
+            }
 			case -1:
 				log_error(logger_memoria, "El Kernel se desconecto de Memoria. Terminando servidor.");
 				desconexion_kernel_memoria = 1;
@@ -35,6 +38,15 @@ void escuchar_mensajes_kernel_memoria(){
 			}
 	}
 }
+
+int recibir_path_kernel (int socket){
+    op_code codigo_de_operacion =  recibir_codigo_operacion(socket);
+
+    if (codigo_de_operacion == MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS){
+
+    }
+}
+
 /*
 int recv_fetch_instruccion(int fd_modulo, char** path, int** pc) {
     t_list* paquete = recibir_paquete(fd_modulo); // Preguntar funcion q recibe paquete

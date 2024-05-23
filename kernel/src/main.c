@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
     iniciar_kernel();
     log_info(logger_kernel, "Arranca el modulo KERNEL");
 
-    /* TEST
+    // /* TEST
 
     // Levantar Server Kernel (para que E/S se conecte)
     fd_kernel = iniciar_servidor(puerto_escucha, logger_kernel, ">>> Server Kernel escuchando... <<<");
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
         return EXIT_FAILURE;
     }
 
-    TEST */
+    // TEST */
 
     // Planificadores
     pthread_t hilo_planificacion_largo;
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]){
     pthread_detach(hilo_planificacion_corto_plazo);
 
 
-    /* TEST
+    // /* TEST
 
     // Escuchar los mensajes de Dispatch-Kernel
     pthread_t hilo_dispatch_kernel;
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]){
 
     // Kernel se conectó con CPU (Dispatch e Interrupt) y con Memoria. Ahora se hacen los handshakes.
     
-    TEST */
+    //TEST */
     
     // Inicia la consola interactiva
     pthread_t hilo_consola_interactiva;

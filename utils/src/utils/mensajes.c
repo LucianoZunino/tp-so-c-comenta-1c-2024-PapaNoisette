@@ -38,6 +38,7 @@ void agregar_pcb (t_paquete *paquete, t_pcb *pcb)
     //cargar_datos_al_buffer(paquete->buffer, pcb->instrucciones, sizeof(pcb->instrucciones));
     cargar_int_al_buffer(paquete->buffer, pcb->program_counter);
     cargar_datos_al_buffer(paquete->buffer, pcb->registros_cpu, sizeof(pcb->registros_cpu));
+    cargar_int_al_buffer(paquete->buffer, pcb->quantum);
     cargar_datos_al_buffer(paquete->buffer, &pcb->estado, sizeof(pcb->estado));
 }
 
@@ -89,6 +90,8 @@ void enviar_proceso_por_paquete(t_pcb *pcb, char *archivo_pseudocodigo, int sock
     eliminar_paquete(paquete);    
 }
 
+
+
 /// @brief Envia CPU_INTERRUPT y el pcb al socket indicado
 /// @param pcb
 /// @param socket
@@ -100,3 +103,26 @@ void enviar_cpu_interrupt(t_pcb *pcb, motivo_interrupcion motivo, int socket){
     enviar_paquete(paquete, socket);
     eliminar_paquete(paquete);
 }
+/*
+t_list* recibir_paquete(int socket_cliente)
+{
+    int size;
+    int desplazamiento = 0;
+    void * buffer;
+    t_list* valores = list_create();
+    int tamanio;
+
+    buffer = recibir_buffer_completo(socket_cliente);
+    while(desplazamiento < size)
+    {
+        memcpy(&tamanio, buffer + desplazamiento, sizeof(int));
+        desplazamiento+=sizeof(int);
+        char* valor = malloc(tamanio);
+        memcpy(valor, buffer+desplazamiento, tamanio);
+        desplazamiento+=tamanio;
+        list_add(valores, valor);
+    }
+    free(buffer);
+    return valores;
+}
+*/
