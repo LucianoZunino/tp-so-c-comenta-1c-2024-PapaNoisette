@@ -20,23 +20,14 @@ int fd_memoria;
 int fd_kernel_dispatch;
 int fd_kernel_interrupt;
 
-uint32_t PROGRAM_COUNTER=0;
-uint8_t BX;
-uint8_t CX;
-uint8_t DX;
-uint32_t EAX;
-uint32_t EBX;
-uint32_t ECX;
-uint32_t EDX;
-uint32_t SI;
-uint32_t DI;
 
 extern t_list* INSTRUCTION_LIST;
-
+extern t_registros_cpu * registros_cpu;
 
 int main(int argc, char* argv[]){
   	log_info(logger_cpu, "Arranca el modulo CPU");
-
+	iniciar_cpu();
+    registros_cpu=malloc(sizeof(t_registros_cpu));//pasasr a iniciar_cpu()
     // Inicia el server de cpu dispatch
 	fd_cpu_dispatch = iniciar_servidor(puerto_escucha_dispatch, logger_cpu, ">>> Server CPU-Dispatch escuchando... <<<");
  
@@ -60,6 +51,11 @@ int main(int argc, char* argv[]){
         return EXIT_FAILURE;
     }
 
+	//comento esta parte por ahora por que creo que quedariamos atendiendo:
+	//Dispatch en el hilo principal del modulo cpu
+	//interrupt en hilo paralelo
+	//memoria se conecta y desconecta a pedido 
+/*  
 	// Escuchar los mensajes de Kernel-Dispatch
 	pthread_t hilo_kernel_dispatch;
 	pthread_create(&hilo_kernel_dispatch, NULL, (void*)escuchar_mensajes_kernel_dispatch, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
@@ -75,6 +71,10 @@ int main(int argc, char* argv[]){
 	pthread_create(&hilo_memoria_cpu, NULL, (void*)escuchar_mensajes_memoria_cpu, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	pthread_join(hilo_memoria_cpu, NULL); // Frena el hilo principal hasta que el hilo_memoria_cpu no finalice
 	// Porque si se el hilo_memoria_cpu se desacopla del principal termina el modulo CPU
+
+*/
+
+
 
 	// Finalizar CPU
 	finalizar_cpu();

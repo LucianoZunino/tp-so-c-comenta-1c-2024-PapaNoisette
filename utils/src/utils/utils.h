@@ -22,6 +22,8 @@ typedef struct
 	char * arg1;
 	char * arg2;
 	char * arg3;
+	char * arg4;
+	char * arg5;
 } t_instruccion;
 /*typedef struct
 {
@@ -43,7 +45,11 @@ typedef enum{
 	KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, // PIDE A MEMORIA INICIALIZAR ESTRUCTURA Y LO HACE CORRECTAMENTE.
 	MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS,
 	ENVIAR_PROCESO_A_EXEC,
-	CPU_INTERRUPT
+	CPU_INTERRUPT,
+	CONTEXTO_EJECUCION,   //cpu-> KERNEL por dipatch
+	IO_GEN_SLEEP_FS, //le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
+	MEMORIA_SOLICITAR_INSTRUCCION,  //cpu->memoria DISPATCH
+	MEMORIA_ENVIA_INSTRUCCION   //memoria->cpu DISPATCH
 } op_code;
 
 typedef struct{
@@ -72,6 +78,7 @@ typedef enum{
 
 typedef struct
 {
+ uint8_t PROGRAM_COUNTER;
  uint8_t AX;
  uint8_t BX;
  uint8_t CX;
@@ -82,7 +89,6 @@ typedef struct
  uint32_t EDX;
  uint32_t SI;
  uint32_t DI;
-
 } t_registros_cpu;
 typedef enum {
     E_NEW,
@@ -111,8 +117,6 @@ typedef enum
 } motivo_interrupcion;
 
 
-
-
 // Funciones de init
 t_config* iniciar_config(char* ruta_config);
 t_log* iniciar_logger(char* ruta_logger, char* nombre_logger);
@@ -131,6 +135,8 @@ void cargar_datos_al_buffer(t_buffer* buffer, void* datos, int size_datos);
 void cargar_int_al_buffer(t_buffer* buffer, int valor_int);
 void cargar_string_al_buffer(t_buffer* buffer, char* valor_string);
 int recibir_operacion(int socket_cliente);
+char *recibir_cadena(int socket);
+int recibir_int(int socket);
 //void* recibir_buffer(int*, int);
 t_buffer* recibir_buffer_completo(int socket_cliente);
 void* extraer_datos_del_buffer(t_buffer* buffer);

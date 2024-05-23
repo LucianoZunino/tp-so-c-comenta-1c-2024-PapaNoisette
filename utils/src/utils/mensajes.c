@@ -98,3 +98,20 @@ void enviar_cpu_interrupt(t_pcb *pcb, motivo_interrupcion motivo, int socket){
     enviar_paquete(paquete, socket);
     eliminar_paquete(paquete);
 }
+
+
+
+/// @brief Envia al kernel el pcb por motivo de interrupcion
+/// @param pcb
+/// @param socket
+void enviar_kernel_interrupt(t_pcb *pcb, motivo_interrupcion motivo, int socket)
+{
+  
+
+}
+
+
+void enviar_memoria_solicitar_instruccion(t_pcb *pcb, int socket)
+{
+  
+}

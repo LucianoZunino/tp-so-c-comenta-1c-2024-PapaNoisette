@@ -1,25 +1,17 @@
 #include "utils.h"
 
-<<<<<<< HEAD
 char* op_code_desc[] = {"HANDSHAKE_OK", "MENSAJE_A_MEMORIA", "HANDSHAKE_KERNEL", "HANDSHAKE_ENTRADASALIDA", "HANDSHAKE_MEMORIA", "HANDSHAKE_CPU"};
 
 t_config* iniciar_config(char* ruta_config){
 	t_config* nuevo_config = config_create(ruta_config);
 	if(nuevo_config == NULL){
-=======
-t_config *iniciar_config(char *ruta_config)
-{
-	t_config *nuevo_config = config_create(ruta_config);
-	if (nuevo_config == NULL)
-	{
->>>>>>> 7b7d65d320219bffdc1d8391a4a74fa604d3eaf9
 		printf("Error al cargar el config %s.\n", ruta_config);
 		exit(EXIT_FAILURE);
 	}
 	return nuevo_config;
 }
 
-t_log *iniciar_logger(char *ruta_logger, char *nombre_logger)
+t_log * iniciar_logger(char *ruta_logger, char *nombre_logger)
 {
 	t_log *nuevo_logger = log_create(ruta_logger, nombre_logger, true, LOG_LEVEL_INFO); // el LEVEL tendría que ser un parámetro si vamos a usar distintos niveles
 	if (nuevo_logger == NULL)
@@ -132,6 +124,30 @@ int recibir_operacion(int socket_cliente)
 	}
 }
 
+
+/// @brief Recibe la cadena del buffer del socket
+/// @note Reserva memoria para la cadena
+/// @param socket
+/// @return
+char *recibir_cadena(int socket)
+{
+    int longitud;
+    recv(socket, &longitud, sizeof(longitud), MSG_WAITALL);
+    char *cadena = malloc(sizeof(char) * longitud);
+    recv(socket, cadena, sizeof(char) * longitud, MSG_WAITALL);
+    return cadena;
+}
+/// @brief Recibe un uint8_t del buffer del socket
+/// @note Funciona  solo uint8_t
+/// @param socket
+/// @return
+int recibir_int(int socket)//no se si se usa por las dudas la armo...
+{
+    char *cadena = malloc(sizeof(uint8_t)) ;
+    recv(socket, cadena, sizeof(uint8_t) , MSG_WAITALL);
+    int numero=atoi(cadena);
+    return numero;
+}
 /*void crear_buffer(t_paquete* paquete){
 	paquete->buffer = malloc(sizeof(t_buffer));
 	paquete->buffer->size = 0;
@@ -303,7 +319,7 @@ void enviar_paquete(t_paquete *paquete, int socket_cliente)
 	free(a_enviar);
 }
 
-// Serializacion de las instrucciones que ejecuta cpu//despues veo si este codigo me lo llevo a al modulo correspondiente
+// mepa que con lo de crear_paquete esta 
 
 void *serializar_instruccion(t_instruccion *instruccion)
 {

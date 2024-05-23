@@ -41,6 +41,8 @@ extern uint32_t EDX;
 extern uint32_t SI;
 extern uint32_t DI;
 
+extern t_registros_cpu * registros_cpu;
+
 extern t_list* INSTRUCTION_LIST;
 
 

@@ -32,6 +32,11 @@ void escuchar_mensajes_kernel_interrupt(){
 				aceptar_handshake(logger_cpu, fd_kernel_interrupt, cod_op);
 				break;
 			//	break;
+
+			
+			//aca deberia ir el case de la interrupcion, recibir el pid, y si esta corrieno interrumpirlo
+
+
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Interrupt. Terminando servidor.");
 				desconexion_kernel_interrupt = 1;
