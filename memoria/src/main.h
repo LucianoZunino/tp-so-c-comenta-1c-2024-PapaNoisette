@@ -10,6 +10,7 @@
 #include "escuchar_cpu_memoria.h"
 #include "escuchar_entradasalida_memoria.h"
 #include "escuchar_kernel_memoria.h"
+#include <utils/mensajes.h>
 
 extern t_log* logger_memoria;
 

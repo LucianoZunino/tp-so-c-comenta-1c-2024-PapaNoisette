@@ -2,16 +2,19 @@
 
 char* op_code_desc[] = {"HANDSHAKE_OK", "MENSAJE_A_MEMORIA", "HANDSHAKE_KERNEL", "HANDSHAKE_ENTRADASALIDA", "HANDSHAKE_MEMORIA", "HANDSHAKE_CPU"};
 
+
 t_config* iniciar_config(char* ruta_config){
 	t_config* nuevo_config = config_create(ruta_config);
-	if(nuevo_config == NULL){
+	if(nuevo_config == NULL)
+	{
 		printf("Error al cargar el config %s.\n", ruta_config);
 		exit(EXIT_FAILURE);
 	}
 	return nuevo_config;
 }
 
-t_log * iniciar_logger(char *ruta_logger, char *nombre_logger)
+
+t_log *iniciar_logger(char *ruta_logger, char *nombre_logger)
 {
 	t_log *nuevo_logger = log_create(ruta_logger, nombre_logger, true, LOG_LEVEL_INFO); // el LEVEL tendría que ser un parámetro si vamos a usar distintos niveles
 	if (nuevo_logger == NULL)
@@ -148,6 +151,19 @@ int recibir_int(int socket)//no se si se usa por las dudas la armo...
     int numero=atoi(cadena);
     return numero;
 }
+t_pcb* recibir_pcb(int socket_cliente)
+{
+	t_pcb* pcb;
+	if (recv(socket_cliente, &pcb, sizeof(t_pcb*), MSG_WAITALL) > 0)
+		return pcb;
+	else
+	{
+		close(socket_cliente);
+		return -1;
+	}
+}
+
+
 /*void crear_buffer(t_paquete* paquete){
 	paquete->buffer = malloc(sizeof(t_buffer));
 	paquete->buffer->size = 0;

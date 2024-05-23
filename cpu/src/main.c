@@ -20,11 +20,13 @@ int fd_memoria;
 int fd_kernel_dispatch;
 int fd_kernel_interrupt;
 
+uint32_t PROGRAM_COUNTER=0;
 
 extern t_list* INSTRUCTION_LIST;
 extern t_registros_cpu * registros_cpu;
 
 int main(int argc, char* argv[]){
+	iniciar_cpu();
   	log_info(logger_cpu, "Arranca el modulo CPU");
 	iniciar_cpu();
     registros_cpu=malloc(sizeof(t_registros_cpu));//pasasr a iniciar_cpu()
@@ -50,6 +52,7 @@ int main(int argc, char* argv[]){
 	if (realizar_handshake(logger_cpu, fd_memoria, HANDSHAKE_CPU) == -1){
         return EXIT_FAILURE;
     }
+	
 
 	//comento esta parte por ahora por que creo que quedariamos atendiendo:
 	//Dispatch en el hilo principal del modulo cpu
@@ -71,6 +74,10 @@ int main(int argc, char* argv[]){
 	pthread_create(&hilo_memoria_cpu, NULL, (void*)escuchar_mensajes_memoria_cpu, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	pthread_join(hilo_memoria_cpu, NULL); // Frena el hilo principal hasta que el hilo_memoria_cpu no finalice
 	// Porque si se el hilo_memoria_cpu se desacopla del principal termina el modulo CPU
+	
+	
+	
+
 
 */
 
@@ -78,6 +85,7 @@ int main(int argc, char* argv[]){
 
 	// Finalizar CPU
 	finalizar_cpu();
+	
 	
 	return 0;
 }

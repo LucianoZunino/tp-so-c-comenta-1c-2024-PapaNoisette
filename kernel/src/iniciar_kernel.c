@@ -8,6 +8,7 @@ t_list *EXIT;
 // falta running
 sem_t sem_NEW;
 sem_t sem_READY;
+sem_t sem_MULTIPROGRAMACION;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
@@ -54,6 +55,7 @@ void imprimir_config_kernel(){
 
     }
     printf("GRADO_MULTIPROGRAMACION: %d\n",grado_multiprogramacion);
+}
 
 void iniciar_semaforos(){
     if (pthread_mutex_init(&mutex_NEW, NULL) != 0) {
@@ -73,6 +75,10 @@ void iniciar_semaforos(){
     printf("mutex_next_pid inicializado\n");
     if (sem_init(&sem_NEW, 1, 0) != 0) {
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_NEW");
+        exit(-1);
+    }
+    if (sem_init(&sem_MULTIPROGRAMACION, 1, grado_multiprogramacion) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_MULTIPROGRAMACION");
         exit(-1);
     }
     if (pthread_mutex_init(&mutex_multiprogramacion, NULL) != 0) {

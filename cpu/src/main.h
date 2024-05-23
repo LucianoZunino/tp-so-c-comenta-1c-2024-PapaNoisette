@@ -9,6 +9,7 @@
 #include "iniciar_cpu.h"
 #include "escuchar_kernel_cpu.h"
 #include "escuchar_memoria_cpu.h"
+#include "utils.h"
 
 extern t_log* logger_cpu;
 

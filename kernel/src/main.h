@@ -65,6 +65,8 @@ extern sem_t sem_NEW;
 extern sem_t sem_EXEC;
 extern sem_t sem_READY;
 
+extern sem_t sem_MULTIPROGRAMACION;
+
 
 // SE USA PARA EL CREAR_PROCESO
 extern pthread_mutex_t socket_memoria_mutex;

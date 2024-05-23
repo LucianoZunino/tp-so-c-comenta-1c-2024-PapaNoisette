@@ -8,11 +8,26 @@ void escuchar_mensajes_kernel_memoria(){
 		switch(cod_op){
 			case MENSAJE_A_MEMORIA:
 				buffer = recibir_buffer_completo(fd_kernel);
-				obtener_mensaje(buffer);
+				//obtener_mensaje(buffer);
 				break;
 			case HANDSHAKE_KERNEL:
 				aceptar_handshake(logger_memoria, fd_kernel, cod_op);
 				break;
+			case MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS:{ // O el msj q sea
+                printf("LLEGUE HASTA SOLICITAR INICIALIZAR ESTRUCTURAS \n");
+                buffer = recibir_buffer_completo(fd_kernel);
+                t_pcb *pcb = malloc(sizeof(t_pcb));
+                pcb->pid = extraer_int_del_buffer(buffer);
+                pcb->program_counter = extraer_int_del_buffer(buffer);
+                pcb->registros_cpu = extraer_datos_del_buffer(buffer);
+                pcb->quantum = extraer_int_del_buffer(buffer);
+                pcb->estado = extraer_int_del_buffer(buffer); //es un enum, si no funciona probar con int
+
+                printf("PID DEL PCB RECIBIDO EN MEMORIA: %i \n", pcb->pid);
+                char* path = extraer_string_del_buffer(buffer);
+                printf("path: %s \n" , path);
+				break;
+            }
 			case -1:
 				log_error(logger_memoria, "El Kernel se desconecto de Memoria. Terminando servidor.");
 				desconexion_kernel_memoria = 1;
@@ -24,8 +39,126 @@ void escuchar_mensajes_kernel_memoria(){
 	}
 }
 
+int recibir_path_kernel (int socket){
+    op_code codigo_de_operacion =  recibir_codigo_operacion(socket);
+
+    if (codigo_de_operacion == MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS){
+
+    }
+}
+
+/*
+int recv_fetch_instruccion(int fd_modulo, char** path, int** pc) {
+    t_list* paquete = recibir_paquete(fd_modulo); // Preguntar funcion q recibe paquete
+
+	*path = (char*) list_get(paquete, 0); // Obtener el path del paquete
+    *pc = (int*) list_get(paquete, 1);
+
+    list_destroy(paquete);
+    return 0; 
+}
+
 void obtener_mensaje(t_buffer* buffer){
 	char* mensaje = extraer_string_del_buffer(buffer);
 	log_info(logger_memoria, "Mensaje recibido: %s", mensaje);
 	free(mensaje);
 }
+
+char *armar_path_instruccion(char *path_consola) {
+    char *path_completo = string_new();
+    string_append(&path_completo, path_instrucciones);
+    string_append(&path_completo, "/");
+    string_append(&path_completo, path_consola);
+    return path_completo;
+}
+
+void leer_instruccion_por_pc_y_enviar(char *path_consola, int pc, int fd) {
+    char *path_completa_instruccion = armar_path_instruccion(path_consola);
+
+    FILE *archivo = fopen(path_completa_instruccion, "r");
+    if (archivo == NULL) {
+        perror("No se pudo abrir el archivo de instrucciones");
+        free(path_completa_instruccion);
+        return;
+    }
+
+    char instruccion_leida[256];
+    int current_pc = 0;
+
+    while (fgets(instruccion_leida, sizeof(instruccion_leida), archivo) != NULL) {
+        if (current_pc == pc) {
+            printf("Instrucción %d: %s", pc, instruccion_leida);
+            Instruccion instruccion = armar_estructura_instruccion(instruccion_leida);
+
+            send_instruccion(fd, instruccion);
+
+            // Liberar memoria asignada para la estructura Instruccion
+
+            free(instruccion.opcode);
+            free(instruccion.operando1);
+            free(instruccion.operando2);
+            
+            break;
+        }
+        current_pc++;
+    }
+    fclose(archivo);
+    free(path_completa_instruccion);
+}
+
+/*t_instruccion armar_estructura_instruccion(char* instruccion_leida){
+    char **palabras = string_split(instruccion_leida, " ");
+    
+    t_instruccion instruccion;
+
+    if (palabras[0] != NULL) {
+        instruccion.opcode = malloc(sizeof(char) * (strlen(palabras[0]) + 1));
+        strcpy(instruccion.opcode, palabras[0]);
+
+        if (palabras[1] != NULL) {
+            instruccion.operando1 = malloc(sizeof(char) * (strlen(palabras[1]) + 1));
+            strcpy(instruccion.operando1, palabras[1]);
+
+            if (instruccion.operando1[strlen(instruccion.operando1) - 1] == '\n') {
+                instruccion.operando1[strlen(instruccion.operando1) - 1] = '\0';
+            }
+
+            if (palabras[2] != NULL) {
+                instruccion.operando2 = malloc(sizeof(char) * (strlen(palabras[2]) + 1));
+                strcpy(instruccion.operando2, palabras[2]);
+
+                if (instruccion.operando2[strlen(instruccion.operando2) - 1] == '\n') {
+                    instruccion.operando2[strlen(instruccion.operando2) - 1] = '\0';
+                }
+            } else {
+                instruccion.operando2 = malloc(sizeof(char));
+                instruccion.operando2[0] = '\0'; // Vaciar el operando2 si no hay tercer palabra
+            }
+        } else {
+            instruccion.operando1 = malloc(sizeof(char));
+            instruccion.operando2 = malloc(sizeof(char));
+            instruccion.operando1[0] = '\0'; // Vaciar el operando1 si no hay segunda palabra
+            instruccion.operando2[0] = '\0'; // Vaciar el operando2
+        }
+    } else {
+        perror("Error al cargar la instrucción");
+
+        // Liberar memoria en caso de error
+        free(instruccion.opcode);
+        free(instruccion.operando1);
+        free(instruccion.operando2);
+        instruccion.opcode = NULL;
+        instruccion.operando1 = NULL;
+        instruccion.operando2 = NULL;
+    }
+
+    // Liberar memoria asignada a palabras
+    int i = 0;
+    while (palabras[i] != NULL) {
+        free(palabras[i]);
+        i++;
+    }
+    free(palabras);
+
+    return instruccion;
+}*/

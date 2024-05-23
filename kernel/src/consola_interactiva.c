@@ -12,10 +12,15 @@ void iniciar_consola_interactiva(){
 	while(strcmp(leido, "\0") != 0){
 
         char** operacion = string_split(leido, " ");
-        comando = validar_entrada(operacion[0]);
+        //printf("Operacion[0]: %s\nOperacion[1]: %s\n", operacion[0], operacion[1]);
         
+        comando = validar_entrada(operacion[0]);
+        // printf("Comando: %i\n", comando);
+        // Operacion[0] = "INICIAR_PROCESO"
+        // Operacion[1] = "path.txt"
+        // Comando = 1;
 
-        ejecutar_instruccion(operacion, comando);
+        ejecutar_instruccion(operacion, comando); // (["INICIAR_PROCESO", "path.txt"], 1)
         free(leido);
 		leido = readline("> ");
 	}
@@ -32,16 +37,25 @@ void imprimir_comandos_validos() {
 
 comando_consola validar_entrada(char* codigo){
     for(int i=0; i < 9; i++){
-        if(!strcmp(codigo, comando_consola_desc[i])){return i;};
+        if(!strcmp(codigo, comando_consola_desc[i])){
+            return i;
+        }
     }
     return (-1);
 }
 
+char* recibir_path(){
+    return NULL;
+}
+
+// (["INICIAR_PROCESO", "path.txt"], 1)
 void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando){
     //char** comando_desde_c = string_split(comando_desde_consola, " ");
-    t_buffer* buffer_a_enviar = crear_buffer();
+    // printf("Comando: %i\nComando desde consola: %s\n", comando, comando_desde_consola[1]);
 
-      switch(comando){
+    t_buffer* buffer_a_enviar = crear_buffer();
+    switch(comando){
+
         
         case EJECUTAR_SCRIPT:
             log_info(logger_kernel,"HOLA ENTRASTE A EJECUTAR SCRIPT\n");

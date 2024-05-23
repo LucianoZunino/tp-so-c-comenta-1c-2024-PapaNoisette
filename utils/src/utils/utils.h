@@ -112,6 +112,7 @@ typedef struct
 typedef enum
 {
     FIN_DE_QUANTUM,
+	ENTRADA_SALIDA,
     ELIMINAR_PROCESO
 
 } motivo_interrupcion;
@@ -137,6 +138,7 @@ void cargar_string_al_buffer(t_buffer* buffer, char* valor_string);
 int recibir_operacion(int socket_cliente);
 char *recibir_cadena(int socket);
 int recibir_int(int socket);
+t_pcb* recibir_pcb(int socket_cliente);
 //void* recibir_buffer(int*, int);
 t_buffer* recibir_buffer_completo(int socket_cliente);
 void* extraer_datos_del_buffer(t_buffer* buffer);
