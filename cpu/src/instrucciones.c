@@ -2,51 +2,51 @@
 #include "instrucciones.h"
 
 
-void ejecutar_set(char *registro,char* valor)
+void ejecutar_set(char *registro,char* valor,t_proceso_cpu *proceso)
     {
         if (strcmp(registro, "AX") == 0)
         {
-        registros_cpu->AX=atoi(valor);        
+       proceso->registros_cpu->AX=atoi(valor);        
         }
         else if (strcmp(registro, "BX") == 0)
         {
-        registros_cpu->BX=atoi(valor);        
+       proceso->registros_cpu->BX=atoi(valor);        
         }
         else if (strcmp(registro, "CX") == 0)
         {
-        registros_cpu->CX=atoi(valor);        
+       proceso->registros_cpu->CX=atoi(valor);        
         }
         else if (strcmp(registro, "DX") == 0)
         {
-        registros_cpu->DX=atoi(valor);        
+       proceso->registros_cpu->DX=atoi(valor);        
         }
         else if (strcmp(registro, "EAX") == 0)
         {
-        registros_cpu->EAX=atoi(valor);        
+       proceso->registros_cpu->EAX=atoi(valor);        
         }
         else if (strcmp(registro, "EBX") == 0)
         {
-        registros_cpu->EBX=atoi(valor);        
+       proceso->registros_cpu->EBX=atoi(valor);        
         }
         else if (strcmp(registro, "ECX") == 0)
         {
-       registros_cpu->ECX=atoi(valor);        
+      proceso->registros_cpu->ECX=atoi(valor);        
         }
         else if (strcmp(registro, "EDX") == 0)
         {
-        registros_cpu->EDX=atoi(valor);        
+       proceso->registros_cpu->EDX=atoi(valor);        
         }
         else if (strcmp(registro, "SI") == 0)
         {
-        registros_cpu->SI=atoi(valor);        
+       proceso->registros_cpu->SI=atoi(valor);        
         }
         else if (strcmp(registro, "DI") == 0)
         {
-        registros_cpu->DI=atoi(valor);        
+       proceso->registros_cpu->DI=atoi(valor);        
         }
         else if (strcmp(registro, "PC") == 0)
         {
-        registros_cpu->PROGRAM_COUNTER=atoi(valor);        
+       proceso->registros_cpu->PROGRAM_COUNTER=atoi(valor);        
         }
         else
         {
@@ -54,153 +54,153 @@ void ejecutar_set(char *registro,char* valor)
         }
     }
 
-void ejecutar_sum(char*registro_destino,char *registro_origen)
+void ejecutar_sum(char*registro_destino,char *registro_origen,t_proceso_cpu *proceso)
     {
          int sum =atoi(registro_destino)+atoi(registro_origen);
         printf ("sum: %d\n",sum);
         if (strcmp(registro_destino, "AX") == 0)
         {
-            registros_cpu->AX=sum;
+           proceso->registros_cpu->AX=sum;
         }
         else if (strcmp(registro_destino, "BX") == 0)
         {
-            registros_cpu->BX=sum;
+           proceso->registros_cpu->BX=sum;
         }
         else if (strcmp(registro_destino, "CX") == 0)
         {
-            registros_cpu->CX=sum;
+           proceso->registros_cpu->CX=sum;
         }
         else if (strcmp(registro_destino, "DX") == 0)
         {
-            registros_cpu->DX=sum;
+           proceso->registros_cpu->DX=sum;
         }
         else if (strcmp(registro_destino, "EAX") == 0)
         {
-            registros_cpu->EAX=sum;
+           proceso->registros_cpu->EAX=sum;
         }
         else if (strcmp(registro_destino, "EBX") == 0)
         {
-            registros_cpu->EBX=sum;
+           proceso->registros_cpu->EBX=sum;
         }
         else if (strcmp(registro_destino, "ECX") == 0)
         {
-            registros_cpu->ECX=sum;
+           proceso->registros_cpu->ECX=sum;
         }
         else if (strcmp(registro_destino, "EDX") == 0)
         {
-            registros_cpu->EDX=sum;
+           proceso->registros_cpu->EDX=sum;
         }
         else if (strcmp(registro_destino, "SI") == 0)
         {
-            registros_cpu->SI=sum;
+           proceso->registros_cpu->SI=sum;
         }
         else if (strcmp(registro_destino, "DI") == 0)
         {
-            registros_cpu->DI=sum;
+           proceso->registros_cpu->DI=sum;
         }
         else if (strcmp(registro_destino, "PROGRAM_COUNTER") == 0)
         {
-        registros_cpu->PROGRAM_COUNTER=sum;        
+       proceso->registros_cpu->PROGRAM_COUNTER=sum;        
         }
         else
         {
             log_error(logger_cpu, "El argumento de la instrucción SUM es incorrecto");
         }
     }
-void ejecutar_sub(char*registro_destino,char *registro_origen)
+void ejecutar_sub(char*registro_destino,char *registro_origen,t_proceso_cpu *proceso)
     {
          int sum =atoi(registro_destino)-atoi(registro_origen);
         printf ("sub: %d\n",sum);
         if (strcmp(registro_destino, "AX") == 0)
         {
-            registros_cpu->AX=sum;
+           proceso->registros_cpu->AX=sum;
         }
         else if (strcmp(registro_destino, "BX") == 0)
         {
-            registros_cpu->BX=sum;
+           proceso->registros_cpu->BX=sum;
         }
         else if (strcmp(registro_destino, "CX") == 0)
         {
-            registros_cpu->CX=sum;
+           proceso->registros_cpu->CX=sum;
         }
         else if (strcmp(registro_destino, "DX") == 0)
         {
-            registros_cpu->DX=sum;
+           proceso->registros_cpu->DX=sum;
         }
         else if (strcmp(registro_destino, "EAX") == 0)
         {
-            registros_cpu->EAX=sum;
+           proceso->registros_cpu->EAX=sum;
         }
         else if (strcmp(registro_destino, "EBX") == 0)
         {
-            registros_cpu->EBX=sum;
+           proceso->registros_cpu->EBX=sum;
         }
         else if (strcmp(registro_destino, "ECX") == 0)
         {
-            registros_cpu->ECX=sum;
+           proceso->registros_cpu->ECX=sum;
         }
         else if (strcmp(registro_destino, "EDX") == 0)
         {
-            registros_cpu->EDX=sum;
+           proceso->registros_cpu->EDX=sum;
         }
         else if (strcmp(registro_destino, "SI") == 0)
         {
-            registros_cpu->SI=sum;
+           proceso->registros_cpu->SI=sum;
         }
         else if (strcmp(registro_destino, "DI") == 0)
         {
-            registros_cpu->DI=sum;
+           proceso->registros_cpu->DI=sum;
         }
         else if (strcmp(registro_destino, "PROGRAM_COUNTER") == 0)
         {
-        registros_cpu->PROGRAM_COUNTER=sum;        
+       proceso->registros_cpu->PROGRAM_COUNTER=sum;        
         }
         else
         {
             log_error(logger_cpu, "El argumento de la instrucción SUM es incorrecto");
         }
     }
-void ejecutar_jnz(char*registro,char *numero_instruccion){
+void ejecutar_jnz(char*registro,char *numero_instruccion,t_proceso_cpu *proceso){
 
-        if (strcmp(registro, "AX") == 0 && registros_cpu->AX !=0)
+        if (strcmp(registro, "AX") == 0 && proceso->registros_cpu->AX !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion); 
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion); 
         }
-        else if (strcmp(registro, "BX") == 0 && registros_cpu->BX !=0)
+        else if (strcmp(registro, "BX") == 0 && proceso->registros_cpu->BX !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
         }
-        else if (strcmp(registro, "CX") == 0 && registros_cpu->CX !=0)
+        else if (strcmp(registro, "CX") == 0 && proceso->registros_cpu->CX !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);        
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);        
         }
-        else if (strcmp(registro, "DX") == 0 && registros_cpu->DX !=0)
+        else if (strcmp(registro, "DX") == 0 && proceso->registros_cpu->DX !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
         }
-        else if (strcmp(registro, "EAX") == 0 && registros_cpu->EAX !=0)
+        else if (strcmp(registro, "EAX") == 0 && proceso->registros_cpu->EAX !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
         }
-        else if (strcmp(registro, "EBX") == 0 && registros_cpu->EBX !=0)
+        else if (strcmp(registro, "EBX") == 0 && proceso->registros_cpu->EBX !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
         }
-        else if (strcmp(registro, "ECX") == 0 && registros_cpu->ECX !=0)
+        else if (strcmp(registro, "ECX") == 0 && proceso->registros_cpu->ECX !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
         }
-        else if (strcmp(registro, "EDX") == 0 && registros_cpu->EDX !=0)
+        else if (strcmp(registro, "EDX") == 0 && proceso->registros_cpu->EDX !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
         }
-        else if (strcmp(registro, "SI") == 0 && registros_cpu->SI !=0)
+        else if (strcmp(registro, "SI") == 0 && proceso->registros_cpu->SI !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
         }
-        else if (strcmp(registro, "DI") == 0 && registros_cpu->DI !=0)
+        else if (strcmp(registro, "DI") == 0 && proceso->registros_cpu->DI !=0)
         {
-            registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
+            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
         }
         else
         {

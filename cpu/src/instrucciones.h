@@ -15,9 +15,9 @@
 #include "utils/mensajes.h"
 
 
-void ejecutar_set(char *registro,char* valor);
-void ejecutar_sum(char*registro_destino,char *registro_origen);
-void ejecutar_sub(char*registro_destino,char *registro_origen);
-void ejecutar_jnz(char*registro,char *numero_instruccion);
+void ejecutar_set(char *registro,char* valor,t_proceso_cpu *proceso);
+void ejecutar_sum(char*registro_destino,char *registro_origen,t_proceso_cpu *proceso);
+void ejecutar_sub(char*registro_destino,char *registro_origen,t_proceso_cpu *proceso);
+void ejecutar_jnz(char*registro,char *numero_instruccion,t_proceso_cpu *proceso);
 void ejecutar_io_gen_sleep(char* interfaz,char * unidades_de_trabajo);
 #endif

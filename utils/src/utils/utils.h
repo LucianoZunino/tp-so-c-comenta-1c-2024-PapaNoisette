@@ -48,6 +48,7 @@ typedef enum{
 	CPU_INTERRUPT,
 	CONTEXTO_EJECUCION,   //cpu-> KERNEL por dipatch
 	IO_GEN_SLEEP_FS, //le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
+	KERNEL_ENVIA_PROCESO,//KERNEL -> CPU por dispatch 
 	MEMORIA_SOLICITAR_INSTRUCCION,  //cpu->memoria DISPATCH
 	MEMORIA_ENVIA_INSTRUCCION   //memoria->cpu DISPATCH
 } op_code;
@@ -98,6 +99,7 @@ typedef enum {
     E_EXIT
 } estado_pcb;
 
+//
 typedef struct
 {
   uint32_t pid;
@@ -105,8 +107,17 @@ typedef struct
   t_registros_cpu *registros_cpu;
   int quantum;
   estado_pcb estado;
-
 } t_pcb;
+
+
+// es incorrecto enviar quantum y estado que son cosas de planificacion a cpu,
+//vamos a usar una estructura distinta en cpu
+typedef struct
+{
+  uint32_t pid;
+  uint32_t program_counter;
+  t_registros_cpu *registros_cpu;
+} t_proceso_cpu;
 
 // MOTIVOS DE INTERRUPCION
 typedef enum
@@ -160,5 +171,8 @@ int largo_array(char**array);
 int realizar_handshake(t_log *logger, int socket_servidor, op_code handshake);
 void aceptar_handshake(t_log *logger, int socket_cliente, op_code cop);
 void rechazar_handshake(t_log *logger, int socket_cliente);
+
+
+void print_registros(t_registros_cpu* registros);
 
 #endif

@@ -335,31 +335,79 @@ void enviar_paquete(t_paquete *paquete, int socket_cliente)
 	free(a_enviar);
 }
 
-// mepa que con lo de crear_paquete esta 
 
-void *serializar_instruccion(t_instruccion *instruccion)
+// para los arrays de kernel
+int largo_array(char **array)
 {
-	uint32_t tam_buffer_instruccion = sizeof(t_instruccion);
-	//printf("sizeoft_instruccion %ld \n", sizeof(t_instruccion));
-
-	void *buffer_instruccion = malloc(tam_buffer_instruccion);
-	memcpy(buffer_instruccion, instruccion->instruccion, sizeof(char[20]));
-	memcpy(buffer_instruccion + sizeof(char[20]), instruccion->arg1, sizeof(char[20]));
-	memcpy(buffer_instruccion + sizeof(char[20]) * 2, instruccion->arg2, sizeof(char[20]));
-	memcpy(buffer_instruccion + sizeof(char[20]) * 3, instruccion->arg3, sizeof(char[20]));
-
-	return buffer_instruccion;
+	int largo = 0;
+	while (array[largo] != NULL)
+	{
+		largo++;
+	}
+	return largo;
 }
 
-t_instruccion *deserializar_instruccion(void *stream)
+int enviar_handshake(t_log *logger, int socket_cliente, op_code handshake)
 {
-	t_instruccion *instruccion = malloc(sizeof(t_instruccion));
-	memcpy(&instruccion->instruccion, stream, sizeof(char[20]));
-	memcpy(&instruccion->arg1, stream + sizeof(char[20]), sizeof(char[20]));
-	memcpy(&instruccion->arg2, stream + sizeof(char[20]) * 2, sizeof(char[20]));
-	memcpy(&instruccion->arg3, stream + sizeof(char[20]) * 3, sizeof(char[20]));
-	return instruccion;
+	int resultado;
+	send(socket_cliente, &handshake, sizeof(int), 0);
+	recv(socket_cliente, &resultado, sizeof(int), MSG_WAITALL);
+	if (resultado != -1)
+	{
+		log_info(logger, "Handshake OK");
+	}
+	else
+	{
+		log_error(logger, "Handshake rechazado");
+	}
+
+	return resultado;
 }
+
+int realizar_handshake(t_log *logger, int socket_servidor, op_code handshake)
+{
+
+	if (enviar_handshake(logger, socket_servidor, handshake) == -1)
+	{
+		close(socket_servidor);
+		log_error(logger, "No se pudo realizar el handshake con el servidor");
+		return -1;
+	}
+
+	return 0;
+}
+
+void aceptar_handshake(t_log *logger, int socket_cliente, op_code cop)
+{
+	int result_ok = 0;
+	log_info(logger, "Recibido handshake %s.", op_code_desc[cop]);
+	send(socket_cliente, &result_ok, sizeof(int), 0);
+}
+
+void rechazar_handshake(t_log *logger, int socket_cliente)
+{
+	int result_error = -1;
+	log_error(logger, "Recibido handshake de un modulo no autorizado, rechazando...");
+	send(socket_cliente, &result_error, sizeof(int), 0);
+}
+
+void print_registros (t_registros_cpu *registros){
+printf("printeo registros \n");
+printf(">>registros - PROGRAM_COUNTER: %d\n",registros->PROGRAM_COUNTER);
+printf(">>registros - AX: %d\n",registros->AX);
+printf(">>registros - BX: %d\n",registros->BX);
+printf(">>registros - CX: %d\n",registros->CX);
+printf(">>registros - DX: %d\n",registros->DX);
+printf(">>registros - EAX: %d\n",registros->EAX);
+printf(">>registros - EBX: %d\n",registros->EBX);
+printf(">>registros - ECX: %d\n",registros->ECX);
+printf(">>registros - EDX: %d\n",registros->EDX);
+printf(">>registros - SI: %d\n",registros->SI);
+printf(">>registros - DI: %d\n",registros->DI);
+
+
+}
+
 
 // Para leer el script de instrucciones y lo deja enlistado para que memoria los envie de a uno
 t_list *parsear_archivo_instrucciones(char *path_archivo, t_log *logger)// va a memoria
@@ -418,59 +466,4 @@ t_list *parsear_archivo_instrucciones(char *path_archivo, t_log *logger)// va a 
 	fclose(archivo_instrucciones);
 
 	return instrucciones;
-}
-
-// para los arrays de kernel
-int largo_array(char **array)
-{
-	int largo = 0;
-	while (array[largo] != NULL)
-	{
-		largo++;
-	}
-	return largo;
-}
-
-int enviar_handshake(t_log *logger, int socket_cliente, op_code handshake)
-{
-	int resultado;
-	send(socket_cliente, &handshake, sizeof(int), 0);
-	recv(socket_cliente, &resultado, sizeof(int), MSG_WAITALL);
-	if (resultado != -1)
-	{
-		log_info(logger, "Handshake OK");
-	}
-	else
-	{
-		log_error(logger, "Handshake rechazado");
-	}
-
-	return resultado;
-}
-
-int realizar_handshake(t_log *logger, int socket_servidor, op_code handshake)
-{
-
-	if (enviar_handshake(logger, socket_servidor, handshake) == -1)
-	{
-		close(socket_servidor);
-		log_error(logger, "No se pudo realizar el handshake con el servidor");
-		return -1;
-	}
-
-	return 0;
-}
-
-void aceptar_handshake(t_log *logger, int socket_cliente, op_code cop)
-{
-	int result_ok = 0;
-	log_info(logger, "Recibido handshake %s.", op_code_desc[cop]);
-	send(socket_cliente, &result_ok, sizeof(int), 0);
-}
-
-void rechazar_handshake(t_log *logger, int socket_cliente)
-{
-	int result_error = -1;
-	log_error(logger, "Recibido handshake de un modulo no autorizado, rechazando...");
-	send(socket_cliente, &result_error, sizeof(int), 0);
 }

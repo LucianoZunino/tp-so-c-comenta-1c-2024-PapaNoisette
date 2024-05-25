@@ -1,25 +1,62 @@
 #include "escuchar_kernel_cpu.h"
 
 void escuchar_mensajes_kernel_dispatch(){
+	printf("Entro a  escuchar_mensajes_kernel_dispatch \n");
+t_buffer * buffer;
     bool desconexion_kernel_dispatch = 0;
 	while(!desconexion_kernel_dispatch){
+
 		int cod_op = recibir_operacion(fd_kernel_dispatch); // recv() es bloqueante por ende no queda loopeando infinitamente
+			printf("---recibir_operacion--->cod_op= %d\n",cod_op);
+				//aceptar_handshake(logger_cpu, fd_kernel_dispatch, cod_op);
+
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
 						
 			case HANDSHAKE_KERNEL:
 				aceptar_handshake(logger_cpu, fd_kernel_dispatch, cod_op);
+				printf(" case aceptar_handshake \n");
+
 				break;
+
+			case KERNEL_ENVIA_PROCESO:
+				printf("CASE: KERNEL_ENVIA_PROCESO\n");
+				buffer=recibir_buffer_completo(fd_kernel_dispatch);
+				t_proceso_cpu *proceso=malloc(sizeof(t_proceso_cpu));
+
+                proceso->pid = extraer_int_del_buffer(buffer);
+				printf("------>proceso->pid= %d\n",proceso->pid);
+
+                proceso->program_counter = extraer_int_del_buffer(buffer);
+				printf("------>proceso->program_counter= %d\n",proceso->program_counter);
+
+                proceso->registros_cpu = extraer_datos_del_buffer(buffer);
+				print_registros(proceso->registros_cpu);
+				
+				/*	while (ciclo_de_instruccion(proceso) == 0)
+					{
+						sleep(1); // TODO: Quitar sleep cuando este implementado el tiempo de retardo en la memoria
+					}*/
+
+
+               //free(proceso);
+
+ 			break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Dispatch. Terminando servidor.");
 				desconexion_kernel_dispatch = 1;
 				break;
 			default:
-				log_warning(logger_cpu, "Operacion desconocida de Kernel-Dispatch.");
+				log_warning(logger_cpu, "Operacion desconocida de Kernel-Dispatch. ABORTANDO");
+				desconexion_kernel_dispatch = 1;
+
 				break;
 			}
+
 	}
+				printf("FINALIZA HILO: escuchar_mensajes_kernel_dispatch= ");
+
 }
 
 void escuchar_mensajes_kernel_interrupt(){

@@ -6,10 +6,12 @@
 #include <pthread.h>
 #include <utils/hello.h>
 #include <utils/utils.h>
-#include "iniciar_cpu.h"
+#include <utils/mensajes.h>
+#include "ciclo_instrucciones.h"
 #include "escuchar_kernel_cpu.h"
 #include "escuchar_memoria_cpu.h"
 #include "utils.h"
+#include "iniciar_cpu.h"
 
 extern t_log* logger_cpu;
 
@@ -44,7 +46,6 @@ extern uint32_t DI;
 
 extern t_registros_cpu * registros_cpu;
 
-extern t_list* INSTRUCTION_LIST;
 
 
 #endif
