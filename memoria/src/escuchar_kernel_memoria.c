@@ -16,16 +16,13 @@ void escuchar_mensajes_kernel_memoria(){
 			case MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS:{ // O el msj q sea
                 printf("LLEGUE HASTA SOLICITAR INICIALIZAR ESTRUCTURAS \n");
                 buffer = recibir_buffer_completo(fd_kernel);
-                t_pcb *pcb = malloc(sizeof(t_pcb));
-                pcb->pid = extraer_int_del_buffer(buffer);
-                pcb->program_counter = extraer_int_del_buffer(buffer);
-                pcb->registros_cpu = extraer_datos_del_buffer(buffer);
-                pcb->quantum = extraer_int_del_buffer(buffer);
-                pcb->estado = extraer_int_del_buffer(buffer); //es un enum, si no funciona probar con int
+                t_pcb* pcb = deserealizar_pcb(buffer); //FUNCION AGREGADA EN utils.c
 
                 printf("PID DEL PCB RECIBIDO EN MEMORIA: %i \n", pcb->pid);
                 char* path = extraer_string_del_buffer(buffer);
                 printf("path: %s \n" , path);
+                enviar_ok(KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, fd_kernel);
+                destruir_buffer(buffer);
 				break;
             }
 			case -1:

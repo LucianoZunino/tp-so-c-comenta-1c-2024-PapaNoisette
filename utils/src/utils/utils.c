@@ -467,3 +467,14 @@ t_list *parsear_archivo_instrucciones(char *path_archivo, t_log *logger)// va a 
 
 	return instrucciones;
 }
+
+t_pcb* deserializar_pcb(t_buffer* buffer)
+	{
+     t_pcb *pcb = malloc(sizeof(t_pcb)); // ESTA MEMORIA CUANDO SE LIBERA?
+     pcb->pid = extraer_int_del_buffer(buffer);
+     pcb->program_counter = extraer_int_del_buffer(buffer);
+     pcb->registros_cpu = extraer_datos_del_buffer(buffer);
+     pcb->quantum = extraer_int_del_buffer(buffer);
+     pcb->estado = extraer_int_del_buffer(buffer);
+	 return pcb;
+	}

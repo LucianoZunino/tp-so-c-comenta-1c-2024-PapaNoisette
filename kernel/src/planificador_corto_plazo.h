@@ -9,4 +9,9 @@ void planificador_corto_plazo();
 
 void *interrupcion_quantum(void *p);
 
+void esperar_respuesta_de_cpu();
+
+void desalojar_proceso_cpu(op_code motivo, t_pcb* pcb) ;
+
+
 #endif

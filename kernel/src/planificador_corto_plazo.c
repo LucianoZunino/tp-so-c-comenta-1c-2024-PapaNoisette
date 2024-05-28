@@ -20,7 +20,7 @@ void planificador_corto_plazo(){
             pcb->estado = E_EXEC;
 
             // Lo comento para testear nomas, asi no rompe, pq falta implementarlo en cpu
-            // enviar_proceso_por_paquete(pcb, NULL ,fd_cpu_dispatch, ENVIAR_PROCESO_A_EXEC); 
+            enviar_proceso_por_paquete(pcb, NULL ,fd_cpu_dispatch, ENVIAR_PROCESO_A_EXEC); 
             // recibir OK de CPU
             
             pthread_mutex_lock(&mutex_RUNNING);
@@ -46,10 +46,54 @@ void planificador_corto_plazo(){
         // 
         // esperar_respuesta_de_CPU con: contexto, motivo_desalojo
 
+        esperar_respuesta_de_cpu();
 
-        //void *buffer = recibir_nuevo_contexto(socket_cpu, &cop);
-        //deserializar_contexto_pcb(buffer, r_pcb);
     }
+}
+
+void esperar_respuesta_de_cpu()
+{
+    op_code motivo = recibir_operacion (fd_cpu_dispatch);
+    
+    t_buffer *buffer = crear_buffer(fd_cpu_dispatch);
+        
+    buffer = recibir_buffer_completo(fd_cpu_dispatch);
+        
+    t_pcb* pcb = deserializar_pcb(buffer);
+
+    destruir_buffer(buffer);
+
+    desalojar_proceso_cpu (motivo, pcb);
+}
+
+
+void desalojar_proceso_cpu(op_code motivo, t_pcb* pcb) 
+{
+    switch (motivo)
+    {
+    case FIN_DE_QUANTUM:
+        pasar_proceso_a_ready(pcb);
+        break;
+    
+    case FINALIZAR_PROCESO:
+        break;
+    
+    case ENTRADA_SALIDA:
+        break;
+
+    default:
+        break;
+    }
+}
+
+void pasar_proceso_a_ready(t_pcb* pcb){
+    
+    pthread_mutex_lock(&mutex_READY);
+    queue_push(READY, pcb);
+    pthread_mutex_unlock(&mutex_READY);
+    
+    sem_post(&sem_READY);
+    sem_post(&sem_EXEC);
 }
 /*
 

@@ -7,6 +7,16 @@
 //****MENSAJES GENERICOS
 //******************************
 
+void enviar_ok(op_code codigo_operacion, int socket)
+{
+    t_buffer* bufferVacio = crear_buffer();
+    t_paquete* paquete = crear_paquete(codigo_operacion, bufferVacio);
+    int _ = -1;
+    cargar_int_al_buffer(paquete->buffer, &_);
+    enviar_paquete(paquete, socket);
+    eliminar_paquete(paquete);
+}
+
 void recibir_ok(int socket)
 {
     int _;
@@ -15,7 +25,7 @@ void recibir_ok(int socket)
 }
 
 /// @brief Recibe el codigo de operacion del socket
-/// @note Se debe utilizar antes de cualquier llamado a otros recibir_...()
+/// @note Se debe utilizar antes de cualquier llamado a otros recibir_...() ES LA FUNCION recibir_operacion() QUE ESTA EN util.c
 /// @param socket
 /// @return
 op_code recibir_codigo_operacion(int socket)
