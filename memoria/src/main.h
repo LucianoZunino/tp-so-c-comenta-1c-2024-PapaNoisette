@@ -25,4 +25,16 @@ extern int fd_cpu;
 extern int fd_kernel;
 extern int fd_entradasalida;
 
+typedef struct
+{
+
+    int pid;
+    t_list *lista_de_instrucciones;
+
+} t_miniPcb;
+
+extern t_list *lista_de_miniPcb;
+
+
+
 #endif

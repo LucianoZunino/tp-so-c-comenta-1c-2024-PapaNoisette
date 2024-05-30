@@ -1,6 +1,8 @@
 #include "iniciar_memoria.h"
 
 t_config* config_memoria;
+t_list* lista_de_miniPcb;
+pthread_mutex_t* mutex_miniPcb;
 
 void iniciar_memoria(){
     iniciar_logger_memoria();
@@ -33,4 +35,15 @@ void imprimir_config_memoria(){
 void finalizar_memoria(){
     log_destroy(logger_memoria);
     config_destroy(config_memoria);
+}
+
+void inicializar_estructuras(){
+    t_list *lista_de_miniPcb = list_create();
+}
+
+void inicializar_semaforos(){
+    if (pthread_mutex_init(&mutex_miniPcb, NULL) != 0) {
+        log_error(logger_memoria, "No se pudo inicializar el semaforo para la lista miniPcb");
+        exit(-1);
+    } 
 }

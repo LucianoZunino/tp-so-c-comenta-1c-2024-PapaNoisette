@@ -84,26 +84,3 @@ t_pcb *crear_pcb(){
 
 
 
-    /*FILE* archivo = fopen(path, "r");
-
-    if (archivo == NULL) {
-        printf("Error: No se pudo abrir el archivo %s\n", path);
-        return;
-    }
-    
-    char* instrucciones_del_path = list_create();
-    
-    char* linea[100]; 
-    
-    while(fgets(linea, sizeof(linea), archivo) != NULL){
-        
-        
-        // Eliminar el salto de línea al final de la línea leída
-        linea[strcspn(linea, "\n")] = '\0';
-        // Crear una copia de la línea leída para almacenarla en la lista
-        char* linea_copia = strdup(linea);
-        list_add(instrucciones_del_path, linea);
-    }
-
-    fclose(archivo);
-*/ //PUEDE SERVIR PARA MEMORIA

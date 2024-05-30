@@ -17,7 +17,7 @@ pthread_mutex_t interrupcion_mutex;
 t_instruccion *fetch(t_proceso_cpu *proceso)
 {
     log_info(logger_cpu, "Ejecutando FETCH PID: %i Program Counter: %i", proceso->pid, proceso->program_counter);
-   // enviar_memoria_solicitar_instruccion(proceso, fd_memoria);
+    //enviar_memoria_solicitar_instruccion(proceso, fd_memoria);
     
    // op_code codigo_operacion =recibir_codigo_operacion(fd_memoria);
     char *cpu_respuesta_instruccion ;//la instruccion sin parsear tipo IO_FS_READ Int4 notas.txt BX ECX EDX

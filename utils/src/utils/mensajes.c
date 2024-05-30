@@ -173,5 +173,24 @@ void enviar_kernel_interrupt(t_pcb *pcb, motivo_interrupcion motivo, int socket)
 
 void enviar_memoria_solicitar_instruccion(t_pcb *pcb, int socket)
 {
-  
+  t_buffer* buffer = crear_buffer();
+  t_paquete* paquete = crear_paquete(MEMORIA_SOLICITAR_INSTRUCCION, buffer);
+  agregar_pcb(paquete, pcb);
+  enviar_paquete(paquete, socket);
+  eliminar_paquete(paquete);
+}
+
+
+
+//******************************
+//****MENSAJES QUE ENVIA MEMORIA A CPU
+//******************************
+
+void enviar_instruccion(char* instruccion, int socket){
+
+    t_buffer* buffer_a_enviar = crear_buffer();
+    t_paquete *paquete = crear_paquete(MEMORIA_ENVIA_INSTRUCCION, buffer_a_enviar);
+    cargar_string_al_buffer(paquete->buffer, instruccion);
+    enviar_paquete(paquete, socket);
+    eliminar_paquete(paquete);
 }
