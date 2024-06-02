@@ -5,6 +5,7 @@ t_config* config_entradasalida;
 void iniciar_entradasalida(){
     iniciar_logger_entradasalida();
     iniciar_config_entradasalida();
+    iniciar_estructuras();
     //imprimir_config_entradasalida();
 }
 
@@ -15,7 +16,7 @@ void iniciar_logger_entradasalida(){
 void iniciar_config_entradasalida(){
     config_entradasalida = iniciar_config("entradasalida.config");
 
-    tipo_interfaz = config_get_string_value(config_entradasalida, "TIPO_INTERFAZ");
+    tipo_de_interfaz = config_get_string_value(config_entradasalida, "TIPO_INTERFAZ");
     tiempo_unidad_trabajo = config_get_int_value(config_entradasalida, "TIEMPO_UNIDAD_TRABAJO");
     ip_kernel = config_get_string_value(config_entradasalida, "IP_KERNEL");
     puerto_kernel = config_get_string_value(config_entradasalida, "PUERTO_KERNEL");
@@ -27,7 +28,7 @@ void iniciar_config_entradasalida(){
 }
 
 void imprimir_config_entradasalida(){
-    printf("TIPO_INTERFAZ:%s\n",tipo_interfaz);
+    printf("TIPO_INTERFAZ:%s\n",tipo_de_interfaz);
     printf("TIEMPO_UNIDAD_TRABAJO:%d\n",tiempo_unidad_trabajo);
     printf("IP_KERNEL:%s\n",ip_kernel);
     printf("PUERTO_KERNEL:%s\n",puerto_kernel);
@@ -36,6 +37,10 @@ void imprimir_config_entradasalida(){
     printf("PATH_BASE_DIALFS:%s\n",path_base_dialfs);
     printf("BLOCK_SIZE:%d\n",block_size);
     printf("BLOCK_COUNT:%d\n",block_count);
+}
+
+void iniciar_estructuras(){
+    interfaces = dictionary_create();
 }
 
 void finalizar_entradasalida(){

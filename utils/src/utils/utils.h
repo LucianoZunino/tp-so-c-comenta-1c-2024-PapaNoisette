@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
+#include <semaphore.h>
 #include <commons/log.h>
 #include <commons/config.h>
 #include <commons/string.h>
@@ -93,8 +94,22 @@ typedef enum
 
 } motivo_interrupcion;
 
+typedef enum
+{
+	GENERICA,
+	STDIN,
+	STDOUT,
+	DIAL_FS
+} tipo_interfaz;
 
-
+// Interfaz
+typedef struct
+{
+	t_config* config;
+	t_queue* cola_espera;
+	pthread_t hilo;
+	sem_t* semaforo;
+} t_interfaz;
 
 // Funciones de init
 t_config* iniciar_config(char* ruta_config);

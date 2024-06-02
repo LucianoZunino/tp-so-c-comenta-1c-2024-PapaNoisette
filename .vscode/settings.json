@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "iniciar_kernel.h": "c",
+        "utils.h": "c",
+        "main.h": "c",
+        "iniciar_entradasalida.h": "c",
+        "escuchar_kernel_entradasalida.h": "c",
+        "semaphore.h": "c",
+        "log.h": "c"
+    }
+}

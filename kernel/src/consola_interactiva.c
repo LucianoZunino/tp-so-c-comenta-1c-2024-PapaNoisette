@@ -88,7 +88,7 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
 
         default:
              log_error(logger_kernel, "Comando no reconocido");
-             exit(EXIT_FAILURE);
+             exit(EXIT_FAILURE); // El sistema no tiene que fallar si se envia una instruccion incorrecta
          
 
     }
