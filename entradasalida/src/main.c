@@ -2,7 +2,7 @@
 
 t_log* logger_entradasalida;
 
-char* tipo_interfaz;
+char* tipo_de_interfaz;
 int tiempo_unidad_trabajo;
 char* ip_kernel;
 char* puerto_kernel;
