@@ -17,6 +17,7 @@ extern t_log* logger_memoria;
 extern char* puerto_escucha;
 extern int tam_memoria;
 extern int tam_pagina;
+extern int numero_paginas;
 extern char* path_instrucciones;
 extern int retardo_respuesta;
 
@@ -25,8 +26,7 @@ extern int fd_cpu;
 extern int fd_kernel;
 extern int fd_entradasalida;
 
-typedef struct
-{
+typedef struct{
 
     int pid;
     t_list *lista_de_instrucciones;

@@ -5,6 +5,7 @@ t_log* logger_memoria;
 char* puerto_escucha;
 int tam_memoria;
 int tam_pagina;
+int numero_paginas;
 char* path_instrucciones;
 int retardo_respuesta;
 

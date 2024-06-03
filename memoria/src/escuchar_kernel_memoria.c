@@ -13,12 +13,12 @@ void escuchar_mensajes_kernel_memoria(){
 			case HANDSHAKE_KERNEL:
 				aceptar_handshake(logger_memoria, fd_kernel, cod_op);
 				break;
-			case MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS:{ // O el msj q sea
-            // ver de crear hilo
+			case MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS:{
+                // ver de crear hilo¿?
                 buffer = recibir_buffer_completo(fd_kernel);
-                t_pcb* pcb = deserializar_pcb(buffer); //FUNCION AGREGADA EN utils.c
-                char* path = extraer_string_del_buffer(buffer);
-                guardar_instrucciones_en_memoria(pcb,path);
+                t_pcb* pcb = deserializar_pcb(buffer);
+                char* path = extraer_string_del_buffer(buffer); // Obtiene el path del archivo pseudocodigo
+                guardar_instrucciones_en_memoria(pcb, path); //Guar
                 enviar_ok(KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, fd_kernel);
                 destruir_buffer(buffer);
 				break;
@@ -47,29 +47,28 @@ void guardar_instrucciones_en_memoria(t_pcb* pcb,char* path){
 
     FILE* archivo = fopen(path, "r");
 
-    if (archivo == NULL) {
+    if(archivo == NULL){
         printf("Error: No se pudo abrir el archivo %s\n", path);
         return;
     }
     instrucciones->pid = malloc(sizeof(int));
     instrucciones->pid = pcb->pid;
-    instrucciones->lista_de_instrucciones = list_create();
+    instrucciones->lista_de_instrucciones = list_create(); // Crea una lista ej => ["MOVE AX BX", "ADD DX CX"]
     
     char* linea[100]; 
     
     while(fgets(linea, sizeof(linea), archivo) != NULL){
-        
         // Eliminar el salto de línea al final de la línea leída
         linea[strcspn(linea, "\n")] = '\0';
         // Crear una copia de la línea leída para almacenarla en la lista
         char* linea_copia = strdup(linea);
         char* linea_a_agregar = malloc(sizeof(linea_copia)); // HACER FREE AL SACAR EL PROCESO DE MEMORIA
-        list_add(instrucciones->lista_de_instrucciones, linea_a_agregar); 
+        list_add(instrucciones->lista_de_instrucciones, linea_a_agregar); // Agrega las intrucciones a la lista
     }
 
     fclose(archivo);
     // PONER HILO MUTEX PARA LISTA_dE_MINIPCB
-    list_add(lista_de_miniPcb, instrucciones );
+    list_add(lista_de_miniPcb, instrucciones ); 
 }
 
 
