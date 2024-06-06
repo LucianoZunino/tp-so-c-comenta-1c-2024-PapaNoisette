@@ -13,5 +13,5 @@ void esperar_respuesta_de_cpu();
 
 void desalojar_proceso_cpu(op_code motivo, t_pcb* pcb) ;
 
-
+//void interrumpir_cpu(motivo_interrupcion motivo);
 #endif

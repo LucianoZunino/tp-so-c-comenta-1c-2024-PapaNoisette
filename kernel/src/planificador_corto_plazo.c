@@ -20,7 +20,7 @@ void planificador_corto_plazo(){
             pcb->estado = E_EXEC;
 
             // Lo comento para testear nomas, asi no rompe, pq falta implementarlo en cpu
-            enviar_proceso_por_paquete(pcb, NULL ,fd_cpu_dispatch, ENVIAR_PROCESO_A_EXEC); 
+            enviar_proceso_por_paquete(pcb, NULL ,fd_cpu_dispatch, KERNEL_ENVIA_PROCESO); 
             // recibir OK de CPU
             
             pthread_mutex_lock(&mutex_RUNNING);
@@ -46,12 +46,11 @@ void planificador_corto_plazo(){
         // 
         // esperar_respuesta_de_CPU con: contexto, motivo_desalojo
 
-        esperar_respuesta_de_cpu();
-
+       
     }
 }
 
-void esperar_respuesta_de_cpu()
+/*void esperar_respuesta_de_cpu()
 {
     op_code motivo = recibir_operacion (fd_cpu_dispatch);
     
@@ -71,21 +70,19 @@ void desalojar_proceso_cpu(op_code motivo, t_pcb* pcb)
 {
     switch (motivo)
     {
-    case FIN_DE_QUANTUM:
+    case RECURSOS:
         pasar_proceso_a_ready(pcb);
         break;
     
-    case FINALIZAR_PROCESO:
+    case EXIT:
         break;
     
-    case ENTRADA_SALIDA:
-        break;
 
     default:
         break;
     }
 }
-
+*/
 void pasar_proceso_a_ready(t_pcb* pcb){
     
     pthread_mutex_lock(&mutex_READY);
@@ -95,6 +92,17 @@ void pasar_proceso_a_ready(t_pcb* pcb){
     sem_post(&sem_READY);
     sem_post(&sem_EXEC);
 }
+
+/*
+void interrumpir_cpu(motivo_interrupcion motivo){
+    t_buffer* buffer_interrupt = crear_buffer();
+    t_paquete* paquete = crear_paquete(INTERRUPCION, buffer_interrupt);
+    cargar_int_al_buffer(paquete->buffer, motivo);
+    enviar_paquete(paquete, fd_cpu_interrupt);
+    eliminar_paquete(paquete);
+    
+}
+*/
 /*
 
 void iniciar_quantum(t_pcb *pcb){
