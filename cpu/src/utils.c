@@ -11,6 +11,7 @@ uint32_t EDX;
 uint32_t SI;
 uint32_t DI;
 
+
 void loggear_ejecucion(t_instruccion *instruccion)//log obligatorio
 {
     log_info(logger_cpu, "Ejecutando: %s - arg1: %s, arg2: %s, arg3: %s",

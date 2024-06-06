@@ -273,3 +273,10 @@
 [INFO] 14:33:39:500 entradasalida/(7470:7470): Handshake OK
 [ERROR] 14:36:24:582 entradasalida/(7470:7484): La Memoria se desconecto de Entradasalida. Terminando servidor.
 [ERROR] 14:36:26:662 entradasalida/(7470:7485): El Kernel se desconecto de Entradasalida. Terminando servidor.
+[INFO] 20:57:56:881 entradasalida/(15839:15839): Arranca el modulo  Entrada/Salida
+[ERROR] 20:57:56:882 entradasalida/(15839:15839): Error conectando al Servidor,apagado o invalido
+[ERROR] 20:57:56:882 entradasalida/(15839:15839): Error conectando al Servidor,apagado o invalido
+[INFO] 20:57:56:882 entradasalida/(15839:15839): Handshake OK
+[INFO] 20:57:56:882 entradasalida/(15839:15839): Handshake OK
+[ERROR] 20:57:56:882 entradasalida/(15839:15840): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 20:57:56:885 entradasalida/(15839:15841): El Kernel se desconecto de Entradasalida. Terminando servidor.

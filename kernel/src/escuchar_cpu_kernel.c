@@ -23,24 +23,23 @@ void escuchar_mensajes_dispatch_kernel(){
 void escuchar_mensajes_interrupt_kernel(){
     bool desconexion_interrupt_kernel = 0;
 	while(!desconexion_interrupt_kernel){
-		int cod_op = recibir_operacion(fd_cpu_interrupt); // recv() es bloqueante por ende no queda loopeando infinitamente
-		switch(cod_op){
-			case CPU_INTERRUPT:
-				motivo_interrupcion motivo = recibir_operacion(fd_cpu_interrupt);
-				t_pcb* pcb = recibir_pcb(fd_cpu_interrupt);
-				if (motivo == FIN_DE_QUANTUM){
-					sem_post(&sem_EXEC);
-					queue_push(READY, pcb);
-				}
-				else if(motivo == ENTRADA_SALIDA){
-					list_add(BLOCKED, pcb);
-					// hacer cosas de IO
-				}
-				else if(motivo == ELIMINAR_PROCESO){
-					sem_post(&sem_MULTIPROGRAMACION);
-					// hacer cosas de memoria
-				}
+		int motivo = recibir_operacion(fd_cpu_interrupt); // recv() es bloqueante por ende no queda loopeando infinitamente
+		switch(motivo){
+			motivo_interrupcion motivo = recibir_operacion(fd_cpu_interrupt);
+			t_pcb* pcb = recibir_pcb(fd_cpu_interrupt); //chequear si anda, sino usar deserealizar_pcb
+			sem_post(&sem_EXEC);
+			case FIN_DE_QUANTUM:
+				queue_push(READY, pcb);
+
+			case ENTRADA_SALIDA:
+				list_add(BLOCKED, pcb);
+				// hacer cosas de IO
 				break;
+			case ELIMINAR_PROCESO:
+				sem_post(&sem_MULTIPROGRAMACION);
+				// hacer cosas de memoria
+				break;
+
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
 			case -1:
@@ -53,3 +52,4 @@ void escuchar_mensajes_interrupt_kernel(){
 			}
 	}
 }
+

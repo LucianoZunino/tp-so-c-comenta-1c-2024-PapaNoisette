@@ -1313,3 +1313,9 @@
 [INFO] 14:33:39:496 cpu/(7406:7474): Recibido handshake HANDSHAKE_KERNEL.
 [INFO] 14:33:39:497 cpu/(7406:7475): Recibido handshake HANDSHAKE_KERNEL.
 [ERROR] 14:36:24:582 cpu/(7406:7476): La Memoria se desconecto de CPU. Terminando servidor.
+[INFO] 16:24:20:672 cpu/(175596:175596): Arranca el modulo CPU
+[INFO] 16:24:20:674 cpu/(175596:175596): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 16:24:20:674 cpu/(175596:175596): >>> Server CPU-Interrupt escuchando... <<<
+[ERROR] 16:24:20:674 cpu/(175596:175596): Error conectando al Servidor,apagado o invalido
+[INFO] 16:24:20:674 cpu/(175596:175596): >>>CPU se conecta al server MEMORIA
+[INFO] 16:24:20:674 cpu/(175596:175596): Esperando conexion de Kernel en Dispatch

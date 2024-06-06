@@ -5,4 +5,6 @@
 
 void escuchar_mensajes_kernel_entradasalida();
 
+void crear_interfaz(char* nombre_interfaz, char* path_config);
+
 #endif

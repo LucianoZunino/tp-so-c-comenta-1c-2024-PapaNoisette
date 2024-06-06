@@ -23,13 +23,13 @@ int fd_kernel_interrupt;
 uint32_t PROGRAM_COUNTER=0;
 
 extern t_list* INSTRUCTION_LIST;
-extern t_registros_cpu * registros_cpu;
+t_registros_cpu * registros_cpu;
 
 int main(int argc, char* argv[]){
 	iniciar_cpu();
   	log_info(logger_cpu, "Arranca el modulo CPU");
 	iniciar_cpu();
-   // registros_cpu=malloc(sizeof(t_registros_cpu));//pasasr a iniciar_cpu()
+    registros_cpu = malloc(sizeof(t_registros_cpu));//pasasr a iniciar_cpu()
     // Inicia el server de cpu dispatch
 	fd_cpu_dispatch = iniciar_servidor(puerto_escucha_dispatch, logger_cpu, ">>> Server CPU-Dispatch escuchando... <<<");
  

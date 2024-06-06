@@ -46,6 +46,5 @@ extern uint32_t DI;
 
 extern t_registros_cpu * registros_cpu;
 
-
-
+extern t_pcb* EXEC;
 #endif

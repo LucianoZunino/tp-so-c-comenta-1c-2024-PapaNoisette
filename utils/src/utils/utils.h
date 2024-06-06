@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
+#include <semaphore.h>
 #include <commons/log.h>
 #include <commons/config.h>
 #include <commons/string.h>
@@ -44,7 +45,6 @@ typedef enum{
 	HANDSHAKE_CPU,
 	KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, // PIDE A MEMORIA INICIALIZAR ESTRUCTURA Y LO HACE CORRECTAMENTE.
 	MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS,
-	ENVIAR_PROCESO_A_EXEC,
 	CPU_INTERRUPT,
 	CONTEXTO_EJECUCION,   //cpu-> KERNEL por dipatch
 	IO_GEN_SLEEP_FS, //le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
@@ -58,6 +58,8 @@ typedef enum{
 	MEMORIA_ESCRIBIR,//cpu-> MEMORIA
 	KERNEL_WAIT,//cpu-> KERNEL por dipatch
 	KERNEL_SIGNAL//cpu-> KERNEL por dipatch
+	MEMORIA_ENVIA_INSTRUCCION,   //memoria->cpu DISPATCH
+	INTERRUPCION
 } op_code;
 
 typedef struct{
@@ -137,6 +139,22 @@ typedef enum
 
 } motivo_interrupcion;
 
+typedef enum
+{
+	GENERICA,
+	STDIN,
+	STDOUT,
+	DIAL_FS
+} tipo_interfaz;
+
+// Interfaz
+typedef struct
+{
+	t_config* config;
+	t_queue* cola_espera;
+	pthread_t hilo;
+	sem_t* semaforo;
+} t_interfaz;
 
 // Funciones de init
 t_config* iniciar_config(char* ruta_config);
