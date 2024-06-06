@@ -75,11 +75,13 @@ int decode_excute(t_instruccion * instruccion,t_proceso_cpu *proceso){
         }
         else if (strcmp(instruccion->instruccion, "MOV_IN") == 0)
         {
-            return MOV_IN;
+                ejecutar_mov_in(instruccion->arg1,instruccion->arg2,proceso);
+                return CONTINUAR_CICLO;
         }
         else if (strcmp(instruccion->instruccion, "MOV_OUT") == 0)
         {
-            return MOV_OUT;
+                ejecutar_mov_out(instruccion->arg1,instruccion->arg2,proceso);
+                return CONTINUAR_CICLO;
         }
         else if (strcmp(instruccion->instruccion, "SUM") == 0)
         {
@@ -101,33 +103,43 @@ int decode_excute(t_instruccion * instruccion,t_proceso_cpu *proceso){
         }
         else if (strcmp(instruccion->instruccion, "RESIZE") == 0)
         {
-            return RESIZE;
-        }
+                ejecutar_resize(instruccion->arg1);
+                // no se si me conviene esperar aca mismo la respuesta o en el hilo de escucha de memoria
+               // return CONTINUAR_CICLO;       no continua el ciclo por que necesito la respuesto ok /error
+       }
         else if (strcmp(instruccion->instruccion, "COPY_STRING") == 0)
         {
-            return COPY_STRING;
+                ejecutar_copy_string(instruccion->arg1);
+                return CONTINUAR_CICLO;        
         }
         else if (strcmp(instruccion->instruccion, "WAIT") == 0)
         {
-            return WAIT;
+                devolver_contexto_ejecucion(proceso);
+                return SALIR_DE_CICLO;      
         }
         else if (strcmp(instruccion->instruccion, "SIGNAL") == 0)
         {
-            return SIGNAL;
+                devolver_contexto_ejecucion(proceso);
+                return SALIR_DE_CICLO;       
         }
         else if (strcmp(instruccion->instruccion, "IO_GEN_SLEEP") == 0)
         {
                 ejecutar_io_gen_sleep(instruccion->arg1,instruccion->arg2);
-                return SALIR_DE_CICLO;//autodesalojo??
+                 devolver_contexto_ejecucion(proceso);
+                return SALIR_DE_CICLO;
 
         }
         else if (strcmp(instruccion->instruccion, "IO_STDIN_READ") == 0)
         {
-            return IO_STDIN_READ;
+                ejecutar_io_stdin_read(instruccion->arg1,instruccion->arg2,,instruccion->arg3);
+                devolver_contexto_ejecucion(proceso);
+                return SALIR_DE_CICLO;      
         }
         else if (strcmp(instruccion->instruccion, "IO_STDOUT_WRITE") == 0)
         {
-            return IO_STDOUT_WRITE;
+                ejecutar_io_stout_write(instruccion->arg1,instruccion->arg2,instruccion->arg3);
+                devolver_contexto_ejecucion(proceso);
+                return SALIR_DE_CICLO;
         }
         else if (strcmp(instruccion->instruccion, "IO_FS_CREATE") == 0)
         {
@@ -172,7 +184,6 @@ void devolver_contexto_ejecucion(t_proceso_cpu *proceso)
     log_info(logger_cpu, " ENVIANDO CONTEXTO DE EJECUCION A KERNEL");
     t_buffer* buffer_a_enviar = crear_buffer();
     //aca cargaria toos los parametros
-     //motivo desalojo
      t_paquete* paquete = crear_paquete(CONTEXTO_EJECUCION, buffer_a_enviar);
      enviar_paquete(paquete, fd_kernel_dispatch);
      eliminar_paquete(paquete);

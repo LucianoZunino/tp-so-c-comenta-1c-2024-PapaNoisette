@@ -8,6 +8,14 @@ void escuchar_mensajes_memoria_cpu(){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
 			case -1:
+			case RESIZE_OK:
+
+			break;
+			case OUT_OF_MEMORY:
+				proceso->motivo=PROCESO_OUT_OF_MEMORY;
+				devolver_contexto_ejecucion(proceso);
+				
+			break:
 				log_error(logger_cpu, "La Memoria se desconecto de CPU. Terminando servidor.");
 				desconexion_memoria_cpu = 1;
 				break;

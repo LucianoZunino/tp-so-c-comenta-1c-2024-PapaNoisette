@@ -50,7 +50,14 @@ typedef enum{
 	IO_GEN_SLEEP_FS, //le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
 	KERNEL_ENVIA_PROCESO,//KERNEL -> CPU por dispatch 
 	MEMORIA_SOLICITAR_INSTRUCCION,  //cpu->memoria DISPATCH
-	MEMORIA_ENVIA_INSTRUCCION   //memoria->cpu DISPATCH
+	MEMORIA_ENVIA_INSTRUCCION ,  //memoria->cpu DISPATCH
+	MEMORIA_RESIZE, //cpu-> MEMORIA//mano pid y new_size
+	RESIZE_OK, //memoria ->cpu
+    OUT_OF_MEMORY, //memoria ->cpu
+	MEMORIA_LEER,//cpu-> MEMORIA
+	MEMORIA_ESCRIBIR,//cpu-> MEMORIA
+	KERNEL_WAIT,//cpu-> KERNEL por dipatch
+	KERNEL_SIGNAL//cpu-> KERNEL por dipatch
 } op_code;
 
 typedef struct{
@@ -117,14 +124,16 @@ typedef struct
   uint32_t pid;
   uint32_t program_counter;
   t_registros_cpu *registros_cpu;
+  motivo_interrupcion motivo;
 } t_proceso_cpu;
 
-// MOTIVOS DE INTERRUPCION
+// MOTIVOS DE INTERRUPCION o FIN DE PROCESO 
 typedef enum
 {
     FIN_DE_QUANTUM,
 	ENTRADA_SALIDA,
-    ELIMINAR_PROCESO
+    ELIMINAR_PROCESO,
+	PROCESO_OUT_OF_MEMORY
 
 } motivo_interrupcion;
 
