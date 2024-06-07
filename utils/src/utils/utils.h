@@ -57,7 +57,7 @@ typedef enum{
 	MEMORIA_LEER,//cpu-> MEMORIA
 	MEMORIA_ESCRIBIR,//cpu-> MEMORIA
 	KERNEL_WAIT,//cpu-> KERNEL por dipatch
-	KERNEL_SIGNAL//cpu-> KERNEL por dipatch
+	KERNEL_SIGNAL,//cpu-> KERNEL por dipatch
 	MEMORIA_ENVIA_INSTRUCCION,   //memoria->cpu DISPATCH
 	INTERRUPCION
 } op_code;
