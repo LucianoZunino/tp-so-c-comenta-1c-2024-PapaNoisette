@@ -10,9 +10,9 @@ void iniciar_memoria(){
     //imprimir_config_memoria();
 
     // Inicializa la tabla de páginas y el espacio de memoria
-    TablaDePaginas tabla_de_paginas;
-    inicializar_tabla_paginas(&tabla_de_paginas, numero_paginas);
-    void *memoria = asignar_memoria(tam_pagina * numero_paginas); // 32 * 128 = 4096
+    //TablaDePaginas tabla_de_paginas;
+    //inicializar_tabla_paginas(&tabla_de_paginas, numero_paginas);
+    //void *memoria = asignar_memoria(tam_pagina * numero_paginas); // 32 * 128 = 4096
     
     // Ejemplo de asignación de páginas
     //asignar_marco(&tabla_de_paginas, 2, 5);
@@ -26,8 +26,8 @@ void iniciar_memoria(){
     }*/
 
     // Limpia la memoria
-    free(tabla_de_paginas.pagina);
-    free(memoria);
+    //free(tabla_de_paginas.pagina);
+    //free(memoria);
 }
 
 void iniciar_logger_memoria(){
@@ -36,7 +36,6 @@ void iniciar_logger_memoria(){
 
 void iniciar_config_memoria(){
     config_memoria = iniciar_config("memoria.config");
-    
     puerto_escucha = config_get_string_value(config_memoria, "PUERTO_ESCUCHA");
     tam_memoria = config_get_int_value(config_memoria, "TAM_MEMORIA");
     tam_pagina = config_get_int_value(config_memoria, "TAM_PAGINA");
@@ -44,6 +43,9 @@ void iniciar_config_memoria(){
     retardo_respuesta = config_get_int_value(config_memoria, "RETARDO_RESPUESTA");
     numero_paginas = tam_memoria/tam_pagina; // 4096 / 32 = 128
 }
+
+// Función crear Proceso
+
 
 // Función para inicializar la tabla de páginas
 void inicializar_tabla_paginas(TablaDePaginas *tabla, int numero_paginas){
@@ -55,9 +57,67 @@ void inicializar_tabla_paginas(TablaDePaginas *tabla, int numero_paginas){
     tabla->numero_paginas = numero_paginas;
 
     for(int i = 0; i < numero_paginas; i++){
-        tabla->pagina[i].numero_de_marco = -1; // -1 indica que no está en memoria
+        tabla->pagina[i].numero_de_marco = -1; // -1 indica que no está asignado a ningun marco
         tabla->pagina[i].bit_presencia = 0;
     }
+}
+
+
+// Crea una estructura TablaDePaginasPorProceso para un nuevo proceso, inicializa su tabla de páginas y devuelve un puntero a esta estructura
+TablaDePaginasPorProceso *memoria_crear_proceso(int pid){
+    TablaDePaginasPorProceso *tablaDePaginasDelProceso = (TablaDePaginasPorProceso *)malloc(sizeof(TablaDePaginasPorProceso)); // Se le asigna un espacio de memoria a esa tabla
+    if(tablaDePaginasDelProceso == NULL){
+        fprintf(stderr, "Error al asignar memoria para el proceso\n");
+        return NULL;
+    }
+    tablaDePaginasDelProceso->pid = pid;
+    tablaDePaginasDelProceso->tabla_paginas = (TablaDePaginas *)malloc(sizeof(TablaDePaginas));
+    if(tablaDePaginasDelProceso->tabla_paginas == NULL){
+        fprintf(stderr, "Error al asignar memoria para la tabla de páginas\n");
+        free(tablaDePaginasDelProceso);
+        return NULL;
+    }
+    inicializar_tabla_paginas(tablaDePaginasDelProceso->tabla_paginas, 0); // Tabla de páginas vacía inicialmente
+    printf("PID: %d - Tabla de páginas creada\n", pid);
+    return tablaDePaginasDelProceso;
+}
+
+void resize_tamano_proceso(TablaDePaginasPorProceso *proceso, int nuevo_tamano){
+    int numero_paginas_actual = proceso->tabla_paginas->numero_paginas;
+    int numero_paginas_nuevo = (nuevo_tamano + tam_pagina - 1) / tam_pagina; // tam_pagina es siempre 32
+
+    if(numero_paginas_nuevo > numero_paginas_actual){
+        // Ampliación de un proceso
+        Pagina *nuevas_paginas = (Pagina *)realloc(proceso->tabla_paginas->pagina, numero_paginas_nuevo * sizeof(Pagina));
+        if(nuevas_paginas == NULL){
+            fprintf(stderr, "Error al redimensionar la tabla de páginas\n");
+            // Opcional: Manejar error de memoria llena aquí (Out Of Memory)
+            return;
+        }
+        proceso->tabla_paginas->pagina = nuevas_paginas;
+        for(int i = numero_paginas_actual; i < numero_paginas_nuevo; i++){
+            proceso->tabla_paginas->pagina[i].numero_de_marco = -1;
+            proceso->tabla_paginas->pagina[i].bit_presencia = 0;
+        }
+        printf("PID: %d - Redimensionado a %d páginas\n", proceso->pid, numero_paginas_nuevo);
+    }
+    else if(numero_paginas_nuevo < numero_paginas_actual){
+        // Reducción de un proceso
+        for(int i = numero_paginas_nuevo; i < numero_paginas_actual; i++){
+            // Opcional: Aquí puedes liberar marcos si es necesario
+            proceso->tabla_paginas->pagina[i].numero_de_marco = -1;
+            proceso->tabla_paginas->pagina[i].bit_presencia = 0;
+        }
+        Pagina *nuevas_paginas = (Pagina *)realloc(proceso->tabla_paginas->pagina, numero_paginas_nuevo * sizeof(Pagina));
+        if(nuevas_paginas == NULL && numero_paginas_nuevo > 0){
+            fprintf(stderr, "Error al redimensionar la tabla de páginas\n");
+            return;
+        }
+        proceso->tabla_paginas->pagina = nuevas_paginas;
+        printf("PID: %d - Redimensionado a %d páginas\n", proceso->pid, numero_paginas_nuevo);
+    }
+
+    proceso->tabla_paginas->numero_paginas = numero_paginas_nuevo;
 }
 
 // Función para asignar un marco a una página
@@ -99,7 +159,7 @@ void inicializar_estructuras(){
 }
 
 void inicializar_semaforos(){
-    if (pthread_mutex_init(&mutex_miniPcb, NULL) != 0) {
+    if(pthread_mutex_init(&mutex_miniPcb, NULL) != 0){
         log_error(logger_memoria, "No se pudo inicializar el semaforo para la lista miniPcb");
         exit(-1);
     } 
