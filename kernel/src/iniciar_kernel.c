@@ -3,12 +3,14 @@
 t_config* config_kernel;
 t_list *NEW;
 t_queue *READY;
+t_queue *PRIORIDAD;
 t_list *BLOCKED;
 t_list *EXIT; 
 // falta running
 sem_t sem_NEW;
 sem_t sem_READY;
 sem_t sem_MULTIPROGRAMACION;
+sem_t sem_desalojo;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
@@ -72,7 +74,6 @@ void iniciar_semaforos(){
         log_error(logger_kernel, "No se pudo inicializar el mutex_next_pid");
         exit(-1);
     }
-    printf("mutex_next_pid inicializado\n");
     if (sem_init(&sem_NEW, 1, 0) != 0) {
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_NEW");
         exit(-1);
@@ -93,6 +94,22 @@ void iniciar_semaforos(){
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_READY");
         exit(-1);
     }
+    if (pthread_mutex_init(&mutex_READY, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el mutex_READY");
+        exit(-1);
+    }
+    if (pthread_mutex_init(&mutex_PRIORIDAD, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el mutex_READY");
+        exit(-1);
+    }
+    if (pthread_mutex_init(&mutex_BLOCKED, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el mutex_BLOCKED");
+        exit(-1);
+    }
+    if (sem_init(&sem_desalojo, 1, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_desalojo");
+        exit(-1);
+    }
 
 }
 
@@ -100,6 +117,7 @@ void iniciar_semaforos(){
 void iniciar_colas_estados() {
     NEW = list_create();
     READY = queue_create();
+    PRIORIDAD = queue_create();
     BLOCKED = list_create();
     EXIT = list_create();
 }

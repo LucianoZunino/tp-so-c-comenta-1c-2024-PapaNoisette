@@ -57,9 +57,9 @@ typedef enum{
 	MEMORIA_LEER,//cpu-> MEMORIA
 	MEMORIA_ESCRIBIR,//cpu-> MEMORIA
 	KERNEL_WAIT,//cpu-> KERNEL por dipatch
-	KERNEL_SIGNAL,//cpu-> KERNEL por dipatch
-	MEMORIA_ENVIA_INSTRUCCION,   //memoria->cpu DISPATCH
-	INTERRUPCION
+	KERNEL_SIGNAL,  //cpu-> KERNEL por dipatch
+	INTERRUPCION,
+	FIN_IO  // IO -> KERNEL
 } op_code;
 
 typedef struct{
@@ -100,12 +100,14 @@ typedef struct
  uint32_t SI;
  uint32_t DI;
 } t_registros_cpu;
+
 typedef enum {
     E_NEW,
     E_READY,
     E_EXEC,
     E_BLOCKED,
-    E_EXIT
+    E_EXIT,
+	E_PRIORIDAD
 } estado_pcb;
 
 //
@@ -115,9 +117,18 @@ typedef struct
   uint32_t program_counter;
   t_registros_cpu *registros_cpu;
   int quantum;
-  estado_pcb estado;
+  estado_pcb* estado;
 } t_pcb;
 
+// MOTIVOS DE INTERRUPCION o FIN DE PROCESO 
+typedef enum
+{
+    FIN_DE_QUANTUM,
+	ENTRADA_SALIDA,
+    ELIMINAR_PROCESO,
+	PROCESO_OUT_OF_MEMORY
+
+} motivo_interrupcion;
 
 // es incorrecto enviar quantum y estado que son cosas de planificacion a cpu,
 //vamos a usar una estructura distinta en cpu
@@ -129,15 +140,7 @@ typedef struct
   motivo_interrupcion motivo;
 } t_proceso_cpu;
 
-// MOTIVOS DE INTERRUPCION o FIN DE PROCESO 
-typedef enum
-{
-    FIN_DE_QUANTUM,
-	ENTRADA_SALIDA,
-    ELIMINAR_PROCESO,
-	PROCESO_OUT_OF_MEMORY
 
-} motivo_interrupcion;
 
 typedef enum
 {
@@ -155,6 +158,7 @@ typedef struct
 	pthread_t hilo;
 	sem_t* semaforo;
 } t_interfaz;
+
 
 // Funciones de init
 t_config* iniciar_config(char* ruta_config);

@@ -77,6 +77,8 @@ t_pcb *crear_pcb(){
     
     pcb->quantum = quantum;
 
+    pcb->estado = malloc(sizeof(pcb->estado));
+
     // ESTA MEMORIA SE ELIMINA EN ELIMINAR_PROCESO
 
     return pcb;

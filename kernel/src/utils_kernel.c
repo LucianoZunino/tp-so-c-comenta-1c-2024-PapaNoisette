@@ -10,6 +10,26 @@ void pcb_destruir(t_pcb *pcb){
         
         free(pcb->registros_cpu);
         free(pcb->quantum);
+        free(pcb->estado);
         free(pcb);
     }
+}
+
+void enviar_proceso_cpu(t_pcb *pcb, int socket, op_code op_code)
+{
+    t_buffer* buffer_a_enviar = crear_buffer();
+    t_paquete *paquete = crear_paquete(op_code, buffer_a_enviar);
+    agregar_pcb(paquete, pcb);
+    enviar_paquete(paquete, socket);
+    eliminar_paquete(paquete);    
+}
+
+int buscar_index_por_pid(t_list* lista, int pid) {
+	for (unsigned int i = 0; i < list_size(lista); i++) {
+		t_pcb* pcb = list_get(lista, i);
+		if (pcb->pid == pid) {
+			return i;
+		}
+	}
+	return -1;
 }
