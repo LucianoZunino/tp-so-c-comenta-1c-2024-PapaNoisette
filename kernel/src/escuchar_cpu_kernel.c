@@ -9,11 +9,13 @@ void escuchar_mensajes_dispatch_kernel(){
 		int cod_op = recibir_operacion(fd_cpu_dispatch); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
 			t_pcb* pcb;
+			int pid;
+			t_buffer* buffer;
 			case FIN_DE_QUANTUM:
 				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
 				sem_post(&sem_EXEC);
 				pthread_mutex_lock(&mutex_READY);
-				queue_push(READY, pcb);
+				list_add(READY, pcb);
 				pthread_mutex_unlock(&mutex_READY);
 				pcb->estado = E_READY;
 				break;
@@ -30,11 +32,40 @@ void escuchar_mensajes_dispatch_kernel(){
 			case ELIMINAR_PROCESO:
 				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
 				sem_post(&sem_EXEC);
-				sem_post(&sem_MULTIPROGRAMACION);
+				//sem_post(&sem_MULTIPROGRAMACION); lo hacemos en eliminar_proceso()
+				
+
 				pcb->estado = E_EXIT;
+				pthread_mutex_lock(&mutex_EXIT);
+				list_add(EXIT, pcb);
+				pthread_mutex_unlock(&mutex_EXIT);
+				
+				sem_post(&sem_EXIT);
 				// hacer cosas de memoria
 				break;
+			case KERNEL_WAIT: //pónernos de acuerdo con nacho como envia el recurso solicitado
+				buffer = recibir_buffer_completo(fd_cpu_dispatch);
+				pid = extraer_int_del_buffer(buffer);
+				create_pthread
+				detach_pthread
+				
+				// RECURSOS = ["RA", "RB", "RC"];
+				char* recurso_solicitado = extraer_string_del_buffer(buffer); // "RB"
 
+				if (buscar_recurso(recurso) > 0){
+					enviar_a_exit(RUNNING);
+				} else {
+					restar_instancia(recurso);
+				}
+				
+				destruir_buffer(buffer);
+				break;
+			case KERNEL_SIGNAL:
+				buffer = recibir_buffer_completo(fd_cpu_dispatch);
+				pid = extraer_int_del_buffer(buffer);
+				char* recurso = extraer_string_del_buffer(buffer);
+				destruir_buffer(buffer);
+				break;
 			case -1:
 				log_error(logger_kernel, "El Dispatch se desconecto de Kernel. Terminando servidor.");
 				desconexion_dispatch_kernel = 1;
@@ -46,7 +77,12 @@ void escuchar_mensajes_dispatch_kernel(){
 			}
 	}
 }
-
+/* 
+WAIT (Recurso): Esta instrucción solicita al Kernel que se asigne una instancia del recurso indicado por parámetro.
+SIGNAL (Recurso): Esta instrucción solicita al Kernel que se libere una instancia del recurso indicado por parámetro.
+RECURSOS=[RA,RB,RC]
+INSTANCIAS_RECURSOS=[1,2,1]
+*/
 
 void escuchar_mensajes_interrupt_kernel(){
     bool desconexion_interrupt_kernel = 0;
@@ -69,11 +105,12 @@ void escuchar_mensajes_interrupt_kernel(){
 
 /*
 1) ENTRADA/SALIDA
-2) QUANTUM DE RR Y VRR
-3) HACER VRR E INTERRUPCION DE QUANTUM
-4) HACER RECURSOS
-5) ELIMINAR PROCESO (TERMINAR LARGO PLAZO)
-6) SHARED
+2) HACER RECURSOS
+3) CONSOLA
+4) QUANTUM DE RR Y VRR (hecho)
+5) HACER VRR E INTERRUPCION DE QUANTUM (hecho)
+6) ELIMINAR PROCESO (TERMINAR LARGO PLAZO) (hecho)
+
 
 
 */

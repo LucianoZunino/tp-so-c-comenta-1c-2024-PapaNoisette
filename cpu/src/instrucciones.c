@@ -273,6 +273,7 @@ void ejecutar_wait(char* recurso,t_proceso_cpu *proceso){
     t_buffer* buffer_a_enviar = crear_buffer();
 
      cargar_int_al_buffer(buffer_a_enviar, proceso->pid);//Proceso al que se le reajustara su tamaño en memoria
+     cargar_string_al_buffer(buffer_a_enviar, recurso);
      t_paquete* paquete = crear_paquete(KERNEL_WAIT, buffer_a_enviar);
      enviar_paquete(paquete, fd_kernel_dispatch);
      eliminar_paquete(paquete);
@@ -283,6 +284,7 @@ void ejecutar_signal(char* recurso,t_proceso_cpu *proceso){
     t_buffer* buffer_a_enviar = crear_buffer();
 
      cargar_int_al_buffer(buffer_a_enviar, proceso->pid);//Proceso al que se le reajustara su tamaño en memoria
+     cargar_string_al_buffer(buffer_a_enviar, recurso);
      t_paquete* paquete = crear_paquete(KERNEL_SIGNAL, buffer_a_enviar);
      enviar_paquete(paquete, fd_kernel_dispatch);
      eliminar_paquete(paquete);

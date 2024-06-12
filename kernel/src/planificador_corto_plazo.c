@@ -15,7 +15,9 @@ void planificador_corto_plazo(){
 
 
         if(string_equals_ignore_case(algoritmo_planificacion,"RR") || string_equals_ignore_case(algoritmo_planificacion, "FIFO")){
-            t_pcb *pcb = queue_pop(READY);
+            pthread_mutex_lock(&mutex_READY);
+            t_pcb *pcb = list_remove(READY, 0);
+            pthread_mutex_unlock(&mutex_READY);
             pcb->estado = E_EXEC;
             
             pthread_mutex_lock(&mutex_RUNNING);
@@ -28,9 +30,9 @@ void planificador_corto_plazo(){
             }
         } else if(string_equals_ignore_case(algoritmo_planificacion,"VRR")){
             t_pcb* pcb;
-            if(queue_is_empty(PRIORIDAD)){
+            if(list_is_empty(PRIORIDAD)){
                 pthread_mutex_lock(&mutex_READY);
-                pcb = queue_pop(READY);
+                pcb = list_remove(READY, 0);
                 pthread_mutex_unlock(&mutex_READY);
 
                 pcb->estado = E_EXEC;
@@ -40,7 +42,7 @@ void planificador_corto_plazo(){
                 pthread_mutex_unlock(&mutex_RUNNING);
             }else {
                 pthread_mutex_lock(&mutex_PRIORIDAD);
-                pcb = queue_pop(PRIORIDAD);
+                pcb = list_remove(PRIORIDAD, 0);
                 pthread_mutex_lock(&mutex_PRIORIDAD);
                 pcb->estado = E_EXEC;
             
@@ -105,11 +107,9 @@ void send_interrupt(){
 void pasar_proceso_a_ready(t_pcb* pcb){
     
     pthread_mutex_lock(&mutex_READY);
-    queue_push(READY, pcb);
+    list_add(READY, pcb);
     pthread_mutex_unlock(&mutex_READY);
     
     sem_post(&sem_READY);
     sem_post(&sem_EXEC);
 }
-
-

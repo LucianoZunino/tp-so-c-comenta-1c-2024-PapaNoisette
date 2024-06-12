@@ -47,8 +47,8 @@ extern pthread_mutex_t mutex_multiprogramacion;
 
 // LISTAS DE ESTADOS, DEBEMOS USARLAS COMO FIFO
 extern t_list *NEW;
-extern t_queue *READY;
-extern t_queue *PRIORIDAD;
+extern t_list *READY;
+extern t_list *PRIORIDAD;
 extern t_list *BLOCKED;
 extern t_pcb *RUNNING;
 extern t_list *EXIT;
@@ -66,6 +66,7 @@ extern pthread_mutex_t mutex_EXIT;
 extern sem_t sem_NEW;
 extern sem_t sem_EXEC;
 extern sem_t sem_READY;
+extern sem_t sem_EXIT;
 
 extern sem_t sem_MULTIPROGRAMACION;
 extern sem_t sem_desalojo;
@@ -74,4 +75,4 @@ extern sem_t sem_desalojo;
 extern pthread_mutex_t socket_memoria_mutex;
 
 
-#endif
+#endif 
