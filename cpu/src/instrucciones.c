@@ -283,11 +283,8 @@ indicadas en el parámetro tamaño a la posición de memoria apuntada por el reg
 void ejecutar_wait(char* recurso,t_pcb *proceso){
    log_info(logger_cpu, " ENVIANDO WAIT A KERNEL");
    
-    t_buffer* buffer_a_enviar = crear_buffer();
-
-     cargar_int_al_buffer(buffer_a_enviar, proceso->pid);//Proceso al que se le reajustara su tamaño en memoria
-     cargar_string_al_buffer(buffer_a_enviar, recurso);
-     t_paquete* paquete = crear_paquete(KERNEL_WAIT, buffer_a_enviar);
+      t_buffer* buffer_a_enviar = crear_buffer();
+     t_paquete* paquete = crear_paquete(KERNEL_WAIT, buffer_a_enviar); // CARGAR BUFFER CON PCB Y NOMBRE RECURSO AL FINAL (agregar_pcb(paquete, pcb))
      enviar_paquete(paquete, fd_kernel_dispatch);
      eliminar_paquete(paquete);
 }

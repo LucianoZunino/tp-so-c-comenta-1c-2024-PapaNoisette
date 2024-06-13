@@ -131,40 +131,12 @@ typedef struct
   uint32_t program_counter;
   t_registros_cpu *registros_cpu;
   int quantum;
-<<<<<<< HEAD
-  estado_pcb estado;
- // motivo_interrupcion motivo;
-
-=======
   estado_pcb* estado;
->>>>>>> fb32937ae99f2f2cd9cc7236f767db8e0c25e1fb
+ // motivo_interrupcion motivo;
 } t_pcb;
 
-// MOTIVOS DE INTERRUPCION o FIN DE PROCESO 
-typedef enum
-{
-    FIN_DE_QUANTUM,
-	ENTRADA_SALIDA,
-    ELIMINAR_PROCESO,
-	PROCESO_OUT_OF_MEMORY
-
-} motivo_interrupcion;
-
-<<<<<<< HEAD
-=======
-// es incorrecto enviar quantum y estado que son cosas de planificacion a cpu,
-//vamos a usar una estructura distinta en cpu
-typedef struct
-{
-  uint32_t pid;
-  uint32_t program_counter;
-  t_registros_cpu *registros_cpu;
-  motivo_interrupcion motivo;
-} t_proceso_cpu;
 
 
-
->>>>>>> fb32937ae99f2f2cd9cc7236f767db8e0c25e1fb
 typedef enum
 {
 	GENERICA,

@@ -18,6 +18,7 @@ void iniciar_kernel(){
     iniciar_config_kernel();
     iniciar_semaforos();
     iniciar_colas_estados();
+    iniciar_recursos();
     //imprimir_config_kernel();
 }
 
@@ -129,6 +130,30 @@ void iniciar_colas_estados() {
     PRIORIDAD = list_create();
     BLOCKED = list_create();
     EXIT = list_create();
+}
+
+void iniciar_recursos(){
+    int length = sizeof(instancias_recursos) / sizeof(instancias_recursos[0]);
+
+    t_list* recursos_disponibles = list_create();
+
+    for (int i = 0; i < length; i++){
+        t_recurso* nuevo_recurso = malloc (sizeof(t_recurso)); //HACER FREE CUANDO SE ELIMINA TODO
+        char* nombre = recursos[i];
+        int instancias = instancias_recursos[i];
+        t_queue* cola_de_espera = queue_create();
+        t_list* pcb_asignados = list_create();
+        pthread_mutex_t mutex;
+        pthread_mutex_init(&mutex, NULL);
+
+        nuevo_recurso->nombre = nombre;
+        nuevo_recurso->instancias = instancias;
+        nuevo_recurso->cola_de_espera = cola_de_espera;
+        nuevo_recurso->pcb_asignados = pcb_asignados;
+        nuevo_recurso->mutex = mutex;
+
+        list_add(recursos_disponibles, nuevo_recurso);
+    }
 }
 
 

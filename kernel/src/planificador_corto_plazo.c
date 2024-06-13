@@ -55,10 +55,8 @@ void planificador_corto_plazo(){
 
             int64_t ms_transcurridos = esperar_a_cpu_virtual_round_robin(RUNNING);
             
-            if(ms_transcurridos >= pcb->quantum){
-                
-            } else {
-                pcb->quantum -= ms_transcurridos;
+            if(ms_transcurridos < RUNNING->quantum){
+                RUNNING->quantum -= ms_transcurridos;
             }
             
         }

@@ -3,6 +3,7 @@
 //pthread_mutex_t mutex_READY;
 pthread_mutex_t mutex_BLOCKED;
 
+
 void escuchar_mensajes_dispatch_kernel(){
     bool desconexion_dispatch_kernel = 0;
 	while(!desconexion_dispatch_kernel){
@@ -14,6 +15,9 @@ void escuchar_mensajes_dispatch_kernel(){
 			case FIN_DE_QUANTUM:
 				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
 				sem_post(&sem_EXEC);
+
+				pcb->quantum = quantum;
+
 				pthread_mutex_lock(&mutex_READY);
 				list_add(READY, pcb);
 				pthread_mutex_unlock(&mutex_READY);
@@ -22,19 +26,20 @@ void escuchar_mensajes_dispatch_kernel(){
 
 			case ENTRADA_SALIDA:
 				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
-				sem_post(&sem_EXEC);
 				sem_post(&sem_desalojo);
+				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
 				pthread_mutex_lock(&mutex_BLOCKED);
 				list_add(BLOCKED, pcb);
 				pthread_mutex_unlock(&mutex_BLOCKED);
 				pcb->estado = E_BLOCKED;
+				sem_post(&sem_EXEC);
 				break;
 			case ELIMINAR_PROCESO:
 				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
+				sem_post(&sem_desalojo);
 				sem_post(&sem_EXEC);
 				//sem_post(&sem_MULTIPROGRAMACION); lo hacemos en eliminar_proceso()
-				
-
+			
 				pcb->estado = E_EXIT;
 				pthread_mutex_lock(&mutex_EXIT);
 				list_add(EXIT, pcb);
@@ -45,26 +50,37 @@ void escuchar_mensajes_dispatch_kernel(){
 				break;
 			case KERNEL_WAIT: //pónernos de acuerdo con nacho como envia el recurso solicitado
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pid = extraer_int_del_buffer(buffer);
-				create_pthread
-				detach_pthread
+				pcb = deserializar_pcb(buffer);
+				
+				sem_post(&sem_desalojo);
+				pcb->quantum = RUNNING->quantum;
 				
 				// RECURSOS = ["RA", "RB", "RC"];
 				char* recurso_solicitado = extraer_string_del_buffer(buffer); // "RB"
 
-				if (buscar_recurso(recurso) > 0){
+				if (buscar_recurso(recurso_solicitado) < 0){
 					enviar_a_exit(RUNNING);
 				} else {
-					restar_instancia(recurso);
+					restar_instancia(recursos_disponibles, pcb);
 				}
+
+				sem_post(&sem_EXEC);
 				
 				destruir_buffer(buffer);
 				break;
 			case KERNEL_SIGNAL:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pid = extraer_int_del_buffer(buffer);
+				pcb = deserializar_pcb(buffer);
 				char* recurso = extraer_string_del_buffer(buffer);
+
+				sem_post(&sem_desalojo);
+				pcb->quantum = RUNNING->quantum;
+
+				sumar_instancia(recurso, pcb);
+
 				destruir_buffer(buffer);
+				
+				sem_post(&sem_EXEC);
 				break;
 			case -1:
 				log_error(logger_kernel, "El Dispatch se desconecto de Kernel. Terminando servidor.");
@@ -84,6 +100,7 @@ RECURSOS=[RA,RB,RC]
 INSTANCIAS_RECURSOS=[1,2,1]
 */
 
+
 void escuchar_mensajes_interrupt_kernel(){
     bool desconexion_interrupt_kernel = 0;
 	while(!desconexion_interrupt_kernel){
@@ -101,7 +118,6 @@ void escuchar_mensajes_interrupt_kernel(){
 			}
 	}
 }
-
 
 /*
 1) ENTRADA/SALIDA

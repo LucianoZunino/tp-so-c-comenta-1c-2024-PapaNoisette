@@ -1,5 +1,7 @@
 #include "utils_kernel.h"
 
+t_list* recursos_disponibles;
+
 void interrumpir_cpu(t_pcb *pcb, motivo_interrupcion motivo){
     enviar_cpu_interrupt(pcb, motivo, fd_cpu_interrupt);
     log_trace(logger_kernel, "Interrumpo la ejecucion de PID %i", pcb->pid);
@@ -84,16 +86,76 @@ void enviar_a_exit(t_pcb* pcb){
 	pthread_mutex_unlock(&mutex_EXIT);
 }
 
-void restar_instancia(char* recurso){
-    int index = buscar_recurso(recurso);
-    int instancias = list_get(instancias_recursos, index);
-    if (instancias < 0){
-        // Bloquear proceso
-    } else {
-        // Asignar instancia
-        // Restar instancia
+void restar_instancia(char* nombre_recurso, t_pcb *pcb){
+    int index = buscar_recurso(nombre_recurso);
+    t_recurso* recurso = list_get(recursos_disponibles, index);
+
+    if (recurso->instancias <= 0){ //caso en el que no hay recurso de instancia disponible
+        pthread_mutex_lock(&mutex_BLOCKED);
+	    list_add(BLOCKED, pcb);
+	    pthread_mutex_unlock(&mutex_BLOCKED);
+        
+        pthread_mutex_lock(&recurso->mutex);
+        list_add(recurso->cola_de_espera, pcb);
+        pthread_mutex_unlock(&recurso->mutex);
+    } else { //caso en el que hay recurso de instancia disponible
+        pthread_mutex_lock(&recurso->mutex);
+        recurso->instancias =- 1;
+        pthread_mutex_unlock(&recurso->mutex);
+        
+        pthread_mutex_lock(&recurso->mutex);
+        list_add(recurso->pcb_asignados, pcb);
+        pthread_mutex_unlock(&recurso->mutex);
+        
+        if(pcb->quantum != quantum){ // CUANDO SE UTILIZA VRR, SE CONTEMPLA EL CASO DE PRIORIDAD POR QUANTUM
+            pthread_mutex_lock(&mutex_PRIORIDAD);
+			list_add(PRIORIDAD, pcb);
+			pthread_mutex_unlock(&mutex_PRIORIDAD);
+        }else {
+            pthread_mutex_lock(&mutex_READY);
+			list_add(READY, pcb);
+			pthread_mutex_unlock(&mutex_READY);
+        }
+        
+        list_remove(recursos_disponibles, index); //se actualiza la lista de recursos_disponibles
+        list_add_in_index(recursos_disponibles, index, &recurso);
+
     }
+}
 
-    sem_wait(contador_recursos[index]);
+void sumar_instancia(char* nombre_recurso, t_pcb* pcb){
+    int index = buscar_recurso(nombre_recurso);
+    t_recurso* recurso = list_get(recursos_disponibles, index);
+    
+    if(recurso->instancias >= 0){
+        pthread_mutex_lock(&recurso->mutex);
+        recurso->instancias =- 1;
+        pthread_mutex_unlock(&recurso->mutex);
+        
+        if(!queue_is_empty(recurso->cola_de_espera)){ // Verifico que haya procesos esperando el recurso
 
+            t_pcb* nuevo_pcb = queue_pop(recurso->cola_de_espera); // Tomo el primero
+
+            list_remove(recursos_disponibles, index);
+            list_add_in_index(recursos_disponibles, index, &recurso);
+
+            if(pcb->quantum != quantum){ // Devuelvo el proceso original a la cola de ready o de prioridad, segun corresponda
+                pthread_mutex_lock(&mutex_PRIORIDAD);
+			    list_add(PRIORIDAD, pcb);
+			    pthread_mutex_unlock(&mutex_PRIORIDAD);
+            }else {
+                pthread_mutex_lock(&mutex_READY);
+			    list_add(READY, pcb);
+			    pthread_mutex_unlock(&mutex_READY);
+            }
+            // char* nombre = recurso.nombre;
+            restar_instancia(recurso->nombre, nuevo_pcb); // Llamo a la funcion para asignarle las instancia al nuevo proceso
+
+            
+            index = buscar_index_por_pid(BLOCKED, nuevo_pcb->pid);
+            pthread_mutex_lock(&mutex_BLOCKED);
+            list_remove(BLOCKED, index);  // Elimino el nuevo proceso de la lista de bloqueados
+            pthread_mutex_unlock(&mutex_BLOCKED);
+        }
+    }
 }
