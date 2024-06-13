@@ -2,7 +2,7 @@
 #include "instrucciones.h"
 
 
-void ejecutar_set(char *registro,char* valor,t_proceso_cpu *proceso)
+void ejecutar_set(char *registro,char* valor,t_pcb *proceso)
     {
         if (strcmp(registro, "AX") == 0)
         {
@@ -54,7 +54,7 @@ void ejecutar_set(char *registro,char* valor,t_proceso_cpu *proceso)
         }
     }
 
-void ejecutar_sum(char*registro_destino,char *registro_origen,t_proceso_cpu *proceso)
+void ejecutar_sum(char*registro_destino,char *registro_origen,t_pcb *proceso)
     {
          int sum =atoi(registro_destino)+atoi(registro_origen);
         printf ("sum: %d\n",sum);
@@ -107,7 +107,7 @@ void ejecutar_sum(char*registro_destino,char *registro_origen,t_proceso_cpu *pro
             log_error(logger_cpu, "El argumento de la instrucción SUM es incorrecto");
         }
     }
-void ejecutar_sub(char*registro_destino,char *registro_origen,t_proceso_cpu *proceso)
+void ejecutar_sub(char*registro_destino,char *registro_origen,t_pcb *proceso)
     {
          int sum =atoi(registro_destino)-atoi(registro_origen);
         printf ("sub: %d\n",sum);
@@ -160,7 +160,7 @@ void ejecutar_sub(char*registro_destino,char *registro_origen,t_proceso_cpu *pro
             log_error(logger_cpu, "El argumento de la instrucción SUM es incorrecto");
         }
     }
-void ejecutar_jnz(char*registro,char *numero_instruccion,t_proceso_cpu *proceso){
+void ejecutar_jnz(char*registro,char *numero_instruccion,t_pcb *proceso){
 
         if (strcmp(registro, "AX") == 0 && proceso->registros_cpu->AX !=0)
         {
@@ -208,7 +208,7 @@ void ejecutar_jnz(char*registro,char *numero_instruccion,t_proceso_cpu *proceso)
         }
 }
 
-void  ejecutar_io_gen_sleep(char* interfaz,char * unidades_de_trabajo){
+void  ejecutar_io_gen_sleep(char* interfaz,char * unidades_de_trabajo,t_pcb *proceso){
 //IO_GEN_SLEEP (Interfaz, Unidades de trabajo):
  //Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.instruccion
 
@@ -225,7 +225,7 @@ void  ejecutar_io_gen_sleep(char* interfaz,char * unidades_de_trabajo){
 }
 
 
-void ejecutar_resize(char * tamanio,t_proceso_cpu *proceso){
+int ejecutar_resize(char * tamanio,t_pcb *proceso){
    /*Solicitará a la Memoria ajustar el tamaño del proceso al tamaño pasado por parámetro.
     En caso de que la respuesta de la memoria sea Out of Memory, se deberá devolver el contexto 
     de ejecución al Kernel informando de esta situación.*/
@@ -241,12 +241,25 @@ void ejecutar_resize(char * tamanio,t_proceso_cpu *proceso){
      enviar_paquete(paquete, fd_memoria);
      eliminar_paquete(paquete);
 
+     int respuesta_resize = recibir_operacion(fd_memoria);//respuesta_resize deveria ser del tipo op_code?
+     if (respuesta_resize ==RESIZE_OK)
+     {
+       log_info(logger_cpu, "Se realizo correctamente el resize");
+       return 0;
+     }
+   if (respuesta_resize ==OUT_OF_MEMORY){
+      log_info(logger_cpu, "Fallo el resize por OUT OF MEMORY");
+      return 1;
+   }
+
+
 }
-void ejecutar_copy_string(char* tamanio,t_proceso_cpu *proceso){
+
+void ejecutar_copy_string(char* tamanio,t_pcb *proceso){
 /*
 Toma del string apuntado por el registro SI y copia la cantidad de bytes 
 indicadas en el parámetro tamaño a la posición de memoria apuntada por el registro DI. 
-*/  
+*/
     int dir_fisica=traducir_direccion_logica(proceso->registros_cpu->SI);
     log_info(logger_cpu, " ENVIANDO EJECUTANDO COPY_STRING");
         log_info(logger_cpu, "Le solicito a memoria leer lo que se encuentra en el puntero SI");
@@ -267,7 +280,7 @@ indicadas en el parámetro tamaño a la posición de memoria apuntada por el reg
 //en estas dos intrucciones no se si es necesario mandar el mensaje o directamente 
 //enviar el contexto de ejecucion con el motivo wait/signal
 
-void ejecutar_wait(char* recurso,t_proceso_cpu *proceso){
+void ejecutar_wait(char* recurso,t_pcb *proceso){
    log_info(logger_cpu, " ENVIANDO WAIT A KERNEL");
    
     t_buffer* buffer_a_enviar = crear_buffer();
@@ -277,7 +290,7 @@ void ejecutar_wait(char* recurso,t_proceso_cpu *proceso){
      enviar_paquete(paquete, fd_kernel_dispatch);
      eliminar_paquete(paquete);
 }
-void ejecutar_signal(char* recurso,t_proceso_cpu *proceso){
+void ejecutar_signal(char* recurso,t_pcb *proceso){
  log_info(logger_cpu, " ENVIANDO SIGNAL A KERNEL");
    
     t_buffer* buffer_a_enviar = crear_buffer();
@@ -288,7 +301,7 @@ void ejecutar_signal(char* recurso,t_proceso_cpu *proceso){
      eliminar_paquete(paquete);
 
 }
-void ejecutar_io_stdin_read(char* interfaz,char * direccion, char * tamanio,t_proceso_cpu *proceso){
+void ejecutar_io_stdin_read(char* interfaz,char * direccion, char * tamanio,t_pcb *proceso){
 /*
 Esta instrucción solicita al Kernel que mediante la interfaz ingresada se lea desde el
  STDIN (Teclado) un valor cuyo tamaño está delimitado por el valor del Registro Tamaño
@@ -297,7 +310,7 @@ Esta instrucción solicita al Kernel que mediante la interfaz ingresada se lea d
 */
 
 }
-void ejecutar_io_stdot_write(char* interfaz,char * direccion, char * tamanio,t_proceso_cpu *proceso){
+void ejecutar_io_stdout_write(char* interfaz,char * direccion, char * tamanio,t_pcb *proceso){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada, se lea desde la
     posición de memoria indicada por la Dirección Lógica almacenada en el Registro Dirección, 
@@ -306,7 +319,7 @@ void ejecutar_io_stdot_write(char* interfaz,char * direccion, char * tamanio,t_p
    */
 }
 
-void ejecutar_mov_in(char* datos,char * direccion,t_proceso_cpu *proceso){
+void ejecutar_mov_in(char* datos,char * direccion,t_pcb *proceso){
 
 /*
  Lee el valor de memoria correspondiente a la Dirección Lógica que se encuentra en el Registro 
@@ -314,7 +327,7 @@ void ejecutar_mov_in(char* datos,char * direccion,t_proceso_cpu *proceso){
 
 */
 }
-void ejecutar_mov_out(char* direccion,char * datos,t_proceso_cpu *proceso){
+void ejecutar_mov_out(char* direccion,char * datos,t_pcb *proceso){
 
 /*
  Lee el valor del Registro Datos y lo escribe en la dirección física de memoria obtenida a 

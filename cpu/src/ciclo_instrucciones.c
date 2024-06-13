@@ -14,7 +14,7 @@ pthread_mutex_t interrupcion_mutex;
 /// @note 
 /// @param t_pcb
 /// @return t_instruccion
-t_instruccion *fetch(t_proceso_cpu *proceso)
+t_instruccion *fetch(t_pcb *proceso)
 {
     log_info(logger_cpu, "Ejecutando FETCH PID: %i Program Counter: %i", proceso->pid, proceso->program_counter);
     //enviar_memoria_solicitar_instruccion(proceso, fd_memoria);
@@ -64,7 +64,7 @@ if (sscanf(cpu_respuesta_instruccion, "%s %s %s %s", instruccion->instruccion, i
 /// @note Esta etapa consiste en interpretar qué instrucción es la que se va a ejecutar y si la misma requiere de una traducción de dirección lógica a dirección física.
 /// @param t_instruccion, t_pcb
 /// @return retorna un flag para sabes si sigue el ciclo o se interrumple
-int decode_excute(t_instruccion * instruccion,t_proceso_cpu *proceso){
+int decode_excute(t_instruccion * instruccion,t_pcb *proceso){
         proceso->program_counter += 1; //lo hago aca para que en tal caso el jnz lo sobreescriba
         loggear_ejecucion(instruccion);
         if (strcmp(instruccion->instruccion, "SET") == 0)
@@ -103,13 +103,16 @@ int decode_excute(t_instruccion * instruccion,t_proceso_cpu *proceso){
         }
         else if (strcmp(instruccion->instruccion, "RESIZE") == 0)
         {
-                ejecutar_resize(instruccion->arg1);
-                // no se si me conviene esperar aca mismo la respuesta o en el hilo de escucha de memoria
-               // return CONTINUAR_CICLO;       no continua el ciclo por que necesito la respuesto ok /error
+                if( ejecutar_resize(instruccion->arg1,proceso)==0){
+                    return CONTINUAR_CICLO;
+                }
+                else{
+                    return SALIR_DE_CICLO;      
+                }
        }
         else if (strcmp(instruccion->instruccion, "COPY_STRING") == 0)
         {
-                ejecutar_copy_string(instruccion->arg1);
+                ejecutar_copy_string(instruccion->arg1,proceso);
                 return CONTINUAR_CICLO;        
         }
         else if (strcmp(instruccion->instruccion, "WAIT") == 0)
@@ -124,20 +127,20 @@ int decode_excute(t_instruccion * instruccion,t_proceso_cpu *proceso){
         }
         else if (strcmp(instruccion->instruccion, "IO_GEN_SLEEP") == 0)
         {
-                ejecutar_io_gen_sleep(instruccion->arg1,instruccion->arg2);
+                ejecutar_io_gen_sleep(instruccion->arg1,instruccion->arg2,proceso);
                  devolver_contexto_ejecucion(proceso);
                 return SALIR_DE_CICLO;
 
         }
         else if (strcmp(instruccion->instruccion, "IO_STDIN_READ") == 0)
         {
-                ejecutar_io_stdin_read(instruccion->arg1,instruccion->arg2,,instruccion->arg3);
+                ejecutar_io_stdin_read(instruccion->arg1,instruccion->arg2,instruccion->arg3,proceso);
                 devolver_contexto_ejecucion(proceso);
                 return SALIR_DE_CICLO;      
         }
         else if (strcmp(instruccion->instruccion, "IO_STDOUT_WRITE") == 0)
         {
-                ejecutar_io_stout_write(instruccion->arg1,instruccion->arg2,instruccion->arg3);
+                ejecutar_io_stdout_write(instruccion->arg1,instruccion->arg2,instruccion->arg3,proceso);
                 devolver_contexto_ejecucion(proceso);
                 return SALIR_DE_CICLO;
         }
@@ -163,22 +166,20 @@ int decode_excute(t_instruccion * instruccion,t_proceso_cpu *proceso){
         }
         else if (strcmp(instruccion->instruccion, "EXIT") == 0)
         {
-
                 devolver_contexto_ejecucion(proceso);
                 //finalizar_proceso(pcb);//hacerrr
                 return SALIR_DE_CICLO;
-
         }
         else
         {
             log_error(logger_cpu, "La intrucción no es válida");
-            return -1; // supuestamente las instrucciones nunca vienen incorrectas
+            return -1; // supuestamente las instrucciones nunca vienen incorrectas, se deja para pruebas
         }
     }
 
 
 
-void devolver_contexto_ejecucion(t_proceso_cpu *proceso)
+void devolver_contexto_ejecucion(t_pcb *proceso)
 {
 
     log_info(logger_cpu, " ENVIANDO CONTEXTO DE EJECUCION A KERNEL");
@@ -193,10 +194,10 @@ void devolver_contexto_ejecucion(t_proceso_cpu *proceso)
 
 
 
-int ciclo_de_instruccion(t_proceso_cpu *proceso)
+int ciclo_de_instruccion(t_pcb *proceso)
 {
     //Recibo instruccion y la mando a ejecutar
-printf("Entro a ciclo_de_instruccion  \n");
+printf(">>>>>Entro a ciclo_de_instruccion  \n");
 int estado_ciclo=0;// 0 continuar 1 salir de ciclo
     t_instruccion *instruccion =malloc(sizeof(instruccion));// probar si realmente hace falta malloquearla
     instruccion = fetch(proceso);

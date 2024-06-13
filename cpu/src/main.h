@@ -10,10 +10,9 @@
 #include "ciclo_instrucciones.h"
 #include "escuchar_kernel_cpu.h"
 #include "escuchar_memoria_cpu.h"
-#include "utils.h"
 #include "iniciar_cpu.h"
+#include "mmu.h"
 
-extern t_log* logger_cpu;
 
 //Variables de la config
 extern t_log* logger_cpu;
@@ -23,6 +22,7 @@ extern char * puerto_escucha_dispatch;
 extern char * puerto_escucha_interrupt;
 extern int cantidad_entradas_tlb;
 extern char* algoritmo_tlb;
+extern int tamanio_pagina; //hay que consultarselo a memoria??
 
 //Variables de socket
 extern int fd_cpu_dispatch;
@@ -47,4 +47,7 @@ extern uint32_t DI;
 extern t_registros_cpu * registros_cpu;
 
 extern t_pcb* EXEC;
+
+extern  t_list * tlb;
+
 #endif

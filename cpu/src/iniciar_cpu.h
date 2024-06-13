@@ -9,4 +9,7 @@ void iniciar_logger_cpu();
 void iniciar_config_cpu();
 void imprimir_config_cpu();
 void finalizar_cpu();
+
+void loggear_ejecucion(t_instruccion *instruccion);//log obligatorio
+
 #endif

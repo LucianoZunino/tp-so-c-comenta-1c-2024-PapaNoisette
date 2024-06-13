@@ -39,7 +39,7 @@ typedef struct
 typedef enum{
 	HANDSHAKE_OK,                 // CPU DISPATCH -> KERNEL (aunque podríamos usarlo para todos?) 
     MENSAJE_A_MEMORIA,
-	HANDSHAKE_KERNEL,             // KERNEL -> CPU DISPATCH
+	HANDSHAKE_KERNEL,             // KERNEL -> CPU DISPATCH/interrupt
 	HANDSHAKE_ENTRADASALIDA,	  
 	HANDSHAKE_MEMORIA,
 	HANDSHAKE_CPU,
@@ -57,8 +57,9 @@ typedef enum{
 	MEMORIA_LEER,//cpu-> MEMORIA
 	MEMORIA_ESCRIBIR,//cpu-> MEMORIA
 	KERNEL_WAIT,//cpu-> KERNEL por dipatch
-	KERNEL_SIGNAL//cpu-> KERNEL por dipatch
-	MEMORIA_ENVIA_INSTRUCCION,   //memoria->cpu DISPATCH
+	KERNEL_SIGNAL,//cpu-> KERNEL por dipatch
+	CPU_CONSULTA_FRAME,//cpu-> MEMORIA cuando hay tlb miss
+	RESPUESTA_CPU_CONSULTA_FRAME,//MEMORIA->CPU 
 	INTERRUPCION
 } op_code;
 
@@ -109,6 +110,16 @@ typedef enum {
 } estado_pcb;
 
 //
+// MOTIVOS DE INTERRUPCION o FIN DE PROCESO 
+
+typedef enum
+{
+    FIN_DE_QUANTUM,
+	ENTRADA_SALIDA,
+    ELIMINAR_PROCESO,
+	PROCESO_OUT_OF_MEMORY
+} motivo_interrupcion;
+
 typedef struct
 {
   uint32_t pid;
@@ -116,28 +127,10 @@ typedef struct
   t_registros_cpu *registros_cpu;
   int quantum;
   estado_pcb estado;
+ // motivo_interrupcion motivo;
+
 } t_pcb;
 
-
-// es incorrecto enviar quantum y estado que son cosas de planificacion a cpu,
-//vamos a usar una estructura distinta en cpu
-typedef struct
-{
-  uint32_t pid;
-  uint32_t program_counter;
-  t_registros_cpu *registros_cpu;
-  motivo_interrupcion motivo;
-} t_proceso_cpu;
-
-// MOTIVOS DE INTERRUPCION o FIN DE PROCESO 
-typedef enum
-{
-    FIN_DE_QUANTUM,
-	ENTRADA_SALIDA,
-    ELIMINAR_PROCESO,
-	PROCESO_OUT_OF_MEMORY
-
-} motivo_interrupcion;
 
 typedef enum
 {

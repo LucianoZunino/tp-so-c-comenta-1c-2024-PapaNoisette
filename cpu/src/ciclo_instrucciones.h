@@ -8,7 +8,6 @@
 #include <string.h>
 #include <utils/utils.h>
 #include <main.h>
-#include "utils.h"
 #include "main.h"
 typedef enum {
     SET,  
@@ -32,8 +31,8 @@ typedef enum {
     EXIT
 } t_instruction_code;
 
-int ciclo_de_instruccion(t_proceso_cpu *proceso);
-void devolver_contexto_ejecucion(t_proceso_cpu *proceso);//recibe pid?
+int ciclo_de_instruccion(t_pcb *proceso);
+void devolver_contexto_ejecucion(t_pcb *proceso);//recibe pid?
 
 //void imprimir_contexto_actual();
 
