@@ -17,7 +17,7 @@ extern t_log* logger_memoria;
 extern char* puerto_escucha;
 extern int tam_memoria;
 extern int tam_pagina;
-extern int numero_paginas;
+extern int cantidad_de_marcos;
 extern char* path_instrucciones;
 extern int retardo_respuesta;
 
@@ -34,7 +34,6 @@ typedef struct{
 } t_miniPcb;
 
 extern t_list *lista_de_miniPcb;
-
-
+extern t_list *lista_de_tablas_de_paginas_por_proceso;
 
 #endif

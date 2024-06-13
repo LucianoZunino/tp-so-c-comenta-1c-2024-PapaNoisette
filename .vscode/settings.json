@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "escuchar_kernel_memoria.h": "c",
+        "iniciar_memoria.h": "c",
+        "main.h": "c",
+        "escuchar_cpu_memoria.h": "c"
+    }
+}

@@ -3,6 +3,7 @@
 void escuchar_mensajes_kernel_memoria(){
     bool desconexion_kernel_memoria = 0;
 	t_buffer* buffer;
+
 	while(!desconexion_kernel_memoria){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
@@ -19,9 +20,32 @@ void escuchar_mensajes_kernel_memoria(){
                 t_pcb* pcb = deserializar_pcb(buffer);
                 char* path = extraer_string_del_buffer(buffer); // Obtiene el path del archivo pseudocodigo
                 guardar_instrucciones_en_memoria(pcb, path); //Guar
+
+                int numero_paginas_inicial = 0; // Número de páginas inicial
+                TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = memoria_crear_proceso(pcb->pid, numero_paginas_inicial);
+                list_add(lista_de_tablas_de_paginas_por_proceso, tabla_de_paginas_del_proceso);
+
+                /*if(tabla_de_paginas_del_proceso != NULL){
+                    printf("Proceso con PID %d tiene una tabla de páginas inicializada con %d páginas\n", tabla_de_paginas_del_proceso->pid, tabla_de_paginas_del_proceso->tabla_paginas->numero_paginas);
+                    // Aquí puedes trabajar con el proceso y su tabla de páginas
+                    // ESTO ES PARA PROBAAAAAAAAAAAAAAAAAAAAAR
+                    // Liberar memoria al finalizar
+                    free(tabla_de_paginas_del_proceso->tabla_paginas->pagina);
+                    free(tabla_de_paginas_del_proceso->tabla_paginas);
+                    free(tabla_de_paginas_del_proceso);
+                }*/
+
                 enviar_ok(KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, fd_kernel);
                 destruir_buffer(buffer);
 				break;
+
+            /* UBICAR DONDE IRIA
+            case RESIZE:
+                TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
+                resize_tamano_proceso(tabla_de_paginas_del_proceso, nuevo_tamano)
+                break;
+            */
+
             case LIBERAR_PROCESO_EN_MEMORIA:
                 
                 break;
@@ -36,13 +60,14 @@ void escuchar_mensajes_kernel_memoria(){
 	}
 }
 
-int recibir_path_kernel (int socket){
+int recibir_path_kernel(int socket){
     op_code codigo_de_operacion =  recibir_codigo_operacion(socket);
 
     if (codigo_de_operacion == MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS){
 
     }
 }
+
 void guardar_instrucciones_en_memoria(t_pcb* pcb,char* path){
     
     t_miniPcb* instrucciones = malloc(sizeof(t_miniPcb));
