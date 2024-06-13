@@ -2,7 +2,9 @@
 uint32_t next_pid = 0;
 pthread_mutex_t mutex_next_pid;
 pthread_mutex_t mutex_NEW;
+pthread_mutex_t mutex_EXIT;
 pthread_mutex_t socket_memoria_mutex;
+//sem_t sem_EXIT;
 
 
 //sem_t sem_NEW;
@@ -13,7 +15,7 @@ void imprimir_new(){
        t_pcb* pcb = (t_pcb*) list_get(NEW, i);
        printf("PID: %i\n", pcb->pid);
     }
-    printf("Cantidad de procesos en READY: %i\n", queue_size(READY));
+    printf("Cantidad de procesos en READY: %i\n", list_size(READY));
     if (RUNNING != NULL)
         printf("Proceso en RUNNING: %i\n", RUNNING->pid);
     else 
@@ -77,10 +79,41 @@ t_pcb *crear_pcb(){
     
     pcb->quantum = quantum;
 
+    pcb->estado = malloc(sizeof(pcb->estado));
+
+
+
     // ESTA MEMORIA SE ELIMINA EN ELIMINAR_PROCESO
 
     return pcb;
 }
 
+
+
+void eliminar_proceso() {
+    sem_wait(&sem_EXIT);
+    
+    pthread_mutex_lock(&mutex_EXIT);
+    t_pcb* pcb = list_remove(EXIT, 0);
+    pthread_mutex_unlock(&mutex_EXIT);
+    int pid = pcb->pid;
+    
+    solicitar_liberar_en_memoria(pid);
+    
+    pcb_destruir(pcb); // cada pcb tendría que tener referencias a los recursos asignados al proceso // liberar_recursos();
+
+    pthread_mutex_lock(&mutex_multiprogramacion);
+    grado_actual_multiprogramacion--;
+    pthread_mutex_unlock(&mutex_multiprogramacion);
+    sem_post(&sem_MULTIPROGRAMACION);
+}
+
+void solicitar_liberar_en_memoria(int pid) {
+    t_buffer* buffer = crear_buffer();
+    t_paquete* paquete = crear_paquete(LIBERAR_PROCESO_EN_MEMORIA, buffer);
+    cargar_int_al_buffer(paquete->buffer, pid);
+    enviar_paquete(paquete, fd_memoria);
+    eliminar_paquete(paquete);
+}
 
 

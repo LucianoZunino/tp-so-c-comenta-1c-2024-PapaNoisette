@@ -14,10 +14,18 @@ typedef struct{
     int numero_paginas;   // Número de páginas
 } TablaDePaginas;
 
+typedef struct {
+    int pid;
+    TablaDePaginas *tabla_paginas;
+} TablaDePaginasPorProceso;
+
 void iniciar_memoria();
 void iniciar_logger_memoria();
 void iniciar_config_memoria();
 void inicializar_tabla_paginas(TablaDePaginas *tabla, int numero_paginas);
+TablaDePaginasPorProceso *memoria_crear_proceso(int pid);
+void resize_tamano_proceso(TablaDePaginasPorProceso *tablaDePaginasDelProceso, int nuevo_tamano);
+void asignar_marco(TablaDePaginas *tabla, int numero_pagina, int numero_marco);
 void *asignar_memoria(size_t size);
 void imprimir_config_memoria();
 void finalizar_memoria();

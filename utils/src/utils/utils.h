@@ -60,7 +60,10 @@ typedef enum{
 	KERNEL_SIGNAL,//cpu-> KERNEL por dipatch
 	CPU_CONSULTA_FRAME,//cpu-> MEMORIA cuando hay tlb miss
 	RESPUESTA_CPU_CONSULTA_FRAME,//MEMORIA->CPU 
-	INTERRUPCION
+	INTERRUPCION,
+	FIN_IO,  // IO -> KERNEL
+	LIBERAR_PROCESO_EN_MEMORIA, // EN ELIMINAR PROCESO KERNEL -> SOLICITA A MEMORIA LIBERAR MEMORIA DE DICHO PID
+	ERROR_IO  // CUANDO IO NO CONTIENE FUNCION EN LA INTERFAZ, KERNEL MADNA A EXIT AL PROCESO
 } op_code;
 
 typedef struct{
@@ -101,12 +104,14 @@ typedef struct
  uint32_t SI;
  uint32_t DI;
 } t_registros_cpu;
+
 typedef enum {
     E_NEW,
     E_READY,
     E_EXEC,
     E_BLOCKED,
-    E_EXIT
+    E_EXIT,
+	E_PRIORIDAD
 } estado_pcb;
 
 //
@@ -126,12 +131,40 @@ typedef struct
   uint32_t program_counter;
   t_registros_cpu *registros_cpu;
   int quantum;
+<<<<<<< HEAD
   estado_pcb estado;
  // motivo_interrupcion motivo;
 
+=======
+  estado_pcb* estado;
+>>>>>>> fb32937ae99f2f2cd9cc7236f767db8e0c25e1fb
 } t_pcb;
 
+// MOTIVOS DE INTERRUPCION o FIN DE PROCESO 
+typedef enum
+{
+    FIN_DE_QUANTUM,
+	ENTRADA_SALIDA,
+    ELIMINAR_PROCESO,
+	PROCESO_OUT_OF_MEMORY
 
+} motivo_interrupcion;
+
+<<<<<<< HEAD
+=======
+// es incorrecto enviar quantum y estado que son cosas de planificacion a cpu,
+//vamos a usar una estructura distinta en cpu
+typedef struct
+{
+  uint32_t pid;
+  uint32_t program_counter;
+  t_registros_cpu *registros_cpu;
+  motivo_interrupcion motivo;
+} t_proceso_cpu;
+
+
+
+>>>>>>> fb32937ae99f2f2cd9cc7236f767db8e0c25e1fb
 typedef enum
 {
 	GENERICA,
@@ -148,6 +181,7 @@ typedef struct
 	pthread_t hilo;
 	sem_t* semaforo;
 } t_interfaz;
+
 
 // Funciones de init
 t_config* iniciar_config(char* ruta_config);

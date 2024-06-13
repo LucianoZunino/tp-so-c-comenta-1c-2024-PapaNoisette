@@ -1,5 +1,10 @@
 #include "escuchar_entradasalida_kernel.h"
 
+
+pthread_mutex_t mutex_PRIORIDAD;
+
+
+
 void escuchar_mensajes_entradasalida_kernel(){
     bool desconexion_entradasalida_kernel = 0;
 	while(!desconexion_entradasalida_kernel){
@@ -7,9 +12,44 @@ void escuchar_mensajes_entradasalida_kernel(){
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
+			int pid;
 			case HANDSHAKE_ENTRADASALIDA:
 				aceptar_handshake(logger_kernel, fd_entradasalida, cod_op);
 				break;
+			case FIN_IO:
+				pid = recibir_int(fd_entradasalida);
+				int index = buscar_index_por_pid(BLOCKED, pid);
+				t_pcb* pcb = list_get(BLOCKED, index);
+				list_remove_and_destroy_element(BLOCKED, index, pcb_destruir);
+
+				if (pcb->quantum < quantum){
+					pcb->estado = E_PRIORIDAD;
+                	pthread_mutex_lock(&mutex_PRIORIDAD);
+					list_add(PRIORIDAD, pcb);
+					pthread_mutex_unlock(&mutex_PRIORIDAD);
+				} else {
+					pcb->estado = E_READY;
+                	pthread_mutex_lock(&mutex_READY);
+					list_add(READY, pcb);
+					pthread_mutex_unlock(&mutex_READY);
+				}
+				break;
+			case ERROR_IO:
+				t_buffer* buffer = recibir_buffer_completo(fd_entradasalida);
+				pid = extraer_int_del_buffer(buffer);
+
+				index = buscar_index_por_pid(BLOCKED, pid);
+        		pthread_mutex_lock(&mutex_BLOCKED);
+        		pcb = list_remove(BLOCKED, index);
+				pthread_mutex_unlock(&mutex_BLOCKED);
+				
+
+				pcb->estado = E_EXIT;
+				pthread_mutex_lock(&mutex_EXIT);
+				list_add(EXIT, pcb);
+				pthread_mutex_unlock(&mutex_EXIT);
+				break;
+				
 			case -1:
 				log_error(logger_kernel, "La Entradasalida se desconecto de Kernel. Terminando servidor.");
 				desconexion_entradasalida_kernel = 1;

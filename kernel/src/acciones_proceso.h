@@ -10,6 +10,7 @@
 
 void crear_proceso(char* path);
 t_pcb* crear_pcb();
+void eliminar_proceso();
 
 
 #endif

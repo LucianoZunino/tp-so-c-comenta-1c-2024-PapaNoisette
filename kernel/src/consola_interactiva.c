@@ -70,6 +70,13 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
 
         case FINALIZAR_PROCESO:
             log_info(logger_kernel, "HOLA ENTRASTE A F.PROCESO");
+            char* pid_char = comando_desde_consola[1];
+            int pid = atoi(pid_char);
+            if (RUNNING->pid == pid){
+                interrumpir_cpu(RUNNING, ELIMINAR_PROCESO);
+            } else {
+                pasar_proceso_a_exit(pid);
+            }
             break;
         
 
