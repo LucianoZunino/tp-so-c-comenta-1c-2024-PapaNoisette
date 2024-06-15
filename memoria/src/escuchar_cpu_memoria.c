@@ -3,6 +3,7 @@
 void escuchar_mensajes_cpu_memoria()
 {
 	bool desconexion_cpu_memoria = 0;
+	t_buffer* buffer;
 	// while(!desconexion_cpu_memoria){
 	while (1)
 	{
@@ -17,7 +18,7 @@ void escuchar_mensajes_cpu_memoria()
 			aceptar_handshake(logger_memoria, fd_cpu, cod_op);
 			break;
 		case CPU_SOLICITA_INSTRUCCION:
-			t_buffer *buffer = recibir_buffer_completo(fd_cpu);
+			buffer = recibir_buffer_completo(fd_cpu);
 			t_pcb *pcb = deserializar_pcb(buffer);
 			usleep(retardo_respuesta);
 			enviar_instruccion_a_cpu(pcb, fd_cpu);
@@ -33,21 +34,21 @@ void escuchar_mensajes_cpu_memoria()
 			break;
 		case MEMORIA_RESIZE:
 
-			t_buffer *buffer = recibir_buffer_completo(fd_cpu);
+			buffer = recibir_buffer_completo(fd_cpu);
 			int pid = recibir_int(fd_cpu);
-			int nuevo_tam = recibir_int(fd_cpu);
+			int nuevo_tamano = recibir_int(fd_cpu);
 			usleep(retardo_respuesta);
 
-                TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
-                int resultado = resize_tamano_proceso(tabla_de_paginas_del_proceso, nuevo_tamano);
-                if(resultado == 0){ // 0 -> Ok | -1 -> OUT_OF_MEMORY
-                    enviar_ok(RESIZE_OK, fd_cpu);
-                }
-                else{
-					enviar_ok(OUT_OF_MEMORY, fd_cpu);
+			TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
+			int resultado = resize_tamano_proceso(tabla_de_paginas_del_proceso, nuevo_tamano);
+			if(resultado == 0){ // 0 -> Ok | -1 -> OUT_OF_MEMORY
+				enviar_ok(RESIZE_OK, fd_cpu);
+			}
+			else{
+				enviar_ok(OUT_OF_MEMORY, fd_cpu);
 
-                }
-                break;
+			}
+			break;
 
 		case -1:
 			log_error(logger_memoria, "La CPU se desconecto de Memoria. Terminando servidor.");
