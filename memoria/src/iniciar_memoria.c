@@ -86,32 +86,46 @@ TablaDePaginasPorProceso *memoria_crear_proceso(int pid, int numero_paginas){
 }
 
 // Redimensiona la tábla de páginas del proceso
-void resize_tamano_proceso(TablaDePaginasPorProceso *tabla_de_paginas_del_proceso, int nuevo_tamano){
+int resize_tamano_proceso(TablaDePaginasPorProceso *tabla_de_paginas_del_proceso, int nuevo_tamano){
     int numero_paginas_actual = tabla_de_paginas_del_proceso->tabla_paginas->numero_paginas;
-    int numero_paginas_nuevo = (nuevo_tamano + tam_pagina - 1) / tam_pagina; // // Calcula el número de páginas necesarias -> tam_pagina es siempre 32 (La cuenta rara es por si el proceso necesita 1 página y 1byte mas de otra necesitaria 2 páginas)
+    int numero_paginas_nuevo = (nuevo_tamano + tam_pagina - 1) / tam_pagina; // Calcula el número de páginas necesarias -> tam_pagina es siempre 32 (La cuenta rara es por si el proceso necesita 1 página y 1byte mas de otra necesitaria 2 páginas)
+    int paginas_a_agregar_o_quitar = numero_paginas_nuevo - numero_paginas_actual;
+    int frames_disponibles = contar_frames_libres();
 
     if(numero_paginas_nuevo > numero_paginas_actual){
         // Ampliación de un proceso
-        Pagina *nuevas_paginas = (Pagina *)realloc(tabla_de_paginas_del_proceso->tabla_paginas->pagina, numero_paginas_nuevo * sizeof(Pagina));
-        if(nuevas_paginas == NULL){
-            fprintf(stderr, "Error al redimensionar la tabla de páginas\n");
-            // Manejar error de memoria llena (Out Of Memory)
-            return;
+
+        if(frames_disponibles > paginas_a_agregar_o_quitar){
+            Pagina *nuevas_paginas = (Pagina *)realloc(tabla_de_paginas_del_proceso->tabla_paginas->pagina, numero_paginas_nuevo * sizeof(Pagina));
+            if(nuevas_paginas == NULL){
+                fprintf(stderr, "Error al redimensionar la tabla de páginas\n");
+                return;
+            }
+            tabla_de_paginas_del_proceso->tabla_paginas->pagina = nuevas_paginas;
+            for(int i = numero_paginas_actual; i < numero_paginas_nuevo; i++){
+                tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco = asignar_frame(tabla_de_paginas_del_proceso->pid);;
+                tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].bit_presencia = 1; // (tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco != -1) ? 1 : 0;
+            }
+            printf("PID: %d - Redimensionado a %d páginas\n", tabla_de_paginas_del_proceso->pid, numero_paginas_nuevo);
         }
-        tabla_de_paginas_del_proceso->tabla_paginas->pagina = nuevas_paginas;
-        for(int i = numero_paginas_actual; i < numero_paginas_nuevo; i++){
-            tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco = -1;
-            tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].bit_presencia = 0;
+        else{ // OUT_OF_MEMORY
+            fprintf(stderr, "Error: No hay suficiente memoria para redimensionar el proceso (OUT_MEMORY)\n");
+            return -1; // Error OUT_OF_MEMORY
         }
-        printf("PID: %d - Redimensionado a %d páginas\n", tabla_de_paginas_del_proceso->pid, numero_paginas_nuevo);
+
     }
     else if(numero_paginas_nuevo < numero_paginas_actual){
         // Reducción de un proceso
         for(int i = numero_paginas_nuevo; i < numero_paginas_actual; i++){
-            // Opcional: Aquí puedes liberar marcos si es necesario
-            tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco = -1;
-            tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].bit_presencia = 0;
+            liberar_frame(tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco);
         }
+
+        /* De la ultima a la primera
+        for(int i = numero_paginas_actual - 1; i >= numero_paginas_nuevo; i--){
+            liberar_frame(tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco);
+        }
+        */
+
         Pagina *nuevas_paginas = (Pagina *)realloc(tabla_de_paginas_del_proceso->tabla_paginas->pagina, numero_paginas_nuevo * sizeof(Pagina));
         if(nuevas_paginas == NULL && numero_paginas_nuevo > 0){
             fprintf(stderr, "Error al redimensionar la tabla de páginas\n");
@@ -122,6 +136,17 @@ void resize_tamano_proceso(TablaDePaginasPorProceso *tabla_de_paginas_del_proces
     }
 
     tabla_de_paginas_del_proceso->tabla_paginas->numero_paginas = numero_paginas_nuevo;
+    return 0;
+}
+
+int contar_frames_libres(){
+    int cantidad_disponible = 0;
+    for(int i = 0; i < cantidad_de_marcos; i++){
+        if(!frames[i].ocupado){
+            cantidad_disponible++;
+        }
+    }
+    return cantidad_disponible;
 }
 
 int asignar_y_marcar_frame_ocupado(int pid){
@@ -135,7 +160,7 @@ int asignar_y_marcar_frame_ocupado(int pid){
     return -1; // No hay frames libres
 }
 
-void marcar_frame_libre(int numero_de_marco){
+void liberar_frame(int numero_de_marco){
     if(numero_de_marco >= 0 && numero_de_marco < cantidad_de_marcos){
         frames[numero_de_marco].ocupado = 0;
         frames[numero_de_marco].pid = -1;
@@ -161,7 +186,7 @@ void imprimir_config_memoria(){
     printf("RETARDO_RESPUESTA:%d\n",retardo_respuesta);
 }
 
-TablaDePaginasPorProceso* buscar_tabla_por_pid(t_list* lista, int pid){
+TablaDePaginasPorProceso* buscar_tabla_por_pid(t_list* lista, int pid){ // REVISAR SI RESIVE T_LIST
     for(unsigned int i = 0; i < list_size(lista); i++){
         TablaDePaginasPorProceso* tabla_de_paginas_del_proceso = list_get(lista, i);
         if(tabla_de_paginas_del_proceso->pid == pid){
@@ -192,6 +217,14 @@ void inicializar_memoria(){
         frames[i].ocupado = 0;
         frames[i].pid = 0;
     }
+}
+
+void leer_memoria(int marco, void *buffer, size_t tamano) {
+    memcpy(buffer, memoria_RAM + (marco * tam_pagina), tamano);
+}
+
+void escribir_memoria(int marco, void *buffer, size_t tamano) {
+    memcpy(memoria_RAM + (marco * tam_pagina), buffer, tamano);
 }
 
 void inicializar_semaforos(){

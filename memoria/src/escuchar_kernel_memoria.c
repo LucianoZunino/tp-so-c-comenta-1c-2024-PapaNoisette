@@ -42,7 +42,13 @@ void escuchar_mensajes_kernel_memoria(){
             /* UBICAR DONDE IRIA
             case RESIZE:
                 TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
-                resize_tamano_proceso(tabla_de_paginas_del_proceso, nuevo_tamano)
+                int resultado = resize_tamano_proceso(tabla_de_paginas_del_proceso, nuevo_tamano);
+                if(resultado == 0){ // 0 -> Ok | -1 -> OUT_OF_MEMORY
+                    enviar_ok(RESIZE_OK, fd_cpu);
+                }
+                else{
+                    enviar_out_of_memory(OUT_OF_MEMORY, fd_cpu);
+                }
                 break;
             */
 
