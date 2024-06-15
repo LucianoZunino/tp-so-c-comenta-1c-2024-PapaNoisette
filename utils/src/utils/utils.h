@@ -49,11 +49,9 @@ typedef enum
 	MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS,
 	LIBERAR_PROCESO_EN_MEMORIA,		 // EN ELIMINAR PROCESO KERNEL -> SOLICITA A MEMORIA LIBERAR MEMORIA DE DICHO PID
 	// KERNEL-CPU
-	CONTEXTO_EJECUCION,				// cpu-> KERNEL por dipatch
 	IO_GEN_SLEEP_FS,				// le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
 	CONTEXTO_EJECUCION,				// cpu-> KERNEL por dipatch
 	KERNEL_ENVIA_PROCESO,			// KERNEL -> CPU por dispatch
-	CONTEXTO_EJECUCION,				// cpu-> KERNEL por dipatch
 	CPU_INTERRUPT,
 	KERNEL_WAIT,   					// cpu-> KERNEL por dipatch
 	KERNEL_SIGNAL, 					// cpu-> KERNEL por dipatch
