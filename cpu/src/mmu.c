@@ -27,6 +27,36 @@ int calcular_desplazamiento(int dir_logica, int numero_pagina)
 
 int consultar_tamanio_pagina_memoria()
 { // deberia estar luego del hanshake con memoria,o mejor en iniciar_cpu o qcyo
+      printf("flag 1 consultar tamanio: \n");
+
+   t_buffer *buffer_a_enviar = crear_buffer();
+   t_paquete *paquete = crear_paquete(CPU_CONSULTA_TAM_PAGINA, buffer_a_enviar);
+   enviar_paquete(paquete, fd_memoria);
+   eliminar_paquete(paquete);
+t_buffer * buffer=crear_buffer();
+      printf("flag 2 consultar tamanio: \n");
+
+   int nuevo_tam_pagina = -1; // inicializo asi para saber que no llego la respuesta
+               printf("flag 3 consultar tamanio: \n");
+
+   while (nuevo_tam_pagina == -1)
+   {
+            printf("flag 4 consultar tamanio: \n");
+
+      // si memoria no me contesta estoy al horno
+      int cod_op = recibir_operacion(fd_memoria);
+            printf("flag 5 consultar tamanio: \n");
+
+      if (cod_op == CPU_CONSULTA_FRAME)
+         {
+                        printf("flag 6 consultar tamanio: \n");
+
+            buffer = recibir_buffer_completo(fd_memoria);
+            nuevo_tam_pagina=extraer_int_del_buffer(buffer);
+         }
+      
+   }
+
 return 0;
 }
 
@@ -89,7 +119,7 @@ printf("algoritmo :%s\n",algoritmo_tlb);
       //REAJUSTAMOS LA TLB SI ES LRU     
        if (strcmp(algoritmo_tlb,"LRU")==0){
 
-         printf("reajuste tlb por LRU :%s\n");
+         printf("reajuste tlb por LRU \n");
 
          //lo mando al final de la lista por que es ahora el mas reciente
          list_remove_element(tlb,entrada);//test ok
@@ -113,16 +143,18 @@ printf("Se consultara a memoria el marco correspondiente al PID: %d  y la PAGINA
    cargar_int_al_buffer(paquete->buffer, pagina);
    enviar_paquete(paquete, fd_memoria);
    eliminar_paquete(paquete);
+t_buffer * buffer=crear_buffer();
 
-   int marco = -1; // inicializo asi para testear
+   int marco = -1; // inicializo asi para saber que no llego la respuesta
    while (marco == -1)
    {
       // si memoria no me contesta estoy al horno
       int cod_op = recibir_operacion(fd_memoria);
 
-      if (cod_op == RESPUESTA_CPU_CONSULTA_FRAME)
+      if (cod_op == CPU_CONSULTA_FRAME)
          {
-            marco = recibir_buffer_completo(fd_memoria);
+            buffer = recibir_buffer_completo(fd_memoria);
+            marco=extraer_int_del_buffer(buffer);
          }
       
    }
