@@ -94,6 +94,7 @@ int resize_tamano_proceso(TablaDePaginasPorProceso *tabla_de_paginas_del_proceso
 
     if(numero_paginas_nuevo > numero_paginas_actual){
         // Ampliación de un proceso
+			log_info(logger_memoria, "Ampliación de Proceso PID: %d -Tamaño Actual:%d - Tamaño a Ampliar: %d", tabla_de_paginas_del_proceso->pid, tabla_de_paginas_del_proceso->tabla_paginas->numero_paginas*tam_pagina, nuevo_tamano);
 
         if(frames_disponibles > paginas_a_agregar_o_quitar){
             Pagina *nuevas_paginas = (Pagina *)realloc(tabla_de_paginas_del_proceso->tabla_paginas->pagina, numero_paginas_nuevo * sizeof(Pagina));
@@ -103,7 +104,7 @@ int resize_tamano_proceso(TablaDePaginasPorProceso *tabla_de_paginas_del_proceso
             }
             tabla_de_paginas_del_proceso->tabla_paginas->pagina = nuevas_paginas;
             for(int i = numero_paginas_actual; i < numero_paginas_nuevo; i++){
-                tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco = asignar_frame(tabla_de_paginas_del_proceso->pid);;
+                tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco = asignar_frame(tabla_de_paginas_del_proceso->pid);
                 tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].bit_presencia = 1; // (tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco != -1) ? 1 : 0;
             }
             printf("PID: %d - Redimensionado a %d páginas\n", tabla_de_paginas_del_proceso->pid, numero_paginas_nuevo);
@@ -116,6 +117,8 @@ int resize_tamano_proceso(TablaDePaginasPorProceso *tabla_de_paginas_del_proceso
     }
     else if(numero_paginas_nuevo < numero_paginas_actual){
         // Reducción de un proceso
+        		log_info(logger_memoria, "Ampliación de Proceso PID: %d -Tamaño Actual:%d - Tamaño a reducir: %d", tabla_de_paginas_del_proceso->pid, tabla_de_paginas_del_proceso->tabla_paginas->numero_paginas*tam_pagina, nuevo_tamano);
+
         for(int i = numero_paginas_nuevo; i < numero_paginas_actual; i++){
             liberar_frame(tabla_de_paginas_del_proceso->tabla_paginas->pagina[i].numero_de_marco);
         }
@@ -148,6 +151,9 @@ int contar_frames_libres(){
     }
     return cantidad_disponible;
 }
+int asignar_frame(int){
+    return -1;
+}//~nacho: esta funcion falta definirla o no se si te referis a asignar_y_marcar_frame_ocupado
 
 int asignar_y_marcar_frame_ocupado(int pid){
     for(int i = 0; i < cantidad_de_marcos; i++){
@@ -201,6 +207,18 @@ void finalizar_memoria(){
     config_destroy(config_memoria);
 }
 
+void finalizar_proceso (int pid){
+
+for (int i=0;i<cantidad_de_marcos;i++){
+    if (frames[i].pid==pid){
+        frames[i].ocupado=0;
+
+    }
+log_info(logger_memoria, "Se finalizo el proceso :%d",pid);
+//TODO: faltaria borrar las estructuras admisnistrativas del proceso??
+}
+
+}
 void inicializar_memoria(){
     t_list *lista_de_miniPcb = list_create();
     t_list *lista_de_tablas_de_paginas_por_proceso = list_create();
