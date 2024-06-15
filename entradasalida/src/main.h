@@ -10,11 +10,10 @@
 #include "iniciar_entradasalida.h"
 #include "escuchar_kernel_entradasalida.h"
 #include "escuchar_memoria_entradasalida.h"
-#include "iniciar_interfaz.h"
 
 extern t_log* logger_entradasalida;
 
-extern char* tipo_de_interfaz;
+extern int tipo_de_interfaz;
 extern int tiempo_unidad_trabajo;
 extern char* ip_kernel;
 extern char* puerto_kernel;
@@ -23,9 +22,12 @@ extern char* puerto_memoria;
 extern char* path_base_dialfs;
 extern int block_size;
 extern int block_count;
+extern int retraso_compactacion;
 
 extern int fd_memoria;
 extern int fd_kernel;
+
+extern sem_t sem_stdout;
 
 extern t_dictionary* interfaces;
 

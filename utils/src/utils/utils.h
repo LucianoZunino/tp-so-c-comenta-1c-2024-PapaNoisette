@@ -50,6 +50,8 @@ typedef enum
 	LIBERAR_PROCESO_EN_MEMORIA,		 // EN ELIMINAR PROCESO KERNEL -> SOLICITA A MEMORIA LIBERAR MEMORIA DE DICHO PID
 	// KERNEL-CPU
 	IO_GEN_SLEEP_FS,				// le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
+	IO_STDIN_READ_FS,
+	IO_STDOUT_WRITE_FS,
 	CONTEXTO_EJECUCION,				// cpu-> KERNEL por dipatch
 	KERNEL_ENVIA_PROCESO,			// KERNEL -> CPU por dispatch
 	CPU_INTERRUPT,
@@ -152,6 +154,7 @@ typedef enum
 } tipo_interfaz;
 
 // Interfaz
+/*
 typedef struct
 {
 	t_config *config;
@@ -159,6 +162,7 @@ typedef struct
 	pthread_t hilo;
 	sem_t *semaforo;
 } t_interfaz;
+*/
 
 // Funciones de init
 t_config *iniciar_config(char *ruta_config);

@@ -40,4 +40,5 @@ TablaDePaginasPorProceso* buscar_tabla_por_pid(t_list* lista, int pid);
 void finalizar_memoria();
 int recibir_path_kernel(int socket);
 void guardar_instrucciones_en_memoria(t_pcb* pcb,char* path);
+int asignar_frame(int);//nacho: esta funcion falta definirla o no se si te referis a asignar_y_marcar_frame_ocupado
 #endif
