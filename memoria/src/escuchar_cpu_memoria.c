@@ -37,8 +37,17 @@ void escuchar_mensajes_cpu_memoria()
 			int pid = recibir_int(fd_cpu);
 			int nuevo_tam = recibir_int(fd_cpu);
 			usleep(retardo_respuesta);
-			resize_proceso(pid, nuevo_tam);
-			break;
+
+                TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
+                int resultado = resize_tamano_proceso(tabla_de_paginas_del_proceso, nuevo_tamano);
+                if(resultado == 0){ // 0 -> Ok | -1 -> OUT_OF_MEMORY
+                    enviar_ok(RESIZE_OK, fd_cpu);
+                }
+                else{
+					enviar_ok(OUT_OF_MEMORY, fd_cpu);
+
+                }
+                break;
 
 		case -1:
 			log_error(logger_memoria, "La CPU se desconecto de Memoria. Terminando servidor.");
@@ -70,7 +79,7 @@ void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)
 	}
 	log_info(logger_memoria, "Error, no hay pid cargado en memoria \n");
 }
-
+/*
 void resize_proceso(pid, nuevo_tam)
 {
 	int viejo_tam=0;
@@ -134,3 +143,4 @@ void resize_proceso(pid, nuevo_tam)
 	}
 	
 }
+*/
