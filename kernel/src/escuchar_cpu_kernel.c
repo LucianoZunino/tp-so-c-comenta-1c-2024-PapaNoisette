@@ -11,11 +11,19 @@ void escuchar_mensajes_dispatch_kernel(){
 		switch(cod_op){
 			t_pcb* pcb;
 			int pid;
+			int tiempo;
+			int registro_tamanio;
+			int registro_direccion;
+			int indice_interfaz;
+			char* nombre_interfaz;
 			t_interfaz* interfaz;
 			t_buffer* buffer;
+			t_paquete* paquete;
+			
 			case FIN_DE_QUANTUM:
+			
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = extraer_datos_del_buffer(buffer); //chequear si anda, sino usar deserealizar_pcb
+				pcb = deserializar_pcb(buffer); //chequear si anda, sino usar deserealizar_pcb
 				sem_post(&sem_EXEC);
 
 				pcb->quantum = quantum;
@@ -27,46 +35,103 @@ void escuchar_mensajes_dispatch_kernel(){
 				break;
 
 			case IO_GEN_SLEEP_FS:
+	
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = extraer_datos_del_buffer(buffer); //chequear si anda, sino usar deserealizar_pcb
+				pcb = deserializar_pcb(buffer); //chequear si anda, sino usar deserealizar_pcb
 				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
 				sem_post(&sem_desalojo);
 				bloquear_proceso(pcb);
 
-				char* nombre_interfaz = extraer_string_del_buffer(buffer);
-				int tiempo = extraer_int_del_buffer(buffer);
+				nombre_interfaz = extraer_string_del_buffer(buffer);
+				tiempo = extraer_int_del_buffer(buffer);
 
-				int indice_interfaz = buscar_interfaz(nombre_interfaz);
+				indice_interfaz = buscar_interfaz(nombre_interfaz);
 				interfaz = list_get(interfaces, indice_interfaz);
 
-				pthread_mutex_lock(&interfaz->mutex_interfaz);
-				list_add(interfaz->cola_espera, pcb);
-				pthread_mutex_unlock(&interfaz->mutex_interfaz);
+				destruir_buffer(buffer);
 
-				// cargar paquete
+				buffer = crear_buffer();
+				paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer);
+				agregar_pcb(paquete, pcb);
+				cargar_int_al_buffer(paquete->buffer, tiempo);
+				
+				pthread_mutex_lock(&interfaz->mutex_interfaz);
+				list_add(interfaz->cola_espera, paquete);
+				pthread_mutex_unlock(&interfaz->mutex_interfaz);
+				
+				sem_post(interfaz->sem_espera);
 
 				break;
 			
 			case IO_STDIN_READ_FS:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = extraer_datos_del_buffer(buffer); //chequear si anda, sino usar deserealizar_pcb
+				pcb = deserializar_pcb(buffer); //chequear si anda, sino usar deserealizar_pcb
 				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
+				
+				nombre_interfaz = extraer_string_del_buffer(buffer);
+				registro_direccion = extraer_int_del_buffer(buffer);
+				registro_tamanio = extraer_int_del_buffer(buffer);
+
+				indice_interfaz = buscar_interfaz(nombre_interfaz);
+				interfaz = list_get(interfaces, indice_interfaz);
+				
+				
+				destruir_buffer(buffer);
+
+				buffer = crear_buffer();
+				paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer);
+				agregar_pcb(paquete, pcb);
+				cargar_int_al_buffer(paquete->buffer, registro_direccion);
+				cargar_int_al_buffer(paquete->buffer, registro_tamanio);
+
+				pthread_mutex_lock(&interfaz->mutex_interfaz);
+				list_add(interfaz->cola_espera, paquete);
+				pthread_mutex_unlock(&interfaz->mutex_interfaz);
+				
+				sem_post(interfaz->sem_espera);
+				
 				sem_post(&sem_desalojo);
 				bloquear_proceso(pcb);
-
 
 				break;
 		
 			case IO_STDOUT_WRITE_FS:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
+				pcb = deserializar_pcb(buffer); //chequear si anda, sino usar deserealizar_pcb
 				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
+
+				nombre_interfaz = extraer_string_del_buffer(buffer);
+				registro_direccion = extraer_int_del_buffer(buffer);
+				registro_tamanio = extraer_int_del_buffer(buffer);
+
+				indice_interfaz = buscar_interfaz(nombre_interfaz);
+				interfaz = list_get(interfaces, indice_interfaz);
+				
+				
+				destruir_buffer(buffer);
+
+				buffer = crear_buffer();
+				paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer);
+				agregar_pcb(paquete, pcb);
+				cargar_int_al_buffer(paquete->buffer, registro_direccion);
+				cargar_int_al_buffer(paquete->buffer, registro_tamanio);
+
+				pthread_mutex_lock(&interfaz->mutex_interfaz);
+				list_add(interfaz->cola_espera, paquete);
+				pthread_mutex_unlock(&interfaz->mutex_interfaz);
+				
+				sem_post(interfaz->sem_espera);
+				
+				sem_post(&sem_desalojo);
+				bloquear_proceso(pcb);
+
 				sem_post(&sem_desalojo);
 				bloquear_proceso(pcb);
 				break;
+
 			case ELIMINAR_PROCESO:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = extraer_datos_del_buffer(buffer); 
+				pcb = deserializar_pcb(buffer); 
 				sem_post(&sem_desalojo);
 				sem_post(&sem_EXEC);
 				//sem_post(&sem_MULTIPROGRAMACION); lo hacemos en eliminar_proceso()
@@ -81,9 +146,10 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				// CONTEMPLAR EL CASO PARA DEVOLVER RECURSOS SI LOS TIENE
 				break;
+
 			case KERNEL_WAIT: //pónernos de acuerdo con nacho como envia el recurso solicitado
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = extraer_datos_del_buffer(buffer);
+				pcb = deserializar_pcb(buffer);
 				
 				sem_post(&sem_desalojo);
 				pcb->quantum = RUNNING->quantum;
@@ -101,9 +167,10 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				destruir_buffer(buffer);
 				break;
+				
 			case KERNEL_SIGNAL:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = extraer_datos_del_buffer(buffer);
+				pcb = deserializar_pcb(buffer);
 				char* recurso = extraer_string_del_buffer(buffer);
 
 				sem_post(&sem_desalojo);
@@ -115,6 +182,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				sem_post(&sem_EXEC);
 				break;
+				
 			case -1:
 				log_error(logger_kernel, "El Dispatch se desconecto de Kernel. Terminando servidor.");
 				desconexion_dispatch_kernel = 1;

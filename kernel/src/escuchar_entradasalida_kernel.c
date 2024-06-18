@@ -45,6 +45,8 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 					list_add(READY, pcb);
 					pthread_mutex_unlock(&mutex_READY);
 				}
+				
+				sem_post(&sem_ocupado);
 				break;
 			case ERROR_IO:
 				t_buffer* buffer = recibir_buffer_completo(socket);
@@ -60,6 +62,8 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				pthread_mutex_lock(&mutex_EXIT);
 				list_add(EXIT, pcb);
 				pthread_mutex_unlock(&mutex_EXIT);
+
+				sem_post(&sem_ocupado);
 				break;
 				
 			case -1:
@@ -83,5 +87,5 @@ void esperar_entradasalida(sem_t sem_ocupado, int indice){
 	t_paquete* paquete = list_remove(interfaz->cola_espera, 0);
 	pthread_mutex_unlock(&(interfaz->mutex_interfaz));
 
-	// enviar paquete
+	enviar_paquete(paquete, interfaz->socket);
 }
