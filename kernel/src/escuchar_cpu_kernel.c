@@ -11,9 +11,11 @@ void escuchar_mensajes_dispatch_kernel(){
 		switch(cod_op){
 			t_pcb* pcb;
 			int pid;
+			t_interfaz* interfaz;
 			t_buffer* buffer;
 			case FIN_DE_QUANTUM:
-				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
+				buffer = recibir_buffer_completo(fd_cpu_dispatch);
+				pcb = extraer_datos_del_buffer(buffer); //chequear si anda, sino usar deserealizar_pcb
 				sem_post(&sem_EXEC);
 
 				pcb->quantum = quantum;
@@ -24,18 +26,47 @@ void escuchar_mensajes_dispatch_kernel(){
 				pcb->estado = E_READY;
 				break;
 
-			case ENTRADA_SALIDA:
-				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
-				sem_post(&sem_desalojo);
+			case IO_GEN_SLEEP_FS:
+				buffer = recibir_buffer_completo(fd_cpu_dispatch);
+				pcb = extraer_datos_del_buffer(buffer); //chequear si anda, sino usar deserealizar_pcb
 				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
-				pthread_mutex_lock(&mutex_BLOCKED);
-				list_add(BLOCKED, pcb);
-				pthread_mutex_unlock(&mutex_BLOCKED);
-				pcb->estado = E_BLOCKED;
-				sem_post(&sem_EXEC);
+				sem_post(&sem_desalojo);
+				bloquear_proceso(pcb);
+
+				char* nombre_interfaz = extraer_string_del_buffer(buffer);
+				int tiempo = extraer_int_del_buffer(buffer);
+
+				int indice_interfaz = buscar_interfaz(nombre_interfaz);
+				interfaz = list_get(interfaces, indice_interfaz);
+
+				pthread_mutex_lock(&interfaz->mutex_interfaz);
+				list_add(interfaz->cola_espera, pcb);
+				pthread_mutex_unlock(&interfaz->mutex_interfaz);
+
+				// cargar paquete
+
+				break;
+			
+			case IO_STDIN_READ_FS:
+				buffer = recibir_buffer_completo(fd_cpu_dispatch);
+				pcb = extraer_datos_del_buffer(buffer); //chequear si anda, sino usar deserealizar_pcb
+				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
+				sem_post(&sem_desalojo);
+				bloquear_proceso(pcb);
+
+
+				break;
+		
+			case IO_STDOUT_WRITE_FS:
+				buffer = recibir_buffer_completo(fd_cpu_dispatch);
+				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
+				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
+				sem_post(&sem_desalojo);
+				bloquear_proceso(pcb);
 				break;
 			case ELIMINAR_PROCESO:
-				pcb = recibir_pcb(fd_cpu_dispatch); //chequear si anda, sino usar deserealizar_pcb
+				buffer = recibir_buffer_completo(fd_cpu_dispatch);
+				pcb = extraer_datos_del_buffer(buffer); 
 				sem_post(&sem_desalojo);
 				sem_post(&sem_EXEC);
 				//sem_post(&sem_MULTIPROGRAMACION); lo hacemos en eliminar_proceso()
@@ -47,10 +78,12 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				sem_post(&sem_EXIT);
 				// hacer cosas de memoria
+
+				// CONTEMPLAR EL CASO PARA DEVOLVER RECURSOS SI LOS TIENE
 				break;
 			case KERNEL_WAIT: //pónernos de acuerdo con nacho como envia el recurso solicitado
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = deserializar_pcb(buffer);
+				pcb = extraer_datos_del_buffer(buffer);
 				
 				sem_post(&sem_desalojo);
 				pcb->quantum = RUNNING->quantum;
@@ -70,7 +103,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				break;
 			case KERNEL_SIGNAL:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
-				pcb = deserializar_pcb(buffer);
+				pcb = extraer_datos_del_buffer(buffer);
 				char* recurso = extraer_string_del_buffer(buffer);
 
 				sem_post(&sem_desalojo);
@@ -100,6 +133,15 @@ RECURSOS=[RA,RB,RC]
 INSTANCIAS_RECURSOS=[1,2,1]
 */
 
+void bloquear_proceso(t_pcb* pcb){
+	pcb->estado = E_BLOCKED;
+	pthread_mutex_lock(&mutex_BLOCKED);
+	list_add(BLOCKED, pcb);
+	pthread_mutex_unlock(&mutex_BLOCKED);
+	
+	sem_post(&sem_EXEC);
+}
+
 
 void escuchar_mensajes_interrupt_kernel(){
     bool desconexion_interrupt_kernel = 0;
@@ -120,9 +162,9 @@ void escuchar_mensajes_interrupt_kernel(){
 }
 
 /*
-1) ENTRADA/SALIDA
-2) HACER RECURSOS
-3) CONSOLA
+1) ENTRADA/SALIDA (hecho con una sola io)
+2) CONSOLA
+3) HACER RECURSOS (hecho)
 4) QUANTUM DE RR Y VRR (hecho)
 5) HACER VRR E INTERRUPCION DE QUANTUM (hecho)
 6) ELIMINAR PROCESO (TERMINAR LARGO PLAZO) (hecho)

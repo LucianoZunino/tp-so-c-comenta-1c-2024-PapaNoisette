@@ -5,19 +5,31 @@ pthread_mutex_t mutex_PRIORIDAD;
 
 
 
-void escuchar_mensajes_entradasalida_kernel(){
+void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
     bool desconexion_entradasalida_kernel = 0;
+
+	t_interfaz* interfaz = list_get(interfaces, indice_interfaz);
+	int socket = interfaz->socket;
+
+	sem_t* sem_ocupado;
+	sem_init(sem_ocupado, 1, 1);
+
+	// HILO LISTA DE ESPERA
+	pthread_t hilo_lista_espera;
+	pthread_create(hilo_lista_espera, NULL, esperar_entradasalida, (sem_ocupado, indice_interfaz)); // Valgrind?
+	pthread_detach(hilo_lista_espera);
+
 	while(!desconexion_entradasalida_kernel){
-		int cod_op = recibir_operacion(fd_entradasalida); // recv() es bloqueante por ende no queda loopeando infinitamente
+		int cod_op = recibir_operacion(socket); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
 			int pid;
 			case HANDSHAKE_ENTRADASALIDA:
-				aceptar_handshake(logger_kernel, fd_entradasalida, cod_op);
+				aceptar_handshake(logger_kernel, socket, cod_op);
 				break;
 			case FIN_IO:
-				pid = recibir_int(fd_entradasalida);
+				pid = recibir_int(socket);
 				int index = buscar_index_por_pid(BLOCKED, pid);
 				t_pcb* pcb = list_get(BLOCKED, index);
 				list_remove_and_destroy_element(BLOCKED, index, pcb_destruir);
@@ -35,7 +47,7 @@ void escuchar_mensajes_entradasalida_kernel(){
 				}
 				break;
 			case ERROR_IO:
-				t_buffer* buffer = recibir_buffer_completo(fd_entradasalida);
+				t_buffer* buffer = recibir_buffer_completo(socket);
 				pid = extraer_int_del_buffer(buffer);
 
 				index = buscar_index_por_pid(BLOCKED, pid);
@@ -59,4 +71,17 @@ void escuchar_mensajes_entradasalida_kernel(){
 				break;
 			}
 	}
+}
+
+void esperar_entradasalida(sem_t sem_ocupado, int indice){
+
+	t_interfaz* interfaz = list_get(interfaces, indice);
+	sem_wait(&sem_ocupado);
+	sem_wait(&interfaz->sem_espera);
+
+	pthread_mutex_lock(&(interfaz->mutex_interfaz));
+	t_paquete* paquete = list_remove(interfaz->cola_espera, 0);
+	pthread_mutex_unlock(&(interfaz->mutex_interfaz));
+
+	// enviar paquete
 }

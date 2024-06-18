@@ -7,6 +7,8 @@ t_list *PRIORIDAD;
 t_list *BLOCKED;
 t_list *EXIT; 
 // falta running
+t_list *interfaces;
+
 sem_t sem_NEW;
 sem_t sem_READY;
 sem_t sem_MULTIPROGRAMACION;
@@ -120,7 +122,10 @@ void iniciar_semaforos(){
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_EXIT");
         exit(-1);
     }
-
+    if (pthread_mutex_init(&mutex_recursos_disponibles, NULL) != 0) {
+        log_error(logger_kernel, "No se pudo inicializar el mutex_recursos_disponibles");
+        exit(-1);
+    }
 }
 
 
@@ -159,4 +164,34 @@ void iniciar_recursos(){
 
 void finalizar_kernel(){
     log_destroy(logger_kernel);
+    // TODO: Destruir listas, hilos, etc
+}
+
+
+void esperar_clientes(){
+    int i = 1;
+    interfaces = list_create();
+    while(1){
+        char* numero = string_itoa(i);
+        char base[100] = "Int";
+
+        char* nombre = strcat(base, numero);
+        
+        int* socket = malloc(sizeof(int));  //LIBERAR MEMORIA CUANDO SE DESCONECTE IO
+        socket = esperar_cliente(fd_kernel, logger_kernel, nombre);
+
+        t_interfaz* interfaz;
+        interfaz->nombre = nombre;
+        interfaz->socket = &socket;
+        interfaz->cola_espera = list_create();
+        sem_init(interfaz->sem_espera, 1, 0);
+        pthread_mutex_init(&interfaz->mutex_interfaz, NULL);
+
+        list_add(interfaces, interfaz);
+
+        pthread_t hilo_interfaz;
+        pthread_create(hilo_interfaz, NULL, escuchar_mensajes_entradasalida_kernel, i);
+        pthread_detach(hilo_interfaz);
+        i++;                
+    }
 }

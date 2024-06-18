@@ -53,6 +53,7 @@ extern t_list *BLOCKED;
 extern t_pcb *RUNNING;
 extern t_list *EXIT;
 
+extern t_list *interfaces;
 // HILOS MUTEX PARA AGREGAR CON MUTUA EXCLUSION PARA QUE NO HAYA SUPERPOSICION
 // EN LOS PROCESOS QUE COMPARTAN DICHAS COLAS DE ESTADOS.
 extern pthread_mutex_t mutex_NEW;
@@ -61,6 +62,7 @@ extern pthread_mutex_t mutex_PRIORIDAD;
 extern pthread_mutex_t mutex_BLOCKED;
 extern pthread_mutex_t mutex_RUNNING;
 extern pthread_mutex_t mutex_EXIT;
+extern pthread_mutex_t mutex_recursos_disponibles;
 
 // SEMAFOROS DE BINARIOS
 extern sem_t sem_NEW;

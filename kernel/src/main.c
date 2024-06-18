@@ -50,7 +50,10 @@ int main(int argc, char* argv[]){
 
     // Esperar conexion de E/S
     log_info(logger_kernel, "Esperando conexion de Interfaz E/S");
-    fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
+    pthread_t hilo_escucha_io;
+    pthread_create(hilo_escucha_io, NULL, esperar_clientes(), NULL);
+    pthread_detach(hilo_escucha_io);
+//     fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
 
     // HANDSHAKE KERNEL - CPU DISPATCH
     if (realizar_handshake(logger_kernel, fd_cpu_dispatch, HANDSHAKE_KERNEL) == -1){

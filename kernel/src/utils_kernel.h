@@ -20,5 +20,6 @@ void enviar_proceso_cpu(t_pcb *pcb, int socket, op_code op_code);
 int buscar_index_por_pid(t_list* lista, int pid);
 void restar_instancia(char* recurso, t_pcb*);
 void sumar_instancia(char* recurso, t_pcb* pcb);
+int buscar_interfaz(char* nombre);
 
 #endif

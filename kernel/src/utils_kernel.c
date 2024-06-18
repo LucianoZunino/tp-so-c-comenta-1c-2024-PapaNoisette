@@ -1,6 +1,7 @@
 #include "utils_kernel.h"
 
 t_list* recursos_disponibles;
+pthread_mutex_t mutex_recursos_disponibles;
 
 void interrumpir_cpu(t_pcb *pcb, motivo_interrupcion motivo){
     enviar_cpu_interrupt(pcb, motivo, fd_cpu_interrupt);
@@ -136,8 +137,6 @@ void sumar_instancia(char* nombre_recurso, t_pcb* pcb){
 
             t_pcb* nuevo_pcb = queue_pop(recurso->cola_de_espera); // Tomo el primero
 
-            list_remove(recursos_disponibles, index);
-            list_add_in_index(recursos_disponibles, index, &recurso);
 
             if(pcb->quantum != quantum){ // Devuelvo el proceso original a la cola de ready o de prioridad, segun corresponda
                 pthread_mutex_lock(&mutex_PRIORIDAD);
@@ -151,11 +150,36 @@ void sumar_instancia(char* nombre_recurso, t_pcb* pcb){
             // char* nombre = recurso.nombre;
             restar_instancia(recurso->nombre, nuevo_pcb); // Llamo a la funcion para asignarle las instancia al nuevo proceso
 
+            // Sacamos el pcb de la lista de asignados
+            pthread_mutex_lock(&recurso->mutex);
+            int indice_pcb = buscar_index_por_pid(recurso->pcb_asignados, pcb->pid);
+            if (indice_pcb == (-1)){ 
+                log_error(logger_kernel, "NO SE ENCUENTRA EN PCB_ASIGNADOS");
+            }
+            list_remove(recurso->pcb_asignados, indice_pcb);
+            pthread_mutex_unlock(&recurso->mutex);
             
-            index = buscar_index_por_pid(BLOCKED, nuevo_pcb->pid);
+            //
+            int index_pcb = buscar_index_por_pid(BLOCKED, nuevo_pcb->pid);
             pthread_mutex_lock(&mutex_BLOCKED);
-            list_remove(BLOCKED, index);  // Elimino el nuevo proceso de la lista de bloqueados
+            list_remove(BLOCKED, index_pcb);  // Elimino el nuevo proceso de la lista de bloqueados
             pthread_mutex_unlock(&mutex_BLOCKED);
         }
     }
+
+    pthread_mutex_lock(&mutex_recursos_disponibles);
+    list_remove(recursos_disponibles, index);
+    list_add_in_index(recursos_disponibles, index, &recurso);
+    pthread_mutex_unlock(&mutex_recursos_disponibles);
+    }
+
+int buscar_interfaz(char* nombre) {
+    t_interfaz* interfaz;
+    for(int i = 0; i<list_size(interfaces); i++){
+        interfaz = list_get(interfaces, i);
+        if (string_equals_ignore_case(interfaz->nombre, nombre)) {
+            return i;
+        }  
+    }
+    return NULL;
 }

@@ -105,6 +105,19 @@ void eliminar_proceso() {
     pthread_mutex_lock(&mutex_multiprogramacion);
     grado_actual_multiprogramacion--;
     pthread_mutex_unlock(&mutex_multiprogramacion);
+
+    // TODO: Liberar recursos
+    /*
+    typedef struct{
+    char* nombre;
+    int instancias; (actuales)
+    t_queue* cola_de_espera;
+    t_list* pcb_asignados;
+    pthread_mutex_t mutex;
+}t_recurso;
+    */
+    liberar_recursos_de(pcb);
+    
     sem_post(&sem_MULTIPROGRAMACION);
 }
 
@@ -117,3 +130,6 @@ void solicitar_liberar_en_memoria(int pid) {
 }
 
 
+void liberar_recursos_de(t_pcb* pcb) {
+    
+}

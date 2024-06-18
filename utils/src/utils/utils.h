@@ -145,6 +145,16 @@ typedef struct
 	// motivo_interrupcion motivo;
 } t_pcb;
 
+typedef struct
+{
+	char* nombre;
+	int socket;
+	t_list* cola_espera;
+	sem_t* sem_espera;
+	pthread_mutex_t* mutex_interfaz;
+} t_interfaz;
+
+
 typedef enum
 {
 	GENERICA,
