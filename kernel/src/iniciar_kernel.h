@@ -10,5 +10,7 @@ void iniciar_config_kernel();
 void imprimir_config_kernel();
 void iniciar_semaforos();
 void iniciar_recursos();
+void iniciar_colas_estados();
 void finalizar_kernel();
+void esperar_clientes();
 #endif

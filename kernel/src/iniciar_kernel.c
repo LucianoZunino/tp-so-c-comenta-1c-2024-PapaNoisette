@@ -14,6 +14,7 @@ sem_t sem_READY;
 sem_t sem_MULTIPROGRAMACION;
 sem_t sem_desalojo;
 sem_t sem_EXIT;
+sem_t sem_estructuras_inicializadas;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
@@ -126,6 +127,10 @@ void iniciar_semaforos(){
         log_error(logger_kernel, "No se pudo inicializar el mutex_recursos_disponibles");
         exit(-1);
     }
+    if (sem_init(&sem_estructuras_inicializadas, 1, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_estructuras_inicializadas");
+        exit(-1);
+    }
 }
 
 
@@ -171,27 +176,39 @@ void finalizar_kernel(){
 void esperar_clientes(){
     int i = 1;
     interfaces = list_create();
+    printf("ENTRAMOS EN esperar_clientes \n");
     while(1){
+        printf("ENTRAMOS EN EL while(1) de esperar_clientes \n");
         char* numero = string_itoa(i);
         char base[100] = "Int";
 
         char* nombre = strcat(base, numero);
+        printf("Nombre: %s\n", nombre);
         
-        int* socket = malloc(sizeof(int));  //LIBERAR MEMORIA CUANDO SE DESCONECTE IO
+        printf("iteracion: %i, antes de esperar_cliente \n", i);
+        int socket;// = malloc(sizeof(int));  //LIBERAR MEMORIA CUANDO SE DESCONECTE IO
         socket = esperar_cliente(fd_kernel, logger_kernel, nombre);
-
-        t_interfaz* interfaz;
-        interfaz->nombre = nombre;
-        interfaz->socket = &socket;
+        printf("Socket: %i, despues de esperar_cliente \n", socket);
+        if (socket == -1) return;
+        t_interfaz* interfaz = malloc(sizeof(t_interfaz));
+        //memcpy(interfaz->nombre, nombre, 5);
+        printf("Antes del strcpy\n");
+        strcpy(interfaz->nombre, nombre);
+        //interfaz->nombre = nombre;
+    
+        interfaz->socket = socket;
+        printf("Antes de crear el hilo\n");
         interfaz->cola_espera = list_create();
-        sem_init(interfaz->sem_espera, 1, 0);
+        sem_init(&interfaz->sem_espera, 1, 0);
         pthread_mutex_init(&interfaz->mutex_interfaz, NULL);
 
         list_add(interfaces, interfaz);
+        printf("tam interfaces: %i\n", list_size(interfaces));
 
         pthread_t hilo_interfaz;
-        pthread_create(hilo_interfaz, NULL, escuchar_mensajes_entradasalida_kernel, i);
+        pthread_create(&hilo_interfaz, NULL, (void *)(escuchar_mensajes_entradasalida_kernel), (i-1));
         pthread_detach(hilo_interfaz);
-        i++;                
+        i++;      
+        printf("FIN DEL WHILE esperar_clientes \n");          
     }
 }

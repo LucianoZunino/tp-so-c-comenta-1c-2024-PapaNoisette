@@ -7,6 +7,11 @@ void escuchar_mensajes_memoria_kernel(){
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
+			case KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS:
+				// :)
+				printf("nuevo case\n");
+				sem_post(&sem_estructuras_inicializadas);
+				break;
 			case -1:
 				log_error(logger_kernel, "La Memoria se desconecto de Kernel. Terminando servidor.");
 				desconexion_memoria_kernel = 1;

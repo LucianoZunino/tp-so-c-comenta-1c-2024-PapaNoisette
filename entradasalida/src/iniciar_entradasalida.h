@@ -4,7 +4,7 @@
 #include "main.h"
 #include <utils/utils.h>
 
-void iniciar_entradasalida(char* config);
+void iniciar_entradasalida();
 void iniciar_logger_entradasalida();
 void iniciar_config_entradasalida(char* config);
 void iniciar_estructuras();

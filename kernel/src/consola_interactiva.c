@@ -44,9 +44,7 @@ comando_consola validar_entrada(char* codigo){
     return (-1);
 }
 
-char* recibir_path(){
-    return NULL;
-}
+
 
 // (["INICIAR_PROCESO", "path.txt"], 1)
 void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando){

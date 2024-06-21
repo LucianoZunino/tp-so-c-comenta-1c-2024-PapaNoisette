@@ -21,7 +21,7 @@ int main(int argc, char** argv[]){
     decir_hola("una Interfaz de Entrada/Salida");
 
     // Iniciar interfaz I/O
-    iniciar_entradasalida(argv[1]);
+    iniciar_entradasalida(); //argv[1]
     log_info(logger_entradasalida, "Arranca el modulo  Entrada/Salida");
 
     // Se conecta como cliente a MEMORIA

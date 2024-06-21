@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
-#include <utils/hello.h>
+#include "utils/hello.h"
 #include <utils/utils.h>
 #include <semaphore.h>
 #include "iniciar_entradasalida.h"
@@ -29,6 +29,5 @@ extern int fd_kernel;
 
 extern sem_t sem_stdout;
 
-extern t_dictionary* interfaces;
 
 #endif

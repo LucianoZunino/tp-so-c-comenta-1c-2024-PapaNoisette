@@ -1,6 +1,7 @@
 #include "iniciar_memoria.h"
 
 t_config* config_memoria;
+int cantidad_de_marcos;
 t_list* lista_de_miniPcb;
 pthread_mutex_t* mutex_miniPcb;
 t_list *lista_de_tablas_de_paginas_por_proceso;

@@ -110,6 +110,7 @@ int esperar_cliente(int socket_servidor, t_log *logger, char *cliente)
 
 	// Aceptamos un nuevo cliente
 	int socket_cliente = accept(socket_servidor, NULL, NULL);
+	printf("Despues del accept\n");
 	log_info(logger, "Se conecto el cliente: %s\n", cliente);
 
 	return socket_cliente;

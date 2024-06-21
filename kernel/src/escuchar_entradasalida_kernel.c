@@ -2,21 +2,24 @@
 
 
 pthread_mutex_t mutex_PRIORIDAD;
-
+sem_t sem_ocupado;
 
 
 void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
     bool desconexion_entradasalida_kernel = 0;
 
+	printf("Indice interfaz: %i\n", indice_interfaz);
+	printf("Length interfaces: %i\n", list_size(interfaces));
+	if (list_size(interfaces) == 0) return;
 	t_interfaz* interfaz = list_get(interfaces, indice_interfaz);
 	int socket = interfaz->socket;
 
-	sem_t* sem_ocupado;
-	sem_init(sem_ocupado, 1, 1);
+
+	sem_init(&sem_ocupado, 1, 1);
 
 	// HILO LISTA DE ESPERA
 	pthread_t hilo_lista_espera;
-	pthread_create(hilo_lista_espera, NULL, esperar_entradasalida, (sem_ocupado, indice_interfaz)); // Valgrind?
+	pthread_create(&hilo_lista_espera, NULL, esperar_entradasalida, indice_interfaz); // Valgrind?
 	pthread_detach(hilo_lista_espera);
 
 	while(!desconexion_entradasalida_kernel){
@@ -77,7 +80,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 	}
 }
 
-void esperar_entradasalida(sem_t sem_ocupado, int indice){
+void esperar_entradasalida(int indice){
 
 	t_interfaz* interfaz = list_get(interfaces, indice);
 	sem_wait(&sem_ocupado);

@@ -51,7 +51,10 @@ int main(int argc, char* argv[]){
     // Esperar conexion de E/S
     log_info(logger_kernel, "Esperando conexion de Interfaz E/S");
     pthread_t hilo_escucha_io;
-    pthread_create(hilo_escucha_io, NULL, esperar_clientes(), NULL);
+    if (pthread_create(&hilo_escucha_io, NULL, (void *)(esperar_clientes), NULL) == -1){
+        log_error(logger_kernel, "No se pudo crear el hilo de escucha E/S.");
+        return EXIT_FAILURE;
+    }
     pthread_detach(hilo_escucha_io);
 //     fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
 

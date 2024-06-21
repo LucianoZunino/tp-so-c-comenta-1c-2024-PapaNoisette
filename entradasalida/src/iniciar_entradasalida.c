@@ -3,9 +3,9 @@
 t_config* config_entradasalida;
 sem_t sem_stdout;
 
-void iniciar_entradasalida(char* path_config){
+void iniciar_entradasalida(){
     iniciar_logger_entradasalida();
-    iniciar_config_entradasalida(path_config);
+    iniciar_config_entradasalida("entradasalida.config");
     iniciar_estructuras();
     //imprimir_config_entradasalida();
 }
@@ -15,6 +15,7 @@ void iniciar_logger_entradasalida(){
 }
 
 void iniciar_config_entradasalida(char* config){
+    printf("INICIAR CONFIG ENTRADASALIDA /n");
     config_entradasalida = iniciar_config(config);
 
     ip_kernel = config_get_string_value(config_entradasalida, "IP_KERNEL");
@@ -60,8 +61,6 @@ void imprimir_config_entradasalida(){
 
 
 void iniciar_estructuras(){
-    interfaces = dictionary_create();
-
     sem_init(&sem_stdout, 1, 0);
 }
 

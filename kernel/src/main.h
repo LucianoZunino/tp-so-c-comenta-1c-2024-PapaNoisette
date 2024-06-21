@@ -69,6 +69,7 @@ extern sem_t sem_NEW;
 extern sem_t sem_EXEC;
 extern sem_t sem_READY;
 extern sem_t sem_EXIT;
+extern sem_t sem_estructuras_inicializadas;
 
 extern sem_t sem_MULTIPROGRAMACION;
 extern sem_t sem_desalojo;

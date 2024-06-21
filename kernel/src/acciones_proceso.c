@@ -38,15 +38,17 @@ void crear_proceso(char* path){
     enviar_proceso_por_paquete(nuevo_pcb, path, fd_memoria, MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS);
     // printf("Crear proceso\n");
 
-    // /* TEST
-    op_code codigo_operacion = recibir_operacion(fd_memoria);
-    if(codigo_operacion != KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS)
-    {
-        log_error(logger_kernel, "PID %i - No se pudo inicializar estructuras", nuevo_pcb->pid);
-        return;
-    }
-    // Hace falta? 
-    recibir_ok (fd_memoria);
+
+    // op_code codigo_operacion = recibir_operacion(fd_memoria);
+    // if(codigo_operacion != KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS)
+    // {
+    //     log_error(logger_kernel, "PID %i - No se pudo inicializar estructuras", nuevo_pcb->pid);
+    //     return;
+    // }
+    // // Hace falta? 
+    // recibir_ok (fd_memoria);
+    
+    sem_wait(&sem_estructuras_inicializadas);
 
     //TEST */
 

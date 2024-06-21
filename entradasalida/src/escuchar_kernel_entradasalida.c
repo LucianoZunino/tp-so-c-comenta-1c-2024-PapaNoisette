@@ -1,10 +1,10 @@
 #include "escuchar_kernel_entradasalida.h"
 #include <readline/readline.h>
 
-t_dictionary* interfaces;
 
 
 void escuchar_instrucciones_generica(){
+	printf("escuchar1\n");
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
@@ -43,6 +43,7 @@ void escuchar_instrucciones_generica(){
 
 
 void escuchar_instrucciones_stdin(){
+	printf("escuchar2\n");
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
@@ -86,13 +87,15 @@ void escuchar_instrucciones_stdin(){
 }
 
 void escuchar_instrucciones_stdout(){
+	printf("escuchar3\n");
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
-			t_buffer* buffer;
+			t_buffer* buffer = crear_buffer();
 			int pid;
 			case IO_STDOUT_WRITE_FS:
+				printf("a\n");
 				buffer = recibir_buffer_completo(fd_kernel);
 				
 				pid = extraer_int_del_buffer(buffer);
@@ -107,12 +110,20 @@ void escuchar_instrucciones_stdout(){
 
 				destruir_buffer(buffer);
 				break;
+				
+			case -1:
+				log_error(logger_entradasalida, "El Kernel se desconecto de E/S.\n");
+				desconexion_kernel_entradasalida = 1;
+				break;
+
 			default: // La instruccion es incorrecta
+				printf("b\n");
 				buffer = recibir_buffer_completo(fd_kernel);
+				printf("c\n");
 				int process_id = extraer_int_del_buffer(buffer);
 				free(buffer);
 
-				buffer = crear_buffer();
+				//buffer = crear_buffer();
 				cargar_int_al_buffer(buffer, process_id);
 
 				t_paquete* paquete = crear_paquete(ERROR_IO, buffer);

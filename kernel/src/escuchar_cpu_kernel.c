@@ -59,7 +59,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				list_add(interfaz->cola_espera, paquete);
 				pthread_mutex_unlock(&interfaz->mutex_interfaz);
 				
-				sem_post(interfaz->sem_espera);
+				sem_post(&interfaz->sem_espera);
 
 				break;
 			
@@ -88,7 +88,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				list_add(interfaz->cola_espera, paquete);
 				pthread_mutex_unlock(&interfaz->mutex_interfaz);
 				
-				sem_post(interfaz->sem_espera);
+				sem_post(&interfaz->sem_espera);
 				
 				sem_post(&sem_desalojo);
 				bloquear_proceso(pcb);
@@ -120,7 +120,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				list_add(interfaz->cola_espera, paquete);
 				pthread_mutex_unlock(&interfaz->mutex_interfaz);
 				
-				sem_post(interfaz->sem_espera);
+				sem_post(&interfaz->sem_espera);
 				
 				sem_post(&sem_desalojo);
 				bloquear_proceso(pcb);
