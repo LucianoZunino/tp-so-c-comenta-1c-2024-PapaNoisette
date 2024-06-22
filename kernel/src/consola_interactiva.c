@@ -1,5 +1,9 @@
 #include "consola_interactiva.h"
 
+bool flag_planificacion_detenido;
+//sem_t sem_planificador_LP_detenido;
+//sem_t sem_planificador_CP_detenido;
+
 char** comando_consola_desc[9] = {"EJECUTAR_SCRIPT", "INICIAR_PROCESO", "FINALIZAR_PROCESO", "INICIAR_PLANIFICACION", "DETENER_PLANIFICACION",
 							      "PROCESO_ESTADO", "MULTIPROGRAMACION", "MENSAJE_A_MEMORIA1", "COMANDO_INVALIDO"};
 
@@ -57,6 +61,14 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
         
         case EJECUTAR_SCRIPT:
             log_info(logger_kernel,"HOLA ENTRASTE A EJECUTAR SCRIPT\n");
+            char* path = comando_desde_consola[1];
+            int* contador = 0;
+            char** comandos_de_script[100];
+            abrir_archivo(comandos_de_script, path, contador);
+            
+            for(int i = 0; i<contador ; i++){
+                ejecutar_instruccion(comandos_de_script[i], validar_entrada(comandos_de_script[i][0]));
+            }
             break;
         
 
@@ -80,11 +92,21 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
 
         case INICIAR_PLANIFICACION:
             log_info(logger_kernel, "HOLA ENTRASTE A I.PLANI");
+            if(flag_planificacion_detenido){
+                
+                sem_post(&sem_planificador_LP_detenido);
+                sem_post(&sem_planificador_CP_detenido);
+                flag_planificacion_detenido = false;
+            }
             break;
         
 
         case DETENER_PLANIFICACION:
             log_info(logger_kernel, "HOLA ENTRASTE A D.PLANI");
+            if(!flag_planificacion_detenido){
+                flag_planificacion_detenido = true;
+                
+            }
             break;
         
 
@@ -113,4 +135,24 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
     }
 
 
+}
+
+void abrir_archivo(char** comandos_de_script[],char* path, int* j){
+
+    FILE* archivo = fopen(path, "r+");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo %s\n", path);
+        return 1;
+    }
+    int i = 0;
+    
+    while(!feof(archivo)){
+        char* linea;
+        fgets(linea, 100, archivo);
+        char** comando = string_split(linea, " ");
+        memcpy(comandos_de_script[i], comando, string_length(comando) + 1);
+        i++;
+    }
+    j = i;
 }

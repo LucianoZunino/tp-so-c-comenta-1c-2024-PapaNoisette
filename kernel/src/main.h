@@ -39,6 +39,7 @@ extern int fd_memoria;
 extern int fd_entradasalida;
 
 extern int grado_actual_multiprogramacion;
+extern bool flag_planificacion_detenido;
 
 // HILO PARA EL NEXT_PID
 extern uint32_t next_pid; //creo que falta inicializar
@@ -70,6 +71,8 @@ extern sem_t sem_EXEC;
 extern sem_t sem_READY;
 extern sem_t sem_EXIT;
 extern sem_t sem_estructuras_inicializadas;
+extern sem_t sem_planificador_LP_detenido;
+extern sem_t sem_planificador_CP_detenido;
 
 extern sem_t sem_MULTIPROGRAMACION;
 extern sem_t sem_desalojo;

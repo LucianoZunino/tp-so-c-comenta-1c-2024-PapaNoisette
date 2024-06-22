@@ -9,9 +9,15 @@ void planificador_largo_plazo() {
     pthread_detach(hilo_exit);
     
     while (true){
+
+
         sem_wait(&sem_NEW);
 
         sem_wait(&sem_MULTIPROGRAMACION); // cuando un estado sale de BLOCKED, READY o RUNNING, hace un signal de este semáforo
+
+        if(flag_planificacion_detenido){
+            sem_wait(&sem_planificador_LP_detenido);
+        }
 
         pthread_mutex_lock(&mutex_NEW);
         t_pcb *new_pcb = list_remove(NEW, 0);

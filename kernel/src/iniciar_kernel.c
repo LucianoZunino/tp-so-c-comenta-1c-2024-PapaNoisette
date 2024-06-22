@@ -9,12 +9,16 @@ t_list *EXIT;
 // falta running
 t_list *interfaces;
 
+bool flag_planificacion;
+
 sem_t sem_NEW;
 sem_t sem_READY;
 sem_t sem_MULTIPROGRAMACION;
 sem_t sem_desalojo;
 sem_t sem_EXIT;
 sem_t sem_estructuras_inicializadas;
+sem_t sem_planificador_LP_detenido;
+sem_t sem_planificador_CP_detenido;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
@@ -131,6 +135,14 @@ void iniciar_semaforos(){
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_estructuras_inicializadas");
         exit(-1);
     }
+    if (sem_init(&sem_planificador_LP_detenido, 1, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_planificador_LP_detenido");
+        exit(-1);
+    }
+    if (sem_init(&sem_planificador_CP_detenido, 1, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_planificador_CP_detenido");
+        exit(-1);
+    }
 }
 
 
@@ -164,6 +176,8 @@ void iniciar_recursos(){
 
         list_add(recursos_disponibles, nuevo_recurso);
     }
+
+    flag_planificacion_detenido = 0;
 }
 
 

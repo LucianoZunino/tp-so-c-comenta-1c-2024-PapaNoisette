@@ -13,6 +13,9 @@ void planificador_corto_plazo(){
         sem_wait(&sem_READY);
         sem_wait(&sem_EXEC); // sem_signal deberia estar en EXEC (cpu) y que avise cuando desaloja el proceso en ejecucion
 
+        if(flag_planificacion_detenido){
+            sem_wait(&sem_planificador_CP_detenido);
+        }
 
         if(string_equals_ignore_case(algoritmo_planificacion,"RR") || string_equals_ignore_case(algoritmo_planificacion, "FIFO")){
             pthread_mutex_lock(&mutex_READY);
