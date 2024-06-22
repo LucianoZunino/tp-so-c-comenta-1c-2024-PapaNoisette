@@ -62,9 +62,9 @@ int main(int argc, char* argv[]){
 	pthread_detach(hilo_kernel_interrupt); // Hace que el hilo se desacople del principal y se ejecute en paralelo
 
 	// Escuchar los mensajes de Memoria-CPU
-	pthread_t hilo_memoria_cpu;
-	pthread_create(&hilo_memoria_cpu, NULL, (void*)escuchar_mensajes_memoria_cpu, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
-	pthread_join(hilo_memoria_cpu, NULL); // Frena el hilo principal hasta que el hilo_memoria_cpu no finalice
+	//pthread_t hilo_memoria_cpu;
+	//pthread_create(&hilo_memoria_cpu, NULL, (void*)escuchar_mensajes_memoria_cpu, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
+	//pthread_join(hilo_memoria_cpu, NULL); // Frena el hilo principal hasta que el hilo_memoria_cpu no finalice
 	// Porque si se el hilo_memoria_cpu se desacopla del principal termina el modulo CPU
 	
 	

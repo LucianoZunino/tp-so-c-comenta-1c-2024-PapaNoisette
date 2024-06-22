@@ -417,7 +417,7 @@ void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tam
    int tamanio = get_registro(reg_tamanio);
 
    t_buffer *buffer = crear_buffer();
-   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_TRUNCATE, buffer_a_enviar);
+   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_TRUNCATE, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_int_al_buffer(paquete->buffer, tamanio);
@@ -438,7 +438,7 @@ void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direcc
    int puntero_archivo = get_registro(reg_puntero_archivo);
 
    t_buffer *buffer = crear_buffer();
-   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_WRITE, buffer_a_enviar);
+   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_WRITE, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);

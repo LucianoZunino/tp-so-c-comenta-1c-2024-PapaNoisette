@@ -1645,3 +1645,10 @@
 [INFO] 01:32:43:227 cpu/(50192:50192): Handshake OK
 [INFO] 01:32:43:227 cpu/(50192:50192): Esperando conexion de Kernel en Dispatch
 >>>>>>> Stashed changes
+[INFO] 18:14:56:832 cpu/(54726:54726): Arranca el modulo CPU
+[INFO] 18:14:56:954 cpu/(54726:54726): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 18:14:56:955 cpu/(54726:54726): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 18:14:56:955 cpu/(54726:54726): Error conectando al Servidor,apagado o invalido
+[INFO] 18:14:56:963 cpu/(54726:54726): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 18:14:56:963 cpu/(54726:54726): Handshake OK
+[INFO] 18:14:56:963 cpu/(54726:54726): Esperando conexion de Kernel en Dispatch

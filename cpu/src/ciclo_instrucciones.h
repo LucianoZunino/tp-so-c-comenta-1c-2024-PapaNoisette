@@ -31,8 +31,7 @@ typedef enum {
     EXIT
 } t_instruction_code;
 
-int ciclo_de_instruccion(t_pcb *proceso);
-void devolver_contexto_ejecucion(t_pcb *proceso);//recibe pid?
+int ciclo_de_instruccion();
 
 //void imprimir_contexto_actual();
 

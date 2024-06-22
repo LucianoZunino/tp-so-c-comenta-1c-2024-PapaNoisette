@@ -1,5 +1,6 @@
 #include "escuchar_memoria_cpu.h"
 
+/*
 void escuchar_mensajes_memoria_cpu(){
     bool desconexion_memoria_cpu= 0;
 	while(!desconexion_memoria_cpu){
@@ -11,10 +12,8 @@ void escuchar_mensajes_memoria_cpu(){
 			case RESIZE_OK:
 
 			break;
-			case OUT_OF_MEMORY:
-				//EXEC->motivo=PROCESO_OUT_OF_MEMORY; creo se manda en un int abajo
-				devolver_contexto_ejecucion(EXEC);
-			break;
+			
+			
 				log_error(logger_cpu, "La Memoria se desconecto de CPU. Terminando servidor.");
 				desconexion_memoria_cpu = 1;
 				break;
@@ -23,4 +22,4 @@ void escuchar_mensajes_memoria_cpu(){
 				break;
 			}
 	}
-}
+}*/
