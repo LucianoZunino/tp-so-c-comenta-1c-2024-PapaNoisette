@@ -27,5 +27,5 @@ void agregar_entrada_tlb(t_entrada_tlb *entrada);//OK TEST
 int buscar_marco_tlb(int pid, int dir_logica);
 int obtener_marco_en_memoria(int pid, int pagina);
 
-
+int traducir_direccion_logica(int dir_logica);
 #endif

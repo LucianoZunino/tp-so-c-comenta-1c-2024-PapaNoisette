@@ -49,17 +49,23 @@ typedef enum
 	MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS,
 	LIBERAR_PROCESO_EN_MEMORIA,		 // EN ELIMINAR PROCESO KERNEL -> SOLICITA A MEMORIA LIBERAR MEMORIA DE DICHO PID
 	// KERNEL-CPU
-	IO_GEN_SLEEP_FS,				// le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
-	IO_STDIN_READ_FS,
-	IO_STDOUT_WRITE_FS,
-	CONTEXTO_EJECUCION,				// cpu-> KERNEL por dipatch
+	KERNEL_IO_GEN_SLEEP_FS,				// le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
+	KERNEL_IO_STDIN_READ,
+	KERNEL_IO_STDOUT_WRITE,
+	KERNEL_IO_FS_CREATE,
+	KERNEL_IO_FS_DELETE,
+	KERNEL_IO_FS_TRUNCATE,
+	KERNEL_IO_FS_WRITE,
+	KERNEL_IO_FS_READ,
+	KERNEL_EXIT,
+	//CONTEXTO_EJECUCION,				// cpu-> KERNEL por dipatch
 	KERNEL_ENVIA_PROCESO,			// KERNEL -> CPU por dispatch
 	CPU_INTERRUPT,
 	KERNEL_WAIT,   					// cpu-> KERNEL por dipatch
 	KERNEL_SIGNAL, 					// cpu-> KERNEL por dipatch
 	// CPU-MEMORIA
-	CPU_SOLICITA_INSTRUCCION,  // cpu->memoria DISPATCH
-	MEMORIA_ENVIA_INSTRUCCION,	    // memoria->cpu DISPATCH
+	CPU_SOLICITA_INSTRUCCION,  // cpu->memoria 
+	MEMORIA_ENVIA_INSTRUCCION,	    // memoria->cpu 
 	MEMORIA_RESIZE,				    // cpu-> MEMORIA//mano pid y new_size
 	RESIZE_OK,					    // memoria ->cpu
 	OUT_OF_MEMORY,				    // memoria ->cpu
@@ -68,6 +74,11 @@ typedef enum
 	CPU_CONSULTA_FRAME,			    // cpu<-> MEMORIA cuando hay tlb miss
 	CPU_CONSULTA_TAM_PAGINA,	    // cpu<-> MEMORIA por que es un dato que no viene en el cpu.config y lo necesito
 	INTERRUPCION,
+	MEMORIA_MOV_OUT,
+	MEMORIA_MOV_IN,
+	COPY_STRING_LEER, // cpu-> MEMORIA solicito la info en la dir fisica
+	COPY_STRING_LEER_RESPUESTA,//memoria->cpu ,memoria me devuelve lo solicitado
+	COPY_STRING_ESCRIBIR, // cpu-> MEMORIA , le vuelvo a enviar la info recortada
 	// IO-KERNEL
 	FIN_IO,							// IO -> KERNEL
 	ERROR_IO 						// CUANDO IO NO CONTIENE FUNCION EN LA INTERFAZ, KERNEL MADNA A EXIT AL PROCESO

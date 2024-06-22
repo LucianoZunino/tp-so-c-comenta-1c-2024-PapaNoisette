@@ -1425,6 +1425,7 @@
 [ERROR] 05:16:49:689 cpu/(95575:95575): Error conectando al Servidor,apagado o invalido
 [INFO] 05:16:49:689 cpu/(95575:95575): >>>CPU se conecta al server MEMORIA
 [INFO] 05:16:49:690 cpu/(95575:95575): Handshake OK
+<<<<<<< Updated upstream
 [INFO] 13:29:10:604 cpu/(3829:3829): Arranca el modulo CPU
 [INFO] 13:29:10:604 cpu/(3829:3829): >>> Server CPU-Dispatch iniciado <<<
 [INFO] 13:29:10:604 cpu/(3829:3829): >>> Server CPU-Interrupt iniciado <<<
@@ -1522,3 +1523,125 @@
 [INFO] 15:48:08:216 cpu/(36817:37060): Recibido handshake HANDSHAKE_KERNEL.
 [INFO] 15:48:08:217 cpu/(36817:37061): Recibido handshake HANDSHAKE_KERNEL.
 [INFO] 15:48:15:173 cpu/(36817:37060): Ejecutando FETCH PID: 0 Program Counter: 0
+=======
+[INFO] 00:36:31:295 cpu/(4924:4924): Arranca el modulo CPU
+[INFO] 00:36:31:298 cpu/(4924:4924): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 00:36:31:299 cpu/(4924:4924): >>> Server CPU-Interrupt escuchando... <<<
+[ERROR] 00:36:31:299 cpu/(4924:4924): Error conectando al Servidor,apagado o invalido
+[INFO] 00:36:31:299 cpu/(4924:4924): >>>CPU se conecta al server MEMORIA
+[INFO] 00:36:31:300 cpu/(4924:4924): Handshake OK
+[INFO] 21:53:55:930 cpu/(7071:7071): Arranca el modulo CPU
+[INFO] 21:53:55:963 cpu/(7071:7071): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 21:53:55:964 cpu/(7071:7071): >>> Server CPU-Interrupt escuchando... <<<
+[ERROR] 21:53:55:964 cpu/(7071:7071): Error conectando al Servidor,apagado o invalido
+[INFO] 21:53:55:964 cpu/(7071:7071): >>>CPU se conecta al server MEMORIA
+[INFO] 21:53:55:964 cpu/(7071:7071): Handshake OK
+[INFO] 21:55:02:998 cpu/(7277:7277): Arranca el modulo CPU
+[INFO] 21:55:03:008 cpu/(7277:7277): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 21:55:03:010 cpu/(7277:7277): >>> Server CPU-Interrupt escuchando... <<<
+[ERROR] 21:55:03:012 cpu/(7277:7277): Error conectando al Servidor,apagado o invalido
+[INFO] 21:55:03:014 cpu/(7277:7277): >>>CPU se conecta al server MEMORIA
+[INFO] 21:55:03:014 cpu/(7277:7277): Handshake OK
+[INFO] 21:55:18:574 cpu/(7497:7497): Arranca el modulo CPU
+[INFO] 21:55:18:581 cpu/(7497:7497): >>> Server CPU-Dispatch escuchando... <<<
+[INFO] 21:55:18:581 cpu/(7497:7497): >>> Server CPU-Interrupt escuchando... <<<
+[ERROR] 21:55:18:584 cpu/(7497:7497): Error conectando al Servidor,apagado o invalido
+[INFO] 21:55:18:584 cpu/(7497:7497): >>>CPU se conecta al server MEMORIA
+[INFO] 21:55:18:584 cpu/(7497:7497): Handshake OK
+[INFO] 22:03:41:482 cpu/(8113:8113): Arranca el modulo CPU
+[INFO] 22:03:41:484 cpu/(8113:8113): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:03:41:488 cpu/(8113:8113): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:03:41:489 cpu/(8113:8113): Error conectando al Servidor,apagado o invalido
+[INFO] 22:03:41:489 cpu/(8113:8113): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:03:41:489 cpu/(8113:8113): Handshake OK
+[INFO] 22:04:37:610 cpu/(8369:8369): Arranca el modulo CPU
+[INFO] 22:04:37:612 cpu/(8369:8369): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:04:37:613 cpu/(8369:8369): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:04:37:614 cpu/(8369:8369): Error conectando al Servidor,apagado o invalido
+[INFO] 22:04:37:617 cpu/(8369:8369): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:04:37:617 cpu/(8369:8369): Handshake OK
+[INFO] 22:05:44:205 cpu/(8716:8716): Arranca el modulo CPU
+[INFO] 22:05:44:207 cpu/(8716:8716): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:05:44:212 cpu/(8716:8716): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:05:44:212 cpu/(8716:8716): Error conectando al Servidor,apagado o invalido
+[INFO] 22:05:44:212 cpu/(8716:8716): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:05:44:213 cpu/(8716:8716): Handshake OK
+[INFO] 22:06:02:188 cpu/(8851:8851): Arranca el modulo CPU
+[INFO] 22:06:02:188 cpu/(8851:8851): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:06:02:189 cpu/(8851:8851): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:06:02:191 cpu/(8851:8851): Error conectando al Servidor,apagado o invalido
+[INFO] 22:06:02:191 cpu/(8851:8851): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:06:02:191 cpu/(8851:8851): Handshake OK
+[INFO] 22:08:05:747 cpu/(9157:9157): Arranca el modulo CPU
+[INFO] 22:08:05:749 cpu/(9157:9157): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:08:05:750 cpu/(9157:9157): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:08:05:750 cpu/(9157:9157): Error conectando al Servidor,apagado o invalido
+[INFO] 22:08:05:752 cpu/(9157:9157): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:08:05:752 cpu/(9157:9157): Handshake OK
+[INFO] 22:08:25:769 cpu/(9352:9352): Arranca el modulo CPU
+[INFO] 22:08:25:771 cpu/(9352:9352): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:08:25:774 cpu/(9352:9352): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:08:25:781 cpu/(9352:9352): Error conectando al Servidor,apagado o invalido
+[INFO] 22:08:25:781 cpu/(9352:9352): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:08:25:781 cpu/(9352:9352): Handshake OK
+[INFO] 22:09:37:163 cpu/(9763:9763): Arranca el modulo CPU
+[INFO] 22:09:37:168 cpu/(9763:9763): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:09:37:170 cpu/(9763:9763): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:09:37:170 cpu/(9763:9763): Error conectando al Servidor,apagado o invalido
+[INFO] 22:09:37:170 cpu/(9763:9763): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:09:37:171 cpu/(9763:9763): Handshake OK
+[INFO] 22:13:48:459 cpu/(10220:10220): Arranca el modulo CPU
+[INFO] 22:13:48:461 cpu/(10220:10220): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:13:48:462 cpu/(10220:10220): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:13:48:465 cpu/(10220:10220): Error conectando al Servidor,apagado o invalido
+[INFO] 22:13:48:467 cpu/(10220:10220): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:14:05:591 cpu/(10402:10402): Arranca el modulo CPU
+[INFO] 22:14:05:603 cpu/(10402:10402): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:14:05:604 cpu/(10402:10402): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 22:14:05:604 cpu/(10402:10402): Error conectando al Servidor,apagado o invalido
+[INFO] 22:14:05:604 cpu/(10402:10402): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 00:35:58:054 cpu/(10995:10995): Arranca el modulo CPU
+[INFO] 00:35:58:058 cpu/(10995:10995): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 00:35:58:059 cpu/(10995:10995): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 00:35:58:061 cpu/(10995:10995): Error conectando al Servidor,apagado o invalido
+[INFO] 00:35:58:063 cpu/(10995:10995): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 00:42:18:824 cpu/(11284:11284): Arranca el modulo CPU
+[INFO] 00:42:18:828 cpu/(11284:11284): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 00:42:18:830 cpu/(11284:11284): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 00:42:18:831 cpu/(11284:11284): Error conectando al Servidor,apagado o invalido
+[INFO] 00:42:18:831 cpu/(11284:11284): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 00:42:35:818 cpu/(11387:11387): Arranca el modulo CPU
+[INFO] 00:42:35:820 cpu/(11387:11387): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 00:42:35:821 cpu/(11387:11387): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 00:42:35:821 cpu/(11387:11387): Error conectando al Servidor,apagado o invalido
+[INFO] 00:42:35:821 cpu/(11387:11387): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 00:43:41:727 cpu/(11491:11491): Arranca el modulo CPU
+[INFO] 00:43:41:730 cpu/(11491:11491): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 00:43:41:730 cpu/(11491:11491): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 00:43:41:731 cpu/(11491:11491): Error conectando al Servidor,apagado o invalido
+[INFO] 00:43:41:731 cpu/(11491:11491): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 00:45:12:791 cpu/(11643:11643): Arranca el modulo CPU
+[INFO] 00:45:12:798 cpu/(11643:11643): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 00:45:12:809 cpu/(11643:11643): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 00:45:12:812 cpu/(11643:11643): Error conectando al Servidor,apagado o invalido
+[INFO] 00:45:12:812 cpu/(11643:11643): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 20:01:51:662 cpu/(22058:22058): Arranca el modulo CPU
+[INFO] 20:01:51:697 cpu/(22058:22058): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 20:01:51:698 cpu/(22058:22058): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 20:01:51:698 cpu/(22058:22058): Error conectando al Servidor,apagado o invalido
+[INFO] 20:01:51:699 cpu/(22058:22058): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 20:06:55:467 cpu/(22711:22711): Arranca el modulo CPU
+[INFO] 20:06:55:468 cpu/(22711:22711): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 20:06:55:469 cpu/(22711:22711): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 20:06:55:470 cpu/(22711:22711): Error conectando al Servidor,apagado o invalido
+[INFO] 20:06:55:470 cpu/(22711:22711): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 20:06:55:470 cpu/(22711:22711): Handshake OK
+[INFO] 20:06:55:474 cpu/(22711:22711): Esperando conexion de Kernel en Dispatch
+[INFO] 01:32:43:190 cpu/(50192:50192): Arranca el modulo CPU
+[INFO] 01:32:43:225 cpu/(50192:50192): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 01:32:43:226 cpu/(50192:50192): >>> Server CPU-Interrupt iniciado <<<
+[ERROR] 01:32:43:226 cpu/(50192:50192): Error conectando al Servidor,apagado o invalido
+[INFO] 01:32:43:226 cpu/(50192:50192): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 01:32:43:227 cpu/(50192:50192): Handshake OK
+[INFO] 01:32:43:227 cpu/(50192:50192): Esperando conexion de Kernel en Dispatch
+>>>>>>> Stashed changes

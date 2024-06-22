@@ -14,18 +14,23 @@
 #include "utils/mensajes.h"
 
 
-void ejecutar_set(char *registro,char* valor,t_pcb *proceso);
-void ejecutar_mov_in(char* datos,char * direccion,t_pcb *proceso);
-void ejecutar_mov_out(char* direccion,char * datos,t_pcb *proceso);
-void ejecutar_sum(char*registro_destino,char *registro_origen,t_pcb *proceso);
-void ejecutar_sub(char*registro_destino,char *registro_origen,t_pcb *proceso);
-void ejecutar_jnz(char*registro,char *numero_instruccion,t_pcb *proceso);
-int  ejecutar_resize(char* tamanio,t_pcb *proceso);
-void ejecutar_copy_string(char* tamanio,t_pcb *proceso);
-void ejecutar_wait(char* recurso,t_pcb *proceso);
-void ejecutar_signal(char* recurso,t_pcb *proceso);
-void ejecutar_io_gen_sleep(char* interfaz,char * unidades_de_trabajo,t_pcb *proceso);
-void ejecutar_io_stdin_read(char* interfaz,char * direccion, char * tamanio,t_pcb *proceso);
-void ejecutar_io_stdout_write(char* interfaz,char * direccion, char * tamanio,t_pcb *proceso);
+void ejecutar_set(char *registro,char* valor);
+void ejecutar_mov_in(char* datos,char * direccion);
+void ejecutar_mov_out(char* direccion,char * datos);
+void ejecutar_sum(char*registro_destino,char *registro_origen);
+void ejecutar_sub(char*registro_destino,char *registro_origen);
+void ejecutar_jnz(char*registro,char *numero_instruccion);
+int  ejecutar_resize(char* tamanio);
+void ejecutar_copy_string(char* tamanio);
+void ejecutar_wait(char* recurso);
+void ejecutar_signal(char* recurso);
+void ejecutar_io_gen_sleep(char* interfaz,char * unidades_de_trabajo);
+void ejecutar_io_stdin_read(char* interfaz,char * dir_logica, char * tamanio);
+void ejecutar_io_stdout_write(char* interfaz,char * dir_logica, char * tamanio);
+void ejecutar_io_fs_create(char *interfaz, char *nombre_archivo);
+void ejecutar_io_fs_delete(char *interfaz, char *nombre_archivo);
+void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tamanio);
+void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo);
+void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo);
 
 #endif

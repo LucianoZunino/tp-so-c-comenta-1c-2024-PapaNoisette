@@ -2,336 +2,484 @@
 #include "instrucciones.h"
 
 
-void ejecutar_set(char *registro,char* valor,t_pcb *proceso)
-    {
-        if (strcmp(registro, "AX") == 0)
-        {
-       proceso->registros_cpu->AX=atoi(valor);        
-        }
-        else if (strcmp(registro, "BX") == 0)
-        {
-       proceso->registros_cpu->BX=atoi(valor);        
-        }
-        else if (strcmp(registro, "CX") == 0)
-        {
-       proceso->registros_cpu->CX=atoi(valor);        
-        }
-        else if (strcmp(registro, "DX") == 0)
-        {
-       proceso->registros_cpu->DX=atoi(valor);        
-        }
-        else if (strcmp(registro, "EAX") == 0)
-        {
-       proceso->registros_cpu->EAX=atoi(valor);        
-        }
-        else if (strcmp(registro, "EBX") == 0)
-        {
-       proceso->registros_cpu->EBX=atoi(valor);        
-        }
-        else if (strcmp(registro, "ECX") == 0)
-        {
-      proceso->registros_cpu->ECX=atoi(valor);        
-        }
-        else if (strcmp(registro, "EDX") == 0)
-        {
-       proceso->registros_cpu->EDX=atoi(valor);        
-        }
-        else if (strcmp(registro, "SI") == 0)
-        {
-       proceso->registros_cpu->SI=atoi(valor);        
-        }
-        else if (strcmp(registro, "DI") == 0)
-        {
-       proceso->registros_cpu->DI=atoi(valor);        
-        }
-        else if (strcmp(registro, "PC") == 0)
-        {
-       proceso->registros_cpu->PROGRAM_COUNTER=atoi(valor);        
-        }
-        else
-        {
-            log_error(logger_cpu, "El argumento de la instrucción SET es incorrecto");
-        }
-    }
+long int get_registro(char *registro)
+{
 
-void ejecutar_sum(char*registro_destino,char *registro_origen,t_pcb *proceso)
-    {
-         int sum =atoi(registro_destino)+atoi(registro_origen);
-        printf ("sum: %d\n",sum);
-        if (strcmp(registro_destino, "AX") == 0)
-        {
-           proceso->registros_cpu->AX=sum;
-        }
-        else if (strcmp(registro_destino, "BX") == 0)
-        {
-           proceso->registros_cpu->BX=sum;
-        }
-        else if (strcmp(registro_destino, "CX") == 0)
-        {
-           proceso->registros_cpu->CX=sum;
-        }
-        else if (strcmp(registro_destino, "DX") == 0)
-        {
-           proceso->registros_cpu->DX=sum;
-        }
-        else if (strcmp(registro_destino, "EAX") == 0)
-        {
-           proceso->registros_cpu->EAX=sum;
-        }
-        else if (strcmp(registro_destino, "EBX") == 0)
-        {
-           proceso->registros_cpu->EBX=sum;
-        }
-        else if (strcmp(registro_destino, "ECX") == 0)
-        {
-           proceso->registros_cpu->ECX=sum;
-        }
-        else if (strcmp(registro_destino, "EDX") == 0)
-        {
-           proceso->registros_cpu->EDX=sum;
-        }
-        else if (strcmp(registro_destino, "SI") == 0)
-        {
-           proceso->registros_cpu->SI=sum;
-        }
-        else if (strcmp(registro_destino, "DI") == 0)
-        {
-           proceso->registros_cpu->DI=sum;
-        }
-        else if (strcmp(registro_destino, "PROGRAM_COUNTER") == 0)
-        {
-       proceso->registros_cpu->PROGRAM_COUNTER=sum;        
-        }
-        else
-        {
-            log_error(logger_cpu, "El argumento de la instrucción SUM es incorrecto");
-        }
-    }
-void ejecutar_sub(char*registro_destino,char *registro_origen,t_pcb *proceso)
-    {
-         int sum =atoi(registro_destino)-atoi(registro_origen);
-        printf ("sub: %d\n",sum);
-        if (strcmp(registro_destino, "AX") == 0)
-        {
-           proceso->registros_cpu->AX=sum;
-        }
-        else if (strcmp(registro_destino, "BX") == 0)
-        {
-           proceso->registros_cpu->BX=sum;
-        }
-        else if (strcmp(registro_destino, "CX") == 0)
-        {
-           proceso->registros_cpu->CX=sum;
-        }
-        else if (strcmp(registro_destino, "DX") == 0)
-        {
-           proceso->registros_cpu->DX=sum;
-        }
-        else if (strcmp(registro_destino, "EAX") == 0)
-        {
-           proceso->registros_cpu->EAX=sum;
-        }
-        else if (strcmp(registro_destino, "EBX") == 0)
-        {
-           proceso->registros_cpu->EBX=sum;
-        }
-        else if (strcmp(registro_destino, "ECX") == 0)
-        {
-           proceso->registros_cpu->ECX=sum;
-        }
-        else if (strcmp(registro_destino, "EDX") == 0)
-        {
-           proceso->registros_cpu->EDX=sum;
-        }
-        else if (strcmp(registro_destino, "SI") == 0)
-        {
-           proceso->registros_cpu->SI=sum;
-        }
-        else if (strcmp(registro_destino, "DI") == 0)
-        {
-           proceso->registros_cpu->DI=sum;
-        }
-        else if (strcmp(registro_destino, "PROGRAM_COUNTER") == 0)
-        {
-       proceso->registros_cpu->PROGRAM_COUNTER=sum;        
-        }
-        else
-        {
-            log_error(logger_cpu, "El argumento de la instrucción SUM es incorrecto");
-        }
-    }
-void ejecutar_jnz(char*registro,char *numero_instruccion,t_pcb *proceso){
-
-        if (strcmp(registro, "AX") == 0 && proceso->registros_cpu->AX !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion); 
-        }
-        else if (strcmp(registro, "BX") == 0 && proceso->registros_cpu->BX !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
-        }
-        else if (strcmp(registro, "CX") == 0 && proceso->registros_cpu->CX !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);        
-        }
-        else if (strcmp(registro, "DX") == 0 && proceso->registros_cpu->DX !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
-        }
-        else if (strcmp(registro, "EAX") == 0 && proceso->registros_cpu->EAX !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
-        }
-        else if (strcmp(registro, "EBX") == 0 && proceso->registros_cpu->EBX !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
-        }
-        else if (strcmp(registro, "ECX") == 0 && proceso->registros_cpu->ECX !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
-        }
-        else if (strcmp(registro, "EDX") == 0 && proceso->registros_cpu->EDX !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
-        }
-        else if (strcmp(registro, "SI") == 0 && proceso->registros_cpu->SI !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
-        }
-        else if (strcmp(registro, "DI") == 0 && proceso->registros_cpu->DI !=0)
-        {
-            proceso->registros_cpu->PROGRAM_COUNTER=atoi(numero_instruccion);
-        }
-        else
-        {
-            log_error(logger_cpu, "El argumento de la instrucción JNZ es incorrecto");
-        }
-}
-
-void  ejecutar_io_gen_sleep(char* interfaz,char * unidades_de_trabajo,t_pcb *proceso){
-//IO_GEN_SLEEP (Interfaz, Unidades de trabajo):
- //Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.instruccion
-
-    log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
-   
-    t_buffer* buffer_a_enviar = crear_buffer();
-
-     cargar_string_al_buffer(buffer_a_enviar, interfaz);//interfaz io  que debe hacer el sleep
-     cargar_int_al_buffer(buffer_a_enviar, atoi(unidades_de_trabajo)); //tiempo en ms de sleep
-
-     t_paquete* paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer_a_enviar);
-     enviar_paquete(paquete, fd_kernel_dispatch);
-     eliminar_paquete(paquete);
+   if (strcmp(registro, "AX") == 0)
+   {
+      return EXEC->registros_cpu->AX;
+   }
+   else if (strcmp(registro, "BX") == 0)
+   {
+      return EXEC->registros_cpu->BX;
+   }
+   else if (strcmp(registro, "CX") == 0)
+   {
+      return EXEC->registros_cpu->CX;
+   }
+   else if (strcmp(registro, "DX") == 0)
+   {
+      return EXEC->registros_cpu->DX;
+   }
+   else if (strcmp(registro, "EAX") == 0)
+   {
+      return EXEC->registros_cpu->EAX;
+   }
+   else if (strcmp(registro, "EBX") == 0)
+   {
+      return EXEC->registros_cpu->EBX;
+   }
+   else if (strcmp(registro, "ECX") == 0)
+   {
+      return EXEC->registros_cpu->ECX;
+   }
+   else if (strcmp(registro, "EDX") == 0)
+   {
+      return EXEC->registros_cpu->EDX;
+   }
+   else if (strcmp(registro, "SI") == 0)
+   {
+      return EXEC->registros_cpu->SI;
+   }
+   else if (strcmp(registro, "DI") == 0)
+   {
+      return EXEC->registros_cpu->DI;
+   }
+   else if (strcmp(registro, "PROGRAM_COUNTER") == 0)
+   {
+      return EXEC->registros_cpu->PROGRAM_COUNTER;
+   }
+   else
+   {
+      printf("Error en get_registro");
+   }
 }
 
 
-int ejecutar_resize(char * tamanio,t_pcb *proceso){
+
+
+void ejecutar_set(char *registro, char *valor)
+{
+   if (strcmp(registro, "AX") == 0)
+   {
+      EXEC->registros_cpu->AX = atoi(valor);
+   }
+   else if (strcmp(registro, "BX") == 0)
+   {
+      EXEC->registros_cpu->BX = atoi(valor);
+   }
+   else if (strcmp(registro, "CX") == 0)
+   {
+      EXEC->registros_cpu->CX = atoi(valor);
+   }
+   else if (strcmp(registro, "DX") == 0)
+   {
+      EXEC->registros_cpu->DX = atoi(valor);
+   }
+   else if (strcmp(registro, "EAX") == 0)
+   {
+      EXEC->registros_cpu->EAX = atoi(valor);
+   }
+   else if (strcmp(registro, "EBX") == 0)
+   {
+      EXEC->registros_cpu->EBX = atoi(valor);
+   }
+   else if (strcmp(registro, "ECX") == 0)
+   {
+      EXEC->registros_cpu->ECX = atoi(valor);
+   }
+   else if (strcmp(registro, "EDX") == 0)
+   {
+      EXEC->registros_cpu->EDX = atoi(valor);
+   }
+   else if (strcmp(registro, "SI") == 0)
+   {
+      EXEC->registros_cpu->SI = atoi(valor);
+   }
+   else if (strcmp(registro, "DI") == 0)
+   {
+      EXEC->registros_cpu->DI = atoi(valor);
+   }
+   else if (strcmp(registro, "PC") == 0)
+   {
+      EXEC->registros_cpu->PROGRAM_COUNTER = atoi(valor);
+   }
+   else
+   {
+      log_error(logger_cpu, "El argumento de la instrucción SET es incorrecto");
+   }
+}
+
+void ejecutar_sum(char *registro_destino, char *registro_origen)
+{
+   int sum = atoi(registro_destino) + atoi(registro_origen);
+   printf("sum: %d\n", sum);
+
+   ejecutar_set(registro_destino, sum);
+}
+void ejecutar_sub(char *registro_destino, char *registro_origen)
+{
+   int sub = atoi(registro_destino) - atoi(registro_origen);
+   printf("sub: %d\n", sub);
+   ejecutar_set(registro_destino, sub);
+}
+void ejecutar_jnz(char *registro, char *numero_instruccion)
+{
+   if (get_registro(registro) != 0)
+   {
+      ejecutar_set(PROGRAM_COUNTER, numero_instruccion);
+   }
+}
+
+int ejecutar_resize(char *tamanio)
+{
    /*Solicitará a la Memoria ajustar el tamaño del proceso al tamaño pasado por parámetro.
-    En caso de que la respuesta de la memoria sea Out of Memory, se deberá devolver el contexto 
+    En caso de que la respuesta de la memoria sea Out of Memory, se deberá devolver el contexto
     de ejecución al Kernel informando de esta situación.*/
 
-    log_info(logger_cpu, " ENVIANDO RESIZE A MEMORIA");
-   
-    t_buffer* buffer_a_enviar = crear_buffer();
+   log_info(logger_cpu, " ENVIANDO RESIZE A MEMORIA");
 
-     cargar_int_al_buffer(buffer_a_enviar, proceso->pid);//Proceso al que se le reajustara su tamaño en memoria
-     cargar_int_al_buffer(buffer_a_enviar, atoi(tamanio)); //nuevo tamaño del proceso
+   t_buffer *buffer_a_enviar = crear_buffer();
 
-     t_paquete* paquete = crear_paquete(MEMORIA_RESIZE, buffer_a_enviar);
-     enviar_paquete(paquete, fd_memoria);
-     eliminar_paquete(paquete);
+   cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);  // Proceso al que se le reajustara su tamaño en memoria
+   cargar_int_al_buffer(buffer_a_enviar, atoi(tamanio)); // nuevo tamaño del proceso
 
-     int respuesta_resize = recibir_operacion(fd_memoria);//respuesta_resize deveria ser del tipo op_code?
-     if (respuesta_resize ==RESIZE_OK)
-     {
-       log_info(logger_cpu, "Se realizo correctamente el resize");
-       return 0;
-     }
-   if (respuesta_resize ==OUT_OF_MEMORY){
+   t_paquete *paquete = crear_paquete(MEMORIA_RESIZE, buffer_a_enviar);
+   enviar_paquete(paquete, fd_memoria);
+   eliminar_paquete(paquete);
+
+   int respuesta_resize = recibir_operacion(fd_memoria); // respuesta_resize deveria ser del tipo op_code?
+   if (respuesta_resize == RESIZE_OK)
+   {
+      log_info(logger_cpu, "Se realizo correctamente el resize");
+      return 0;
+   }
+   if (respuesta_resize == OUT_OF_MEMORY)
+   {
       log_info(logger_cpu, "Fallo el resize por OUT OF MEMORY");
+      // devuelvo el contexto a kernel
+      t_buffer *buffer_out_of_memory = crear_buffer();
+      t_paquete *paquete_kernel = crear_paquete(OUT_OF_MEMORY, buffer_out_of_memory);
+      agregar_pcb(paquete_kernel, EXEC);
+      enviar_paquete(paquete_kernel, fd_memoria);
+      eliminar_paquete(paquete_kernel);
+
       return 1;
    }
-
-
 }
 
-void ejecutar_copy_string(char* tamanio,t_pcb *proceso){
-/*
-Toma del string apuntado por el registro SI y copia la cantidad de bytes 
-indicadas en el parámetro tamaño a la posición de memoria apuntada por el registro DI. 
-*/
-    int dir_fisica=traducir_direccion_logica(proceso->registros_cpu->SI);
-    log_info(logger_cpu, " ENVIANDO EJECUTANDO COPY_STRING");
-        log_info(logger_cpu, "Le solicito a memoria leer lo que se encuentra en el puntero SI");
-      t_buffer* buffer_a_enviar = crear_buffer();
-      //Le mando el pid por que quizas memoria deberia validar que no invada un espacio incorrecto 
-      cargar_int_al_buffer(buffer_a_enviar, proceso->pid);
-      cargar_int_al_buffer(buffer_a_enviar, dir_fisica);//le deberia mandar tambien el tamanio a leer??
+void ejecutar_copy_string(char *tamanio)
+{
+   /*
+   Toma del string apuntado por el registro SI y copia la cantidad de bytes
+   indicadas en el parámetro tamaño a la posición de memoria apuntada por el registro DI.
+   */
+   int dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI);
+   int dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI);
+   char *string_escribir = string_new();
 
-      t_paquete* paquete = crear_paquete(MEMORIA_LEER, buffer_a_enviar);
-      enviar_paquete(paquete, fd_memoria);
-      eliminar_paquete(paquete);
+   // Le pido a memoria la info que esta en SI
 
-    log_info(logger_cpu, " ENVIANDO RESIZE A MEMORIA");
+   log_info(logger_cpu, " Ejecutando  COPY_STRING");
+   log_info(logger_cpu, "Le solicito a memoria leer lo que se encuentra en el puntero SI");
+   t_buffer *buffer_a_enviar_leer = crear_buffer();
+   cargar_int_al_buffer(buffer_a_enviar_leer, EXEC->pid);
+   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si);
+   t_paquete *paquete_leer = crear_paquete(COPY_STRING_LEER, buffer_a_enviar_leer);
+   enviar_paquete(paquete_leer, fd_memoria);
+   eliminar_paquete(paquete_leer);
 
+   // Recibo de  memoria la info que esta en SI
 
+   while (recibir_operacion(fd_memoria) != COPY_STRING_LEER_RESPUESTA)
+   {
+      log_info(logger_cpu, "Esperando repuesta a COPY_STRING");
+   }
+   t_buffer *buffer_recibido = crear_buffer();
+   buffer_recibido = recibir_buffer_completo(fd_memoria);
+   string_escribir = extraer_string_del_buffer(buffer_recibido);
+   // LOG OBLIGATORIO
+   log_info(logger_cpu, "PID: %d -ACCION LEER - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica_si, string_escribir);
+
+   string_escribir = string_substring(string_escribir, 0, tamanio);
+
+   // Envio a memoria la info para colocarla a donde apunta DI
+   t_buffer *buffer_a_enviar_escribir = crear_buffer();
+   cargar_int_al_buffer(buffer_a_enviar_escribir, EXEC->pid); // Le mando el pid por que quizas memoria deberia validar que no invada un espacio incorrecto
+   cargar_int_al_buffer(buffer_a_enviar_escribir, dir_fisica_di);
+   cargar_string_al_buffer(buffer_a_enviar_escribir, string_escribir);
+
+   t_paquete *paquete = crear_paquete(COPY_STRING_ESCRIBIR, buffer_a_enviar_escribir);
+   enviar_paquete(paquete, fd_memoria);
+   eliminar_paquete(paquete);
+
+   // LOG OBLIGATORIO
+   log_info(logger_cpu, "PID: %d -ACCION LEER - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica_di, string_escribir);
 }
 
-//en estas dos intrucciones no se si es necesario mandar el mensaje o directamente 
-//enviar el contexto de ejecucion con el motivo wait/signal
-
-void ejecutar_wait(char* recurso,t_pcb *proceso){
+void ejecutar_wait(char *recurso)
+{
    log_info(logger_cpu, " ENVIANDO WAIT A KERNEL");
-   
-      t_buffer* buffer_a_enviar = crear_buffer();
-     t_paquete* paquete = crear_paquete(KERNEL_WAIT, buffer_a_enviar); // CARGAR BUFFER CON PCB Y NOMBRE RECURSO AL FINAL (agregar_pcb(paquete, pcb))
-     enviar_paquete(paquete, fd_kernel_dispatch);
-     eliminar_paquete(paquete);
+
+   t_buffer *buffer = crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_WAIT, buffer);
+   // CARGo BUFFER CON PCB Y NOMBRE RECURSO AL FINAL (agregar_pcb(paquete, pcb))
+  //devuelvo contexto por solicitar llamada a kernel
+   agregar_pcb (paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, recurso);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
 }
-void ejecutar_signal(char* recurso,t_pcb *proceso){
- log_info(logger_cpu, " ENVIANDO SIGNAL A KERNEL");
-   
-    t_buffer* buffer_a_enviar = crear_buffer();
+void ejecutar_signal(char *recurso)
+{
+   log_info(logger_cpu, " ENVIANDO SIGNAL A KERNEL");
 
-     cargar_int_al_buffer(buffer_a_enviar, proceso->pid);//Proceso al que se le reajustara su tamaño en memoria
-     cargar_string_al_buffer(buffer_a_enviar, recurso);
-     t_paquete* paquete = crear_paquete(KERNEL_SIGNAL, buffer_a_enviar);
-     enviar_paquete(paquete, fd_kernel_dispatch);
-     eliminar_paquete(paquete);
+  //devuelvo contexto por solicitar llamada a kernel
+
+   t_buffer *buffer = crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_SIGNAL, buffer);
+   agregar_pcb (paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, recurso);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
+}
+
+void ejecutar_mov_in(char *registro_datos, char *registro_direccion)
+{
+
+   /*
+    Lee el valor de memoria correspondiente a la Dirección Lógica que se encuentra en el Registro
+    Dirección y lo almacena en el Registro Datos.
+
+   */
+   log_info(logger_cpu, " ENVIANDO MOV IN A MEMORIA");
+   int dir_logica = -1;
+   // obtengo la dir logica
+   dir_logica = get_registro(registro_direccion);
+
+   // obtengo  la dir fisica
+   int dir_fisica = traducir_direccion_logica(dir_logica);
+
+   // envio todo el paquete a escribir
+   t_buffer *buffer_a_enviar = crear_buffer();
+
+   cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
+   cargar_int_al_buffer(buffer_a_enviar, dir_fisica);
+
+   t_paquete *paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
+   enviar_paquete(paquete, fd_memoria);
+   eliminar_paquete(paquete);
+   while (recibir_operacion(fd_memoria) != MOV_IN)
+   {
+      log_info(logger_cpu, "Esperando repuesta a MOV_IN ");
+   }
+   t_buffer *buffer = crear_buffer();
+   buffer = recibir_buffer_completo(fd_memoria);
+   void *datos = extraer_datos_del_buffer(buffer);
+
+   // LOG OBLIGATORIO
+   log_info(logger_cpu, "PID: %d -ACCION LEER - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica, datos);
+   // guardo los datos recibidos en el registro indicado
+   ejecutar_set(registro_direccion, datos);
+   log_info(logger_cpu, "Se realizo correctamente el MOV_IN");
+   return 0;
+}
+
+void ejecutar_mov_out(char *registro_direccion, char *registro_datos ) // done, testear
+{
+
+   /*
+    Lee el valor del Registro Datos y lo escribe en la dirección física de memoria obtenida a
+    partir de la Dirección Lógica almacenada en el Registro Dirección.
+
+   */
+   log_info(logger_cpu, " ENVIANDO MOV OUT A MEMORIA");
+
+   // me copio el valor que hay en registro datos
+   long int datos_escribir = get_registro(registro_datos);
+
+   // obtengo la dir logica segun el registro
+   long int dir_logica;
+   dir_logica = get_registro(registro_direccion);
+
+   // obtengo  la dir fisica
+   int dir_fisica = traducir_direccion_logica(dir_logica);
+
+   // LOG OBLIGATORIO
+   log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica, datos_escribir);
+
+   // envio todo el paquete a escribir
+   t_buffer *buffer_a_enviar = crear_buffer();
+   cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
+   cargar_int_al_buffer(buffer_a_enviar, dir_fisica);
+   cargar_datos_al_buffer(buffer_a_enviar, datos_escribir,strlen(datos_escribir)); // lo trato como void* por ahora creo es lo mas conveniente
+   t_paquete *paquete = crear_paquete(MEMORIA_MOV_OUT, buffer_a_enviar);
+   enviar_paquete(paquete, fd_memoria);
+   eliminar_paquete(paquete);
+}
+
+void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo)
+{
+   // IO_GEN_SLEEP (Interfaz, Unidades de trabajo):
+   // Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.instruccion
+
+   log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
+
+   t_buffer *buffer= crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_IO_GEN_SLEEP_FS, buffer);
+   agregar_pcb(paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, interfaz);               // interfaz io  que debe hacer el sleep
+   cargar_int_al_buffer(paquete->buffer, atoi(unidades_de_trabajo)); // tiempo en ms de sleep
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
+}
+
+void ejecutar_io_stdin_read(char *interfaz, char *reg_direccion, char *reg_tamanio)
+{
+   /*
+   Esta instrucción solicita al Kernel que mediante la interfaz ingresada se lea desde el
+    STDIN (Teclado) un valor cuyo tamaño está delimitado por el valor del Registro Tamaño
+     y el mismo se guarde a partir de la Dirección Lógica almacenada en el Registro Dirección.
+
+   */
+
+   int dir_logica = get_registro(reg_direccion);
+   int tamanio = get_registro(reg_tamanio);
+   // envio todo el paquete de lo que necesito leer
+   t_buffer *buffer = crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_IO_STDIN_READ, buffer);
+   agregar_pcb(paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, interfaz);
+   cargar_int_al_buffer(paquete->buffer, tamanio);
+   cargar_int_al_buffer(paquete->buffer, dir_logica);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
 
 }
-void ejecutar_io_stdin_read(char* interfaz,char * direccion, char * tamanio,t_pcb *proceso){
-/*
-Esta instrucción solicita al Kernel que mediante la interfaz ingresada se lea desde el
- STDIN (Teclado) un valor cuyo tamaño está delimitado por el valor del Registro Tamaño
-  y el mismo se guarde a partir de la Dirección Lógica almacenada en el Registro Dirección.
-
-*/
-
-}
-void ejecutar_io_stdout_write(char* interfaz,char * direccion, char * tamanio,t_pcb *proceso){
+void ejecutar_io_stdout_write(char *interfaz, char *reg_direccion, char *reg_tamanio)
+{
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada, se lea desde la
-    posición de memoria indicada por la Dirección Lógica almacenada en el Registro Dirección, 
+    posición de memoria indicada por la Dirección Lógica almacenada en el Registro Dirección,
     un tamaño indicado por el Registro Tamaño y se imprima por pantalla.
 
    */
+   int dir_logica = get_registro(reg_direccion);
+   int tamanio = get_registro(reg_tamanio);
+
+   t_buffer *buffer = crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_IO_STDOUT_WRITE, buffer);
+   agregar_pcb(paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, interfaz);
+   cargar_int_al_buffer(paquete->buffer, tamanio);
+   cargar_int_al_buffer(paquete->buffer, dir_logica);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
 }
 
-void ejecutar_mov_in(char* datos,char * direccion,t_pcb *proceso){
-
-/*
- Lee el valor de memoria correspondiente a la Dirección Lógica que se encuentra en el Registro 
- Dirección y lo almacena en el Registro Datos.
-
-*/
-}
-void ejecutar_mov_out(char* direccion,char * datos,t_pcb *proceso){
-
-/*
- Lee el valor del Registro Datos y lo escribe en la dirección física de memoria obtenida a 
- partir de la Dirección Lógica almacenada en el Registro Dirección.
-
-*/
+void ejecutar_io_fs_create(char *interfaz, char *nombre_archivo)
+{
+   /*
+   Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
+   se cree un archivo en el FS montado en dicha interfaz.
+   */
+   t_buffer *buffer = crear_buffer();   
+   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_CREATE, buffer);
+   agregar_pcb(paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, interfaz);
+   cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
 }
 
+void ejecutar_io_fs_delete(char *interfaz, char *nombre_archivo)
+{
+   /*
+   Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
+   se elimine un archivo en el FS montado en dicha interfaz
+   */
+   t_buffer *buffer = crear_buffer();   
+   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_DELETE, buffer);
+   agregar_pcb(paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, interfaz);
+   cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
+}
+
+void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tamanio)
+{
+   /*
+   Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
+   se modifique el tamaño del archivo en el FS montado en dicha interfaz,
+   actualizando al valor que se encuentra en el registro indicado por Registro Tamaño.
+   */
+   int tamanio = get_registro(reg_tamanio);
+
+   t_buffer *buffer = crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_TRUNCATE, buffer_a_enviar);
+   agregar_pcb(paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, interfaz);
+   cargar_int_al_buffer(paquete->buffer, tamanio);
+   cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
+}
+
+void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo)
+{
+   /*
+   Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
+   se lea desde Memoria la cantidad de bytes indicadas por el Registro Tamaño a partir de la dirección lógica
+   que se encuentra en el Registro Dirección y se escriban en el archivo a partir del valor del Registro Puntero Archivo.
+   */
+   int dir_logica = get_registro(reg_direccion);
+   int tamanio = get_registro(reg_tamanio);
+   int puntero_archivo = get_registro(reg_puntero_archivo);
+
+   t_buffer *buffer = crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_WRITE, buffer_a_enviar);
+   agregar_pcb(paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, interfaz);
+   cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+   cargar_int_al_buffer(paquete->buffer, dir_logica);
+   cargar_int_al_buffer(paquete->buffer, tamanio);
+   cargar_int_al_buffer(paquete->buffer, puntero_archivo);
+
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
+}
+
+void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo)
+{
+   /*
+   Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
+   se lea desde el archivo a partir del valor del Registro Puntero Archivo la cantidad de bytes indicada
+   por Registro Tamaño y se escriban en la Memoria a partir de la dirección lógica indicada en el Registro Dirección.
+
+   */
+   int dir_logica = get_registro(reg_direccion);
+   int tamanio = get_registro(reg_tamanio);
+   int puntero_archivo = get_registro(reg_puntero_archivo);
+   t_buffer *buffer = crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_READ, buffer);
+   agregar_pcb(paquete,EXEC);
+   cargar_string_al_buffer(paquete->buffer, interfaz);
+   cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+   cargar_int_al_buffer(paquete->buffer, dir_logica);
+   cargar_int_al_buffer(paquete->buffer, tamanio);
+   cargar_int_al_buffer(paquete->buffer, puntero_archivo);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
+}
+
+
+void  ejecutar_exit(){
+      log_info(logger_cpu, "EJECUTANO EXIT");
+
+      t_buffer *buffer_a_enviar = crear_buffer();
+ t_paquete *paquete = crear_paquete(KERNEL_EXIT, buffer_a_enviar);
+   enviar_paquete(paquete, fd_kernel_dispatch);
+   eliminar_paquete(paquete);
+
+}
