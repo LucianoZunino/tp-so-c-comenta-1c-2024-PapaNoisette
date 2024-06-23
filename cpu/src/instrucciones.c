@@ -147,7 +147,7 @@ int ejecutar_resize(char *tamanio)
    t_paquete *paquete = crear_paquete(MEMORIA_RESIZE, buffer_a_enviar);
    enviar_paquete(paquete, fd_memoria);
    eliminar_paquete(paquete);
-
+//--tiempo de retardo establecido 
    int respuesta_resize = recibir_operacion(fd_memoria); // respuesta_resize deveria ser del tipo op_code?
    if (respuesta_resize == RESIZE_OK)
    {
@@ -161,60 +161,29 @@ int ejecutar_resize(char *tamanio)
       t_buffer *buffer_out_of_memory = crear_buffer();
       t_paquete *paquete_kernel = crear_paquete(OUT_OF_MEMORY, buffer_out_of_memory);
       agregar_pcb(paquete_kernel, EXEC);
-      enviar_paquete(paquete_kernel, fd_memoria);
+      enviar_paquete(paquete_kernel, fd_kernel_dispatch);
       eliminar_paquete(paquete_kernel);
 
       return 1;
    }
 }
-
 void ejecutar_copy_string(char *tamanio)
 {
-   /*
-   Toma del string apuntado por el registro SI y copia la cantidad de bytes
-   indicadas en el parámetro tamaño a la posición de memoria apuntada por el registro DI.
-   */
    int dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI);
    int dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI);
-   char *string_escribir = string_new();
-
-   // Le pido a memoria la info que esta en SI
 
    log_info(logger_cpu, " Ejecutando  COPY_STRING");
-   log_info(logger_cpu, "Le solicito a memoria leer lo que se encuentra en el puntero SI");
    t_buffer *buffer_a_enviar_leer = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar_leer, EXEC->pid);
+   cargar_int_al_buffer(buffer_a_enviar_leer, tamanio);
+
    cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si);
-   t_paquete *paquete_leer = crear_paquete(COPY_STRING_LEER, buffer_a_enviar_leer);
+   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_di);
+
+   t_paquete *paquete_leer = crear_paquete(MEMORIA_COPY_STRING, buffer_a_enviar_leer);
    enviar_paquete(paquete_leer, fd_memoria);
    eliminar_paquete(paquete_leer);
 
-   // Recibo de  memoria la info que esta en SI
-
-   while (recibir_operacion(fd_memoria) != COPY_STRING_LEER_RESPUESTA)
-   {
-      log_info(logger_cpu, "Esperando repuesta a COPY_STRING");
-   }
-   t_buffer *buffer_recibido = crear_buffer();
-   buffer_recibido = recibir_buffer_completo(fd_memoria);
-   string_escribir = extraer_string_del_buffer(buffer_recibido);
-   // LOG OBLIGATORIO
-   log_info(logger_cpu, "PID: %d -ACCION LEER - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica_si, string_escribir);
-
-   string_escribir = string_substring(string_escribir, 0, tamanio);
-
-   // Envio a memoria la info para colocarla a donde apunta DI
-   t_buffer *buffer_a_enviar_escribir = crear_buffer();
-   cargar_int_al_buffer(buffer_a_enviar_escribir, EXEC->pid); // Le mando el pid por que quizas memoria deberia validar que no invada un espacio incorrecto
-   cargar_int_al_buffer(buffer_a_enviar_escribir, dir_fisica_di);
-   cargar_string_al_buffer(buffer_a_enviar_escribir, string_escribir);
-
-   t_paquete *paquete = crear_paquete(COPY_STRING_ESCRIBIR, buffer_a_enviar_escribir);
-   enviar_paquete(paquete, fd_memoria);
-   eliminar_paquete(paquete);
-
-   // LOG OBLIGATORIO
-   log_info(logger_cpu, "PID: %d -ACCION LEER - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica_di, string_escribir);
 }
 
 void ejecutar_wait(char *recurso)
@@ -223,7 +192,6 @@ void ejecutar_wait(char *recurso)
 
    t_buffer *buffer = crear_buffer();
    t_paquete *paquete = crear_paquete(KERNEL_WAIT, buffer);
-   // CARGo BUFFER CON PCB Y NOMBRE RECURSO AL FINAL (agregar_pcb(paquete, pcb))
   //devuelvo contexto por solicitar llamada a kernel
    agregar_pcb (paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, recurso);
@@ -326,7 +294,7 @@ void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo)
    log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
 
    t_buffer *buffer= crear_buffer();
-   t_paquete *paquete = crear_paquete(KERNEL_IO_GEN_SLEEP_FS, buffer);
+   t_paquete *paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);               // interfaz io  que debe hacer el sleep
    cargar_int_al_buffer(paquete->buffer, atoi(unidades_de_trabajo)); // tiempo en ms de sleep
@@ -347,11 +315,13 @@ void ejecutar_io_stdin_read(char *interfaz, char *reg_direccion, char *reg_taman
    int tamanio = get_registro(reg_tamanio);
    // envio todo el paquete de lo que necesito leer
    t_buffer *buffer = crear_buffer();
-   t_paquete *paquete = crear_paquete(KERNEL_IO_STDIN_READ, buffer);
+   t_paquete *paquete = crear_paquete(IO_STDIN_READ_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
-   cargar_int_al_buffer(paquete->buffer, tamanio);
+
    cargar_int_al_buffer(paquete->buffer, dir_logica);
+      cargar_int_al_buffer(paquete->buffer, tamanio);
+
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 
@@ -368,11 +338,11 @@ void ejecutar_io_stdout_write(char *interfaz, char *reg_direccion, char *reg_tam
    int tamanio = get_registro(reg_tamanio);
 
    t_buffer *buffer = crear_buffer();
-   t_paquete *paquete = crear_paquete(KERNEL_IO_STDOUT_WRITE, buffer);
+   t_paquete *paquete = crear_paquete(IO_STDOUT_WRITE_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
-   cargar_int_al_buffer(paquete->buffer, tamanio);
    cargar_int_al_buffer(paquete->buffer, dir_logica);
+   cargar_int_al_buffer(paquete->buffer, tamanio);
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 }
@@ -384,7 +354,7 @@ void ejecutar_io_fs_create(char *interfaz, char *nombre_archivo)
    se cree un archivo en el FS montado en dicha interfaz.
    */
    t_buffer *buffer = crear_buffer();   
-   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_CREATE, buffer);
+   t_paquete *paquete = crear_paquete(IO_FS_CREATE_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);
@@ -399,13 +369,14 @@ void ejecutar_io_fs_delete(char *interfaz, char *nombre_archivo)
    se elimine un archivo en el FS montado en dicha interfaz
    */
    t_buffer *buffer = crear_buffer();   
-   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_DELETE, buffer);
+   t_paquete *paquete = crear_paquete(IO_FS_DELETE_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 }
+//IO_FS_TRUNCATE Int4 notas.txt ECX
 
 void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tamanio)
 {
@@ -417,7 +388,7 @@ void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tam
    int tamanio = get_registro(reg_tamanio);
 
    t_buffer *buffer = crear_buffer();
-   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_TRUNCATE, buffer);
+   t_paquete *paquete = crear_paquete(IO_FS_TRUNCATE_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_int_al_buffer(paquete->buffer, tamanio);
@@ -425,6 +396,7 @@ void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tam
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 }
+
 
 void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo)
 {
@@ -438,7 +410,7 @@ void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direcc
    int puntero_archivo = get_registro(reg_puntero_archivo);
 
    t_buffer *buffer = crear_buffer();
-   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_WRITE, buffer);
+   t_paquete *paquete = crear_paquete(IO_FS_WRITE_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);
@@ -461,8 +433,9 @@ void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direcci
    int dir_logica = get_registro(reg_direccion);
    int tamanio = get_registro(reg_tamanio);
    int puntero_archivo = get_registro(reg_puntero_archivo);
+
    t_buffer *buffer = crear_buffer();
-   t_paquete *paquete = crear_paquete(KERNEL_IO_FS_READ, buffer);
+   t_paquete *paquete = crear_paquete(IO_FS_READ_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);

@@ -94,11 +94,12 @@ int main(int argc, char* argv[]){
 	pthread_create(&hilo_dispatch_kernel, NULL, (void*)escuchar_mensajes_dispatch_kernel, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	pthread_detach(hilo_dispatch_kernel); // Hace que el hilo se desacople del principal y se ejecute en paralelo
 
-    // Escuchar los mensajes de Interrupt-Kernel
+    //lo comento no tiene sentido tener este hilo...
+   /* // Escuchar los mensajes de Interrupt-Kernel
     pthread_t hilo_interrupt_kernel;
 	pthread_create(&hilo_interrupt_kernel, NULL, (void*)escuchar_mensajes_interrupt_kernel, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	pthread_detach(hilo_interrupt_kernel); // Hace que el hilo se desacople del principal y se ejecute en paralelo
-
+*/
     // Escuchar los mensajes de Memoria-Kernel
     pthread_t hilo_memoria_kernel;
 	pthread_create(&hilo_memoria_kernel, NULL, (void*)escuchar_mensajes_memoria_kernel, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
