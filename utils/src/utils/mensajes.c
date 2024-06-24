@@ -103,7 +103,7 @@ void enviar_proceso_por_paquete(t_pcb *pcb, char *archivo_pseudocodigo, int sock
     t_buffer* buffer_a_enviar = crear_buffer();
     t_paquete *paquete = crear_paquete(op_code, buffer_a_enviar);
     agregar_pcb(paquete, pcb);
-    if (archivo_pseudocodigo !=NULL){//por que hacia romper cuano venia null...
+    if (archivo_pseudocodigo != NULL){//por que hacia romper cuano venia null...
     cargar_string_al_buffer(paquete->buffer, archivo_pseudocodigo);}
     enviar_paquete(paquete, socket);
     eliminar_paquete(paquete);    

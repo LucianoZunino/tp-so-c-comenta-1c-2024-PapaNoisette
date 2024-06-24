@@ -1,5 +1,5 @@
 #include "acciones_proceso.h"
-uint32_t next_pid = 0;
+uint32_t next_pid = 1;
 pthread_mutex_t mutex_next_pid;
 pthread_mutex_t mutex_NEW;
 pthread_mutex_t mutex_EXIT;
@@ -20,6 +20,14 @@ void imprimir_new(){
         printf("Proceso en RUNNING: %i\n", RUNNING->pid);
     else 
         printf("Ningun proceso en RUNNING\n");
+}
+
+void imprimir_colas(){
+    printf("Size NEW: %i\n", list_size(NEW));
+    printf("Size READY: %i\n", list_size(READY));
+    printf("Size BLOCKED: %i\n", list_size(BLOCKED));
+    if (RUNNING != NULL)
+        printf("PID RUNNING: %i\n", RUNNING->pid);
 }
 
 void crear_proceso(char* path){
@@ -49,11 +57,13 @@ void crear_proceso(char* path){
     // recibir_ok (fd_memoria);
     
     sem_wait(&sem_estructuras_inicializadas);
+    printf("Se inicializaron las estructuras\n");
 
     //TEST */
 
     // TODO: Revisar tema del PID para tener el log bien hecho
     log_info(logger_kernel, "Se crea el proceso %i en NEW", nuevo_pcb->pid);
+    imprimir_colas();
 
 
     imprimir_new();

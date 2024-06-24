@@ -1,6 +1,6 @@
 #include "escuchar_memoria_cpu.h"
 
-/*
+
 void escuchar_mensajes_memoria_cpu(){
     bool desconexion_memoria_cpu= 0;
 	while(!desconexion_memoria_cpu){
@@ -22,4 +22,4 @@ void escuchar_mensajes_memoria_cpu(){
 				break;
 			}
 	}
-}*/
+}

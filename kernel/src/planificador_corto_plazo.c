@@ -22,12 +22,13 @@ void planificador_corto_plazo(){
             t_pcb *pcb = list_remove(READY, 0);
             pthread_mutex_unlock(&mutex_READY);
             pcb->estado = E_EXEC;
-            
             pthread_mutex_lock(&mutex_RUNNING);
             RUNNING = pcb;
             pthread_mutex_unlock(&mutex_RUNNING);
+            printf("if de FIFO\n");
             
             enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
+            printf("Después de enviar proceso\n");
             if(algoritmo_planificacion == "RR"){
                 esperar_a_cpu_round_robin(pcb);
             }

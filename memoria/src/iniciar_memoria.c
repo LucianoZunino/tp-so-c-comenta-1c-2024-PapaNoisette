@@ -221,8 +221,10 @@ log_info(logger_memoria, "Se finalizo el proceso :%d",pid);
 
 }
 void inicializar_memoria(){
-    t_list *lista_de_miniPcb = list_create();
-    t_list *lista_de_tablas_de_paginas_por_proceso = list_create();
+    lista_de_miniPcb = list_create();
+    //printf("SE CREO lista_de_miniPcb \n");
+    //printf("Size: %i\n", list_size(lista_de_miniPcb));
+    lista_de_tablas_de_paginas_por_proceso = list_create();
 
     // Asignacion de memoria contigua
     memoria_RAM = malloc(tam_memoria);

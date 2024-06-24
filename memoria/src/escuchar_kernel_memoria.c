@@ -17,9 +17,13 @@ void escuchar_mensajes_kernel_memoria(){
 			case MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS:
                 // ver de crear hilo¿?
                 buffer = recibir_buffer_completo(fd_kernel);
+                printf("PASO EL RECIBIR_BUFFER\n");
                 t_pcb* pcb = deserializar_pcb(buffer);
+                printf("Deserializar PCB, PID: %i\n", pcb->pid);
                 char* path = extraer_string_del_buffer(buffer); // Obtiene el path del archivo pseudocodigo
+                printf("Extraer path: %s\n", path);
                 guardar_instrucciones_en_memoria(pcb, path); //Guar
+                printf("Instrucciones guardadas en memoria\n");
 
                 int numero_paginas_inicial = 0; // Número de páginas inicial
                 TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = memoria_crear_proceso(pcb->pid, numero_paginas_inicial);
@@ -35,8 +39,11 @@ void escuchar_mensajes_kernel_memoria(){
                     free(tabla_de_paginas_del_proceso);
                 }*/
 
+                printf("Antes de enviar_ok\n");
                 enviar_ok(KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, fd_kernel);
+                printf("Después de enviar_ok\n");
                 destruir_buffer(buffer);
+                printf("Después de destruir el buffer\n");
 				break;
 
 
@@ -68,29 +75,34 @@ void guardar_instrucciones_en_memoria(t_pcb* pcb,char* path){
     t_miniPcb* instrucciones = malloc(sizeof(t_miniPcb));
 
     FILE* archivo = fopen(path, "r");
-
+    // La ruta desde memoria sería: "../kernel/path.txt"
     if(archivo == NULL){
         printf("Error: No se pudo abrir el archivo %s\n", path);
         return;
     }
+    printf("Archivo != NULL\n");
     instrucciones->pid = malloc(sizeof(int));
     instrucciones->pid = pcb->pid;
     instrucciones->lista_de_instrucciones = list_create(); // Crea una lista ej => ["MOVE AX BX", "ADD DX CX"]
     
     char* linea[100]; 
-    
+    printf("Antes del while\n");
     while(fgets(linea, sizeof(linea), archivo) != NULL){
         // Eliminar el salto de línea al final de la línea leída
         linea[strcspn(linea, "\n")] = '\0';
         // Crear una copia de la línea leída para almacenarla en la lista
         char* linea_copia = strdup(linea);
+        printf("Procesada linea \" %s \" \n", linea_copia);
         char* linea_a_agregar = malloc(sizeof(linea_copia)); // HACER FREE AL SACAR EL PROCESO DE MEMORIA
         list_add(instrucciones->lista_de_instrucciones, linea_a_agregar); // Agrega las intrucciones a la lista
     }
-
+    printf("Después del while\n");
     fclose(archivo);
+    printf("Archivo cerrado\n");
+    printf("Size de lista_de_miniPcb: %i\n", list_size(lista_de_miniPcb));
     // PONER HILO MUTEX PARA LISTA_dE_MINIPCB
     list_add(lista_de_miniPcb, instrucciones ); 
+    printf("Fin de guardar_instrucciones_en_memoria\n");
 }
 
 

@@ -51,7 +51,7 @@ t_instruccion *fetch()
         strcpy(instruccion->arg2, "");
         strcpy(instruccion->arg3, "");
     }
-
+    printf("Devuelve la instruccion\n");
     return instruccion;
 }
 

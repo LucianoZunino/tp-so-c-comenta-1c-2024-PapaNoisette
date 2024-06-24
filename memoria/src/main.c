@@ -19,6 +19,7 @@ int main(int argc, char* argv[]){
 
     // Iniciar Memoria
     iniciar_memoria();
+    printf("Memoria iniciada, lista de mini PCB size: %i\n", list_size(lista_de_miniPcb));
   	log_info(logger_memoria, "Arranca el modulo MEMORIA");
 
     // Levantar Server Memoria
