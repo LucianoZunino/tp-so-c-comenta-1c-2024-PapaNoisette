@@ -2,6 +2,9 @@
 
 t_config* config_entradasalida;
 sem_t sem_stdout;
+int fd_bloques;
+char* bloques_dat;
+t_bitarray* bitmap;
 
 void iniciar_entradasalida(){
     iniciar_logger_entradasalida();
@@ -62,6 +65,33 @@ void imprimir_config_entradasalida(){
 
 void iniciar_estructuras(){
     sem_init(&sem_stdout, 1, 0);
+
+    if(tipo_de_interfaz == DIAL_FS){
+        // Inicializacion bloques.dat
+        fd_bloques = open("bloques.dat", O_RDRW);
+
+        if (fd_bloques == -1) {
+            log_error(logger_entradasalida, "Error abriendo el archivo");
+            close(fd_bloques);
+            return EXIT_FAILURE;
+        }
+
+
+        ftruncate(fd_bloques, block_size * block_count);
+
+        size_t length = lseek(fd_bloques, 0, SEEK_END);
+
+        bloques_dat = mmap(NULL, length, PROT_WRITE, MAP_SHARED, fd_bloques, 0); // Mapeo del archivo de bloques en memoria
+        if (bloques_dat == MAP_FAILED) {
+            perror("Error mapeando el archivo");
+            close(fd_bloques);
+            return EXIT_FAILURE;
+        }
+        
+        // Inicializacion bitmap
+        void* bitarray = malloc(block_count/8);
+        bitmap = bitarray_create_with_mode(bitarray, block_size * block_count / 8, LSB_FIRST);
+    }
 }
 
 void finalizar_entradasalida(){
@@ -83,4 +113,23 @@ int leer_tipo_interfaz(t_config* config_entradasalida){
         log_error(logger_entradasalida, "Tipo de interfaz no reconocida: %s", tipo);
         return (-1);
     }
+}
+
+// de valgrind 
+
+int entradas_swap = tamanio_archivo_de_bloques / tamanio_bloque;
+bitmap_swap = crear_bitmap(entradas_swap);
+
+t_bitarray *crear_bitmap(int entradas)
+{
+    assert(entradas % 8 == 0);
+    void *puntero = malloc(entradas / 8);
+    t_bitarray *bitmap = bitarray_create_with_mode(puntero, entradas / 8, LSB_FIRST);
+
+    for (int i = 0; i < bitarray_get_max_bit(bitmap); i++)
+    {
+        bitarray_clean_bit(bitmap, i);
+    }
+
+    return bitmap;
 }

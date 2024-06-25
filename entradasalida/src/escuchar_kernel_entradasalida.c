@@ -137,7 +137,47 @@ void escuchar_instrucciones_stdout(){
 }
 
 void escuchar_instrucciones_dialfs(){
+	bool desconexion_kernel_entradasalida = 0;
+	while(!desconexion_kernel_entradasalida){
+		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
+		switch(cod_op){
+			t_buffer* buffer = crear_buffer();
+			int pid;
+			case IO_FS_CREATE_FS:
 
+				buffer = recibir_buffer_completo(fd_kernel);
+				
+				pid = extraer_int_del_buffer(buffer);
+
+
+				notificar_fin(fd_kernel, pid);
+
+				destruir_buffer(buffer);
+				break;
+				
+			case -1:
+				log_error(logger_entradasalida, "El Kernel se desconecto de E/S.\n");
+				desconexion_kernel_entradasalida = 1;
+				break;
+
+			default: // La instruccion es incorrecta
+				printf("b\n");
+				buffer = recibir_buffer_completo(fd_kernel);
+				printf("c\n");
+				int process_id = extraer_int_del_buffer(buffer);
+				free(buffer);
+
+				//buffer = crear_buffer();
+				cargar_int_al_buffer(buffer, process_id);
+
+				t_paquete* paquete = crear_paquete(ERROR_IO, buffer);
+				enviar_paquete(paquete, fd_kernel);
+
+				eliminar_paquete(paquete);
+				destruir_buffer(buffer);
+				break;
+		}
+	}
 }
 
 

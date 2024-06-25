@@ -7,6 +7,7 @@
 #include "utils/hello.h"
 #include <utils/utils.h>
 #include <semaphore.h>
+#include <commons/bitarray.h>
 #include "iniciar_entradasalida.h"
 #include "escuchar_kernel_entradasalida.h"
 #include "escuchar_memoria_entradasalida.h"
@@ -28,6 +29,10 @@ extern int fd_memoria;
 extern int fd_kernel;
 
 extern sem_t sem_stdout;
+
+extern int fd_bloques;
+extern char* bloques_dat;
+extern t_bitarray* bitmap;
 
 
 #endif

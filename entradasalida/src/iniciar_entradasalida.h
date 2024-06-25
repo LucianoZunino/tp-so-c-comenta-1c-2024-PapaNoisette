@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include <utils/utils.h>
+#include <sys/mman.h>
 
 void iniciar_entradasalida();
 void iniciar_logger_entradasalida();
