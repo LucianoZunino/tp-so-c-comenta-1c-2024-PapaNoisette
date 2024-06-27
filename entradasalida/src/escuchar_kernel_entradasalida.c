@@ -143,16 +143,48 @@ void escuchar_instrucciones_dialfs(){
 		switch(cod_op){
 			t_buffer* buffer = crear_buffer();
 			int pid;
+			char* nombre;
+			t_config* config;
 			case IO_FS_CREATE_FS:
 
 				buffer = recibir_buffer_completo(fd_kernel);
 				
 				pid = extraer_int_del_buffer(buffer);
+				nombre = extraer_string_del_buffer(buffer);
 
+				// Chequear si hay lugar en bitmap
+				int direccion = buscar_lugar_bitmap(1);
+				// Asignar lugar en bitmap
+				bitarray_set_bit(bitmap, direccion);
+				// Crear archivo metadata
+				FILE* archivo = fopen(nombre, "w");
+				fclose(archivo);
 
+				config = config_create(nombre);
+
+				config_set_value(config, "BLOQUE_INICIAL", string_itoa(direccion));
+				config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(0));
+				config_save(config);
+				// Sincronizar
+				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
+
+				// devolver
 				notificar_fin(fd_kernel, pid);
 
 				destruir_buffer(buffer);
+				config_destroy(config);
+				break;
+
+			case IO_FS_DELETE_FS:
+				break;
+
+			case IO_FS_WRITE_FS:
+				break;
+			
+			case IO_FS_READ_FS:
+				break;
+
+			case IO_FS_TRUNCATE_FS:
 				break;
 				
 			case -1:
@@ -218,82 +250,29 @@ void solicitar_almacen_memoria(int direccion, char* mensaje){
 	eliminar_paquete(paquete);
 	free(buffer);
 }
-/*
-void escuchar_mensajes_kernel_entradasalida(){
-    bool desconexion_kernel_entradasalida = 0;
-	while(!desconexion_kernel_entradasalida){
-		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
-		switch(cod_op){
-			//case PROTOCOLOS_A_DEFINIR:
-			//	break;
-			case IO_GEN_SLEEP_FS:
-				t_buffer * buffer;
-				buffer=recibir_buffer_completo(fd_kernel);
-				
-				//char * interfaz = extraer_string_del_buffer(buffer);
-                /int tiempo_retardo = extraer_int_del_buffer(buffer);
-				//if (interfaz==tipo_interfaz){ //si el sleep fue a este recurso
-				//	sleep(tiempo_retardo);
-				//}
-				//else {
-				//log_trace(logger_entradasalida, "Se recibio un io_gen_sleep pero para otra interfaz.");
 
-				}
-				char* nombre_interfaz = extraer_string_del_buffer(buffer);
-				char* path_config_interfaz = extraer_string_del_buffer(buffer);
-				crear_interfaz(nombre_interfaz, path_config_interfaz);
+int buscar_lugar_bitmap(int tamanio){
+	int i = 0;
+	int contador_libres = 0;
+	int contador_libres_continuo = 0;
+	while(i < block_count){
+		if(bitarray_test_bit(bitmap, i) == 0){
+			contador_libres ++;
+			contador_libres_continuo ++;
+			if (contador_libres_continuo == tamanio){return i - tamanio;}
+		}
+		if(bitarray_test_bit(bitmap, i) == 1){
+			contador_libres_continuo = 0;
+		}
 
-				break;
-			case HANDSHAKE_KERNEL:
-				aceptar_handshake(logger_entradasalida, fd_kernel, cod_op);
-				break;
-			case -1:
-				log_error(logger_entradasalida, "El Kernel se desconecto de Entradasalida. Terminando servidor.");
-				desconexion_kernel_entradasalida = 1;
-				break;
-			default:
-				log_warning(logger_entradasalida, "Operacion desconocida de Kernel-Entradasalida.");
-				break;
-			}
+		i ++;
+	}
+
+	if(contador_libres >= tamanio){
+		// TODO: comprimir() -> buscar
+	}
+	else{
+		// TODO: DEVUELVE ERROR, NO HAY ESPACIO.
+		return -1;
 	}
 }
-
-void crear_interfaz(char* nombre_interfaz, char* path_config){
-	t_config* config = iniciar_config(path_config);
-	char* tipo_de_interfaz = config_get_string_value(config, "TIPO_INTERFAZ");
-
-	if (strcmp(tipo_de_interfaz, "GENERICA")){
-		// crear interfaz generica
-		t_queue* cola = queue_create();
-		sem_t* semaforo = sem_init(semaforo, 1, 0);
-
-		t_interfaz nueva_interfaz;
-		nueva_interfaz.config = config;
-
-		pthread_t* hilo = malloc(sizeof(pthread_t*));
-		nueva_interfaz.hilo = hilo;
-		nueva_interfaz.cola_espera = cola;
-		nueva_interfaz.semaforo = semaforo;
-
-		pthread_create(hilo, NULL, iniciar_interfaz_generica(&nueva_interfaz), NULL);
-		pthread_detach(hilo);
-
-
-
-		dictionary_put(interfaces, nombre_interfaz, &nueva_interfaz);
-		sem_post(semaforo);
-	}
-	else if(strcmp(tipo_de_interfaz, "STDIN")){
-		// TODO crear interfaz STDIN
-	}
-	else if(strcmp(tipo_de_interfaz, "STDOUT")){
-		// TODO crear interfaz STDOUT
-	}
-	else if(strcmp(tipo_de_interfaz, "DIAL_FS")){
-		// TODO crear interfaz DIAL_FS
-	}
-	else {
-		log_error(logger_entradasalida, "El tipo de interfaz %s no existe", tipo_de_interfaz);
-	}
-}
-*/

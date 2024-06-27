@@ -31,7 +31,8 @@ extern int fd_kernel;
 extern sem_t sem_stdout;
 
 extern int fd_bloques;
-extern char* bloques_dat;
+extern int fd_bitmap;
+extern void* bloques_dat;
 extern t_bitarray* bitmap;
 
 
