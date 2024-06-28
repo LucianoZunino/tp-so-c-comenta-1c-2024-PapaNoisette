@@ -2,6 +2,7 @@
 
 t_config* config_entradasalida;
 sem_t sem_stdout;
+sem_t sem_fs_write;
 int fd_bloques;
 int fd_bitmap;
 void* bloques_dat;
@@ -66,6 +67,7 @@ void imprimir_config_entradasalida(){
 
 void iniciar_estructuras(){
     sem_init(&sem_stdout, 1, 0);
+    sem_init(&sem_fs_write, 1, 0);
 
     if(tipo_de_interfaz == DIAL_FS){
         // Inicializacion bloques.dat

@@ -4,6 +4,7 @@
         "iniciar_memoria.h": "c",
         "main.h": "c",
         "escuchar_cpu_memoria.h": "c",
-        "consola_interactiva.h": "c"
+        "consola_interactiva.h": "c",
+        "utils.h": "c"
     }
 }

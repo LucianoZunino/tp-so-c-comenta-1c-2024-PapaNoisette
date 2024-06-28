@@ -62,7 +62,9 @@ void escuchar_instrucciones_stdin(){
 				char* mensaje;
 				memcpy(mensaje, input, reg_tamanio);
 
-				solicitar_almacen_memoria(reg_direccion, mensaje);
+				solicitar_almacen_memoria(reg_direccion, mensaje, IO_STDIN_READ_FS);
+
+				// ESPERAR ERROR MEMORIA?
 
 				notificar_fin(fd_kernel, pid);
 
@@ -102,7 +104,7 @@ void escuchar_instrucciones_stdout(){
 				int reg_direccion = extraer_int_del_buffer(buffer);
 				int reg_tamanio = extraer_int_del_buffer(buffer);
 
-				solicitar_lectura_memoria(reg_direccion, reg_tamanio);
+				solicitar_lectura_memoria(reg_direccion, reg_tamanio, IO_STDOUT_WRITE_FS);
 
 				sem_wait(&sem_stdout);
 
@@ -179,6 +181,28 @@ void escuchar_instrucciones_dialfs(){
 				break;
 
 			case IO_FS_WRITE_FS:
+				buffer = recibir_buffer_completo(fd_kernel);
+				
+				pid = extraer_int_del_buffer(buffer);
+				nombre = extraer_string_del_buffer(buffer);
+
+				int reg_direccion = extraer_int_del_buffer(buffer);
+				int reg_tamanio = extraer_int_del_buffer(buffer);
+				int reg_puntero_archivo = extraer_int_del_buffer(buffer);
+
+				solicitar_lectura_memoria(reg_direccion, reg_tamanio, IO_STDOUT_WRITE_FS);
+				sem_wait(&sem_fs_write);
+
+				if(!verificar_escritura_archivo(nombre, reg_tamanio, reg_puntero_archivo)){
+					log_error(logger_entradasalida, "Se intenta escribir por fuera del tamaño del archivo\n");
+				}
+				
+				void* aux = bloques_dat + reg_puntero_archivo;
+
+				memcpy(aux, datos, reg_tamanio); 
+
+				msync(bloques_dat, block_size*block_count, MS_SYNC);
+
 				break;
 			
 			case IO_FS_READ_FS:
@@ -225,12 +249,12 @@ void notificar_fin(int fd_kernel, int pid){
 	free(buffer);
 }
 
-void solicitar_lectura_memoria(int direccion, int tamanio){
+void solicitar_lectura_memoria(int direccion, int tamanio, op_code cod_op){
 	t_buffer* buffer = crear_buffer();
 	cargar_int_al_buffer(buffer, direccion);
 	cargar_int_al_buffer(buffer, tamanio);
 
-	t_paquete* paquete = crear_paquete(IO_STDOUT_WRITE_FS, buffer);
+	t_paquete* paquete = crear_paquete(cod_op, buffer);
 
 	enviar_paquete(paquete, fd_memoria);
 
@@ -238,12 +262,12 @@ void solicitar_lectura_memoria(int direccion, int tamanio){
 	free(buffer);
 }
 
-void solicitar_almacen_memoria(int direccion, char* mensaje){
+void solicitar_almacen_memoria(int direccion, char* mensaje, op_code cod_op){
 	t_buffer* buffer = crear_buffer();
 	cargar_int_al_buffer(buffer, direccion);
 	cargar_string_al_buffer(buffer, mensaje);
 
-	t_paquete* paquete = crear_paquete(IO_STDIN_READ_FS, buffer);
+	t_paquete* paquete = crear_paquete(cod_op, buffer);
 
 	enviar_paquete(paquete, fd_memoria);
 
@@ -275,4 +299,19 @@ int buscar_lugar_bitmap(int tamanio){
 		// TODO: DEVUELVE ERROR, NO HAY ESPACIO.
 		return -1;
 	}
+}
+
+bool verificar_escritura_archivo(char* path, int reg_tamanio, int reg_puntero_archivo){
+	t_config* config = config_create(path);
+	
+	if(config == NULL){
+		log_error(logger_entradasalida, "Error, no se encontro el archivo en el path.\n");
+	}
+
+	int inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
+	int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
+
+	config_destroy(config);	
+
+	return reg_tamanio + reg_puntero_archivo <= inicio_archivo + tamanio_archivo;
 }
