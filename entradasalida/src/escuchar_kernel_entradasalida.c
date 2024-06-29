@@ -145,6 +145,10 @@ void escuchar_instrucciones_dialfs(){
 		switch(cod_op){
 			t_buffer* buffer = crear_buffer();
 			int pid;
+			int reg_direccion;
+			int reg_tamanio;
+			int reg_puntero_archivo;
+			void* aux;
 			char* nombre;
 			t_config* config;
 			case IO_FS_CREATE_FS:
@@ -178,6 +182,20 @@ void escuchar_instrucciones_dialfs(){
 				break;
 
 			case IO_FS_DELETE_FS:
+				buffer = recibir_buffer_completo(fd_kernel);
+				
+				pid = extraer_int_del_buffer(buffer);
+				nombre = extraer_string_del_buffer(buffer);
+
+				liberar_archivo_bitmap(nombre);
+
+				remove(nombre);
+
+				// devolver
+				notificar_fin(fd_kernel, pid);
+
+				destruir_buffer(buffer);
+				config_destroy(config);
 				break;
 
 			case IO_FS_WRITE_FS:
@@ -186,29 +204,64 @@ void escuchar_instrucciones_dialfs(){
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 
-				int reg_direccion = extraer_int_del_buffer(buffer);
-				int reg_tamanio = extraer_int_del_buffer(buffer);
-				int reg_puntero_archivo = extraer_int_del_buffer(buffer);
+				reg_direccion = extraer_int_del_buffer(buffer);
+				reg_tamanio = extraer_int_del_buffer(buffer);
+				reg_puntero_archivo = extraer_int_del_buffer(buffer);
 
 				solicitar_lectura_memoria(reg_direccion, reg_tamanio, IO_STDOUT_WRITE_FS);
 				sem_wait(&sem_fs_write);
 
 				if(!verificar_escritura_archivo(nombre, reg_tamanio, reg_puntero_archivo)){
-					log_error(logger_entradasalida, "Se intenta escribir por fuera del tamaño del archivo\n");
+					log_error(logger_entradasalida, "Se intenta escribir por fuera del tamanio del archivo\n");
+					goto error_io;
 				}
 				
-				void* aux = bloques_dat + reg_puntero_archivo;
+				aux = bloques_dat + reg_puntero_archivo;
 
 				memcpy(aux, datos, reg_tamanio); 
 
 				msync(bloques_dat, block_size*block_count, MS_SYNC);
 
+				// devolver
+				notificar_fin(fd_kernel, pid);
+
+				destruir_buffer(buffer);
+				config_destroy(config);
+
 				break;
 			
 			case IO_FS_READ_FS:
+				buffer = recibir_buffer_completo(fd_kernel);
+				
+				pid = extraer_int_del_buffer(buffer);
+				nombre = extraer_string_del_buffer(buffer);
+
+				reg_direccion = extraer_int_del_buffer(buffer);
+				reg_tamanio = extraer_int_del_buffer(buffer);
+				reg_puntero_archivo = extraer_int_del_buffer(buffer);
+
+				if(!verificar_escritura_archivo(nombre, reg_tamanio, reg_puntero_archivo)){
+					log_error(logger_entradasalida, "Se intenta leer por fuera del tamanio del archivo\n");
+					goto error_io;
+				}
+
+				char* leido = malloc(reg_tamanio);
+				aux = bloques_dat + reg_puntero_archivo;
+
+				memcpy(leido, aux, reg_tamanio);
+
+				solicitar_almacen_memoria(reg_direccion, leido, IO_FS_READ_FS);
+
+				// devolver
+				notificar_fin(fd_kernel, pid);
+
+				destruir_buffer(buffer);
+				config_destroy(config);
+
 				break;
 
 			case IO_FS_TRUNCATE_FS:
+				//TODO
 				break;
 				
 			case -1:
@@ -217,6 +270,7 @@ void escuchar_instrucciones_dialfs(){
 				break;
 
 			default: // La instruccion es incorrecta
+				error_io:
 				printf("b\n");
 				buffer = recibir_buffer_completo(fd_kernel);
 				printf("c\n");
@@ -314,4 +368,19 @@ bool verificar_escritura_archivo(char* path, int reg_tamanio, int reg_puntero_ar
 	config_destroy(config);	
 
 	return reg_tamanio + reg_puntero_archivo <= inicio_archivo + tamanio_archivo;
+}
+
+void liberar_archivo_bitmap(char* path){
+	t_config* config = config_create(path);
+	
+	if(config == NULL){
+		log_error(logger_entradasalida, "Error, no se encontro el archivo en el path.\n");
+	}
+
+	int inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
+	int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
+
+	for(int i = 0; i < tamanio_archivo; i++){
+		bitarray_clean_bit(bitmap, inicio_archivo + i);
+	}
 }

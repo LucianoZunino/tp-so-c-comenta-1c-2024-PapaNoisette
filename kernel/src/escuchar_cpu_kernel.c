@@ -60,7 +60,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			buffer = crear_buffer();
 			paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer); // aca no iria generica?
-			agregar_pcb(paquete, pcb);
+			cargar_int_al_buffer(paquete->buffer,pcb->pid);
 			cargar_int_al_buffer(paquete->buffer, tiempo);
 
 			pthread_mutex_lock(&interfaz->mutex_interfaz);
@@ -69,11 +69,13 @@ void escuchar_mensajes_dispatch_kernel()
 
 			sem_post(&interfaz->sem_espera);
 
+			destruir_buffer(buffer);
+
 			break;
 
 		case IO_STDIN_READ_FS:
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
-			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
+			pcb = deserializar_pcb(buffer);	 
 			pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
@@ -87,7 +89,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			buffer = crear_buffer();
 			paquete = crear_paquete(IO_STDIN_READ_FS, buffer);
-			agregar_pcb(paquete, pcb);
+			cargar_int_al_buffer(paquete->buffer,pcb->pid);
 			cargar_int_al_buffer(paquete->buffer, registro_direccion);
 			cargar_int_al_buffer(paquete->buffer, registro_tamanio);
 
@@ -100,11 +102,13 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&sem_desalojo);
 			bloquear_proceso(pcb);
 
+			destruir_buffer(buffer);
+
 			break;
 
 		case IO_STDOUT_WRITE_FS:
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
-			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
+			pcb = deserializar_pcb(buffer);	
 			pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
@@ -118,7 +122,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			buffer = crear_buffer();
 			paquete = crear_paquete(IO_STDOUT_WRITE_FS, buffer);
-			agregar_pcb(paquete, pcb);
+			cargar_int_al_buffer(paquete->buffer,pcb->pid);
 			cargar_int_al_buffer(paquete->buffer, registro_direccion);
 			cargar_int_al_buffer(paquete->buffer, registro_tamanio);
 
@@ -131,68 +135,164 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&sem_desalojo);
 			bloquear_proceso(pcb);
 
-			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			destruir_buffer(buffer);
+
 			break;
 
 		case IO_FS_READ_FS:
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
-			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
+			pcb = deserializar_pcb(buffer);	 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
 			nombre_archivo = extraer_string_del_buffer(buffer);
 			dir_logica = extraer_int_del_buffer(buffer);
 			tamanio = extraer_int_del_buffer(buffer);
 			puntero_archivo = extraer_int_del_buffer(buffer);
 
+			
 			//resolver io_fs_read
+			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			interfaz = list_get(interfaces, indice_interfaz);
+			
+			destruir_buffer(buffer);
+			buffer = crear_buffer();
+
+			paquete = crear_paquete(IO_FS_READ_FS, buffer);
+			cargar_int_al_buffer(paquete->buffer, pcb->pid);
+			cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+			cargar_string_al_buffer(paquete->buffer, dir_logica);
+			cargar_int_al_buffer(paquete->buffer, tamanio);
+			cargar_int_al_buffer(paquete->buffer, puntero_archivo);
+			
+			pthread_mutex_lock(&interfaz->mutex_interfaz);
+			list_add(interfaz->cola_espera, paquete);
+			pthread_mutex_unlock(&interfaz->mutex_interfaz);
+
+			sem_post(&interfaz->sem_espera);
+
+			sem_post(&sem_desalojo);
+			bloquear_proceso(pcb);
 
 			destruir_buffer(buffer);
 
 			break;
 		case IO_FS_WRITE_FS:
-	buffer = recibir_buffer_completo(fd_cpu_dispatch);
-			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
+			buffer = recibir_buffer_completo(fd_cpu_dispatch);
+			pcb = deserializar_pcb(buffer);	 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
 			nombre_archivo = extraer_string_del_buffer(buffer);
-			 dir_logica = extraer_int_del_buffer(buffer);
-			 tamanio = extraer_int_del_buffer(buffer);
-			 puntero_archivo = extraer_int_del_buffer(buffer);
+			dir_logica = extraer_int_del_buffer(buffer);
+			tamanio = extraer_int_del_buffer(buffer);
+			puntero_archivo = extraer_int_del_buffer(buffer);
 
 			//resolver io_fs_write
+			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			interfaz = list_get(interfaces, indice_interfaz);
+
+			destruir_buffer(buffer);
+			buffer = crear_buffer();
+
+			paquete = crear_paquete(IO_FS_WRITE_FS, buffer);
+			cargar_int_al_buffer(paquete->buffer, pcb->pid);
+			cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+			cargar_string_al_buffer(paquete->buffer, dir_logica);
+			cargar_int_al_buffer(paquete->buffer, tamanio);
+			cargar_int_al_buffer(paquete->buffer, puntero_archivo);
 			
+			pthread_mutex_lock(&interfaz->mutex_interfaz);
+			list_add(interfaz->cola_espera, paquete);
+			pthread_mutex_unlock(&interfaz->mutex_interfaz);
+
+			sem_post(&interfaz->sem_espera);
+
+			sem_post(&sem_desalojo);
+			bloquear_proceso(pcb);
+
 			destruir_buffer(buffer);
 
 			break;
 
 		case IO_FS_TRUNCATE_FS:
-	buffer = recibir_buffer_completo(fd_cpu_dispatch);
-			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
+			buffer = recibir_buffer_completo(fd_cpu_dispatch);
+			pcb = deserializar_pcb(buffer);	 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
-			tamanio = extraer_int_del_buffer(buffer);
 			nombre_archivo = extraer_string_del_buffer(buffer);
-
+			tamanio = extraer_int_del_buffer(buffer);
+			
 			//resolver io_fs_truncate
+			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			interfaz = list_get(interfaces, indice_interfaz);
+
+			destruir_buffer(buffer);
+			buffer = crear_buffer();
+
+			paquete = crear_paquete(IO_FS_TRUNCATE_FS, buffer);
+			cargar_int_al_buffer(paquete->buffer, pcb->pid);
+			cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+			cargar_int_al_buffer(paquete->buffer, tamanio);
+			
+			pthread_mutex_lock(&interfaz->mutex_interfaz);
+			list_add(interfaz->cola_espera, paquete);
+			pthread_mutex_unlock(&interfaz->mutex_interfaz);
+
+			sem_post(&interfaz->sem_espera);
+
+			sem_post(&sem_desalojo);
+			bloquear_proceso(pcb);
+
 			
 			destruir_buffer(buffer);
 
 			break;
 		case IO_FS_CREATE_FS:
-	buffer = recibir_buffer_completo(fd_cpu_dispatch);
-			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
+			buffer = recibir_buffer_completo(fd_cpu_dispatch);
+			pcb = deserializar_pcb(buffer);	 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
 			nombre_archivo = extraer_string_del_buffer(buffer);
 			//resolver io_fs_create
+			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			interfaz = list_get(interfaces, indice_interfaz);
+			
+			paquete = crear_paquete(IO_FS_CREATE_FS, buffer);
+			cargar_int_al_buffer(paquete->buffer, pcb->pid);
+			cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+
+			pthread_mutex_lock(&interfaz->mutex_interfaz);
+			list_add(interfaz->cola_espera, paquete);
+			pthread_mutex_unlock(&interfaz->mutex_interfaz);
+
+			sem_post(&interfaz->sem_espera);
+
+			sem_post(&sem_desalojo);
+			bloquear_proceso(pcb);
 			
 			destruir_buffer(buffer);
 
-		break;
+			break;
 		case IO_FS_DELETE_FS:
-		buffer = recibir_buffer_completo(fd_cpu_dispatch);
-			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
+			buffer = recibir_buffer_completo(fd_cpu_dispatch);
+			pcb = deserializar_pcb(buffer);	 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
-			 nombre_archivo = extraer_string_del_buffer(buffer);
+			nombre_archivo = extraer_string_del_buffer(buffer);
 
 			//resolver io_fs_delete
+			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			interfaz = list_get(interfaces, indice_interfaz);
+			
+			destruir_buffer(buffer);
+			buffer = crear_buffer();
+
+			paquete = crear_paquete(IO_FS_DELETE_FS, buffer);
+			cargar_int_al_buffer(paquete->buffer, pcb->pid);
+			cargar_string_al_buffer(paquete->buffer, nombre_archivo);
+
+			pthread_mutex_lock(&interfaz->mutex_interfaz);
+			list_add(interfaz->cola_espera, paquete);
+			pthread_mutex_unlock(&interfaz->mutex_interfaz);
+
+			sem_post(&interfaz->sem_espera);
+
+			sem_post(&sem_desalojo);
+			bloquear_proceso(pcb);
 			
 			destruir_buffer(buffer);
 
@@ -215,7 +315,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			sem_post(&sem_EXIT);
 			// hacer cosas de memoria
-
+			destruir_buffer(buffer);
 			// CONTEMPLAR EL CASO PARA DEVOLVER RECURSOS SI LOS TIENE
 			break;
 
@@ -319,5 +419,5 @@ void bloquear_proceso(t_pcb *pcb)
 6) ELIMINAR PROCESO (TERMINAR LARGO PLAZO) (hecho)
 
 
-
 */
+
