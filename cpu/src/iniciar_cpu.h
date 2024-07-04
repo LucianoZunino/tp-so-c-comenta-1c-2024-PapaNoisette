@@ -10,6 +10,9 @@ void iniciar_config_cpu();
 void imprimir_config_cpu();
 void finalizar_cpu();
 
-void loggear_ejecucion(t_instruccion *instruccion);//log obligatorio
+//void loggear_ejecucion(t_instruccion *instruccion);//log obligatorio
+int get_tamanio_registro(char *registro);
+long int get_registro(char *registro);
+int consultar_tamanio_pagina_memoria();
 
 #endif

@@ -16,23 +16,8 @@
 #include <commons/collections/queue.h>
 #include <time.h>
 
-// Linea de instruccion, si no usa algun argumento,se deja empty
-typedef struct
-{
-	char *instruccion;
-	char *arg1;
-	char *arg2;
-	char *arg3;
-	char *arg4;
-	char *arg5;
-} t_instruccion;
-/*typedef struct
-{
-	char instruccion[20];
-	char arg1[20];
-	char arg2[20];
-	char arg3[20];
-} t_instruccion;*/
+
+
 
 // Codigos de operaciones
 typedef enum
@@ -113,7 +98,7 @@ typedef enum
 
 typedef struct
 {
-	uint8_t PROGRAM_COUNTER;
+	//uint32_t PROGRAM_COUNTER;
 	uint8_t AX;
 	uint8_t BX;
 	uint8_t CX;
@@ -217,9 +202,9 @@ t_paquete *crear_paquete(op_code code_op, t_buffer *buffer);
 void eliminar_paquete(t_paquete *paquete);
 void *serializar_paquete(t_paquete *paquete);
 void enviar_paquete(t_paquete *paquete, int socket_cliente);
-void *serializar_instruccion(t_instruccion *instruccion);
-t_instruccion *deserializar_instruccion(void *stream);
-t_list *parsear_archivo_instrucciones(char *path_archivo, t_log *logger);
+//void *serializar_instruccion(t_instruccion *instruccion);
+//t_instruccion *deserializar_instruccion(void *stream);
+//t_list *parsear_archivo_instrucciones(char *path_archivo, t_log *logger);
 t_pcb *deserializar_pcb(t_buffer *buffer);
 
 // Funciones auxiliares
@@ -231,5 +216,5 @@ void aceptar_handshake(t_log *logger, int socket_cliente, op_code cop);
 void rechazar_handshake(t_log *logger, int socket_cliente);
 
 void print_registros(t_registros_cpu *registros);
-
+void print_pcb(t_pcb* pcb);
 #endif

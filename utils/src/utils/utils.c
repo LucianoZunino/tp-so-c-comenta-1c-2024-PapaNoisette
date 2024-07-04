@@ -394,7 +394,6 @@ void rechazar_handshake(t_log *logger, int socket_cliente)
 
 void print_registros (t_registros_cpu *registros){
 printf("printeo registros \n");
-printf(">>registros - PROGRAM_COUNTER: %d\n",registros->PROGRAM_COUNTER);
 printf(">>registros - AX: %d\n",registros->AX);
 printf(">>registros - BX: %d\n",registros->BX);
 printf(">>registros - CX: %d\n",registros->CX);
@@ -409,73 +408,26 @@ printf(">>registros - DI: %d\n",registros->DI);
 
 }
 
-
-// Para leer el script de instrucciones y lo deja enlistado para que memoria los envie de a uno
-t_list *parsear_archivo_instrucciones(char *path_archivo, t_log *logger)// va a memoria
-{
-	FILE *archivo_instrucciones = fopen(path_archivo, "r");
-
-	if (archivo_instrucciones == NULL)
-	{
-		log_error(logger, "Error al abrir el archivo de instrucciones\n");
-		exit(-1);
-	}
-
-	t_list *instrucciones = list_create();
-	char *linea = malloc(sizeof(t_instruccion));
-
-	t_instruccion *instruccion;
-	while (fgets(linea, 80, archivo_instrucciones) !=NULL)
-	{
-
-		printf("linea %s\n",linea);
-
-
-		instruccion = malloc(sizeof(t_instruccion));
-		instruccion->instruccion = malloc(20);
-		instruccion->arg1 = malloc(20);
-		instruccion->arg2 = malloc(20);
-		instruccion->arg3 = malloc(20);
-
-		if (sscanf(linea, "%s %s %s %s", instruccion->instruccion, instruccion->arg1, instruccion->arg2, instruccion->arg3) == 4)
-		{
-			// se cargaron los 4 strings
-		}
-		else if (sscanf(linea, "%s %s %s", instruccion->instruccion, instruccion->arg1, instruccion->arg2) == 3)
-		{
-			strcpy(instruccion->arg3, "");
-		}
-		else if (sscanf(linea, "%s %s", instruccion->instruccion, instruccion->arg1) == 2)
-		{
-			strcpy(instruccion->arg2, "");
-			strcpy(instruccion->arg3, "");
-		}
-		else if (sscanf(linea, "%s", instruccion->instruccion) == 1)
-		{
-			strcpy(instruccion->arg1, "");
-			strcpy(instruccion->arg2, "");
-			strcpy(instruccion->arg3, "");
-		}
-		printf("\ninstruccion %s\n",instruccion->instruccion);
-		printf("arg1 %s\n",instruccion->arg1);
-		printf("arg2 %s\n",instruccion->arg2);
-		printf("arg3 %s\n",instruccion->arg3);
-
-		list_add(instrucciones, (void *)instruccion);
-	}
-	free(instruccion);
-	fclose(archivo_instrucciones);
-
-	return instrucciones;
+print_pcb(t_pcb *pcb){
+	printf("\n------------------>>>>>>>>   printeo pcb \n");
+	printf(">>pcb pid: %d\n",pcb->pid);
+	printf(">>pcb program_counter: %d\n",pcb->program_counter);
+	printf(">>pcb quantum: %d\n",pcb->quantum);
+	printf(">>pcb estado: %d\n",pcb->estado);
+	print_registros (pcb->registros_cpu);
+    printf(">>Fin pcb: \n");
 }
 
 t_pcb* deserializar_pcb(t_buffer* buffer)
 	{
      t_pcb *pcb = malloc(sizeof(t_pcb)); // ESTA MEMORIA CUANDO SE LIBERA?
+	//t_pcb *pcb;
+	    pcb->registros_cpu = malloc(sizeof(t_registros_cpu));
+
      pcb->pid = extraer_int_del_buffer(buffer);
      pcb->program_counter = extraer_int_del_buffer(buffer);
-     pcb->registros_cpu = extraer_datos_del_buffer(buffer); // esto está vacío y rompe
-	 pcb->quantum = extraer_int_del_buffer(buffer);
+	 pcb->registros_cpu=extraer_datos_del_buffer(buffer);
+     pcb->quantum = extraer_int_del_buffer(buffer);
      pcb->estado = extraer_int_del_buffer(buffer);
 	 return pcb;
 	}

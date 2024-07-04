@@ -2,61 +2,6 @@
 #include "instrucciones.h"
 
 
-long int get_registro(char *registro)
-{
-
-   if (strcmp(registro, "AX") == 0)
-   {
-      return EXEC->registros_cpu->AX;
-   }
-   else if (strcmp(registro, "BX") == 0)
-   {
-      return EXEC->registros_cpu->BX;
-   }
-   else if (strcmp(registro, "CX") == 0)
-   {
-      return EXEC->registros_cpu->CX;
-   }
-   else if (strcmp(registro, "DX") == 0)
-   {
-      return EXEC->registros_cpu->DX;
-   }
-   else if (strcmp(registro, "EAX") == 0)
-   {
-      return EXEC->registros_cpu->EAX;
-   }
-   else if (strcmp(registro, "EBX") == 0)
-   {
-      return EXEC->registros_cpu->EBX;
-   }
-   else if (strcmp(registro, "ECX") == 0)
-   {
-      return EXEC->registros_cpu->ECX;
-   }
-   else if (strcmp(registro, "EDX") == 0)
-   {
-      return EXEC->registros_cpu->EDX;
-   }
-   else if (strcmp(registro, "SI") == 0)
-   {
-      return EXEC->registros_cpu->SI;
-   }
-   else if (strcmp(registro, "DI") == 0)
-   {
-      return EXEC->registros_cpu->DI;
-   }
-   else if (strcmp(registro, "PROGRAM_COUNTER") == 0)
-   {
-      return EXEC->registros_cpu->PROGRAM_COUNTER;
-   }
-   else
-   {
-      printf("Error en get_registro");
-   }
-}
-
-
-
 
 void ejecutar_set(char *registro, char *valor)
 {
@@ -102,7 +47,7 @@ void ejecutar_set(char *registro, char *valor)
    }
    else if (strcmp(registro, "PC") == 0)
    {
-      EXEC->registros_cpu->PROGRAM_COUNTER = atoi(valor);
+      EXEC->program_counter = atoi(valor);
    }
    else
    {
@@ -224,7 +169,8 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion)
    int dir_logica = -1;
    // obtengo la dir logica
    dir_logica = get_registro(registro_direccion);
-
+   //calculo el tamaño a leer en memoria 
+   int tam_registro =get_tamanio_registro(registro_datos);
    // obtengo  la dir fisica
    int dir_fisica = traducir_direccion_logica(dir_logica);
 
@@ -290,15 +236,31 @@ void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo)
 {
    // IO_GEN_SLEEP (Interfaz, Unidades de trabajo):
    // Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.instruccion
+     printf("ejecutar_io_gen_sleep  \n");
 
-   log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
+   //log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
+     printf("flag1 \n");
 
    t_buffer *buffer= crear_buffer();
+        printf("flag2 \n");
+
    t_paquete *paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer);
+        printf("flag3 \n");
+
    agregar_pcb(paquete,EXEC);
-   cargar_string_al_buffer(paquete->buffer, interfaz);               // interfaz io  que debe hacer el sleep
+        printf("flag4 \n");
+
+   cargar_string_al_buffer(paquete->buffer, interfaz);  
+        printf("flag1 \n");
+             // interfaz io  que debe hacer el sleep
+                  printf("flag5 \n");
+
    cargar_int_al_buffer(paquete->buffer, atoi(unidades_de_trabajo)); // tiempo en ms de sleep
+        printf("flag6 \n");
+
    enviar_paquete(paquete, fd_kernel_dispatch);
+        printf("flag7 \n");
+
    eliminar_paquete(paquete);
 }
 

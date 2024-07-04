@@ -14,8 +14,8 @@ void iniciar_memoria(){
     iniciar_config_memoria();
     inicializar_memoria();
     //imprimir_config_memoria();
-
-
+// lista_de_miniPcb=list_create();
+//lista_de_tablas_de_paginas_por_proceso=list_create();
 
     // Inicializa la tabla de páginas y el espacio de memoria
     //TablaDePaginas tabla_de_paginas;
@@ -222,8 +222,6 @@ log_info(logger_memoria, "Se finalizo el proceso :%d",pid);
 }
 void inicializar_memoria(){
     lista_de_miniPcb = list_create();
-    //printf("SE CREO lista_de_miniPcb \n");
-    //printf("Size: %i\n", list_size(lista_de_miniPcb));
     lista_de_tablas_de_paginas_por_proceso = list_create();
 
     // Asignacion de memoria contigua

@@ -16,11 +16,11 @@ int fd_entradasalida;
 
 int main(int argc, char* argv[]){
     decir_hola("Memoria");
-
     // Iniciar Memoria
     iniciar_memoria();
     printf("Memoria iniciada, lista de mini PCB size: %i\n", list_size(lista_de_miniPcb));
   	log_info(logger_memoria, "Arranca el modulo MEMORIA");
+    printf("path_instrucciones%s\n",path_instrucciones);
 
     // Levantar Server Memoria
    	fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, ">>> Server Memoria escuchando... <<<");
@@ -37,15 +37,20 @@ int main(int argc, char* argv[]){
     log_info(logger_memoria, "Esperando conexión de E/S");
     fd_entradasalida = esperar_cliente(fd_memoria, logger_memoria, "E/S");
 
-    // Escucha los mensajes CPU-Memoria
-    pthread_t hilo_cpu_memoria;
-	pthread_create(&hilo_cpu_memoria, NULL, (void*)escuchar_mensajes_cpu_memoria, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
-	pthread_detach(hilo_cpu_memoria); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+  
 
     // Escucha los mensajes Kernel-Memoria
     pthread_t hilo_kernel_memoria;
 	pthread_create(&hilo_kernel_memoria, NULL, (void*)escuchar_mensajes_kernel_memoria, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	pthread_detach(hilo_kernel_memoria); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+  
+  // Escucha los mensajes CPU-Memoria
+    pthread_t hilo_cpu_memoria;
+	pthread_create(&hilo_cpu_memoria, NULL, (void*)escuchar_mensajes_cpu_memoria, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
+	pthread_join(hilo_cpu_memoria,NULL); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+
+    	//pthread_detach(hilo_cpu_memoria); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+
 
     // Escucha los mensajes E/S-Memoria
     pthread_t hilo_entradasalida_memoria;

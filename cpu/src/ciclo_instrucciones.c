@@ -5,6 +5,12 @@
 #define CONTINUAR_CICLO 0
 #define SALIR_DE_CICLO 1
 
+char instruccion[20];
+char instr_arg1[20];
+char instr_arg2[20];
+char instr_arg3[20];
+char instr_arg4[20];
+char instr_arg5[20];
 int pid_interrupcion = SIN_INTERRUPCION;
 motivo_interrupcion motivo;
 pthread_mutex_t interrupcion_mutex;
@@ -13,153 +19,162 @@ pthread_mutex_t interrupcion_mutex;
 /// @note
 /// @param t_pcb
 /// @return t_instruccion
-t_instruccion *fetch()
+void fetch()
 {
     log_info(logger_cpu, "Ejecutando FETCH PID: %i Program Counter: %i", EXEC->pid, EXEC->program_counter);
-    // enviar_memoria_solicitar_instruccion(proceso, fd_memoria); CPU_SOLICITA_INSTRUCCION
 
-    // op_code codigo_operacion =recibir_codigo_operacion(fd_memoria);
-    char *cpu_respuesta_instruccion; // la instruccion sin parsear tipo IO_FS_READ Int4 notas.txt BX ECX EDX
+    enviar_memoria_solicitar_instruccion(EXEC, fd_memoria);
 
-    t_instruccion *instruccion = malloc(sizeof(t_instruccion));
-    // esta parte iria en el hilo
-    /* if (codigo_operacion==MEMORIA_ENVIA_INSTRUCCION){
-     char *cpu_respuesta_instruccion  = recibir_cadena(fd_memoria);
-     }
-     else
-     {
-     log_error(logger_cpu, "Se recibio un OP_CODE distinto de MEMORIA_ENVIA_INSTRUCCION");
-     //aca no se si meter un while o ke...
-     }*/
+    // la instruccion sin parseadasr tipo IO_FS_READ Int4 notas.txt BX ECX EDX
+    char *cpu_respuesta_instruccion = malloc(100);
 
-    if (sscanf(cpu_respuesta_instruccion, "%s %s %s %s", instruccion->instruccion, instruccion->arg1, instruccion->arg2, instruccion->arg3) == 4)
+    op_code codigo_operacion = recibir_operacion(fd_memoria);
+    if (codigo_operacion == MEMORIA_ENVIA_INSTRUCCION)
     {
-        // se cargaron los 4 strings
+        t_buffer *buffer = crear_buffer();
+        buffer = recibir_buffer_completo(fd_memoria);
+
+        strcpy(cpu_respuesta_instruccion, extraer_string_del_buffer(buffer));
+
+        destruir_buffer(buffer);
     }
-    else if (sscanf(cpu_respuesta_instruccion, "%s %s %s", instruccion->instruccion, instruccion->arg1, instruccion->arg2) == 3)
+
+   // printf("cpu_respuesta_instruccion %s  \n", cpu_respuesta_instruccion);
+
+    char **array_instruccion = string_split(cpu_respuesta_instruccion, " ");
+
+    for (int i = string_array_size(array_instruccion); i <= 5; i++)
     {
-        strcpy(instruccion->arg3, "");
+        string_array_push(&array_instruccion, "");
     }
-    else if (sscanf(cpu_respuesta_instruccion, "%s %s", instruccion->instruccion, instruccion->arg1) == 2)
-    {
-        strcpy(instruccion->arg2, "");
-        strcpy(instruccion->arg3, "");
-    }
-    else if (sscanf(cpu_respuesta_instruccion, "%s", instruccion->instruccion) == 1)
-    {
-        strcpy(instruccion->arg1, "");
-        strcpy(instruccion->arg2, "");
-        strcpy(instruccion->arg3, "");
-    }
-    printf("Devuelve la instruccion\n");
-    return instruccion;
+
+    free(cpu_respuesta_instruccion);
+
+    strcpy(instruccion, array_instruccion[0]);
+    strcpy(instr_arg1, array_instruccion[1]);
+    strcpy(instr_arg2, array_instruccion[2]);
+    strcpy(instr_arg3, array_instruccion[3]);
+    strcpy(instr_arg4, array_instruccion[4]);
+    strcpy(instr_arg5, array_instruccion[5]);
+
+    printf("instruccion    %s\n", instruccion);
+    printf("instr_arg1   %s\n", instr_arg1);
+    printf("instr_arg2   %s\n", instr_arg2);
+    printf("instr_arg3   %s\n", instr_arg3);
+    printf("instr_arg4   %s\n", instr_arg4);
+    printf("instr_arg5   %s\n", instr_arg5);
 }
-
 /// @brief Procesa una instruccion para un proceso
 /// @note Esta etapa consiste en interpretar qué instrucción es la que se va a ejecutar y si la misma requiere de una traducción de dirección lógica a dirección física.
 /// @param t_instruccion, t_pcb
 /// @return retorna un flag para sabes si sigue el ciclo o se interrumpe
-int decode_excute(t_instruccion *instruccion)
+int decode_excute()
 {
     EXEC->program_counter += 1; // lo hago aca para que en tal caso el jnz lo sobreescriba
-    loggear_ejecucion(instruccion);
-    if (strcmp(instruccion->instruccion, "SET") == 0)
+    printf("--decode_excute  -  EXEC->program_counter :%d  - instruccion:%s\n", EXEC->program_counter, instruccion);
+
+    // loggear_ejecucion(instruccion);
+    if (strcmp(instruccion, "SET") == 0)
     {
-        ejecutar_set(instruccion->arg1, instruccion->arg2);
+        ejecutar_set(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "MOV_IN") == 0)
+    else if (strcmp(instruccion, "MOV_IN") == 0)
     {
-        ejecutar_mov_in(instruccion->arg1, instruccion->arg2);
+        //ejecutar_mov_in(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "MOV_OUT") == 0)
+    else if (strcmp(instruccion, "MOV_OUT") == 0)
     {
-        ejecutar_mov_out(instruccion->arg1, instruccion->arg2);
+       // ejecutar_mov_out(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "SUM") == 0)
+    else if (strcmp(instruccion, "SUM") == 0)
     {
-        ejecutar_sum(instruccion->arg1, instruccion->arg2);
+        ejecutar_sum(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "SUB") == 0)
+    else if (strcmp(instruccion, "SUB") == 0)
     {
-        ejecutar_sub(instruccion->arg1, instruccion->arg2);
+        ejecutar_sub(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "JNZ") == 0)
+    else if (strcmp(instruccion, "JNZ") == 0)
     {
-        ejecutar_jnz(instruccion->arg1, instruccion->arg2);
+        printf("entro en jnz\n");
+        //ejecutar_jnz(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "RESIZE") == 0)
+    else if (strcmp(instruccion, "RESIZE") == 0)
     {
-        if (ejecutar_resize(instruccion->arg1) == 0)
+        /*if (ejecutar_resize(instr_arg1) == 0)
         {
             return CONTINUAR_CICLO;
         }
         else
         {
             return SALIR_DE_CICLO;
-        }
-    }
-    else if (strcmp(instruccion->instruccion, "COPY_STRING") == 0)
-    {
-        ejecutar_copy_string(instruccion->arg1);
+        }*/
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "WAIT") == 0)
+    else if (strcmp(instruccion, "COPY_STRING") == 0)
     {
-        ejecutar_wait(instruccion->arg1);
+       // ejecutar_copy_string(instr_arg1);
+        return CONTINUAR_CICLO;
+    }
+    else if (strcmp(instruccion, "WAIT") == 0)
+    {
+       // ejecutar_wait(instr_arg1);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "SIGNAL") == 0)
+    else if (strcmp(instruccion, "SIGNAL") == 0)
     {
-        ejecutar_signal(instruccion->arg1);
+       // ejecutar_signal(instr_arg1);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "IO_GEN_SLEEP") == 0)
+    else if (strcmp(instruccion, "IO_GEN_SLEEP") == 0)
     {
-        ejecutar_io_gen_sleep(instruccion->arg1, instruccion->arg2);
+        printf("entro en IO_GEN_SLEEP\n");
+
+        //ejecutar_io_gen_sleep(instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "IO_STDIN_READ") == 0)
+    else if (strcmp(instruccion, "IO_STDIN_READ") == 0)
     {
-        ejecutar_io_stdin_read(instruccion->arg1, instruccion->arg2, instruccion->arg3);
+       // ejecutar_io_stdin_read(instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "IO_STDOUT_WRITE") == 0)
+    else if (strcmp(instruccion, "IO_STDOUT_WRITE") == 0)
     {
-        ejecutar_io_stdout_write(instruccion->arg1, instruccion->arg2, instruccion->arg3);
+       // ejecutar_io_stdout_write(instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "IO_FS_CREATE") == 0)
+    else if (strcmp(instruccion, "IO_FS_CREATE") == 0)
     {
-        ejecutar_io_fs_create(instruccion->arg1, instruccion->arg2);
+       // ejecutar_io_fs_create(instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "IO_FS_DELETE") == 0)
+    else if (strcmp(instruccion, "IO_FS_DELETE") == 0)
     {
-        ejecutar_io_fs_delete(instruccion->arg1, instruccion->arg2);
+       // ejecutar_io_fs_delete(instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "IO_FS_TRUNCATE") == 0)
+    else if (strcmp(instruccion, "IO_FS_TRUNCATE") == 0)
     {
-        ejecutar_io_fs_truncate(instruccion->arg1, instruccion->arg2, instruccion->arg3);
+       // ejecutar_io_fs_truncate(instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "IO_FS_WRITE") == 0)
+    else if (strcmp(instruccion, "IO_FS_WRITE") == 0)
     {
-        ejecutar_io_fs_write(instruccion->arg1, instruccion->arg2, instruccion->arg3, instruccion->arg4, instruccion->arg5);
+       // ejecutar_io_fs_write(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "IO_FS_READ") == 0)
+    else if (strcmp(instruccion, "IO_FS_READ") == 0)
     {
-        ejecutar_io_fs_read(instruccion->arg1, instruccion->arg2, instruccion->arg3, instruccion->arg4, instruccion->arg5);
+       // ejecutar_io_fs_read(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion->instruccion, "EXIT") == 0)
+    else if (strcmp(instruccion, "EXIT") == 0)
     {
         ejecutar_exit();
         return SALIR_DE_CICLO;
@@ -171,40 +186,36 @@ int decode_excute(t_instruccion *instruccion)
     }
 }
 
-int ciclo_de_instruccion()
+int ciclo_de_instruccion() // FETCH->EXECUTE
 {
     // Recibo instruccion y la mando a ejecutar
-    printf(">>>>>Entro a ciclo_de_instruccion  \n");
-    int estado_ciclo = 0;                                     // 0 continuar 1 salir de ciclo
-    t_instruccion *instruccion = malloc(sizeof(instruccion)); // probar si realmente hace falta malloquearla
-    instruccion = fetch();
+    printf("\n>>>>>>>>Entro a ciclo_de_instruccion <<<<<<<<<  \n");
+    int estado_ciclo = 1; 
+    // 0 continuar 1 salir de ciclo,incializo en 1 para que no loopee eternamente
 
-    estado_ciclo = decode_excute(instruccion); // lo h
+    fetch(); 
 
-    free(instruccion->instruccion);
-    free(instruccion);
 
-    // Chequeo si la instruccion recibida no fue un EXIT
-    // por ahora lo comento calculo que lo trato en decode_execute
-    //   if(estado_ciclo == 1)return 1;
+     estado_ciclo = decode_excute(); 
+    printf("fin a ciclo_de_instruccion   \n");
 
-    // Chequeo interrupciones
+ /*
 
-    pthread_mutex_lock(&interrupcion_mutex);
-    if (pid_interrupcion == EXEC->pid)
-    {
-        estado_ciclo = SALIR_DE_CICLO;
-        pid_interrupcion = SIN_INTERRUPCION;
-        pthread_mutex_unlock(&interrupcion_mutex);
-        motivo_interrupcion motivo = motivo;
-        enviar_kernel_interrupt(EXEC,motivo, fd_kernel_dispatch);
-    }
-    else
-    {
-        if (pid_interrupcion != SIN_INTERRUPCION)
-            log_debug(logger_cpu, "Hubo interrupcion pero para otro pid. PID en ejeucion: %i - PID de interrupcion: %i", EXEC->pid, pid_interrupcion);
-        pthread_mutex_unlock(&interrupcion_mutex);
-    }
-
+        pthread_mutex_lock(&interrupcion_mutex);
+        if (pid_interrupcion == EXEC->pid)
+        {
+            estado_ciclo = SALIR_DE_CICLO;
+            pid_interrupcion = SIN_INTERRUPCION;
+            pthread_mutex_unlock(&interrupcion_mutex);
+            motivo_interrupcion motivo = motivo;
+            enviar_kernel_interrupt(EXEC,motivo, fd_kernel_dispatch);
+        }
+        else
+        {
+            if (pid_interrupcion != SIN_INTERRUPCION)
+                log_debug(logger_cpu, "Hubo interrupcion pero para otro pid. PID en ejeucion: %i - PID de interrupcion: %i", EXEC->pid, pid_interrupcion);
+            pthread_mutex_unlock(&interrupcion_mutex);
+        }
+    */
     return estado_ciclo;
 }

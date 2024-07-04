@@ -103,8 +103,9 @@ void enviar_proceso_por_paquete(t_pcb *pcb, char *archivo_pseudocodigo, int sock
     t_buffer* buffer_a_enviar = crear_buffer();
     t_paquete *paquete = crear_paquete(op_code, buffer_a_enviar);
     agregar_pcb(paquete, pcb);
-    if (archivo_pseudocodigo != NULL){//por que hacia romper cuano venia null...
-    cargar_string_al_buffer(paquete->buffer, archivo_pseudocodigo);}
+  //  if (archivo_pseudocodigo !=NULL){//por que hacia romper cuano venia null...
+   // cargar_string_al_buffer(paquete->buffer, archivo_pseudocodigo);}
+   cargar_string_al_buffer(paquete->buffer, archivo_pseudocodigo);
     enviar_paquete(paquete, socket);
     eliminar_paquete(paquete);    
 }
@@ -158,19 +159,6 @@ void recibir_kernel_respuesta_inicializar_estructuras(int socket)
 
 
 
-//******************************
-//****MENSAJES QUE ENVIA CPU
-//******************************
-
-
-/// @brief Envia al kernel el pcb por motivo de interrupcion
-/// @param pcb
-/// @param socket
-void enviar_kernel_interrupt(t_pcb *pcb, motivo_interrupcion motivo, int socket)
-{
-  
-
-}
 
 void enviar_memoria_solicitar_instruccion(t_pcb *pcb, int socket)
 {
@@ -180,6 +168,7 @@ void enviar_memoria_solicitar_instruccion(t_pcb *pcb, int socket)
   enviar_paquete(paquete, socket);
   eliminar_paquete(paquete);
 }
+
 
 
 

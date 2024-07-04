@@ -3,14 +3,11 @@
 t_pcb* EXEC;
 
 void escuchar_mensajes_kernel_dispatch(){
-	printf("Entro a  escuchar_mensajes_kernel_dispatch \n");
 t_buffer * buffer=crear_buffer();
     bool desconexion_kernel_dispatch = 0;
 	while(!desconexion_kernel_dispatch){
-
 		int cod_op = recibir_operacion(fd_kernel_dispatch); // recv() es bloqueante por ende no queda loopeando infinitamente
-			printf("---recibir_operacion--->cod_op= %d\n",cod_op);
-				//aceptar_handshake(logger_cpu, fd_kernel_dispatch, cod_op);
+			//printf("---recibir_operacion--->cod_op= %d\n",cod_op);
 
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
@@ -22,15 +19,17 @@ t_buffer * buffer=crear_buffer();
 				break;
 
 			case KERNEL_ENVIA_PROCESO:
-				printf("CASE: KERNEL_ENVIA_PROCESO\n");
 				buffer=recibir_buffer_completo(fd_kernel_dispatch);
 			    EXEC=malloc(sizeof(t_pcb));
-				EXEC = deserializar_pcb(buffer); //PROBAR, NO ESTAMOS USANDO MALLOC
+				EXEC = deserializar_pcb(buffer); 
+				print_pcb(EXEC);
+    sleep(2);
 
 					while (ciclo_de_instruccion(EXEC) == 0){
-						
+						    sleep(1);
+
 					};
-               //free(EXEC);
+					print_pcb(EXEC);
 
  				break;
 			case -1:
@@ -54,7 +53,7 @@ void escuchar_mensajes_kernel_interrupt(){
 	while(!desconexion_kernel_interrupt){
 		int cod_op = recibir_operacion(fd_kernel_interrupt); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
-			//case PROTOCOLOS_A_DEFINIR:
+			//case PROTOCOLOS_A_DEFINIR :
 			case HANDSHAKE_KERNEL:
 				aceptar_handshake(logger_cpu, fd_kernel_interrupt, cod_op);
 				break;
@@ -63,11 +62,6 @@ void escuchar_mensajes_kernel_interrupt(){
 			buffer = recibir_buffer_completo(fd_kernel_interrupt);
 			motivo_interrupcion motivo = extraer_int_del_buffer(buffer);
 			enviar_proceso_por_paquete(EXEC, NULL,fd_cpu_interrupt, motivo);
-				
-
-			
-			//aca deberia ir el case de la interrupcion, recibir el pid, y si esta corrieno interrumpirlo
-
 			break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Interrupt. Terminando servidor.");

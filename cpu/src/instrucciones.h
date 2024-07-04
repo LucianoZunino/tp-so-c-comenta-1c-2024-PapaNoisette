@@ -9,6 +9,7 @@
 #include <utils/utils.h>
 #include "main.h"
 #include "mmu.h"
+#include "iniciar_cpu.h"
 
 #include "ciclo_instrucciones.h"
 #include "utils/mensajes.h"

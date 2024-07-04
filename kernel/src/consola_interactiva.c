@@ -23,8 +23,10 @@ void iniciar_consola_interactiva(){
         // Operacion[0] = "INICIAR_PROCESO"
         // Operacion[1] = "path.txt"
         // Comando = 1;
-
         ejecutar_instruccion(operacion, comando); // (["INICIAR_PROCESO", "path.txt"], 1)
+            //crear_proceso("as");
+
+
         free(leido);
 		leido = readline("> ");
 	}

@@ -22,7 +22,6 @@ typedef struct{
 
 int calcular_numero_de_pagina(int dir_logica);//OK TEST
 int calcular_desplazamiento(int dir_logica, int numero_pagina);//OK TEST
-int consultar_tamanio_pagina_memoria();
 void agregar_entrada_tlb(t_entrada_tlb *entrada);//OK TEST
 int buscar_marco_tlb(int pid, int dir_logica);
 int obtener_marco_en_memoria(int pid, int pagina);
