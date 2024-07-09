@@ -39,11 +39,15 @@ void crear_proceso(char* path){
     pthread_mutex_lock(&mutex_NEW);
     list_add(NEW, nuevo_pcb);
     pthread_mutex_unlock(&mutex_NEW);
-
-
-    sem_post(&sem_NEW); // no deberia ser despues de recibir el ok de memoria? QUIEN HACE UN SEM_WAIT?
+   
 
     enviar_proceso_por_paquete(nuevo_pcb, path, fd_memoria, MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS);
+
+    
+    sem_wait(&sem_estructuras_inicializadas);
+
+    sem_post(&sem_NEW);  // no deberia ser despues de recibir el ok de memoria? QUIEN HACE UN SEM_WAIT?
+
     // printf("Crear proceso\n");
 
 
@@ -56,7 +60,7 @@ void crear_proceso(char* path){
     // // Hace falta? 
     // recibir_ok (fd_memoria);
     
-    sem_wait(&sem_estructuras_inicializadas);
+
     printf("Se inicializaron las estructuras\n");
 
     //TEST */
@@ -82,12 +86,10 @@ t_pcb *crear_pcb(){
 
     pcb->program_counter = 0;
 
-    t_registros_cpu *registros_cpu = malloc(sizeof(t_registros_cpu));
+    pcb->registros_cpu = malloc(sizeof(t_registros_cpu));
     
 
-    pcb->registros_cpu = registros_cpu;
-
-    int quantum = malloc(sizeof(int));
+    pcb->quantum = malloc(sizeof(int));
     
     pcb->quantum = quantum;
 

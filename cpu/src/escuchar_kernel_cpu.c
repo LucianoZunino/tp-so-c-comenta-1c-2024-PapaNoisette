@@ -23,7 +23,7 @@ t_buffer * buffer=crear_buffer();
 			    EXEC=malloc(sizeof(t_pcb));
 				EXEC = deserializar_pcb(buffer); 
 				print_pcb(EXEC);
-    sleep(2);
+    //sleep(2);
 
 					while (ciclo_de_instruccion(EXEC) == 0){
 						    sleep(1);

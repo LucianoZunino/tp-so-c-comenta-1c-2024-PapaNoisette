@@ -8,6 +8,7 @@ void escuchar_mensajes_dispatch_kernel()
 	bool desconexion_dispatch_kernel = 0;
 	while (!desconexion_dispatch_kernel)
 	{
+		
 		int cod_op = recibir_operacion(fd_cpu_dispatch); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch (cod_op)
 		{
@@ -27,7 +28,7 @@ void escuchar_mensajes_dispatch_kernel()
 			t_buffer *buffer;
 			t_paquete *paquete;
 
-
+			
 		case FIN_DE_QUANTUM:
 
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
@@ -43,31 +44,47 @@ void escuchar_mensajes_dispatch_kernel()
 			break;
 
 		case IO_GEN_SLEEP_FS:
-
+			printf("flag1 \n");
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
+			printf("flag2 \n");
 			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
+			printf("flag3 \n");
 			pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
+			printf("flag4 \n");
 			sem_post(&sem_desalojo);
+			printf("flag5 \n");
 			bloquear_proceso(pcb);
+			printf("flag6 \n");
 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
+			printf("flag7 \n");
 			tiempo = extraer_int_del_buffer(buffer);
-
+			printf("flag8 \n");
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			printf("flag9 \n");
 			interfaz = list_get(interfaces, indice_interfaz);
+			printf("flag10 \n");
 
 			destruir_buffer(buffer);
-
+			printf("flag11 \n");
 			buffer = crear_buffer();
+			printf("flag12 \n");
 			paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer); // aca no iria generica?
+			printf("flag13 \n");
 			cargar_int_al_buffer(paquete->buffer,pcb->pid);
+			printf("flag14 \n");
 			cargar_int_al_buffer(paquete->buffer, tiempo);
+			printf("flag15 \n");
 
 			pthread_mutex_lock(&interfaz->mutex_interfaz);
+			printf("flag16 \n");
 			list_add(interfaz->cola_espera, paquete);
+			printf("flag17 \n");
 			pthread_mutex_unlock(&interfaz->mutex_interfaz);
+			printf("flag18 \n");
 
 			sem_post(&interfaz->sem_espera);
+			printf("flag19 \n");
 
 			destruir_buffer(buffer);
 

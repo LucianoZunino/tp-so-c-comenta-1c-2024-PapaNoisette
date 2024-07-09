@@ -238,7 +238,7 @@ void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo)
    // Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.instruccion
      printf("ejecutar_io_gen_sleep  \n");
 
-   //log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
+   log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
      printf("flag1 \n");
 
    t_buffer *buffer= crear_buffer();

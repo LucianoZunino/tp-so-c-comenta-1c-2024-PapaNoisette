@@ -136,7 +136,7 @@ int decode_excute()
     {
         printf("entro en IO_GEN_SLEEP\n");
 
-        //ejecutar_io_gen_sleep(instr_arg1, instr_arg2);
+        ejecutar_io_gen_sleep(instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "IO_STDIN_READ") == 0)

@@ -776,3 +776,80 @@
 [ERROR] 00:13:18:864 entradasalida/(10028:10036): La Memoria se desconecto de Entradasalida. Terminando servidor.
 [ERROR] 00:13:18:868 entradasalida/(10028:10037): El Kernel se desconecto de E/S.
 
+[INFO] 21:56:24:247 entradasalida/(3103:3103): Arranca el modulo  Entrada/Salida
+[INFO] 21:56:24:248 entradasalida/(3103:3103): Handshake OK
+[INFO] 22:03:56:073 entradasalida/(3103:3103): Handshake OK
+[ERROR] 22:03:56:074 entradasalida/(3103:3320): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 22:03:59:938 entradasalida/(3103:3321): El Kernel se desconecto de E/S.
+
+[INFO] 22:04:13:311 entradasalida/(3613:3613): Arranca el modulo  Entrada/Salida
+[ERROR] 22:04:13:312 entradasalida/(3613:3613): Error conectando al Servidor,apagado o invalido
+[INFO] 22:04:13:312 entradasalida/(3613:3613): Handshake OK
+[INFO] 22:05:09:389 entradasalida/(3848:3848): Arranca el modulo  Entrada/Salida
+[INFO] 22:05:09:390 entradasalida/(3848:3848): Handshake OK
+[INFO] 22:05:15:040 entradasalida/(3848:3848): Handshake OK
+[ERROR] 22:05:15:042 entradasalida/(3848:3851): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 22:05:22:483 entradasalida/(3848:3852): El Kernel se desconecto de E/S.
+
+[INFO] 22:05:51:121 entradasalida/(4192:4192): Arranca el modulo  Entrada/Salida
+[INFO] 22:05:51:122 entradasalida/(4192:4192): Handshake OK
+[INFO] 22:19:56:842 entradasalida/(4192:4192): Handshake OK
+[ERROR] 22:19:56:845 entradasalida/(4192:4727): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 22:20:01:990 entradasalida/(4192:4728): El Kernel se desconecto de E/S.
+
+[INFO] 22:20:17:411 entradasalida/(5071:5071): Arranca el modulo  Entrada/Salida
+[INFO] 22:20:17:412 entradasalida/(5071:5071): Handshake OK
+[INFO] 22:24:44:228 entradasalida/(5071:5071): Handshake OK
+[ERROR] 22:24:44:229 entradasalida/(5071:5259): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 22:24:49:946 entradasalida/(5071:5260): El Kernel se desconecto de E/S.
+
+[INFO] 22:25:08:789 entradasalida/(5599:5599): Arranca el modulo  Entrada/Salida
+[INFO] 22:25:08:790 entradasalida/(5599:5599): Handshake OK
+[INFO] 22:33:03:884 entradasalida/(5599:5599): Handshake OK
+[ERROR] 22:33:03:887 entradasalida/(5599:5830): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 22:33:07:965 entradasalida/(5599:5831): El Kernel se desconecto de E/S.
+
+[INFO] 22:33:19:973 entradasalida/(6164:6164): Arranca el modulo  Entrada/Salida
+[INFO] 22:33:19:976 entradasalida/(6164:6164): Handshake OK
+[INFO] 22:44:28:637 entradasalida/(6164:6164): Handshake OK
+[ERROR] 22:44:28:640 entradasalida/(6164:6373): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 22:44:34:484 entradasalida/(6164:6374): El Kernel se desconecto de E/S.
+
+[INFO] 22:45:06:532 entradasalida/(6764:6764): Arranca el modulo  Entrada/Salida
+[INFO] 22:45:06:533 entradasalida/(6764:6764): Handshake OK
+[INFO] 22:45:26:614 entradasalida/(6764:6764): Handshake OK
+[ERROR] 22:45:26:614 entradasalida/(6764:6782): El Kernel se desconecto de E/S.
+
+[INFO] 22:48:58:580 entradasalida/(7457:7457): Arranca el modulo  Entrada/Salida
+[INFO] 22:48:58:581 entradasalida/(7457:7457): Handshake OK
+[INFO] 22:52:21:270 entradasalida/(7457:7457): Handshake OK
+[ERROR] 22:52:21:272 entradasalida/(7457:7560): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[ERROR] 22:52:34:158 entradasalida/(7457:7561): El Kernel se desconecto de E/S.
+
+[INFO] 22:52:43:273 entradasalida/(7906:7906): Arranca el modulo  Entrada/Salida
+[INFO] 22:52:43:274 entradasalida/(7906:7906): Handshake OK
+[INFO] 22:52:59:490 entradasalida/(7906:7906): Handshake OK
+[ERROR] 22:52:59:490 entradasalida/(7906:7924): El Kernel se desconecto de E/S.
+
+[INFO] 22:56:54:704 entradasalida/(8649:8649): Arranca el modulo  Entrada/Salida
+[INFO] 22:56:54:705 entradasalida/(8649:8649): Handshake OK
+[INFO] 22:57:15:897 entradasalida/(8649:8649): Handshake OK
+[ERROR] 22:57:15:897 entradasalida/(8649:8669): El Kernel se desconecto de E/S.
+
+[INFO] 22:58:42:531 entradasalida/(9141:9141): Arranca el modulo  Entrada/Salida
+[INFO] 22:58:42:532 entradasalida/(9141:9141): Handshake OK
+[INFO] 23:03:27:023 entradasalida/(9141:9141): Handshake OK
+[INFO] 23:04:50:699 entradasalida/(9707:9707): Arranca el modulo  Entrada/Salida
+[ERROR] 23:04:50:699 entradasalida/(9707:9707): Error conectando al Servidor,apagado o invalido
+[INFO] 23:12:38:732 entradasalida/(10852:10852): Arranca el modulo  Entrada/Salida
+[ERROR] 23:12:38:734 entradasalida/(10852:10852): Error conectando al Servidor,apagado o invalido
+[INFO] 23:13:18:405 entradasalida/(10943:10943): Arranca el modulo  Entrada/Salida
+[ERROR] 23:13:18:406 entradasalida/(10943:10943): Error conectando al Servidor,apagado o invalido
+[INFO] 23:13:25:079 entradasalida/(11007:11007): Arranca el modulo  Entrada/Salida
+[ERROR] 23:13:25:079 entradasalida/(11007:11007): Error conectando al Servidor,apagado o invalido
+[INFO] 23:13:25:957 entradasalida/(11071:11071): Arranca el modulo  Entrada/Salida
+[ERROR] 23:13:25:957 entradasalida/(11071:11071): Error conectando al Servidor,apagado o invalido
+[INFO] 23:14:40:895 entradasalida/(11569:11569): Arranca el modulo  Entrada/Salida
+[ERROR] 23:14:40:896 entradasalida/(11569:11569): Error conectando al Servidor,apagado o invalido
+[INFO] 23:18:23:453 entradasalida/(12119:12119): Arranca el modulo  Entrada/Salida
+[ERROR] 23:18:23:453 entradasalida/(12119:12119): Error conectando al Servidor,apagado o invalido

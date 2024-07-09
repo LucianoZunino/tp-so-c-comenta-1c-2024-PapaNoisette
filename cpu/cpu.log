@@ -1994,3 +1994,289 @@
 [INFO] 19:24:34:171 cpu/(46959:47174): Recibido handshake HANDSHAKE_KERNEL.
 [ERROR] 19:24:48:838 cpu/(46959:47174): El Kernel se desconecto de Interrupt. Terminando servidor.
 [ERROR] 19:24:48:838 cpu/(46959:47173): El Kernel se desconecto de Dispatch. Terminando servidor.
+[INFO] 21:56:09:142 cpu/(2878:2878): Arranca el modulo CPU
+[INFO] 21:56:09:143 cpu/(2878:2878): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 21:56:09:143 cpu/(2878:2878): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 21:56:09:143 cpu/(2878:2878): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 21:56:24:248 cpu/(2878:2878): Handshake OK
+[INFO] 21:56:24:248 cpu/(2878:2878): Esperando conexion de Kernel en Dispatch
+[INFO] 21:56:24:248 cpu/(2878:2878): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 21:56:24:248 cpu/(2878:2878): Esperando conexion de Kernel en Interrupt
+[INFO] 21:56:24:248 cpu/(2878:2878): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 21:56:24:248 cpu/(2878:3109): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 21:56:24:248 cpu/(2878:3108): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 21:58:04:071 cpu/(2878:3109): Ejecutando FETCH PID: 1 Program Counter: 0
+[ERROR] 22:03:56:073 cpu/(2878:3109): La intrucción no es válida
+[ERROR] 22:03:59:937 cpu/(2878:3108): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 22:03:59:937 cpu/(2878:3109): El Kernel se desconecto de Dispatch. Terminando servidor.
+[INFO] 22:04:08:070 cpu/(3447:3447): Arranca el modulo CPU
+[INFO] 22:04:08:070 cpu/(3447:3447): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:04:08:070 cpu/(3447:3447): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:04:08:071 cpu/(3447:3447): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:05:04:008 cpu/(3447:3447): Handshake OK
+[INFO] 22:05:04:008 cpu/(3447:3447): Esperando conexion de Kernel en Dispatch
+[INFO] 22:05:04:008 cpu/(3447:3447): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:05:04:008 cpu/(3447:3447): Esperando conexion de Kernel en Interrupt
+[INFO] 22:05:04:008 cpu/(3447:3447): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:05:04:009 cpu/(3447:3785): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:05:04:009 cpu/(3447:3784): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:05:29:165 cpu/(3986:3986): Arranca el modulo CPU
+[INFO] 22:05:29:165 cpu/(3986:3986): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:05:29:165 cpu/(3986:3986): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:05:29:166 cpu/(3986:3986): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:05:51:122 cpu/(3986:3986): Handshake OK
+[INFO] 22:05:51:122 cpu/(3986:3986): Esperando conexion de Kernel en Dispatch
+[INFO] 22:05:51:122 cpu/(3986:3986): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:05:51:122 cpu/(3986:3986): Esperando conexion de Kernel en Interrupt
+[INFO] 22:05:51:122 cpu/(3986:3986): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:05:51:122 cpu/(3986:4198): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:05:51:122 cpu/(3986:4197): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:06:09:635 cpu/(3986:4198): Ejecutando FETCH PID: 1 Program Counter: 0
+[ERROR] 22:19:56:844 cpu/(3986:4198): La intrucción no es válida
+[INFO] 22:20:09:678 cpu/(4854:4854): Arranca el modulo CPU
+[INFO] 22:20:09:679 cpu/(4854:4854): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:20:09:679 cpu/(4854:4854): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:20:09:679 cpu/(4854:4854): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:20:17:412 cpu/(4854:4854): Handshake OK
+[INFO] 22:20:17:412 cpu/(4854:4854): Esperando conexion de Kernel en Dispatch
+[INFO] 22:20:17:412 cpu/(4854:4854): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:20:17:412 cpu/(4854:4854): Esperando conexion de Kernel en Interrupt
+[INFO] 22:20:17:412 cpu/(4854:4854): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:20:17:412 cpu/(4854:5077): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:20:17:412 cpu/(4854:5076): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:20:46:730 cpu/(4854:5077): Ejecutando FETCH PID: 1 Program Counter: 0
+[ERROR] 22:20:46:731 cpu/(4854:5077): La intrucción no es válida
+[INFO] 22:25:03:113 cpu/(5394:5394): Arranca el modulo CPU
+[INFO] 22:25:03:113 cpu/(5394:5394): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:25:03:113 cpu/(5394:5394): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:25:03:113 cpu/(5394:5394): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:25:08:790 cpu/(5394:5394): Handshake OK
+[INFO] 22:25:08:790 cpu/(5394:5394): Esperando conexion de Kernel en Dispatch
+[INFO] 22:25:08:790 cpu/(5394:5394): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:25:08:790 cpu/(5394:5394): Esperando conexion de Kernel en Interrupt
+[INFO] 22:25:08:790 cpu/(5394:5394): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:25:08:790 cpu/(5394:5605): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:25:08:790 cpu/(5394:5604): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:25:38:731 cpu/(5394:5605): Ejecutando FETCH PID: 1 Program Counter: 0
+[ERROR] 22:25:38:732 cpu/(5394:5605): La intrucción no es válida
+[INFO] 22:33:14:343 cpu/(5957:5957): Arranca el modulo CPU
+[INFO] 22:33:14:344 cpu/(5957:5957): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:33:14:344 cpu/(5957:5957): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:33:14:344 cpu/(5957:5957): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:33:19:976 cpu/(5957:5957): Handshake OK
+[INFO] 22:33:19:977 cpu/(5957:5957): Esperando conexion de Kernel en Dispatch
+[INFO] 22:33:19:977 cpu/(5957:5957): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:33:19:978 cpu/(5957:5957): Esperando conexion de Kernel en Interrupt
+[INFO] 22:33:19:978 cpu/(5957:5957): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:33:19:979 cpu/(5957:6170): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:33:19:979 cpu/(5957:6169): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:33:51:387 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 0
+[INFO] 22:33:52:392 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 1
+[INFO] 22:33:53:399 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 2
+[INFO] 22:33:54:406 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 5
+[INFO] 22:33:55:411 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 6
+[INFO] 22:33:56:414 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 7
+[INFO] 22:33:57:418 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 8
+[INFO] 22:33:58:419 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 9
+[INFO] 22:33:59:422 cpu/(5957:6170): Ejecutando FETCH PID: 1 Program Counter: 10
+[INFO] 22:45:00:917 cpu/(6559:6559): Arranca el modulo CPU
+[INFO] 22:45:00:917 cpu/(6559:6559): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:45:00:917 cpu/(6559:6559): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:45:00:919 cpu/(6559:6559): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:45:06:533 cpu/(6559:6559): Handshake OK
+[INFO] 22:45:06:533 cpu/(6559:6559): Esperando conexion de Kernel en Dispatch
+[INFO] 22:45:06:533 cpu/(6559:6559): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:45:06:533 cpu/(6559:6559): Esperando conexion de Kernel en Interrupt
+[INFO] 22:45:06:533 cpu/(6559:6559): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:45:06:534 cpu/(6559:6770): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:45:06:534 cpu/(6559:6769): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:45:18:412 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 0
+[INFO] 22:45:19:414 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 1
+[INFO] 22:45:20:418 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 2
+[INFO] 22:45:21:422 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 5
+[INFO] 22:45:22:425 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 6
+[INFO] 22:45:23:429 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 7
+[INFO] 22:45:24:434 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 8
+[INFO] 22:45:25:439 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 9
+[INFO] 22:45:26:443 cpu/(6559:6770): Ejecutando FETCH PID: 1 Program Counter: 10
+[ERROR] 22:45:26:613 cpu/(6559:6769): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 22:45:26:613 cpu/(6559:6770): El Kernel se desconecto de Dispatch. Terminando servidor.
+[INFO] 22:46:31:137 cpu/(6936:6936): Arranca el modulo CPU
+[INFO] 22:46:31:138 cpu/(6936:6936): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:46:31:138 cpu/(6936:6936): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:46:31:138 cpu/(6936:6936): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:46:52:659 cpu/(6936:6936): Handshake OK
+[INFO] 22:46:52:660 cpu/(6936:6936): Esperando conexion de Kernel en Dispatch
+[INFO] 22:48:18:989 cpu/(7251:7251): Arranca el modulo CPU
+[INFO] 22:48:18:990 cpu/(7251:7251): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:48:18:990 cpu/(7251:7251): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:48:18:990 cpu/(7251:7251): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:48:58:582 cpu/(7251:7251): Handshake OK
+[INFO] 22:48:58:582 cpu/(7251:7251): Esperando conexion de Kernel en Dispatch
+[INFO] 22:48:58:582 cpu/(7251:7251): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:48:58:582 cpu/(7251:7251): Esperando conexion de Kernel en Interrupt
+[INFO] 22:48:58:582 cpu/(7251:7251): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:48:58:582 cpu/(7251:7463): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:48:58:582 cpu/(7251:7462): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:49:13:006 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 0
+[INFO] 22:49:14:009 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 1
+[INFO] 22:49:15:013 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 2
+[INFO] 22:49:16:016 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 5
+[INFO] 22:49:17:020 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 6
+[INFO] 22:49:18:023 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 7
+[INFO] 22:49:19:026 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 8
+[INFO] 22:49:20:030 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 9
+[INFO] 22:49:21:033 cpu/(7251:7463): Ejecutando FETCH PID: 1 Program Counter: 10
+[INFO] 22:52:41:364 cpu/(7701:7701): Arranca el modulo CPU
+[INFO] 22:52:41:364 cpu/(7701:7701): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:52:41:364 cpu/(7701:7701): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:52:41:365 cpu/(7701:7701): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:52:43:274 cpu/(7701:7701): Handshake OK
+[INFO] 22:52:43:274 cpu/(7701:7701): Esperando conexion de Kernel en Dispatch
+[INFO] 22:52:43:274 cpu/(7701:7701): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:52:43:274 cpu/(7701:7701): Esperando conexion de Kernel en Interrupt
+[INFO] 22:52:43:274 cpu/(7701:7701): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:52:43:275 cpu/(7701:7912): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:52:43:275 cpu/(7701:7911): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:52:51:298 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 0
+[INFO] 22:52:52:300 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 1
+[INFO] 22:52:53:303 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 2
+[INFO] 22:52:54:307 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 5
+[INFO] 22:52:55:311 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 6
+[INFO] 22:52:56:314 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 7
+[INFO] 22:52:57:317 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 8
+[INFO] 22:52:58:320 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 9
+[INFO] 22:52:59:322 cpu/(7701:7912): Ejecutando FETCH PID: 1 Program Counter: 10
+[INFO] 22:52:59:325 cpu/(7701:7912):  ENVIANDO solicitud de sleep A KERNEL
+[ERROR] 22:52:59:489 cpu/(7701:7911): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 22:52:59:490 cpu/(7701:7912): El Kernel se desconecto de Dispatch. Terminando servidor.
+[INFO] 22:56:50:453 cpu/(8441:8441): Arranca el modulo CPU
+[INFO] 22:56:50:454 cpu/(8441:8441): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:56:50:454 cpu/(8441:8441): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:56:50:454 cpu/(8441:8441): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:56:54:705 cpu/(8441:8441): Handshake OK
+[INFO] 22:56:54:705 cpu/(8441:8441): Esperando conexion de Kernel en Dispatch
+[INFO] 22:56:54:705 cpu/(8441:8441): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:56:54:705 cpu/(8441:8441): Esperando conexion de Kernel en Interrupt
+[INFO] 22:56:54:705 cpu/(8441:8441): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:56:54:706 cpu/(8441:8655): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:56:54:706 cpu/(8441:8654): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 22:57:15:895 cpu/(8441:8654): El Kernel se desconecto de Interrupt. Terminando servidor.
+[ERROR] 22:57:15:895 cpu/(8441:8655): El Kernel se desconecto de Dispatch. Terminando servidor.
+[INFO] 22:58:30:408 cpu/(8936:8936): Arranca el modulo CPU
+[INFO] 22:58:30:408 cpu/(8936:8936): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 22:58:30:409 cpu/(8936:8936): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 22:58:30:411 cpu/(8936:8936): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 22:58:42:532 cpu/(8936:8936): Handshake OK
+[INFO] 22:58:42:532 cpu/(8936:8936): Esperando conexion de Kernel en Dispatch
+[INFO] 22:58:42:532 cpu/(8936:8936): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 22:58:42:532 cpu/(8936:8936): Esperando conexion de Kernel en Interrupt
+[INFO] 22:58:42:532 cpu/(8936:8936): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 22:58:42:532 cpu/(8936:9147): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:58:42:532 cpu/(8936:9146): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 22:58:49:824 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 0
+[INFO] 22:58:50:827 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 1
+[INFO] 22:58:51:831 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 2
+[INFO] 22:58:52:833 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 5
+[INFO] 22:58:53:837 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 6
+[INFO] 22:58:54:840 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 7
+[INFO] 22:58:55:845 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 8
+[INFO] 22:58:56:849 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 9
+[INFO] 22:58:57:853 cpu/(8936:9147): Ejecutando FETCH PID: 1 Program Counter: 10
+[INFO] 22:58:57:855 cpu/(8936:9147):  ENVIANDO solicitud de sleep A KERNEL
+[INFO] 23:00:46:494 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 0
+[INFO] 23:00:47:496 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 1
+[INFO] 23:00:48:500 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 2
+[INFO] 23:00:49:504 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 5
+[INFO] 23:00:50:509 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 6
+[INFO] 23:00:51:513 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 7
+[INFO] 23:00:52:518 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 8
+[INFO] 23:00:53:521 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 9
+[INFO] 23:00:54:523 cpu/(8936:9147): Ejecutando FETCH PID: 2 Program Counter: 10
+[INFO] 23:00:54:525 cpu/(8936:9147):  ENVIANDO solicitud de sleep A KERNEL
+[INFO] 23:01:24:335 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 0
+[INFO] 23:01:25:339 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 1
+[INFO] 23:01:26:344 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 2
+[INFO] 23:01:27:348 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 5
+[INFO] 23:01:28:351 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 6
+[INFO] 23:01:29:354 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 7
+[INFO] 23:01:30:357 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 8
+[INFO] 23:01:31:359 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 9
+[INFO] 23:01:32:362 cpu/(8936:9147): Ejecutando FETCH PID: 3 Program Counter: 10
+[INFO] 23:01:32:363 cpu/(8936:9147):  ENVIANDO solicitud de sleep A KERNEL
+[INFO] 23:04:40:885 cpu/(9483:9483): Arranca el modulo CPU
+[INFO] 23:04:40:886 cpu/(9483:9483): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 23:04:40:886 cpu/(9483:9483): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 23:04:40:886 cpu/(9483:9483): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 23:12:23:474 cpu/(9483:9483): Handshake OK
+[INFO] 23:12:23:475 cpu/(9483:9483): Esperando conexion de Kernel en Dispatch
+[INFO] 23:12:23:475 cpu/(9483:9483): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:12:23:475 cpu/(9483:9483): Esperando conexion de Kernel en Interrupt
+[INFO] 23:12:23:475 cpu/(9483:9483): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:12:23:478 cpu/(9483:10481): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:12:23:483 cpu/(9483:10480): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 23:12:26:904 cpu/(9483:10481): El Kernel se desconecto de Dispatch. Terminando servidor.
+[ERROR] 23:12:26:904 cpu/(9483:10480): El Kernel se desconecto de Interrupt. Terminando servidor.
+[INFO] 23:12:34:655 cpu/(10614:10614): Arranca el modulo CPU
+[INFO] 23:12:34:656 cpu/(10614:10614): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 23:12:34:656 cpu/(10614:10614): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 23:12:34:656 cpu/(10614:10614): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 23:13:32:454 cpu/(10614:10614): Handshake OK
+[INFO] 23:13:32:455 cpu/(10614:10614): Esperando conexion de Kernel en Dispatch
+[INFO] 23:13:32:455 cpu/(10614:10614): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:13:32:455 cpu/(10614:10614): Esperando conexion de Kernel en Interrupt
+[INFO] 23:13:32:455 cpu/(10614:10614): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:13:32:456 cpu/(10614:11076): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:13:32:457 cpu/(10614:11075): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:14:24:541 cpu/(11352:11352): Arranca el modulo CPU
+[INFO] 23:14:24:541 cpu/(11352:11352): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 23:14:24:541 cpu/(11352:11352): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 23:14:24:542 cpu/(11352:11352): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 23:18:11:169 cpu/(11352:11352): Handshake OK
+[INFO] 23:18:11:170 cpu/(11352:11352): Esperando conexion de Kernel en Dispatch
+[INFO] 23:18:11:170 cpu/(11352:11352): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:18:11:171 cpu/(11352:11352): Esperando conexion de Kernel en Interrupt
+[INFO] 23:18:11:171 cpu/(11352:11352): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:18:11:172 cpu/(11352:11771): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:18:11:174 cpu/(11352:11770): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 23:18:20:460 cpu/(11914:11914): Arranca el modulo CPU
+[INFO] 23:18:20:460 cpu/(11914:11914): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 23:18:20:460 cpu/(11914:11914): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 23:18:20:460 cpu/(11914:11914): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 23:19:02:522 cpu/(11914:11914): Handshake OK
+[INFO] 23:19:02:522 cpu/(11914:11914): Esperando conexion de Kernel en Dispatch
+[INFO] 23:19:02:522 cpu/(11914:11914): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 23:19:02:522 cpu/(11914:11914): Esperando conexion de Kernel en Interrupt
+[INFO] 23:19:02:522 cpu/(11914:11914): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 23:19:02:522 cpu/(11914:12149): Recibido handshake HANDSHAKE_KERNEL.
+[ERROR] 23:19:02:523 cpu/(11914:12149): El Kernel se desconecto de Dispatch. Terminando servidor.

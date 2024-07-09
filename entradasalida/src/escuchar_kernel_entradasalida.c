@@ -10,6 +10,7 @@ void escuchar_instrucciones_generica(){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
 			case IO_GEN_SLEEP_FS:
+				
 				t_buffer* buffer;
 				buffer = recibir_buffer_completo(fd_kernel);
 				
