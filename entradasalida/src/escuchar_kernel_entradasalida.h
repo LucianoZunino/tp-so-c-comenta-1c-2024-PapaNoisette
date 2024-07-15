@@ -14,6 +14,7 @@ void solicitar_lectura_memoria(int direccion, int tamanio, op_code cod_op);
 void notificar_fin(int fd_kernel, int pid);
 bool verificar_escritura_archivo(char* path, int reg_tamanio, int reg_puntero_archivo);
 void liberar_archivo_bitmap(char* path);
+void compactar(char* nombre, t_config* config);
 
 //void crear_interfaz(char* nombre_interfaz, char* path_config);
 

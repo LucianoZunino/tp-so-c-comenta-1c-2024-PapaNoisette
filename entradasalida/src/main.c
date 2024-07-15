@@ -17,7 +17,7 @@ int fd_memoria;
 int fd_kernel;
 
 int main(int argc, char** argv[]){
-    //if(argc < 1 ){log_error(logger_entradasalida, "Debe pasar el archivo de configuracion "); abort();}
+    //if(argc < 2 ){log_error(logger_entradasalida, "Debe pasar el archivo de configuracion y el nombre por parametro"); abort();}
     decir_hola("una Interfaz de Entrada/Salida");
 
     // Iniciar interfaz I/O
@@ -42,6 +42,13 @@ int main(int argc, char** argv[]){
     pthread_t hilo_memoria_entradasalida;
 	pthread_create(&hilo_memoria_entradasalida, NULL, (void*)escuchar_mensajes_memoria_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	pthread_detach(hilo_memoria_entradasalida); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+
+    t_buffer *buffer = crear_buffer();
+    cargar_string_al_buffer(buffer, argv[0]); //Ver orden parametros consola, argv[0] es el nombre de interfaz a crear
+    t_paquete *paquete = crear_paquete(NUEVA_CONEXION_IO, buffer);
+    enviar_paquete(paquete, fd_kernel);
+    eliminar_paquete(paquete);
+
 
     // Escucha los mensajes Kernel-E/S
     pthread_t hilo_kernel_entradasalida;

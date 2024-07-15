@@ -853,3 +853,5 @@
 [ERROR] 23:14:40:896 entradasalida/(11569:11569): Error conectando al Servidor,apagado o invalido
 [INFO] 23:18:23:453 entradasalida/(12119:12119): Arranca el modulo  Entrada/Salida
 [ERROR] 23:18:23:453 entradasalida/(12119:12119): Error conectando al Servidor,apagado o invalido
+[INFO] 20:31:01:895 entradasalida/(5087:5087): Arranca el modulo  Entrada/Salida
+[ERROR] 20:31:01:897 entradasalida/(5087:5087): Error conectando al Servidor,apagado o invalido

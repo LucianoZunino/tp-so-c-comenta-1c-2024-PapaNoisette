@@ -67,7 +67,8 @@ typedef enum
 	//COPY_STRING_ESCRIBIR, // cpu-> MEMORIA , le vuelvo a enviar la info recortada
 	// IO-KERNEL
 	FIN_IO,							// IO -> KERNEL
-	ERROR_IO 						// CUANDO IO NO CONTIENE FUNCION EN LA INTERFAZ, KERNEL MADNA A EXIT AL PROCESO
+	ERROR_IO, 						// CUANDO IO NO CONTIENE FUNCION EN LA INTERFAZ, KERNEL MADNA A EXIT AL PROCESO
+	NUEVA_CONEXION_IO
 } op_code;
 
 typedef struct
@@ -170,6 +171,8 @@ typedef struct
 	sem_t *semaforo;
 } t_interfaz;
 */
+
+
 
 // Funciones de init
 t_config *iniciar_config(char *ruta_config);

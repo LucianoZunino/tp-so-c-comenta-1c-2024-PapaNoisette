@@ -22,12 +22,14 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 	pthread_create(&hilo_lista_espera, NULL, esperar_entradasalida, indice_interfaz); // Valgrind?
 	pthread_detach(hilo_lista_espera);
 
+	// Mensaje ES semaforo datos
+
 	while(!desconexion_entradasalida_kernel){
 		int cod_op = recibir_operacion(socket); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
-			//case PROTOCOLOS_A_DEFINIR:
-			//	break;
+			t_buffer* buffer;
 			int pid;
+
 			case HANDSHAKE_ENTRADASALIDA:
 				aceptar_handshake(logger_kernel, socket, cod_op);
 				break;
@@ -52,7 +54,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				sem_post(&sem_ocupado);
 				break;
 			case ERROR_IO:
-				t_buffer* buffer = recibir_buffer_completo(socket);
+				buffer = recibir_buffer_completo(socket);
 				pid = extraer_int_del_buffer(buffer);
 
 				index = buscar_index_por_pid(BLOCKED, pid);
@@ -67,6 +69,17 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				pthread_mutex_unlock(&mutex_EXIT);
 
 				sem_post(&sem_ocupado);
+				break;
+
+			case NUEVA_CONEXION_IO:
+				buffer = recibir_buffer_completo(socket);
+
+				char* nombre = extraer_string_del_buffer(buffer);
+
+				t_interfaz* interfaz = list_get(interfaces, indice_interfaz);  // Verificar que list_get modifica la lista
+
+				memcpy(interfaz->nombre, nombre, sizeof(nombre));
+
 				break;
 				
 			case -1:
