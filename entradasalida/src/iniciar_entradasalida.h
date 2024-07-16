@@ -12,4 +12,7 @@ void iniciar_estructuras();
 void imprimir_config_entradasalida();
 void finalizar_entradasalida();
 int leer_tipo_interfaz(t_config* config);
+void iniciar_lista_metadatas();
+char* tomar_nombre_devolver_path(char* nombre);
+
 #endif

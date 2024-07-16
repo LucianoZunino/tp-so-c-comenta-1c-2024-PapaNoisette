@@ -159,15 +159,20 @@ void escuchar_instrucciones_dialfs(){
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 
+				char* path;
+				strcpy(path, tomar_nombre_devolver_path(nombre));
+				eliminar_segun(nombre);
+				list_add(archivos_metadata, path);
+
 				// Chequear si hay lugar en bitmap
 				int direccion = buscar_lugar_bitmap(1);
 				// Asignar lugar en bitmap
 				bitarray_set_bit(bitmap, direccion);
 				// Crear archivo metadata
-				FILE* archivo = fopen(nombre, "w");
+				FILE* archivo = fopen(path, "w");
 				fclose(archivo);
 
-				config = config_create(nombre);
+				config = config_create(path);
 
 				config_set_value(config, "BLOQUE_INICIAL", string_itoa(direccion));
 				config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(0));
@@ -269,9 +274,10 @@ void escuchar_instrucciones_dialfs(){
 				nombre = extraer_string_del_buffer(buffer);
 				int nuevo_tamanio = extraer_int_del_buffer(buffer);
 
-				config = config_create(nombre);
+				config = config_create(tomar_nombre_devolver_path(nombre));
 				if(config == NULL){
 					log_error(logger_entradasalida, "Error, no se encontro el archivo en el path.\n");
+					break;
 				}
 				int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
 				int inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
@@ -283,37 +289,43 @@ void escuchar_instrucciones_dialfs(){
 
 				int diferencia = cantidad_actual_de_bloques - cantidad_nueva_de_bloques;
 
+				if(diferencia == 0){
+					log_info(logger_entradasalida, "Archivo de mismo tamanio en bloques, no hace falta truncar");
+					break;
+				}
+
 				if (cantidad_actual_de_bloques > cantidad_nueva_de_bloques){
 					//si achicamos solo achicamos el archivo de metadata y marcamos los bloques restantes libres en el bitmap
 					
 					config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
 					config_save(config);
 
-					for(int i = 1; i < diferencia; i++){
-						bitarray_clean_bit(bitmap, redondear_up(inicio_archivo+nuevo_tamanio, block_size) + i );
-					}
+					liberar_bloques_desde_hasta(inicio_archivo + cantidad_nueva_de_bloques, inicio_archivo + cantidad_actual_de_bloques);
+
 				}else{
 					// si queremos agrandar
 					diferencia = abs(diferencia);
+
 					if (buscar_lugar_bitmap(diferencia) < 0){
 						log_error(logger_entradasalida, "No hay espacio suficiente para truncar este archivo");
 						break;
 					}
 				// verificar que haya espacio
 				// chequeamos si entra
-				int fin_archivo = inicio_archivo + tamanio_archivo;
-				for(int i = 1; i < diferencia; i++){
-					if(bitarray_test_bit(bitmap, fin_archivo + i) == 1){
-						compactar(nombre, config);
-						break;
+					int fin_archivo = inicio_archivo + redondear_up(tamanio_archivo, block_size);
+					int i = 0;
+					for(i = 1; i <= diferencia; i++){
+						if(bitarray_test_bit(bitmap, fin_archivo + i) == 1){
+							compactar(nombre, config, nuevo_tamanio);
+							break;
+						}
 					}
-				}
-				// si no entra, hay que compactar
-					// leemos el directorio "raiz"
-					// por cada config del metadata agregamos una entrada a una lista
-					// cambiamos tamanio archivo truncado
-					// teniendo el inicio y tamanio de todos los archivos copiamos todo a la lista
-					// sobreescribimos el archivo de bloques original, modificando los archivos de metadata y el bitmap
+
+					if (i >= diferencia){
+						config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
+						config_save(config);
+					}
+
 				}
 				//
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
@@ -411,8 +423,8 @@ int buscar_lugar_bitmap(int tamanio){
 	}
 }
 
-bool verificar_escritura_archivo(char* path, int reg_tamanio, int reg_puntero_archivo){
-	t_config* config = config_create(path);
+bool verificar_escritura_archivo(char* nombre, int reg_tamanio, int reg_puntero_archivo){
+	t_config* config = config_create(tomar_nombre_devolver_path(nombre));
 	
 	if(config == NULL){
 		log_error(logger_entradasalida, "Error, no se encontro el archivo en el path.\n");
@@ -426,8 +438,8 @@ bool verificar_escritura_archivo(char* path, int reg_tamanio, int reg_puntero_ar
 	return reg_tamanio + reg_puntero_archivo <= inicio_archivo * block_size + tamanio_archivo;
 }
 
-void liberar_archivo_bitmap(char* path){
-	t_config* config = config_create(path);
+void liberar_archivo_bitmap(char* nombre){
+	t_config* config = config_create(tomar_nombre_devolver_path(nombre));
 	
 	if(config == NULL){
 		log_error(logger_entradasalida, "Error, no se encontro el archivo en el path.\n");
@@ -441,16 +453,102 @@ void liberar_archivo_bitmap(char* path){
 	}
 }
 
-void compactar(char* nombre, t_config* config){
-// leemos el directorio "raiz"
-	// DIR* opendir("/home/utnso/tp-2024-1c-PapaNoisette/entradasalida/");
-	// por cada config del metadata agregamos una entrada a una lista
-	// cambiamos tamanio archivo truncado
-	// teniendo el inicio y tamanio de todos los archivos copiamos todo a la lista
-	// sobreescribimos el archivo de bloques original, modificando los archivos de metadata y el bitmap
+void liberar_bloques_desde_hasta(inicio, fin){
+	for(int i = 1; i <= fin - inicio; i++ ){
+		bitarray_clean_bit(bitmap, inicio + i);
+	}
 }
-/*
 
+void eliminar_segun(char* nombre){
+	for(int i = 0; i<list_size(archivos_metadata); i++){
+		char* path = list_get(archivos_metadata, i);
+		if(strcmp(path, tomar_nombre_devolver_path(nombre))){
+			list_remove(archivos_metadata, i);
+			break;
+		}
+	}
+}
+
+void compactar(char* nombre, t_config* config, int nuevo_tamanio){
+	// ELIMINAMOS EL ARCHIVO A AGRANDAR, LO AGREGAMOS AL FINAL
+	eliminar_segun(nombre);
+
+	int bloque_inicial = config_get_int_value(config, "BLOQUE_INICIAL");
+	int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
+
+	// Actualizamos el archivo de metadata del archivo a truncar
+	config_set_value(config, "TAMANIO_ARCHIVO", nuevo_tamanio);
+	config_save(config);
+	
+	// Guardamos los datos del archivo
+	/*
+	void* buffer_archivo = malloc(nuevo_tamanio);
+	memcpy(buffer_archivo, bloques_dat + bloque_inicial * block_size, nuevo_tamanio);
+	*/
+
+	// Liberamos todos los bloques
+	liberar_bloques_desde_hasta(-1, block_count);
+
+	// Creamos un buffer para guardar los datos del resto de los archivos
+	void* buffer_auxiliar = malloc(block_size * block_count);
+
+	// Agregamos el archivo a truncar al final de la lista
+	char* path_del_nombre = tomar_nombre_devolver_path(nombre);
+	list_add(archivos_metadata, path_del_nombre);
+	
+	int bloques_desplazados = 0;
+
+	for(int i = 0; i < list_size(archivos_metadata); i++){
+		// Tomamos cada arhivo de la lista de archivos en el FS
+		char* path_metadata = list_get(archivos_metadata, i);
+
+		// Abrimos el config de cada archivo en el FS
+		t_config* config_actual = config_create(path_metadata);
+
+		if(config_actual == NULL){
+            log_info(logger_entradasalida, "El archivo de metada %s no existe", path_metadata);
+            continue;
+        }
+
+		// Leemos el config actual
+		int bloque_inicial_actual = config_get_int_value(config, "BLOQUE_INICIAL");
+		int tamanio_archivo_actual = config_get_int_value(config, "TAMANIO_ARCHIVO"); 
+
+		
+
+		// Copiamos datos del archivo actual
+		if( strcmp(path_metadata, path_del_nombre) != 0){ // Verificamos que los datos a leer no pertenecen al archivo truncado en caso de que el nuevo tamanio se pase del espacio de memoria
+			memcpy(buffer_auxiliar + bloques_desplazados * block_size, bloques_dat + bloque_inicial_actual * block_size, tamanio_archivo_actual);
+		}else{
+			memcpy(buffer_auxiliar + bloques_desplazados * block_size, bloques_dat + bloque_inicial_actual * block_size, tamanio_archivo);
+		}
+		char* desplazamiento_actual = string_itoa(bloques_desplazados);
+        config_set_value(config_actual, "BLOQUE_INICIAL", desplazamiento_actual);
+        free(desplazamiento_actual);
+		config_save(config_actual);
+		config_destroy(config_actual);
+
+		bloques_desplazados += redondear_up(tamanio_archivo_actual, block_size);
+	}
+
+	for(int i = 0; i < bloques_desplazados; i++){
+		bitarray_set_bit(bitmap, i);
+	}
+
+
+
+	// Sincronizamos archivo de bloques
+	memcpy(bloques_dat, buffer_auxiliar, block_count * block_size);
+	msync(bloques_dat, block_size*block_count, MS_SYNC);
+
+	// Sincronizamos bitmap
+	msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
+
+	config_destroy(config);
+}
+
+
+/*
  case FS_TRUNCATE:
             log_info(logger, "PID: %d - Operacion: FS_TRUNCATE", pid);
             uint32_t* puntero_nuevo_tamanio = ((uint32_t*) sacar_de_paquete(paquete->buffer, &desplazamiento));
@@ -582,88 +680,5 @@ int asignar_bloques(t_bitarray* bitmap, int cantidad_bloques_a_agregar, int bloq
 
     return bloque_inicial_nuevo;
 }
-
-void compactar(t_list* archivos_metadata, t_config* metadata_causa_la_compactacion, t_bitarray* bitmap, 
-                int tamanio_bloque, int cantidad_bloques, int tamanio_actual_archivo, int tamanio_nuevo, int bloque_inicial, void* bloques, char* path_archivo){
-    
-    
-    eliminar_nombre_si_es(archivos_metadata, path_archivo);
-
-    //Buffer para guardar los datos del archivo a agrandar
-    void* buffer_archivo = malloc(tamanio_actual_archivo);
-
-    //Guardas los datos actuales
-    memcpy(buffer_archivo, bloques + bloque_inicial * tamanio_bloque, tamanio_actual_archivo);
-
-    //Marcas como vacíos los bloques que ocupaba en el bitmap
-    liberar_bloques_desde_hasta(bitmap, bloque_inicial, ultimo_bloque(bloque_inicial, tamanio_actual_archivo, tamanio_bloque));
-
-    //Buffer para guardar todos la info de los bloques de datos que no son el archivo a agrandar
-    void* buffer_auxiliar = malloc(tamanio_bloque * cantidad_bloques);
-
-    uint32_t desplazamiento_en_bloques = 0;
-    
-    
-
-    for(int i=0; i < list_size(archivos_metadata); i++){
-        char* nombre_archivo_recorrido = list_get(archivos_metadata, i);
-
-        t_config* metadata_recorrido = config_create(nombre_archivo_recorrido);
-
-        if(metadata_recorrido == NULL){
-            log_info(logger, "El archivo de metada %s no existe", nombre_archivo_recorrido);
-            continue;
-        }
-
-        int bloque_inicial_metadata_recorrido = config_get_int_value(metadata_recorrido, "BLOQUE_INICIAL");
-        int tamanio_metadata_recorrido = config_get_int_value(metadata_recorrido, "TAMANIO_ARCHIVO");
-
-        memcpy(buffer_auxiliar + desplazamiento_en_bloques * tamanio_bloque, bloques + bloque_inicial_metadata_recorrido * tamanio_bloque , tamanio_metadata_recorrido);
-
-        char* string_desplazamiento_en_bloques_parcial = string_itoa(desplazamiento_en_bloques);
-        config_set_value(metadata_recorrido, "BLOQUE_INICIAL", string_desplazamiento_en_bloques_parcial);
-        free(string_desplazamiento_en_bloques_parcial);
-        config_save(metadata_recorrido);
-        config_destroy(metadata_recorrido);
-        
-        desplazamiento_en_bloques += cantidad_bloques_segun_bytes(tamanio_metadata_recorrido, tamanio_bloque);
-
-    }
-    //Hasta acá tenemos todos los que no son el archivo por el que compacté en el buffer auxiliar compactados
-    char* string_desplazamiento_en_bloques = string_itoa(desplazamiento_en_bloques);
-    config_set_value(metadata_causa_la_compactacion, "BLOQUE_INICIAL", string_desplazamiento_en_bloques);
-    free(string_desplazamiento_en_bloques);
-
-    memcpy(buffer_auxiliar + desplazamiento_en_bloques * tamanio_bloque, buffer_archivo ,tamanio_actual_archivo);
-    desplazamiento_en_bloques += cantidad_bloques_segun_bytes(tamanio_actual_archivo, tamanio_bloque);
-
-    for(uint32_t j = 0; desplazamiento_en_bloques > j; j++){
-        bitarray_set_bit(bitmap, j);
-    }
-    for(uint32_t k = desplazamiento_en_bloques; cantidad_bloques >= k; k++){
-        bitarray_clean_bit(bitmap, k);
-    }
-
-    extender_bloques(bitmap, cantidad_bloques_segun_bytes(tamanio_nuevo, tamanio_bloque) - cantidad_bloques_segun_bytes(tamanio_actual_archivo, tamanio_bloque),
-                    desplazamiento_en_bloques);
-    
-    //SINCRONIZAR ARCHIVO BITMAP??
-
-    memcpy(bloques, buffer_auxiliar, tamanio_bloque * cantidad_bloques);
-    msync(bloques, cantidad_bloques * tamanio_bloque, MS_SYNC);
-
-    //SINCRONIZAR ARCHIVO BLOQUES??
-
-    char* string_tamanio_nuevo = string_itoa(tamanio_nuevo);
-    config_set_value(metadata_causa_la_compactacion, "TAMANIO_ARCHIVO", string_tamanio_nuevo);
-    free(string_tamanio_nuevo);
-    
-    config_save(metadata_causa_la_compactacion);
-    char* path_archivo_duplicado = strdup(path_archivo);
-    list_add(archivos_metadata, path_archivo_duplicado);
-    
-
-    free(buffer_archivo);
-    free(buffer_auxiliar);
-}
 */
+

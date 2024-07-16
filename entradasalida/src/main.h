@@ -37,6 +37,7 @@ extern int fd_bloques;
 extern int fd_bitmap;
 extern void* bloques_dat;
 extern t_bitarray* bitmap;
+extern t_list* archivos_metadata;
 
 
 #endif
