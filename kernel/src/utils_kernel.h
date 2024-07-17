@@ -13,6 +13,7 @@ typedef struct{
 }t_recurso;
 
 extern t_list* recursos_disponibles;
+extern char* estado_pcb_desc[6];
 
 void interrumpir_cpu(t_pcb *pcb, motivo_interrupcion motivo);
 void pcb_destruir(t_pcb *pcb);
@@ -22,5 +23,6 @@ void restar_instancia(char* recurso, t_pcb*);
 int sumar_instancia(char* recurso, t_pcb* pcb);
 int buscar_interfaz(char* nombre);
 bool lista_contiene_pcb(t_list* lista, t_pcb* pcb);
+void cambio_de_estado(t_pcb* pcb, int estado);
 
 #endif

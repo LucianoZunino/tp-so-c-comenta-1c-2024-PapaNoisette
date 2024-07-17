@@ -70,6 +70,7 @@ void agregar_pcb (t_paquete *paquete, t_pcb *pcb)
     cargar_datos_al_buffer(paquete->buffer, pcb->registros_cpu, sizeof(pcb->registros_cpu));
     cargar_int_al_buffer(paquete->buffer, pcb->quantum);
     cargar_datos_al_buffer(paquete->buffer, &pcb->estado, sizeof(pcb->estado));
+    //cargar_int_al_buffer(paquete->buffer, &pcb->motivo, sizeof(pcb->motivo));
 }
 
 

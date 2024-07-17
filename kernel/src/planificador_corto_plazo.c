@@ -21,7 +21,8 @@ void planificador_corto_plazo(){
             pthread_mutex_lock(&mutex_READY);
             t_pcb *pcb = list_remove(READY, 0);
             pthread_mutex_unlock(&mutex_READY);
-            pcb->estado = E_EXEC;
+            cambio_de_estado(pcb, E_EXEC);
+            //pcb->estado = E_EXEC;
             pthread_mutex_lock(&mutex_RUNNING);
             RUNNING = pcb;
             pthread_mutex_unlock(&mutex_RUNNING);
@@ -38,8 +39,8 @@ void planificador_corto_plazo(){
                 pthread_mutex_lock(&mutex_READY);
                 pcb = list_remove(READY, 0);
                 pthread_mutex_unlock(&mutex_READY);
-
-                pcb->estado = E_EXEC;
+                cambio_de_estado(pcb, E_EXEC);
+                //pcb->estado = E_EXEC;
             
                 pthread_mutex_lock(&mutex_RUNNING);
                 RUNNING = pcb;
@@ -48,7 +49,9 @@ void planificador_corto_plazo(){
                 pthread_mutex_lock(&mutex_PRIORIDAD);
                 pcb = list_remove(PRIORIDAD, 0);
                 pthread_mutex_lock(&mutex_PRIORIDAD);
-                pcb->estado = E_EXEC;
+                cambio_de_estado(pcb, E_EXEC);
+        
+               // pcb->estado = E_EXEC;
             
                 pthread_mutex_lock(&mutex_RUNNING);
                 RUNNING = pcb;

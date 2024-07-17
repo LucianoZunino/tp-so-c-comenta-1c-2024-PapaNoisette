@@ -6,7 +6,7 @@ pthread_mutex_t mutex_EXIT;
 pthread_mutex_t socket_memoria_mutex;
 //sem_t sem_EXIT;
 
-char* estado_pcb_desc[6] = {"NEW", "READY", "BLOCKED", "EXIT", "PRIORIDAD", "EXECUTE"};
+//char* estado_pcb_desc[6] = {"NEW", "READY", "BLOCKED", "EXIT", "PRIORIDAD", "EXECUTE"};
 
 
 //sem_t sem_NEW;
@@ -130,7 +130,8 @@ void eliminar_proceso() {
         diferencia_de_multiprogramacion--;
     }
 
-    
+
+    log_info(logger_kernel, "Se elimina el proceso %i en EXIT", pid);
     pcb_destruir(pcb);
 }
 

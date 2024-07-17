@@ -40,7 +40,8 @@ void escuchar_mensajes_dispatch_kernel()
 			pthread_mutex_lock(&mutex_READY);
 			list_add(READY, pcb);
 			pthread_mutex_unlock(&mutex_READY);
-			pcb->estado = E_READY;
+			cambio_de_estado(pcb, E_READY);
+			//pcb->estado = E_READY;
 			break;
 
 		case IO_GEN_SLEEP_FS:
@@ -323,15 +324,8 @@ void escuchar_mensajes_dispatch_kernel()
 			pcb = deserializar_pcb(buffer);
 			sem_post(&sem_desalojo);
 			sem_post(&sem_EXEC);
-			// sem_post(&sem_MULTIPROGRAMACION); lo hacemos en eliminar_proceso()
-
-			pcb->estado = E_EXIT;
-			pthread_mutex_lock(&mutex_EXIT);
-			list_add(EXIT, pcb);
-			pthread_mutex_unlock(&mutex_EXIT);
-
-			sem_post(&sem_EXIT);
-			// hacer cosas de memoria
+			
+			enviar_a_exit(pcb);
 			destruir_buffer(buffer);
 			// CONTEMPLAR EL CASO PARA DEVOLVER RECURSOS SI LOS TIENE
 			break;
@@ -348,7 +342,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			if (buscar_recurso(recurso_solicitado) < 0)
 			{
-				enviar_a_exit(RUNNING);
+				enviar_a_exit(RUNNING); // no deberia ser el pcb DESEREALIZADO? 
 			}
 			else
 			{
@@ -400,13 +394,15 @@ INSTANCIAS_RECURSOS=[1,2,1]
 
 void bloquear_proceso(t_pcb *pcb)
 {
-	pcb->estado = E_BLOCKED;
+	cambio_de_estado(pcb, E_BLOCKED);
+	//pcb->estado = E_BLOCKED;
 	pthread_mutex_lock(&mutex_BLOCKED);
 	list_add(BLOCKED, pcb);
 	pthread_mutex_unlock(&mutex_BLOCKED);
 
 	sem_post(&sem_EXEC);
 }
+
 
 // creo que este hilo vuela, interrput es unidireccional de kernel a memoria
 /*void escuchar_mensajes_interrupt_kernel(){

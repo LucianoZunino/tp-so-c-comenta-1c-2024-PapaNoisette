@@ -122,7 +122,6 @@ typedef enum
 	E_EXEC
 } estado_pcb;
 
-
 //
 // MOTIVOS DE INTERRUPCION o FIN DE PROCESO
 
@@ -141,7 +140,7 @@ typedef struct
 	t_registros_cpu *registros_cpu;
 	int quantum;
 	estado_pcb *estado;
-	// motivo_interrupcion motivo;
+	//motivo_interrupcion motivo;
 } t_pcb;
 
 typedef struct

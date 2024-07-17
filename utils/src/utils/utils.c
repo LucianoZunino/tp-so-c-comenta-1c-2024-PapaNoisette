@@ -430,5 +430,6 @@ t_pcb* deserializar_pcb(t_buffer* buffer)
 	 pcb->registros_cpu=extraer_datos_del_buffer(buffer);
      pcb->quantum = extraer_int_del_buffer(buffer);
      pcb->estado = extraer_int_del_buffer(buffer);
+	 //pcb->motivo = extraer_int_del_buffer(buffer);
 	 return pcb;
 	}

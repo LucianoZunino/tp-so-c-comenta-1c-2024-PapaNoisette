@@ -40,12 +40,15 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				list_remove_and_destroy_element(BLOCKED, index, pcb_destruir);
 
 				if (pcb->quantum < quantum){
+					cambio_de_estado(pcb, E_PRIORIDAD);
 					pcb->estado = E_PRIORIDAD;
                 	pthread_mutex_lock(&mutex_PRIORIDAD);
 					list_add(PRIORIDAD, pcb);
 					pthread_mutex_unlock(&mutex_PRIORIDAD);
 				} else {
-					pcb->estado = E_READY;
+					
+					cambio_de_estado(pcb, E_READY);
+					//pcb->estado = E_READY;
                 	pthread_mutex_lock(&mutex_READY);
 					list_add(READY, pcb);
 					pthread_mutex_unlock(&mutex_READY);
@@ -62,8 +65,8 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
         		pcb = list_remove(BLOCKED, index);
 				pthread_mutex_unlock(&mutex_BLOCKED);
 				
-
-				pcb->estado = E_EXIT;
+				cambio_de_estado(pcb, E_EXIT);
+				//pcb->estado = E_EXIT; //aca se podria usar el enviar_a_exit()
 				pthread_mutex_lock(&mutex_EXIT);
 				list_add(EXIT, pcb);
 				pthread_mutex_unlock(&mutex_EXIT);

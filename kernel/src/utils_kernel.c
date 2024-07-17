@@ -2,6 +2,7 @@
 
 t_list* recursos_disponibles;
 pthread_mutex_t mutex_recursos_disponibles;
+char* estado_pcb_desc[6] = {"NEW", "READY", "BLOCKED", "EXIT", "PRIORIDAD", "EXECUTE"};
 
 void interrumpir_cpu(t_pcb *pcb, motivo_interrupcion motivo){
     enviar_cpu_interrupt(pcb, motivo, fd_cpu_interrupt);
@@ -81,11 +82,14 @@ int buscar_recurso(char* recurso){
 }
 
 void enviar_a_exit(t_pcb* pcb){
-    pcb->estado = E_EXIT;
+    cambio_de_estado(pcb, E_EXIT);
+    //cb->estado = E_EXIT;
 	pthread_mutex_lock(&mutex_EXIT);
 	list_add(EXIT, pcb);
 	pthread_mutex_unlock(&mutex_EXIT);
+    sem_post(&sem_EXIT); //agregue este semaforo
 }
+
 
 void restar_instancia(char* nombre_recurso, t_pcb *pcb){
     int index = buscar_recurso(nombre_recurso);
@@ -95,7 +99,8 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
         pthread_mutex_lock(&mutex_BLOCKED);
 	    list_add(BLOCKED, pcb);
 	    pthread_mutex_unlock(&mutex_BLOCKED);
-        
+        cambio_de_estado(pcb, E_BLOCKED); //FALTABA CAMBIAR EL ESTADO
+
         pthread_mutex_lock(&recurso->mutex);
         list_add(recurso->cola_de_espera, pcb);
         pthread_mutex_unlock(&recurso->mutex);
@@ -112,10 +117,12 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
             pthread_mutex_lock(&mutex_PRIORIDAD);
 			list_add(PRIORIDAD, pcb);
 			pthread_mutex_unlock(&mutex_PRIORIDAD);
+            cambio_de_estado(pcb, E_PRIORIDAD);
         }else {
             pthread_mutex_lock(&mutex_READY);
 			list_add(READY, pcb);
 			pthread_mutex_unlock(&mutex_READY);
+            cambio_de_estado(pcb, E_READY);
         }
         
         list_remove(recursos_disponibles, index); //se actualiza la lista de recursos_disponibles
@@ -146,10 +153,12 @@ int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
                     pthread_mutex_lock(&mutex_PRIORIDAD);
 			        list_add(PRIORIDAD, pcb);
 			        pthread_mutex_unlock(&mutex_PRIORIDAD);
+                    cambio_de_estado(pcb, E_PRIORIDAD);
                 }else {
                     pthread_mutex_lock(&mutex_READY);
 			        list_add(READY, pcb);
 			        pthread_mutex_unlock(&mutex_READY);
+                    cambio_de_estado(pcb, E_READY);
                 }
             }
             // char* nombre = recurso.nombre;
@@ -167,8 +176,10 @@ int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
             //
             int index_pcb = buscar_index_por_pid(BLOCKED, nuevo_pcb->pid);
             pthread_mutex_lock(&mutex_BLOCKED);
-            list_remove(BLOCKED, index_pcb);  // Elimino el nuevo proceso de la lista de bloqueados
+            list_remove(BLOCKED, index_pcb);  // Elimino el nuevo proceso de la lista de bloqueados 
             pthread_mutex_unlock(&mutex_BLOCKED);
+
+
         }
     }
 
@@ -198,3 +209,10 @@ bool lista_contiene_pcb(t_list* lista, t_pcb* pcb){
     return false;
 }
 
+void cambio_de_estado(t_pcb* pcb, int estado_nuevo){
+    int estado = pcb->estado;
+    char* string_estado_anterior = estado_pcb_desc[estado];
+    char* string_estado_actual = estado_pcb_desc[estado_nuevo];
+    log_info("PID: <%i> - Estado Anterior: <%s> - Estado Actual: <%s>", pcb->pid, string_estado_anterior, string_estado_actual );
+    pcb->estado = estado_nuevo;
+}
