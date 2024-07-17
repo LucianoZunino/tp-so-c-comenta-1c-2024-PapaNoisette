@@ -116,11 +116,12 @@ typedef enum
 {
 	E_NEW,
 	E_READY,
-	E_EXEC,
 	E_BLOCKED,
 	E_EXIT,
-	E_PRIORIDAD
+	E_PRIORIDAD,
+	E_EXEC
 } estado_pcb;
+
 
 //
 // MOTIVOS DE INTERRUPCION o FIN DE PROCESO

@@ -19,6 +19,7 @@ sem_t sem_EXIT;
 sem_t sem_estructuras_inicializadas;
 sem_t sem_planificador_LP_detenido;
 sem_t sem_planificador_CP_detenido;
+t_list* lista_de_estados;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
@@ -152,6 +153,12 @@ void iniciar_colas_estados() {
     PRIORIDAD = list_create();
     BLOCKED = list_create();
     EXIT = list_create();
+    lista_de_estados = list_create();
+    list_add(lista_de_estados, NEW);
+    list_add(lista_de_estados, READY);
+    list_add(lista_de_estados, BLOCKED);
+    list_add(lista_de_estados, EXIT);
+    list_add(lista_de_estados, PRIORIDAD);
 }
 
 void iniciar_recursos(){

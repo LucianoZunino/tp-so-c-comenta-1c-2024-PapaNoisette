@@ -1,6 +1,7 @@
 #include "consola_interactiva.h"
 
 bool flag_planificacion_detenido;
+int diferencia_de_multiprogramacion;
 //sem_t sem_planificador_LP_detenido;
 //sem_t sem_planificador_CP_detenido;
 
@@ -119,6 +120,15 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
 
         case MULTIPROGRAMACION:
             log_info(logger_kernel, "HOLA ENTRASTE A MULTI");
+            char* grado_char = comando_desde_consola[1];
+            int nuevo_grado = atoi(grado_char);
+
+            int viejo_grado = grado_multiprogramacion;
+            diferencia_de_multiprogramacion =  viejo_grado - nuevo_grado;
+
+            pthread_mutex_lock(&mutex_multiprogramacion);
+            grado_multiprogramacion = nuevo_grado;
+            pthread_mutex_unlock(&mutex_multiprogramacion);
             break;
         
         case MENSAJE_A_MEMORIA1:
@@ -158,3 +168,4 @@ void abrir_archivo(char** comandos_de_script[],char* path, int* j){
     }
     j = i;
 }
+

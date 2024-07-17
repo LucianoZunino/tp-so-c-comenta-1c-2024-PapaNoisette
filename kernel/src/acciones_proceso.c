@@ -6,6 +6,8 @@ pthread_mutex_t mutex_EXIT;
 pthread_mutex_t socket_memoria_mutex;
 //sem_t sem_EXIT;
 
+char* estado_pcb_desc[6] = {"NEW", "READY", "BLOCKED", "EXIT", "PRIORIDAD", "EXECUTE"};
+
 
 //sem_t sem_NEW;
 void imprimir_new(){
@@ -87,6 +89,7 @@ t_pcb *crear_pcb(){
     pcb->program_counter = 0;
 
     pcb->registros_cpu = malloc(sizeof(t_registros_cpu));
+    iniciar_registros(pcb);
     
 
     pcb->quantum = malloc(sizeof(int));
@@ -114,25 +117,21 @@ void eliminar_proceso() {
     
     solicitar_liberar_en_memoria(pid);
     
-    pcb_destruir(pcb); // cada pcb tendría que tener referencias a los recursos asignados al proceso // liberar_recursos();
-
     pthread_mutex_lock(&mutex_multiprogramacion);
     grado_actual_multiprogramacion--;
     pthread_mutex_unlock(&mutex_multiprogramacion);
 
-    // TODO: Liberar recursos
-    /*
-    typedef struct{
-    char* nombre;
-    int instancias; (actuales)
-    t_queue* cola_de_espera;
-    t_list* pcb_asignados;
-    pthread_mutex_t mutex;
-}t_recurso;
-    */
-    liberar_recursos_de(pcb);
     
-    sem_post(&sem_MULTIPROGRAMACION);
+    liberar_recursos_de(pcb);
+
+    if(diferencia_de_multiprogramacion <= 0){
+        sem_post(&sem_MULTIPROGRAMACION);
+    }else{
+        diferencia_de_multiprogramacion--;
+    }
+
+    
+    pcb_destruir(pcb);
 }
 
 void solicitar_liberar_en_memoria(int pid) {
@@ -145,5 +144,53 @@ void solicitar_liberar_en_memoria(int pid) {
 
 
 void liberar_recursos_de(t_pcb* pcb) {
-    
+    // Recorremos todos los recursos de la lista de recursos disponibles
+    for(int i = 0; i < list_size(recursos_disponibles); i++){
+        // Tomamos un recurso
+        t_recurso* recurso = list_get(recursos_disponibles, i);
+
+        // Sumamos instancias por cada recurso que se le haya asignado al p
+        int instancias = 0;
+        while(instancias >= 0){
+            //sacamos de la lista de asignadoos
+            instancias = sumar_instancia(recurso->nombre, pcb);
+        }
+        // Sacamos de la cola de espera
+        while(lista_contiene_pcb(recurso->cola_de_espera->elements, pcb)){
+            pthread_mutex_lock(&recurso->mutex);
+            list_remove(recurso->cola_de_espera->elements, pcb);
+            pthread_mutex_unlock(&recurso->mutex);
+        }
+    }
+}
+
+void mostrar_procesos_por_estado(){
+    for(int i = 0; i < list_size(lista_de_estados); i++){
+        t_list* lista_actual = list_get(lista_de_estados, i);
+        log_info(logger_kernel, "Procesos en estado de %s \n", estado_pcb_desc[i]);
+        mostrar_procesos_de(lista_actual);
+    }
+    log_info(logger_kernel, "Proceso en estado de EXEC \n");
+    log_info(logger_kernel, "  - Proceso %i \n", RUNNING->pid);
+}
+
+void mostrar_procesos_de(t_list* lista_actual){
+    if(list_is_empty(lista_actual)){log_info(logger_kernel, "  No se encuentran procesos en este estado\n");}
+    for(int i = 0;i < list_size(lista_actual); i++){
+        t_pcb* pcb_actual = list_get(lista_actual, i);
+        log_info(logger_kernel, "  - Proceso %i \n", pcb_actual->pid);
+    }
+}
+
+void iniciar_registros(t_pcb* pcb){
+    pcb->registros_cpu->AX = 0;
+    pcb->registros_cpu->BX = 0;
+    pcb->registros_cpu->CX = 0;
+    pcb->registros_cpu->DX = 0;
+    pcb->registros_cpu->EAX = 0;
+    pcb->registros_cpu->EBX = 0;
+    pcb->registros_cpu->ECX = 0;
+    pcb->registros_cpu->EDX = 0;
+    pcb->registros_cpu->SI = 0;
+    pcb->registros_cpu->DI = 0;
 }

@@ -124,9 +124,13 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
     }
 }
 
-void sumar_instancia(char* nombre_recurso, t_pcb* pcb){
+int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
     int index = buscar_recurso(nombre_recurso);
     t_recurso* recurso = list_get(recursos_disponibles, index);
+
+    if(lista_contiene_pcb(recurso->pcb_asignados, pcb)){
+        return -1;
+    }
     
     if(recurso->instancias >= 0){
         pthread_mutex_lock(&recurso->mutex);
@@ -136,16 +140,17 @@ void sumar_instancia(char* nombre_recurso, t_pcb* pcb){
         if(!queue_is_empty(recurso->cola_de_espera)){ // Verifico que haya procesos esperando el recurso
 
             t_pcb* nuevo_pcb = queue_pop(recurso->cola_de_espera); // Tomo el primero
-
-
-            if(pcb->quantum != quantum){ // Devuelvo el proceso original a la cola de ready o de prioridad, segun corresponda
-                pthread_mutex_lock(&mutex_PRIORIDAD);
-			    list_add(PRIORIDAD, pcb);
-			    pthread_mutex_unlock(&mutex_PRIORIDAD);
-            }else {
-                pthread_mutex_lock(&mutex_READY);
-			    list_add(READY, pcb);
-			    pthread_mutex_unlock(&mutex_READY);
+            
+            if(pcb->estado != E_EXIT){
+                if(pcb->quantum != quantum){ // Devuelvo el proceso original a la cola de ready o de prioridad, segun corresponda
+                    pthread_mutex_lock(&mutex_PRIORIDAD);
+			        list_add(PRIORIDAD, pcb);
+			        pthread_mutex_unlock(&mutex_PRIORIDAD);
+                }else {
+                    pthread_mutex_lock(&mutex_READY);
+			        list_add(READY, pcb);
+			        pthread_mutex_unlock(&mutex_READY);
+                }
             }
             // char* nombre = recurso.nombre;
             restar_instancia(recurso->nombre, nuevo_pcb); // Llamo a la funcion para asignarle las instancia al nuevo proceso
@@ -171,6 +176,7 @@ void sumar_instancia(char* nombre_recurso, t_pcb* pcb){
     list_remove(recursos_disponibles, index);
     list_add_in_index(recursos_disponibles, index, &recurso);
     pthread_mutex_unlock(&mutex_recursos_disponibles);
+    return 1;
     }
 
 int buscar_interfaz(char* nombre) {
@@ -183,3 +189,12 @@ int buscar_interfaz(char* nombre) {
     }
     return NULL;
 }
+
+bool lista_contiene_pcb(t_list* lista, t_pcb* pcb){
+    for(int i = 0; i < list_size(lista); i ++){
+        t_pcb* aux;
+        if(aux->pid == pcb->pid){return true;}
+    }
+    return false;
+}
+

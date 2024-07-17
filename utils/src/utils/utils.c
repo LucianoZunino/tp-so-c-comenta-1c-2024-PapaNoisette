@@ -3,6 +3,7 @@
 char* op_code_desc[] = {"HANDSHAKE_OK", "MENSAJE_A_MEMORIA", "HANDSHAKE_KERNEL", "HANDSHAKE_ENTRADASALIDA", "HANDSHAKE_MEMORIA", "HANDSHAKE_CPU"};
 
 
+
 t_config* iniciar_config(char* ruta_config){
 	t_config* nuevo_config = config_create(ruta_config);
 	if(nuevo_config == NULL)

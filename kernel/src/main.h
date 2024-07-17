@@ -31,6 +31,7 @@ extern int quantum;
 extern char** recursos;
 extern char** instancias_recursos;
 extern int grado_multiprogramacion;
+extern int diferencia_de_multiprogramacion;
 
 extern int fd_kernel;
 extern int fd_cpu_dispatch;
@@ -79,6 +80,8 @@ extern sem_t sem_desalojo;
 
 // SE USA PARA EL CREAR_PROCESO
 extern pthread_mutex_t socket_memoria_mutex;
+
+extern t_list *lista_de_estados;
 
 
 #endif 
