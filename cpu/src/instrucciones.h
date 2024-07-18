@@ -15,7 +15,7 @@
 #include "utils/mensajes.h"
 
 
-void ejecutar_set(char *registro,char* valor);
+void ejecutar_set(char *registro,int valor);
 void ejecutar_mov_in(char* datos,char * direccion);
 void ejecutar_mov_out(char* direccion,char * datos);
 void ejecutar_sum(char*registro_destino,char *registro_origen);

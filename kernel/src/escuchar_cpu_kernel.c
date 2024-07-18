@@ -53,9 +53,12 @@ void escuchar_mensajes_dispatch_kernel()
 			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
 			pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
 			sem_post(&sem_desalojo);
-
+			bloquear_proceso(pcb);
+ 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
 			tiempo = extraer_int_del_buffer(buffer);
+   			log_info(logger_kernel, " Se recibio solicitud de sleep para la interfaz: %s por el tiempo:%d",nombre_interfaz,tiempo);
+		
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
 			interfaz = list_get(interfaces, indice_interfaz);
 
@@ -72,13 +75,15 @@ void escuchar_mensajes_dispatch_kernel()
 
 
 			pthread_mutex_lock(&interfaz->mutex_interfaz);
+
 			list_add(interfaz->cola_espera, paquete);
+
 			pthread_mutex_unlock(&interfaz->mutex_interfaz);
 
-			sem_post(&interfaz->sem_espera);
+			sem_post(&interfaz->sem_espera);		
 
 			destruir_buffer(buffer);
-
+printf("destruir_buffer \n");
 			break;
 
 		case IO_STDIN_READ_FS:

@@ -20,16 +20,16 @@ t_buffer * buffer=crear_buffer();
 
 			case KERNEL_ENVIA_PROCESO:
 				buffer=recibir_buffer_completo(fd_kernel_dispatch);
-			    EXEC=malloc(sizeof(t_pcb));
+			   // EXEC=malloc(sizeof(t_pcb));
 				EXEC = deserializar_pcb(buffer); 
 				print_pcb(EXEC);
     //sleep(2);
 
 					while (ciclo_de_instruccion(EXEC) == 0){
+							print_pcb(EXEC);
 						    sleep(1);
 
 					};
-					print_pcb(EXEC);
 
  				break;
 			case -1:

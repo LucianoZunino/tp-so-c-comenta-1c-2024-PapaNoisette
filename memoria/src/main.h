@@ -33,9 +33,9 @@ typedef struct{
     int pid;
     t_list *lista_de_instrucciones;
 
-} t_miniPcb;
+} t_instrucciones_por_proceso;
 
-extern t_list *lista_de_miniPcb;
+extern t_list *lista_de_instrucciones_por_proceso;
 extern t_list *lista_de_tablas_de_paginas_por_proceso;
 
 #endif

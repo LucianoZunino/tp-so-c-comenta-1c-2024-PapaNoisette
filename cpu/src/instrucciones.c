@@ -3,51 +3,53 @@
 
 
 
-void ejecutar_set(char *registro, char *valor)
+void ejecutar_set(char *registro, int valor)
 {
+      log_info(logger_cpu,"ejecutando set,  valor: %d, registro destino %s\n", valor,registro);
+
    if (strcmp(registro, "AX") == 0)
    {
-      EXEC->registros_cpu->AX = atoi(valor);
+      EXEC->registros_cpu->AX = valor;
    }
    else if (strcmp(registro, "BX") == 0)
    {
-      EXEC->registros_cpu->BX = atoi(valor);
+      EXEC->registros_cpu->BX = valor;
    }
    else if (strcmp(registro, "CX") == 0)
    {
-      EXEC->registros_cpu->CX = atoi(valor);
+      EXEC->registros_cpu->CX = valor;
    }
    else if (strcmp(registro, "DX") == 0)
    {
-      EXEC->registros_cpu->DX = atoi(valor);
+      EXEC->registros_cpu->DX = valor;
    }
    else if (strcmp(registro, "EAX") == 0)
    {
-      EXEC->registros_cpu->EAX = atoi(valor);
+      EXEC->registros_cpu->EAX = valor;
    }
    else if (strcmp(registro, "EBX") == 0)
    {
-      EXEC->registros_cpu->EBX = atoi(valor);
+      EXEC->registros_cpu->EBX = valor;
    }
    else if (strcmp(registro, "ECX") == 0)
    {
-      EXEC->registros_cpu->ECX = atoi(valor);
+      EXEC->registros_cpu->ECX = valor;
    }
    else if (strcmp(registro, "EDX") == 0)
    {
-      EXEC->registros_cpu->EDX = atoi(valor);
+      EXEC->registros_cpu->EDX = valor;
    }
    else if (strcmp(registro, "SI") == 0)
    {
-      EXEC->registros_cpu->SI = atoi(valor);
+      EXEC->registros_cpu->SI = valor;
    }
    else if (strcmp(registro, "DI") == 0)
    {
-      EXEC->registros_cpu->DI = atoi(valor);
+      EXEC->registros_cpu->DI = valor;
    }
    else if (strcmp(registro, "PC") == 0)
    {
-      EXEC->program_counter = atoi(valor);
+      EXEC->program_counter = valor;
    }
    else
    {
@@ -57,15 +59,13 @@ void ejecutar_set(char *registro, char *valor)
 
 void ejecutar_sum(char *registro_destino, char *registro_origen)
 {
-   int sum = atoi(registro_destino) + atoi(registro_origen);
-   printf("sum: %d\n", sum);
+   int sum = get_registro(registro_destino) + get_registro(registro_origen);
 
    ejecutar_set(registro_destino, sum);
 }
 void ejecutar_sub(char *registro_destino, char *registro_origen)
 {
-   int sub = atoi(registro_destino) - atoi(registro_origen);
-   printf("sub: %d\n", sub);
+   int sub = get_registro(registro_destino) - get_registro(registro_origen);
    ejecutar_set(registro_destino, sub);
 }
 void ejecutar_jnz(char *registro, char *numero_instruccion)
@@ -82,7 +82,6 @@ int ejecutar_resize(char *tamanio)
     En caso de que la respuesta de la memoria sea Out of Memory, se deberá devolver el contexto
     de ejecución al Kernel informando de esta situación.*/
 
-   log_info(logger_cpu, " ENVIANDO RESIZE A MEMORIA");
 
    t_buffer *buffer_a_enviar = crear_buffer();
 
@@ -90,12 +89,19 @@ int ejecutar_resize(char *tamanio)
    cargar_int_al_buffer(buffer_a_enviar, atoi(tamanio)); // nuevo tamaño del proceso
 
    t_paquete *paquete = crear_paquete(MEMORIA_RESIZE, buffer_a_enviar);
+   log_info(logger_cpu, " ENVIANDO RESIZE A MEMORIA pid %d size: %d\n",EXEC->pid,atoi(tamanio));
+
    enviar_paquete(paquete, fd_memoria);
    eliminar_paquete(paquete);
+
 //--tiempo de retardo establecido 
+   t_buffer *buffer = crear_buffer();
+   log_info(logger_cpu, " ESPERANDO RESPUESTA\n");
+sleep(2);
    int respuesta_resize = recibir_operacion(fd_memoria); // respuesta_resize deveria ser del tipo op_code?
    if (respuesta_resize == RESIZE_OK)
    {
+
       log_info(logger_cpu, "Se realizo correctamente el resize");
       return 0;
    }
@@ -111,6 +117,8 @@ int ejecutar_resize(char *tamanio)
 
       return 1;
    }
+   sleep(2);
+
 }
 void ejecutar_copy_string(char *tamanio)
 {
@@ -206,26 +214,35 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos ) // done, 
     Lee el valor del Registro Datos y lo escribe en la dirección física de memoria obtenida a
     partir de la Dirección Lógica almacenada en el Registro Dirección.
 
-   */
-   log_info(logger_cpu, " ENVIANDO MOV OUT A MEMORIA");
+   */printf("flag  registro_datos %s-registro_direccion %s\n",registro_datos,registro_direccion);
 
+   log_info(logger_cpu, " ENVIANDO MOV OUT A MEMORIA");
+printf("flag  movout1\n");
    // me copio el valor que hay en registro datos
    long int datos_escribir = get_registro(registro_datos);
+printf("flag  movout2\n");
 
    // obtengo la dir logica segun el registro
-   long int dir_logica;
+   uint32_t dir_logica;
    dir_logica = get_registro(registro_direccion);
+printf("flag  movout33 dir_logica%d\n",dir_logica);
+printf("flag  movout33 datos_escribir%d\n",datos_escribir);
 
    // obtengo  la dir fisica
-   int dir_fisica = traducir_direccion_logica(dir_logica);
+   uint32_t dir_fisica = traducir_direccion_logica(dir_logica);
+   printf("flag  movout33 dir_fisica%d\n",dir_fisica);
+
+printf("flag  movout41\n");
 
    // LOG OBLIGATORIO
-   log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica, datos_escribir);
+   log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica, datos_escribir);
 
    // envio todo el paquete a escribir
    t_buffer *buffer_a_enviar = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar, dir_fisica);
+   printf("flag  movout5\n");
+
    cargar_datos_al_buffer(buffer_a_enviar, datos_escribir,strlen(datos_escribir)); // lo trato como void* por ahora creo es lo mas conveniente
    t_paquete *paquete = crear_paquete(MEMORIA_MOV_OUT, buffer_a_enviar);
    enviar_paquete(paquete, fd_memoria);
@@ -238,29 +255,18 @@ void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo)
    // Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.instruccion
      printf("ejecutar_io_gen_sleep  \n");
 
-   log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
      printf("flag1 \n");
+   log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
 
    t_buffer *buffer= crear_buffer();
-        printf("flag2 \n");
-
    t_paquete *paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer);
-        printf("flag3 \n");
 
    agregar_pcb(paquete,EXEC);
-        printf("flag4 \n");
-
    cargar_string_al_buffer(paquete->buffer, interfaz);  
-        printf("flag1 \n");
              // interfaz io  que debe hacer el sleep
-                  printf("flag5 \n");
-
    cargar_int_al_buffer(paquete->buffer, atoi(unidades_de_trabajo)); // tiempo en ms de sleep
-        printf("flag6 \n");
-
+   
    enviar_paquete(paquete, fd_kernel_dispatch);
-        printf("flag7 \n");
-
    eliminar_paquete(paquete);
 }
 
@@ -411,9 +417,9 @@ void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direcci
 
 void  ejecutar_exit(){
       log_info(logger_cpu, "EJECUTANO EXIT");
-
       t_buffer *buffer_a_enviar = crear_buffer();
  t_paquete *paquete = crear_paquete(KERNEL_EXIT, buffer_a_enviar);
+    agregar_pcb(paquete,EXEC);
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 

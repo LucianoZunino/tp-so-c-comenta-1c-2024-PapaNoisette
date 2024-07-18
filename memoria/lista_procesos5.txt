@@ -1,0 +1,5 @@
+Print lista_procesos (1 procesos)
+
+{Proceso: 1, cantidad de paginas: 2}
+--------numero_de_marco: 0
+--------numero_de_marco: 1

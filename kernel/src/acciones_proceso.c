@@ -42,7 +42,14 @@ void crear_proceso(char* path){
     pthread_mutex_unlock(&mutex_NEW);
    
 
-    enviar_proceso_por_paquete(nuevo_pcb, path, fd_memoria, MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS);
+   // enviar_proceso_por_paquete(nuevo_pcb, path, fd_memoria, MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS);
+    t_buffer* buffer_a_enviar = crear_buffer();
+    t_paquete *paquete = crear_paquete(MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS, buffer_a_enviar);
+   cargar_int_al_buffer(paquete->buffer, nuevo_pcb->pid);
+   cargar_string_al_buffer(paquete->buffer, path);
+    enviar_paquete(paquete, fd_memoria);
+    eliminar_paquete(paquete);   
+    // printf("Crear proceso\n");
 
     
     sem_wait(&sem_estructuras_inicializadas);

@@ -12,7 +12,7 @@ char* puerto_escucha_dispatch;
 char * puerto_escucha_interrupt;
 int cantidad_entradas_tlb;
 char* algoritmo_tlb;
-int tamanio_pagina;
+int tamanio_pagina=-1;
 //Variables de socket
 int fd_cpu_dispatch;
 int fd_cpu_interrupt;
@@ -27,6 +27,8 @@ t_list * tlb;
 
 int main(int argc, char* argv[]){
 	iniciar_cpu();
+	
+
   	log_info(logger_cpu, "Arranca el modulo CPU");
     // Inicia el server de cpu dispatch
 	fd_cpu_dispatch = iniciar_servidor(puerto_escucha_dispatch, logger_cpu, ">>> Server CPU-Dispatch iniciado <<<");

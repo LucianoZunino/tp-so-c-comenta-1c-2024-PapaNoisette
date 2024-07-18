@@ -3,17 +3,20 @@
 void escuchar_mensajes_cpu_memoria()
 {
 	bool desconexion_cpu_memoria = 0;
-	t_buffer* buffer;
-	while(!desconexion_cpu_memoria){
-	
+
+	while (!desconexion_cpu_memoria)
+	{
+
 		int pid;
 		int pagina;
 		int marco;
 		int cod_op = recibir_operacion(fd_cpu);
 		t_paquete *paquete;
-		t_buffer *buffer_a_enviar ;
+				t_paquete *paquete2;
+		t_buffer *buffer_a_enviar2;
 
-
+		t_buffer *buffer_a_enviar;
+	t_buffer *buffer;
 		switch (cod_op)
 		{
 
@@ -25,62 +28,71 @@ void escuchar_mensajes_cpu_memoria()
 			printf("-CASE--CPU_SOLICITA_INSTRUCCION :\n");
 
 			buffer = recibir_buffer_completo(fd_cpu);
+			pid = extraer_int_del_buffer(buffer);
+			int program_counter = extraer_int_del_buffer(buffer);
 
-			t_pcb *pcb =malloc(100);
-			pcb= deserializar_pcb(buffer);
-			print_pcb(pcb);
 			usleep(retardo_respuesta);
-
-			enviar_instruccion_a_cpu(pcb, fd_cpu);
-			printf("---FIN CPU_SOLICITA_INSTRUCCION :\n");
-destruir_buffer(buffer);
+			enviar_instruccion_a_cpu(pid, program_counter, fd_cpu);
+			destruir_buffer(buffer);
 			break;
 		case CPU_CONSULTA_TAM_PAGINA:
-			//t_buffer* buffer2 = recibir_buffer_completo(fd_cpu);
-		
-			//usleep(retardo_respuesta);
-			buffer_a_enviar = crear_buffer();
-			paquete = crear_paquete(CPU_CONSULTA_TAM_PAGINA, buffer_a_enviar);
+			printf("-CASE--CPU_CONSULTA_TAM_PAGINA :\n");
+
+			buffer_a_enviar2 = crear_buffer();
+			paquete = crear_paquete(CPU_CONSULTA_TAM_PAGINA, buffer_a_enviar2);
 			cargar_int_al_buffer(paquete->buffer, tam_pagina);
 			enviar_paquete(paquete, fd_cpu);
 			eliminar_paquete(paquete);
-						destruir_buffer(buffer_a_enviar);
 
 			break;
 		case CPU_CONSULTA_FRAME: // no se si no hay que hacerlo tambieen en io
 			usleep(retardo_respuesta);
-/*
-			pid = recibir_int(fd_cpu);
-			int pagina = extraer_int_del_buffer(buffer);
-			int marco = -1;
-			marco = buscar_marco(pid, pagina);
-			buffer_a_enviar = crear_buffer();
-			paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
-			cargar_int_al_buffer(paquete->buffer, marco);
-			enviar_paquete(paquete, fd_cpu);
-			eliminar_paquete(paquete);
-			// LOG OBLIGATORIO
-			log_info(logger_memoria, "Acceso a Tabla de Páginas PID: %d - Página: %d - Marco: %d\n", pid, pagina, marco);
-			destruir_buffer(buffer);
-*/
+			/*
+						pid = recibir_int(fd_cpu);
+						int pagina = extraer_int_del_buffer(buffer);
+						int marco = -1;
+						marco = buscar_marco(pid, pagina);
+						buffer_a_enviar = crear_buffer();
+						paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
+						cargar_int_al_buffer(paquete->buffer, marco);
+						enviar_paquete(paquete, fd_cpu);
+						eliminar_paquete(paquete);
+						// LOG OBLIGATORIO
+						log_info(logger_memoria, "Acceso a Tabla de Páginas PID: %d - Página: %d - Marco: %d\n", pid, pagina, marco);
+						destruir_buffer(buffer);
+			*/
 			break;
 		case MEMORIA_RESIZE:
 
+			log_info(logger_memoria, "MEMORIA_RESIZE");
+
 			buffer = recibir_buffer_completo(fd_cpu);
-			int pid = recibir_int(fd_cpu);
-			int nuevo_tamano = recibir_int(fd_cpu);
+			pid = extraer_int_del_buffer(buffer);
+			int nuevo_tamano = extraer_int_del_buffer(buffer);
+
 			usleep(retardo_respuesta);
 
-			TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
-			int resultado = resize_tamano_proceso(tabla_de_paginas_del_proceso, nuevo_tamano);
-			if(resultado == 0){ // 0 -> Ok | -1 -> OUT_OF_MEMORY
-				enviar_ok(RESIZE_OK, fd_cpu);
-			}
-			else{
-				enviar_ok(OUT_OF_MEMORY, fd_cpu);
+			// TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
+			int resultado = resize_tamano_proceso(pid, nuevo_tamano);
+			if (resultado == 0)
+			{ // 0 -> Ok | -1 -> OUT_OF_MEMORY
 
+				log_info(logger_memoria, "RESIZE_OK");
+				buffer_a_enviar = crear_buffer();
+				paquete2 = crear_paquete(RESIZE_OK, buffer_a_enviar);
+				enviar_paquete(paquete2, fd_cpu);
+				eliminar_paquete(paquete2);
+
+				// RESOLVER ESTA PARTE QUE QUEDA PEGAD EL BUFFER
 			}
-			destruir_buffer(buffer);
+			else
+			{
+				log_info(logger_memoria, "RESIZE NOT OK OUT_OF_MEMORY");
+				buffer_a_enviar = crear_buffer();
+				paquete2 = crear_paquete(OUT_OF_MEMORY, buffer_a_enviar);
+				enviar_paquete(paquete2, fd_cpu);
+				eliminar_paquete(paquete2);
+			}
 
 			break;
 		/*case MEMORIA_MOV_OUT:
@@ -107,8 +119,8 @@ destruir_buffer(buffer);
 				log_info(logger_memoria, "COPY_STRING");
 
 			buffer = recibir_buffer_completo(fd_cpu);
-			pcb = deserializar_pcb(buffer);	 
-		    tamanio = extraer_int_del_buffer(buffer);
+			pcb = deserializar_pcb(buffer);
+			tamanio = extraer_int_del_buffer(buffer);
 
 			int dir_fisica_origen = extraer_int_del_buffer(buffer);
 			int dir_fisica_estino = extraer_int_del_buffer(buffer);
@@ -122,49 +134,50 @@ destruir_buffer(buffer);
 			desconexion_cpu_memoria = 1;
 			break;
 		default:
-			log_warning(logger_memoria, "Operacion desconocida de CPU-Memoria. cod_op:%d",cod_op);
+			log_warning(logger_memoria, "Operacion desconocida de CPU-Memoria. cod_op:%d", cod_op);
 			break;
 		}
 	}
 }
 
-void ejecutar_copy_string (int pid,int dir_fisica_origen,int dir_fisica_estino,int tamanio){
-
+void ejecutar_copy_string(int pid, int dir_fisica_origen, int dir_fisica_estino, int tamanio)
+{
 }
 
-void ejecutar_mov_out (int pid,int dir_fisica,void* datos){
-
+void ejecutar_mov_out(int pid, int dir_fisica, void *datos)
+{
 }
-void ejecutar_mov_in(int pid,int dir_fisica){
-
+void ejecutar_mov_in(int pid, int dir_fisica)
+{
 }
-
+/*
 void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)
-{      
+{
 
-	if (list_size(lista_de_miniPcb)<1){
-      printf("No se cargaron pcbs en memoria: \n");
-	  return 0;
-	  }
+	if (list_size(lista_de_instrucciones_por_proceso) < 1)
+	{
+		printf("No se cargaron pcbs en memoria: \n");
+		return 0;
+	}
 
-	for (int i = 0; i <= list_size(lista_de_miniPcb); i++)
+	for (int i = 0; i <= list_size(lista_de_instrucciones_por_proceso); i++)
 	{
 
-		t_miniPcb *miniPcb = list_get(lista_de_miniPcb, i);
-		if (miniPcb->pid == pcb->pid)
+		t_instrucciones_por_proceso *instrucciones_proceso = list_get(lista_de_instrucciones_por_proceso, i);
+		if (instrucciones_proceso->pid == pcb->pid)
 		{
 
 			int pc = pcb->program_counter;
-			char *instruccion = list_get(miniPcb->lista_de_instrucciones, pc);
-			log_info(logger_memoria, "PROGRAM COUNTER  %d\n",pc);
+			char *instruccion = list_get(instrucciones_proceso->lista_de_instrucciones, pc);
 
-			if (strlen(instruccion)!=0){
-			enviar_instruccion(instruccion, socket);
-			log_info(logger_memoria, "INSTRUCCION ENVIADA A CPU:  %s\n",instruccion);
+			if (strlen(instruccion) != 0)
+			{
+				enviar_instruccion(instruccion, socket);
+				log_info(logger_memoria, "INSTRUCCION ENVIADA A CPU:  %s   PROGRAM_COUNTER:%d\n", instruccion, pc);
 			}
 			else
 			{
-				log_error(logger_memoria, "No hay instruccion para el pcb:  %d\n",miniPcb->pid);
+				log_error(logger_memoria, "No hay instruccion para el pcb:  %d\n", instrucciones_proceso->pid);
 			}
 
 			return;
@@ -172,11 +185,12 @@ void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)
 	}
 	log_info(logger_memoria, "Error, no hay pid cargado en memoria \n");
 }
-
+*/
+/*
 int buscar_marco(int pid, int num_pagina)
 {
 	int marco = -1;
 	TablaDePaginasPorProceso *tabla_pag_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
-	marco = tabla_pag_proceso->tabla_paginas->pagina[num_pagina].numero_de_marco; 
+	marco = tabla_pag_proceso->tabla_paginas->pagina[num_pagina].numero_de_marco;
 	return marco;
-}
+}*/

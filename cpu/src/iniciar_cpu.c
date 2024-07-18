@@ -8,8 +8,33 @@ void iniciar_cpu()
    iniciar_config_cpu();
    imprimir_config_cpu();
    tlb = list_create();
+	EXEC=malloc(sizeof(t_pcb));
+	EXEC->registros_cpu=malloc(sizeof(t_registros_cpu));
+	EXEC->estado=malloc(sizeof(estado_pcb));
+	iniciar_pcb();
+	
+
 }
 
+void iniciar_pcb(){
+   EXEC->estado=0;
+	EXEC->pid=0;
+	EXEC->program_counter=0;
+	EXEC->quantum=0;
+	EXEC->registros_cpu->AX=0;
+   EXEC->registros_cpu->BX=0;
+	EXEC->registros_cpu->CX=0;
+   EXEC->registros_cpu->DX=0;
+   EXEC->registros_cpu->EAX=0;
+	EXEC->registros_cpu->EBX=0;
+	EXEC->registros_cpu->ECX=0;
+   EXEC->registros_cpu->EDX=0;
+	EXEC->registros_cpu->SI=0;
+	EXEC->registros_cpu->DI=0;
+
+	
+
+}
 void iniciar_logger_cpu()
 {
    logger_cpu = iniciar_logger("cpu.log", "cpu");
@@ -65,7 +90,7 @@ int get_tamanio_registro(char *registro)
    }
 }
 
-long int get_registro(char *registro)
+uint32_t get_registro(char *registro)
 {
 
    if (strcmp(registro, "AX") == 0)
@@ -114,12 +139,13 @@ long int get_registro(char *registro)
    }
    else
    {
-      printf("Error en get_registro");
+      printf("Error en get_registro\n");
    }
 }
 
 int consultar_tamanio_pagina_memoria()
 { // deberia estar luego del hanshake con memoria,o mejor en iniciar_cpu o qcyo
+   log_info(logger_cpu, "consultar_tamanio_pagina_memoria" );
 
    t_buffer *buffer_a_enviar = crear_buffer();
    t_paquete *paquete = crear_paquete(CPU_CONSULTA_TAM_PAGINA, buffer_a_enviar);
@@ -143,6 +169,8 @@ int consultar_tamanio_pagina_memoria()
       }
    }
    log_info(logger_cpu, "SE RECIBIO DE MEMORIA EL TAMAÑO DE PAGINA= %d", nuevo_tam_pagina);
+         destruir_buffer(buffer);
+      printf("destruir_buffer\n");
 
    return nuevo_tam_pagina;
 }

@@ -20,12 +20,15 @@ pthread_mutex_t interrupcion_mutex;
 /// @param t_pcb
 /// @return t_instruccion
 void fetch()
-{
+{   char buffer[100];
+    recv(fd_memoria,buffer,sizeof(100),MSG_DONTWAIT);//borro el buffer 
+    printf("buffer,%s\n",buffer);
     log_info(logger_cpu, "Ejecutando FETCH PID: %i Program Counter: %i", EXEC->pid, EXEC->program_counter);
 
-    enviar_memoria_solicitar_instruccion(EXEC, fd_memoria);
+   // enviar_memoria_solicitar_instruccion(EXEC, fd_memoria);
+    enviar_memoria_solicitar_instruccion(EXEC->pid,EXEC->program_counter, fd_memoria);
 
-    // la instruccion sin parseadasr tipo IO_FS_READ Int4 notas.txt BX ECX EDX
+    // la instruccion sin parsear tipo "IO_FS_READ Int4 notas.txt BX ECX EDX"
     char *cpu_respuesta_instruccion = malloc(100);
 
     op_code codigo_operacion = recibir_operacion(fd_memoria);
@@ -39,7 +42,7 @@ void fetch()
         destruir_buffer(buffer);
     }
 
-   // printf("cpu_respuesta_instruccion %s  \n", cpu_respuesta_instruccion);
+    printf("\nINSTRUCCION RECIBIDA DE MEMORIA: %s  \n\n", cpu_respuesta_instruccion);
 
     char **array_instruccion = string_split(cpu_respuesta_instruccion, " ");
 
@@ -57,12 +60,12 @@ void fetch()
     strcpy(instr_arg4, array_instruccion[4]);
     strcpy(instr_arg5, array_instruccion[5]);
 
-    printf("instruccion    %s\n", instruccion);
+   /* printf("instruccion    %s\n", instruccion);
     printf("instr_arg1   %s\n", instr_arg1);
     printf("instr_arg2   %s\n", instr_arg2);
     printf("instr_arg3   %s\n", instr_arg3);
     printf("instr_arg4   %s\n", instr_arg4);
-    printf("instr_arg5   %s\n", instr_arg5);
+    printf("instr_arg5   %s\n", instr_arg5);*/
 }
 /// @brief Procesa una instruccion para un proceso
 /// @note Esta etapa consiste en interpretar qué instrucción es la que se va a ejecutar y si la misma requiere de una traducción de dirección lógica a dirección física.
@@ -71,22 +74,21 @@ void fetch()
 int decode_excute()
 {
     EXEC->program_counter += 1; // lo hago aca para que en tal caso el jnz lo sobreescriba
-    printf("--decode_excute  -  EXEC->program_counter :%d  - instruccion:%s\n", EXEC->program_counter, instruccion);
 
     // loggear_ejecucion(instruccion);
     if (strcmp(instruccion, "SET") == 0)
     {
-        ejecutar_set(instr_arg1, instr_arg2);
+        ejecutar_set(instr_arg1, atoi(instr_arg2));
         return CONTINUAR_CICLO;
-    }
+    }  
     else if (strcmp(instruccion, "MOV_IN") == 0)
     {
-        //ejecutar_mov_in(instr_arg1, instr_arg2);
+        ejecutar_mov_in(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
     else if (strcmp(instruccion, "MOV_OUT") == 0)
     {
-       // ejecutar_mov_out(instr_arg1, instr_arg2);
+        ejecutar_mov_out(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
     else if (strcmp(instruccion, "SUM") == 0)
@@ -102,20 +104,19 @@ int decode_excute()
     else if (strcmp(instruccion, "JNZ") == 0)
     {
         printf("entro en jnz\n");
-        //ejecutar_jnz(instr_arg1, instr_arg2);
+        ejecutar_jnz(instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
     else if (strcmp(instruccion, "RESIZE") == 0)
     {
-        /*if (ejecutar_resize(instr_arg1) == 0)
+        if (ejecutar_resize(instr_arg1) == 0)
         {
             return CONTINUAR_CICLO;
         }
         else
         {
             return SALIR_DE_CICLO;
-        }*/
-        return CONTINUAR_CICLO;
+        }
     }
     else if (strcmp(instruccion, "COPY_STRING") == 0)
     {
@@ -187,9 +188,11 @@ int decode_excute()
 }
 
 int ciclo_de_instruccion() // FETCH->EXECUTE
-{
+{   
+    if 	(tamanio_pagina==-1){
+    tamanio_pagina=consultar_tamanio_pagina_memoria();//es un dato necesario en cpu y no viene en config
+    }
     // Recibo instruccion y la mando a ejecutar
-    printf("\n>>>>>>>>Entro a ciclo_de_instruccion <<<<<<<<<  \n");
     int estado_ciclo = 1; 
     // 0 continuar 1 salir de ciclo,incializo en 1 para que no loopee eternamente
 
