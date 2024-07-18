@@ -62,16 +62,12 @@ t_pcb* buscar_pcb_por_pid(int pid){
 
 }
 
-void pasar_proceso_a_exit(int pid){
+void pasar_proceso_a_exit(int pid, char* motivo){
     t_pcb* pcb = buscar_pcb_por_pid(pid);
-    pcb->estado = E_EXIT;
     
-    pthread_mutex_lock(&mutex_EXIT);
-	list_add(EXIT, pcb);
-	pthread_mutex_unlock(&mutex_EXIT);
-
-    sem_post(&sem_EXIT);
+    enviar_a_exit(pcb, motivo);
 }
+
 
 int buscar_recurso(char* recurso){
     for (unsigned int i = 0; i < list_size(recursos); i++){
@@ -81,13 +77,14 @@ int buscar_recurso(char* recurso){
     return -1;
 }
 
-void enviar_a_exit(t_pcb* pcb){
+void enviar_a_exit(t_pcb* pcb, char* motivo){
     cambio_de_estado(pcb, E_EXIT);
     //cb->estado = E_EXIT;
 	pthread_mutex_lock(&mutex_EXIT);
 	list_add(EXIT, pcb);
 	pthread_mutex_unlock(&mutex_EXIT);
     sem_post(&sem_EXIT); //agregue este semaforo
+    log_info("Finaliza el proceso <%i> - Motivo: <%s>", pcb->pid, motivo);
 }
 
 
@@ -213,6 +210,23 @@ void cambio_de_estado(t_pcb* pcb, int estado_nuevo){
     int estado = pcb->estado;
     char* string_estado_anterior = estado_pcb_desc[estado];
     char* string_estado_actual = estado_pcb_desc[estado_nuevo];
-    log_info("PID: <%i> - Estado Anterior: <%s> - Estado Actual: <%s>", pcb->pid, string_estado_anterior, string_estado_actual );
+    log_info(logger_kernel ,"PID: <%i> - Estado Anterior: <%s> - Estado Actual: <%s>", pcb->pid, string_estado_anterior, string_estado_actual );
+    if (estado_nuevo == E_READY ){
+        log_info(logger_kernel ,"Cola Ready: \n");
+        leer_pids_cola(E_READY);
+    }
+    if (estado_nuevo == E_PRIORIDAD){
+        log_info(logger_kernel ,"Cola prioridad: \n");
+        leer_pids_cola(E_PRIORIDAD);
+    }
     pcb->estado = estado_nuevo;
+}
+
+void leer_pids_cola(estado_pcb estado){
+    t_list* lista = list_get(lista_de_estados, estado);
+    for(int i = 0; i < list_size(lista); i++){
+        t_pcb* pcb_actual = list_get(lista, i);
+        log_info(logger_kernel ,"   - PID: %i \n", pcb_actual->pid);
+    }
+
 }

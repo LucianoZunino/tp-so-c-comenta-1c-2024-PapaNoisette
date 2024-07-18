@@ -65,11 +65,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
         		pcb = list_remove(BLOCKED, index);
 				pthread_mutex_unlock(&mutex_BLOCKED);
 				
-				cambio_de_estado(pcb, E_EXIT);
-				//pcb->estado = E_EXIT; //aca se podria usar el enviar_a_exit()
-				pthread_mutex_lock(&mutex_EXIT);
-				list_add(EXIT, pcb);
-				pthread_mutex_unlock(&mutex_EXIT);
+				enviar_a_exit(pcb, "INVALID_INTERFACE");
 
 				sem_post(&sem_ocupado);
 				break;

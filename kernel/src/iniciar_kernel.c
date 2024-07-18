@@ -161,6 +161,7 @@ void iniciar_colas_estados() {
     list_add(lista_de_estados, PRIORIDAD);
 }
 
+
 void iniciar_recursos(){
     int length = sizeof(instancias_recursos) / sizeof(instancias_recursos[0]);
 

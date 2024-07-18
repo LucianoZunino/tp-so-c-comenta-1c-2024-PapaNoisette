@@ -5,6 +5,7 @@ int cantidad_de_marcos;
 t_list* lista_de_miniPcb;
 pthread_mutex_t* mutex_miniPcb;
 t_list *lista_de_tablas_de_paginas_por_proceso;
+t_list* lista_de_interfaces;
 void *memoria_RAM; // Memoria contigua
 Frame frames[128]; // [cantidad_de_marcos] // Bitmap de frames de la memoria
 
@@ -223,6 +224,7 @@ log_info(logger_memoria, "Se finalizo el proceso :%d",pid);
 void inicializar_memoria(){
     lista_de_miniPcb = list_create();
     lista_de_tablas_de_paginas_por_proceso = list_create();
+    lista_de_interfaces = list_create();
 
     // Asignacion de memoria contigua
     memoria_RAM = malloc(tam_memoria);
@@ -251,4 +253,36 @@ void inicializar_semaforos(){
         log_error(logger_memoria, "No se pudo inicializar el semaforo para la lista miniPcb");
         exit(-1);
     } 
+}
+
+void esperar_clientes(){
+    int i = 0;
+    lista_de_interfaces = list_create();
+    printf("ENTRAMOS EN esperar_clientes de memoria\n");
+    while(1){
+        
+        printf("antes de esperar_cliente \n");
+        int socket;// = malloc(sizeof(int));  //LIBERAR MEMORIA CUANDO SE DESCONECTE IO
+        socket = esperar_cliente(fd_memoria, logger_memoria, "entradasalida");
+        printf("Socket: %i, despues de esperar_cliente \n", socket);
+        if (socket == -1) return;
+        t_interfaz* interfaz = malloc(sizeof(t_interfaz));
+        
+    
+        interfaz->socket = socket;
+        printf("Antes de crear el hilo\n");
+        interfaz->cola_espera = list_create();
+        sem_init(&interfaz->sem_espera, 1, 0);
+        pthread_mutex_init(&interfaz->mutex_interfaz, NULL);
+
+        list_add(lista_de_interfaces, interfaz);
+        printf("tam lista_de_interfaces: %i\n", list_size(lista_de_interfaces));
+
+        pthread_t hilo_interfaz;
+        pthread_create(&hilo_interfaz, NULL, (void *)(escuchar_mensajes_entradasalida_memoria), (i));
+        pthread_detach(hilo_interfaz);
+        printf("FIN DEL WHILE esperar_clientes \n");
+        
+        i++;
+    }
 }

@@ -37,55 +37,45 @@ void escuchar_mensajes_dispatch_kernel()
 
 			pcb->quantum = quantum;
 
+			log_info(logger_kernel, "PID: %i - Desalojado por fin de Quantum", pcb->pid);
+
 			pthread_mutex_lock(&mutex_READY);
 			list_add(READY, pcb);
 			pthread_mutex_unlock(&mutex_READY);
 			cambio_de_estado(pcb, E_READY);
 			//pcb->estado = E_READY;
+
+			destruir_buffer(buffer);
 			break;
 
 		case IO_GEN_SLEEP_FS:
-			printf("flag1 \n");
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
-			printf("flag2 \n");
 			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
-			printf("flag3 \n");
 			pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
-			printf("flag4 \n");
 			sem_post(&sem_desalojo);
-			printf("flag5 \n");
-			bloquear_proceso(pcb);
-			printf("flag6 \n");
 
 			nombre_interfaz = extraer_string_del_buffer(buffer);
-			printf("flag7 \n");
 			tiempo = extraer_int_del_buffer(buffer);
-			printf("flag8 \n");
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
-			printf("flag9 \n");
 			interfaz = list_get(interfaces, indice_interfaz);
-			printf("flag10 \n");
+
+			bloquear_proceso(pcb, interfaz->nombre);
+			sem_post(&sem_EXEC);
 
 			destruir_buffer(buffer);
-			printf("flag11 \n");
+
+
 			buffer = crear_buffer();
-			printf("flag12 \n");
 			paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer); // aca no iria generica?
-			printf("flag13 \n");
 			cargar_int_al_buffer(paquete->buffer,pcb->pid);
-			printf("flag14 \n");
 			cargar_int_al_buffer(paquete->buffer, tiempo);
-			printf("flag15 \n");
+
 
 			pthread_mutex_lock(&interfaz->mutex_interfaz);
-			printf("flag16 \n");
 			list_add(interfaz->cola_espera, paquete);
-			printf("flag17 \n");
 			pthread_mutex_unlock(&interfaz->mutex_interfaz);
-			printf("flag18 \n");
 
 			sem_post(&interfaz->sem_espera);
-			printf("flag19 \n");
 
 			destruir_buffer(buffer);
 
@@ -118,7 +108,8 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&interfaz->sem_espera);
 
 			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			bloquear_proceso(pcb, interfaz->nombre);
+			sem_post(&sem_EXEC);
 
 			destruir_buffer(buffer);
 
@@ -151,7 +142,8 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&interfaz->sem_espera);
 
 			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			bloquear_proceso(pcb, interfaz->nombre);
+			sem_post(&sem_EXEC);
 
 			destruir_buffer(buffer);
 
@@ -188,7 +180,8 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&interfaz->sem_espera);
 
 			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			bloquear_proceso(pcb, interfaz->nombre);
+			sem_post(&sem_EXEC);
 
 			destruir_buffer(buffer);
 
@@ -223,7 +216,8 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&interfaz->sem_espera);
 
 			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			bloquear_proceso(pcb, interfaz->nombre);
+			sem_post(&sem_EXEC);
 
 			destruir_buffer(buffer);
 
@@ -255,7 +249,8 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&interfaz->sem_espera);
 
 			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			bloquear_proceso(pcb, interfaz->nombre);
+			sem_post(&sem_EXEC);
 
 			
 			destruir_buffer(buffer);
@@ -281,7 +276,8 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&interfaz->sem_espera);
 
 			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			bloquear_proceso(pcb, interfaz->nombre);
+			sem_post(&sem_EXEC);
 			
 			destruir_buffer(buffer);
 
@@ -310,7 +306,8 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&interfaz->sem_espera);
 
 			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			bloquear_proceso(pcb, interfaz->nombre);
+			sem_post(&sem_EXEC);
 			
 			destruir_buffer(buffer);
 
@@ -325,16 +322,17 @@ void escuchar_mensajes_dispatch_kernel()
 			sem_post(&sem_desalojo);
 			sem_post(&sem_EXEC);
 			
-			enviar_a_exit(pcb);
+			enviar_a_exit(pcb, "SUCCESS");
 			destruir_buffer(buffer);
 			// CONTEMPLAR EL CASO PARA DEVOLVER RECURSOS SI LOS TIENE
 			break;
 
-		case KERNEL_WAIT: // pónernos de acuerdo con nacho como envia el recurso solicitado
+		case KERNEL_WAIT: // ponernos de acuerdo con nacho como envia el recurso solicitado
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
 			pcb = deserializar_pcb(buffer);
 
 			sem_post(&sem_desalojo);
+			usleep(20);
 			pcb->quantum = RUNNING->quantum;
 
 			// RECURSOS = ["RA", "RB", "RC"];
@@ -342,7 +340,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			if (buscar_recurso(recurso_solicitado) < 0)
 			{
-				enviar_a_exit(RUNNING); // no deberia ser el pcb DESEREALIZADO? 
+				enviar_a_exit(pcb, "INVALID_RESOURCE");
 			}
 			else
 			{
@@ -372,7 +370,10 @@ void escuchar_mensajes_dispatch_kernel()
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
 			pcb = deserializar_pcb(buffer);
 			destruir_buffer(buffer);
-			// aca no se que mas hacen..
+			
+			enviar_a_exit(pcb, "OUT_OF_MEMORY");
+			pcb_destruir(pcb);
+
 			break;
 		case -1:
 			log_error(logger_kernel, "El Dispatch se desconecto de Kernel. Terminando servidor.");
@@ -385,52 +386,15 @@ void escuchar_mensajes_dispatch_kernel()
 		}
 	}
 }
-/*
-WAIT (Recurso): Esta instrucción solicita al Kernel que se asigne una instancia del recurso indicado por parámetro.
-SIGNAL (Recurso): Esta instrucción solicita al Kernel que se libere una instancia del recurso indicado por parámetro.
-RECURSOS=[RA,RB,RC]
-INSTANCIAS_RECURSOS=[1,2,1]
-*/
 
-void bloquear_proceso(t_pcb *pcb)
+void bloquear_proceso(t_pcb *pcb, char* motivo)
 {
 	cambio_de_estado(pcb, E_BLOCKED);
 	//pcb->estado = E_BLOCKED;
 	pthread_mutex_lock(&mutex_BLOCKED);
 	list_add(BLOCKED, pcb);
 	pthread_mutex_unlock(&mutex_BLOCKED);
-
-	sem_post(&sem_EXEC);
+	log_info("PID: %i -Motivo de bloque: %s", pcb->pid, motivo);
+	
 }
-
-
-// creo que este hilo vuela, interrput es unidireccional de kernel a memoria
-/*void escuchar_mensajes_interrupt_kernel(){
-	bool desconexion_interrupt_kernel = 0;
-	while(!desconexion_interrupt_kernel){
-		int motivo = recibir_operacion(fd_cpu_interrupt); // recv() es bloqueante por ende no queda loopeando infinitamente
-		switch(motivo){
-			//case PROTOCOLOS_A_DEFINIR:
-			//	break;
-			case -1:
-				log_error(logger_kernel, "El Interrupt se desconecto de Kernel. Terminando servidor.");
-				desconexion_interrupt_kernel = 1;
-				break;
-			default:
-				log_warning(logger_kernel, "Operacion desconocida de Interrupt-Kernel.");
-				break;
-			}
-	}
-}
-*/
-/*
-1) ENTRADA/SALIDA (hecho con una sola io)
-2) CONSOLA
-3) HACER RECURSOS (hecho)
-4) QUANTUM DE RR Y VRR (hecho)
-5) HACER VRR E INTERRUPCION DE QUANTUM (hecho)
-6) ELIMINAR PROCESO (TERMINAR LARGO PLAZO) (hecho)
-
-
-*/
 

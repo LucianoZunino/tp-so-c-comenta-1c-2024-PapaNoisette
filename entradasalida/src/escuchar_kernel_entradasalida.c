@@ -152,12 +152,15 @@ void escuchar_instrucciones_dialfs(){
 			void* aux;
 			char* nombre;
 			t_config* config;
+
 			case IO_FS_CREATE_FS:
 
 				buffer = recibir_buffer_completo(fd_kernel);
 				
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
+
+				usleep(tiempo_unidad_trabajo);
 
 				char* path;
 				strcpy(path, tomar_nombre_devolver_path(nombre));
@@ -193,6 +196,8 @@ void escuchar_instrucciones_dialfs(){
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 
+				usleep(tiempo_unidad_trabajo);
+
 				liberar_archivo_bitmap(nombre);
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC); //dudoso, pero creo que va
 
@@ -210,6 +215,8 @@ void escuchar_instrucciones_dialfs(){
 				
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
+
+				usleep(tiempo_unidad_trabajo);
 
 				reg_direccion = extraer_int_del_buffer(buffer);
 				reg_tamanio = extraer_int_del_buffer(buffer);
@@ -247,6 +254,8 @@ void escuchar_instrucciones_dialfs(){
 				reg_tamanio = extraer_int_del_buffer(buffer);
 				reg_puntero_archivo = extraer_int_del_buffer(buffer);
 
+				usleep(tiempo_unidad_trabajo);
+
 				if(!verificar_escritura_archivo(nombre, reg_tamanio, reg_puntero_archivo)){
 					log_error(logger_entradasalida, "Se intenta leer por fuera del tamanio del archivo\n");
 					goto error_io;
@@ -273,6 +282,8 @@ void escuchar_instrucciones_dialfs(){
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 				int nuevo_tamanio = extraer_int_del_buffer(buffer);
+
+				usleep(tiempo_unidad_trabajo);
 
 				config = config_create(tomar_nombre_devolver_path(nombre));
 				if(config == NULL){
@@ -545,6 +556,7 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 	msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
 
 	config_destroy(config);
+	usleep(retraso_compactacion);
 }
 
 

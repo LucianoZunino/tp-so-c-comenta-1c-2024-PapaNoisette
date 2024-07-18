@@ -16,7 +16,7 @@ void escuchar_mensajes_entradasalida_memoria(){
 				break;
 			case IO_STDIN_READ_FS:
 
-		   log_info(logger_memoria, "IO_STDIN_READ_FS");
+			log_info(logger_memoria, "IO_STDIN_READ_FS");
 			buffer = recibir_buffer_completo(fd_entradasalida);
 			//no se si no hace falta el tamaño
 			dir_fisica = extraer_int_del_buffer(buffer);

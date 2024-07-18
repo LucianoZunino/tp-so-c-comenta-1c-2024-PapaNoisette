@@ -37,7 +37,6 @@ void crear_proceso(char* path){
     t_pcb *nuevo_pcb = crear_pcb();
 
     nuevo_pcb->estado = E_NEW;
-    printf("Pcb encolado en new, PID: %i\n", nuevo_pcb->pid);
     pthread_mutex_lock(&mutex_NEW);
     list_add(NEW, nuevo_pcb);
     pthread_mutex_unlock(&mutex_NEW);
@@ -50,24 +49,8 @@ void crear_proceso(char* path){
 
     sem_post(&sem_NEW);  // no deberia ser despues de recibir el ok de memoria? QUIEN HACE UN SEM_WAIT?
 
-    // printf("Crear proceso\n");
-
-
-    // op_code codigo_operacion = recibir_operacion(fd_memoria);
-    // if(codigo_operacion != KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS)
-    // {
-    //     log_error(logger_kernel, "PID %i - No se pudo inicializar estructuras", nuevo_pcb->pid);
-    //     return;
-    // }
-    // // Hace falta? 
-    // recibir_ok (fd_memoria);
-    
-
     printf("Se inicializaron las estructuras\n");
 
-    //TEST */
-
-    // TODO: Revisar tema del PID para tener el log bien hecho
     log_info(logger_kernel, "Se crea el proceso %i en NEW", nuevo_pcb->pid);
     imprimir_colas();
 

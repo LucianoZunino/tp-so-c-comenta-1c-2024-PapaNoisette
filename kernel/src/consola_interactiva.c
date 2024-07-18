@@ -88,7 +88,7 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
             if (RUNNING->pid == pid){
                 interrumpir_cpu(RUNNING, ELIMINAR_PROCESO);
             } else {
-                pasar_proceso_a_exit(pid);
+                pasar_proceso_a_exit(pid, "INTERRUPTED BY USER");
             }
             break;
         

@@ -6,5 +6,6 @@
 
 void escuchar_mensajes_dispatch_kernel();
 void escuchar_mensajes_interrupt_kernel();
+void bloquear_proceso(t_pcb *pcb, char* motivo);
 
 #endif
