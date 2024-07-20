@@ -53,7 +53,7 @@ void escuchar_mensajes_dispatch_kernel()
 			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
 			pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
 			sem_post(&sem_desalojo);
-			bloquear_proceso(pcb);
+			bloquear_proceso(pcb, interfaz->nombre);
  
 			nombre_interfaz = extraer_string_del_buffer(buffer);
 			tiempo = extraer_int_del_buffer(buffer);

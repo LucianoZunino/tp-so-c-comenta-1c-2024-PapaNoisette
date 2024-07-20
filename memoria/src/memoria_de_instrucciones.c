@@ -1,7 +1,6 @@
 #include "memoria_de_instrucciones.h"
 
-void guardar_instrucciones_en_memoria(int pid,char* path){
-    
+void guardar_instrucciones_en_memoria(int pid, char* path){
     t_instrucciones_por_proceso* instrucciones_proceso = malloc(sizeof(t_instrucciones_por_proceso));
     char *path_final=strcat(strcat(path_instrucciones,"/"),path);
     //char *path_final="/home/utnso/scripts-pruebas/instrucciones.txt";
@@ -32,41 +31,33 @@ void guardar_instrucciones_en_memoria(int pid,char* path){
     printf("Size de instrucciones_proceso: %i\n", list_size(lista_de_instrucciones_por_proceso));
     // PONER HILO MUTEX PARA LISTA_dE_instrucciones_proceso
     list_add(lista_de_instrucciones_por_proceso, instrucciones_proceso ); 
-
 }
 
+void enviar_instruccion_a_cpu(int pid, int program_counter, int socket){
 
-
-void enviar_instruccion_a_cpu(int pid,int program_counter,int socket)
-{
-
-	if (list_size(lista_de_instrucciones_por_proceso) < 1)
-	{
+	if(list_size(lista_de_instrucciones_por_proceso) < 1){
 		printf("No se cargaron pcbs en memoria: \n");
 		return 0;
 	}
 
-	for (int i = 0; i <= list_size(lista_de_instrucciones_por_proceso); i++)
-	{
+	for(int i = 0; i <= list_size(lista_de_instrucciones_por_proceso); i++){
 
 		t_instrucciones_por_proceso *instrucciones_proceso = list_get(lista_de_instrucciones_por_proceso, i);
-		if (instrucciones_proceso->pid == pid)
-		{
 
+		if(instrucciones_proceso->pid == pid){
 			char *instruccion = list_get(instrucciones_proceso->lista_de_instrucciones, program_counter);
 
-			if (strlen(instruccion) != 0)
-			{
+			if(strlen(instruccion) != 0){
 				enviar_instruccion(instruccion, socket);
 				log_info(logger_memoria, "INSTRUCCION ENVIADA A CPU:  %s,PROGRAM_COUNTER:%d\n", instruccion, program_counter);
 			}
-			else
-			{
+			else{
 				log_error(logger_memoria, "No hay instruccion para el pcb:  %d\n", instrucciones_proceso->pid);
 			}
 
 			return;
 		}
 	}
+    
 	log_info(logger_memoria, "Error, no hay pid cargado en memoria \n");
 }

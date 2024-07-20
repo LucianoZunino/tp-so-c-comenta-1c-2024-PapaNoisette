@@ -2293,3 +2293,16 @@
 
 [INFO] 17:07:28:648 cpu/(13507:13755): Recibido handshake HANDSHAKE_KERNEL.
 [INFO] 17:07:28:649 cpu/(13507:13754): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 20:51:26:265 cpu/(5640:5640): Arranca el modulo CPU
+[INFO] 20:51:26:265 cpu/(5640:5640): >>> Server CPU-Dispatch iniciado <<<
+[INFO] 20:51:26:265 cpu/(5640:5640): >>> Server CPU-Interrupt iniciado <<<
+[INFO] 20:51:26:266 cpu/(5640:5640): >>>CPU se conecta al server MEMORIA<<<
+[INFO] 20:51:28:416 cpu/(5640:5640): Handshake OK
+[INFO] 20:51:28:416 cpu/(5640:5640): Esperando conexion de Kernel en Dispatch
+[INFO] 20:51:28:416 cpu/(5640:5640): Se conecto el cliente: Kernel-Dispatch
+
+[INFO] 20:51:28:416 cpu/(5640:5640): Esperando conexion de Kernel en Interrupt
+[INFO] 20:51:28:416 cpu/(5640:5640): Se conecto el cliente: Kernel-Interrupt
+
+[INFO] 20:51:28:416 cpu/(5640:5647): Recibido handshake HANDSHAKE_KERNEL.
+[INFO] 20:51:28:417 cpu/(5640:5646): Recibido handshake HANDSHAKE_KERNEL.
