@@ -57,8 +57,8 @@ int main(int argc, char* argv[]){
     // Escucha los mensajes CPU-Memoria
     pthread_t hilo_cpu_memoria;
 	pthread_create(&hilo_cpu_memoria, NULL, (void*)escuchar_mensajes_cpu_memoria, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
-	//pthread_join(hilo_cpu_memoria,NULL); // Hace que el hilo se desacople del principal y se ejecute en paralelo
-    pthread_detach(hilo_cpu_memoria); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+	pthread_join(hilo_cpu_memoria, NULL); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+    //pthread_detach(hilo_cpu_memoria); // Hace que el hilo se desacople del principal y se ejecute en paralelo
 
     /*
     // Escucha los mensajes E/S-Memoria
