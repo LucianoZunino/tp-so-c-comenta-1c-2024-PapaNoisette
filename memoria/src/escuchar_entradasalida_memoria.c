@@ -1,13 +1,16 @@
 #include "escuchar_entradasalida_memoria.h"
 
-void escuchar_mensajes_entradasalida_memoria(){
+
+void escuchar_mensajes_entradasalida_memoria(int indice){
 		t_buffer* buffer;
 		int dir_fisica;
 		int tamanio;
 
+		t_interfaz* interfaz = list_get(lista_de_interfaces, indice);
+
     bool desconexion_entradasalida_memoria = 0;
 	while(!desconexion_entradasalida_memoria){
-		int cod_op = recibir_operacion(fd_entradasalida); // recv() es bloqueante por ende no queda loopeando infinitamente
+		int cod_op = recibir_operacion(interfaz->socket); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;

@@ -42,7 +42,7 @@ int main(int argc, char* argv[]){
     log_info(logger_memoria, "Esperando conexion de Interfaz E/S");
     pthread_t hilo_escucha_io;
 
-    if(pthread_create(&hilo_escucha_io, NULL, (void *)(esperar_clientes), NULL) == -1){
+    if(pthread_create(&hilo_escucha_io, NULL, esperar_clientes, NULL) == -1){
         log_error(logger_memoria, "No se pudo crear el hilo de escucha E/S.");
         return EXIT_FAILURE;
     }
@@ -57,8 +57,8 @@ int main(int argc, char* argv[]){
     // Escucha los mensajes CPU-Memoria
     pthread_t hilo_cpu_memoria;
 	pthread_create(&hilo_cpu_memoria, NULL, (void*)escuchar_mensajes_cpu_memoria, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
-	//pthread_join(hilo_cpu_memoria,NULL); // Hace que el hilo se desacople del principal y se ejecute en paralelo
-    pthread_detach(hilo_cpu_memoria); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+	pthread_join(hilo_cpu_memoria, NULL); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+    //pthread_detach(hilo_cpu_memoria); // Hace que el hilo se desacople del principal y se ejecute en paralelo
 
     /*
     // Escucha los mensajes E/S-Memoria

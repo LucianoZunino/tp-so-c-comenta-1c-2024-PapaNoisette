@@ -25,7 +25,7 @@ void iniciar_logger_entradasalida(){
 }
 
 void iniciar_config_entradasalida(char* config){
-    printf("INICIAR CONFIG ENTRADASALIDA /n");
+    printf("INICIAR CONFIG ENTRADASALIDA \n");
     config_entradasalida = iniciar_config(config);
 
     ip_kernel = config_get_string_value(config_entradasalida, "IP_KERNEL");

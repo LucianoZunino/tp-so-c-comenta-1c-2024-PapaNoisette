@@ -355,9 +355,9 @@ void esperar_clientes(){
 
         list_add(lista_de_interfaces, interfaz);
         printf("tam lista_de_interfaces: %i\n", list_size(lista_de_interfaces));
-
+ 
         pthread_t hilo_interfaz;
-        pthread_create(&hilo_interfaz, NULL, (void *)(escuchar_mensajes_entradasalida_memoria), (i));
+        pthread_create(&hilo_interfaz, NULL, (void *) escuchar_mensajes_entradasalida_memoria, i);
         pthread_detach(hilo_interfaz);
         printf("FIN DEL WHILE esperar_clientes \n");
         

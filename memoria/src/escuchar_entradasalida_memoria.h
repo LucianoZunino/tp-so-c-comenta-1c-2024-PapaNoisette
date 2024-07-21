@@ -3,6 +3,6 @@
 
 #include "main.h"
 
-void escuchar_mensajes_entradasalida_memoria();
+void escuchar_mensajes_entradasalida_memoria(int indice);
 
 #endif

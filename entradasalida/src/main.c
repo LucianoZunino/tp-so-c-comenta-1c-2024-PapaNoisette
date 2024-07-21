@@ -25,11 +25,13 @@ int main(int argc, char** argv[]){
     log_info(logger_entradasalida, "Arranca el modulo  Entrada/Salida");
 
     // Se conecta como cliente a MEMORIA
-    fd_memoria = crear_conexion(ip_memoria, puerto_memoria, logger_entradasalida);
-
+    if(tipo_de_interfaz != GENERICA){
+        fd_memoria = crear_conexion(ip_memoria, puerto_memoria, logger_entradasalida);
+    }
     // Se conecta como cliente a KERNEL
     fd_kernel = crear_conexion(ip_kernel, puerto_kernel, logger_entradasalida);
 
+    
     if (realizar_handshake(logger_entradasalida, fd_kernel, HANDSHAKE_ENTRADASALIDA) == -1){
         return EXIT_FAILURE;
     }
@@ -39,10 +41,12 @@ int main(int argc, char** argv[]){
     }
 
     // Escucha los mensajes Memoria-E/S
-    pthread_t hilo_memoria_entradasalida;
-	pthread_create(&hilo_memoria_entradasalida, NULL, (void*)escuchar_mensajes_memoria_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
-	pthread_detach(hilo_memoria_entradasalida); // Hace que el hilo se desacople del principal y se ejecute en paralelo
-
+    if(tipo_de_interfaz != GENERICA){
+        pthread_t hilo_memoria_entradasalida;
+	    pthread_create(&hilo_memoria_entradasalida, NULL, (void*)escuchar_mensajes_memoria_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
+	    pthread_detach(hilo_memoria_entradasalida); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+    }
+    
     t_buffer *buffer = crear_buffer();
     cargar_string_al_buffer(buffer, argv[0]); //Ver orden parametros consola, argv[0] es el nombre de interfaz a crear
     t_paquete *paquete = crear_paquete(NUEVA_CONEXION_IO, buffer);

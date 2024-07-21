@@ -5,9 +5,12 @@ void escuchar_mensajes_kernel_memoria(){
 	t_buffer* buffer;
     int pid;
 	while(!desconexion_kernel_memoria){
-		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
-		switch(cod_op){
+		printf("FLAG 1\n");
+        int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
+		printf("FLAG 2\n");
+        switch(cod_op){
 			case  HANDSHAKE_KERNEL:
+                printf("FLAG HANDSHAKE_KERNEL\n");
 				aceptar_handshake(logger_memoria, fd_kernel, cod_op);
 				break;
 			case MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS:

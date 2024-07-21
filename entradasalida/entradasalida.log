@@ -863,3 +863,23 @@
 [ERROR] 15:06:42:403 entradasalida/(7363:7363): Error conectando al Servidor,apagado o invalido
 [INFO] 15:12:13:264 entradasalida/(7678:7678): Arranca el modulo  Entrada/Salida
 [ERROR] 15:12:13:265 entradasalida/(7678:7678): Error conectando al Servidor,apagado o invalido
+[INFO] 21:26:38:960 entradasalida/(6997:6997): Arranca el modulo  Entrada/Salida
+[ERROR] 21:26:38:960 entradasalida/(6997:6997): Error conectando al Servidor,apagado o invalido
+[INFO] 21:33:09:158 entradasalida/(7470:7470): Arranca el modulo  Entrada/Salida
+[ERROR] 21:33:09:158 entradasalida/(7470:7470): Error conectando al Servidor,apagado o invalido
+[INFO] 21:42:08:091 entradasalida/(7918:7918): Arranca el modulo  Entrada/Salida
+[ERROR] 21:42:08:091 entradasalida/(7918:7918): Error conectando al Servidor,apagado o invalido
+[INFO] 21:42:55:905 entradasalida/(8300:8300): Arranca el modulo  Entrada/Salida
+[ERROR] 21:42:55:906 entradasalida/(8300:8300): Error conectando al Servidor,apagado o invalido
+[INFO] 21:49:03:841 entradasalida/(8843:8843): Arranca el modulo  Entrada/Salida
+[ERROR] 21:49:03:841 entradasalida/(8843:8843): Error conectando al Servidor,apagado o invalido
+[INFO] 21:57:46:824 entradasalida/(9690:9690): Arranca el modulo  Entrada/Salida
+[INFO] 21:57:46:826 entradasalida/(9690:9690): Handshake OK
+[INFO] 21:57:46:826 entradasalida/(9690:9690): Handshake OK
+[ERROR] 21:57:46:826 entradasalida/(9690:9693): La Memoria se desconecto de Entradasalida. Terminando servidor.
+[INFO] 22:01:49:894 entradasalida/(10119:10119): Arranca el modulo  Entrada/Salida
+[INFO] 22:01:49:895 entradasalida/(10119:10119): Handshake OK
+[INFO] 22:01:49:895 entradasalida/(10119:10119): Handshake OK
+[INFO] 22:10:04:286 entradasalida/(11007:11007): Arranca el modulo  Entrada/Salida
+[INFO] 22:10:04:291 entradasalida/(11007:11007): Handshake OK
+[INFO] 22:10:04:291 entradasalida/(11007:11007): Handshake OK

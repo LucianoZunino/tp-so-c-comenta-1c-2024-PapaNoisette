@@ -22,6 +22,7 @@ extern int tam_pagina;
 extern int cantidad_de_marcos;
 extern char* path_instrucciones;
 extern int retardo_respuesta;
+extern t_list* lista_de_interfaces;
 
 extern int fd_memoria;
 extern int fd_cpu;
