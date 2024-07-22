@@ -314,16 +314,16 @@ Proceso *buscar_proceso(t_list *lista, int pid){
 }
 
 void finalizar_proceso(int pid){
-    /*
-        for (int i = 0; i < cantidad_de_marcos; i++)
-        {
-            if (frames[i].pid == pid)
-            {
-                frames[i].ocupado = 0;
-            }
-            log_info(logger_memoria, "Se finalizo el proceso :%d", pid);
-            // TODO: faltaria borrar las estructuras admisnistrativas del proceso??
-        }*/
+    for(int i = 0; i < cantidad_de_marcos; i++){
+        Frame *frame = list_get(lista_de_frames, i);
+
+        if(frame->pid == pid){
+            frame->ocupado = 0;
+            list_replace(lista_de_frames, i, frame);
+            log_info(logger_memoria, "Se libero el frame :%d\n", i);
+        }
+    }
+    log_info(logger_memoria, "Se finalizo el proceso :%d", pid);
 }
 
 void leer_memoria(int marco, void *buffer, size_t tamano){

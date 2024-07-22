@@ -29,6 +29,8 @@ extern int fd_cpu;
 extern int fd_kernel;
 extern int fd_entradasalida;
 
+extern void* memoria_RAM;
+
 typedef struct{
 
     int pid;

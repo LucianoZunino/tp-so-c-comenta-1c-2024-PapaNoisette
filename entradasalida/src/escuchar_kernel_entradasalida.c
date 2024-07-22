@@ -36,7 +36,6 @@ void escuchar_instrucciones_generica(){
 				enviar_paquete(paquete, fd_kernel);
 
 				eliminar_paquete(paquete);
-				destruir_buffer(buffer);
 				break;
 		}
 	}
@@ -83,7 +82,6 @@ void escuchar_instrucciones_stdin(){
 				enviar_paquete(paquete, fd_kernel);
 
 				eliminar_paquete(paquete);
-				destruir_buffer(buffer);
 				break;
 		}
 	}
@@ -133,7 +131,6 @@ void escuchar_instrucciones_stdout(){
 				enviar_paquete(paquete, fd_kernel);
 
 				eliminar_paquete(paquete);
-				destruir_buffer(buffer);
 				break;
 		}
 	}
@@ -362,7 +359,6 @@ void escuchar_instrucciones_dialfs(){
 				enviar_paquete(paquete, fd_kernel);
 
 				eliminar_paquete(paquete);
-				destruir_buffer(buffer);
 				break;
 		}
 	}

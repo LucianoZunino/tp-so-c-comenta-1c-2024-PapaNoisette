@@ -13,6 +13,7 @@ list_iterate(tlb,mostrar_entrada);
 
 int traducir_direccion_logica(int a){
    return a;
+   // [numero_pagina | desplazamiento]
 }
 
 int calcular_numero_de_pagina(int dir_logica)

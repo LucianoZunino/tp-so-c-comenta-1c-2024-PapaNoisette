@@ -8,11 +8,11 @@ void escuchar_mensajes_memoria_cpu(){
 		switch(cod_op){
 			//case PROTOCOLOS_A_DEFINIR:
 			//	break;
-			case -1:
+			
 			case RESIZE_OK:
 
 			break;
-			
+			case -1:
 			
 				log_error(logger_cpu, "La Memoria se desconecto de CPU. Terminando servidor.");
 				desconexion_memoria_cpu = 1;

@@ -2,8 +2,8 @@
 
 void guardar_instrucciones_en_memoria(int pid, char* path){
     t_instrucciones_por_proceso* instrucciones_proceso = malloc(sizeof(t_instrucciones_por_proceso));
-    char *path_final=strcat(strcat(path_instrucciones,"/"),path);
-    //char *path_final="/home/utnso/scripts-pruebas/instrucciones.txt";
+    //char *path_final=strcat(strcat(path_instrucciones,"/"),path);
+    char *path_final="/home/utnso/scripts-pruebas/instrucciones.txt";
     FILE* archivo = fopen(path_final, "r");
 
     if(archivo == NULL){

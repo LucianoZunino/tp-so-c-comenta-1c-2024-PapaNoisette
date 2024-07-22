@@ -1,5 +1,5 @@
 #include "escuchar_cpu_memoria.h"
-
+//void* memoria_RAM;
 void escuchar_mensajes_cpu_memoria()
 {
 	bool desconexion_cpu_memoria = 0;
@@ -16,7 +16,9 @@ void escuchar_mensajes_cpu_memoria()
 		t_buffer *buffer_a_enviar2;
 
 		t_buffer *buffer_a_enviar;
-	t_buffer *buffer;
+		t_buffer *buffer;
+		int tamanio;
+		int dir_fisica;
 		switch (cod_op)
 		{
 
@@ -95,44 +97,65 @@ void escuchar_mensajes_cpu_memoria()
 			}
 
 			break;
-		/*case MEMORIA_MOV_OUT:
-		log_info(logger_memoria, "MOV_OUT");
-
-		buffer = recibir_buffer_completo(fd_cpu);
-			 pid = extraer_int_del_buffer(buffer);
-			 dir_fisica = extraer_int_del_buffer(buffer);
-			void * datos = extraer_datos_del_buffer(buffer);
-			ejecutar_mov_out (pid,dir_fisica,datos);
-			destruir_buffer(buffer);
-
-		break;
-		case MEMORIA_MOV_IN:
-		log_info(logger_memoria, "MOV_IN");
-
-		buffer = recibir_buffer_completo(fd_cpu);
-			 pid = extraer_int_del_buffer(buffer);
-			 dir_fisica = extraer_int_del_buffer(buffer);
-			ejecutar_mov_in (pid,dir_fisica);
-			destruir_buffer(buffer);
-
-		case MEMORIA_COPY_STRING:
-				log_info(logger_memoria, "COPY_STRING");
+		case MEMORIA_MOV_OUT: //LECTURA
+			log_info(logger_memoria, "MOV_OUT");
 
 			buffer = recibir_buffer_completo(fd_cpu);
-			pcb = deserializar_pcb(buffer);
+			pid = extraer_int_del_buffer(buffer);
+			tamanio = extraer_int_del_buffer(buffer);
+			dir_fisica = extraer_int_del_buffer(buffer);
+			printf("flag  mem_mov_out1\n");
+			int datos = extraer_datos_del_buffer(buffer);
+			printf("flag  mem_mov_out2\n");
+			void* datos_aux = &datos;
+			printf("flag  mem_mov_out3\n");
+			printf("flag  mem_mov_out4\n");
+			ejecutar_mov_out (tamanio, dir_fisica, datos_aux);
+			usleep(retardo_respuesta);
+			
+			destruir_buffer(buffer);
+			break;
+		case MEMORIA_MOV_IN: //ESCRITURA
+			log_info(logger_memoria, "MOV_IN");
+
+			buffer = recibir_buffer_completo(fd_cpu);
+			pid = extraer_int_del_buffer(buffer);
+			tamanio = extraer_int_del_buffer(buffer);
+			dir_fisica = extraer_int_del_buffer(buffer);
+			printf("flag  mem_mov_in1\n");
+			void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica);
+			printf("flag  mem_mov_in2\n");
+			buffer_a_enviar = crear_buffer();
+			printf("flag  mem_mov_in3\n");
+			//cargar_int_al_buffer(pid); CREO QUE NO ES NECESARIO ENVIARLO
+			cargar_datos_al_buffer(buffer_a_enviar, datos_a_devolver, tamanio);
+			paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar); //SI COLISIONA CAMBIAR COD_OP
+			enviar_paquete(paquete, fd_cpu);
+			usleep(retardo_respuesta);
+			eliminar_paquete(paquete);
+			break;
+
+		case MEMORIA_COPY_STRING: //DESDE CPU SE HACE DICHA LOGICA. SOLICITAS UNA LECTURA, CON EL DATO QUE TE DEVUELVE, REALIZAR UNA ESCRITURA.
+			log_info(logger_memoria, "COPY_STRING");
+
+			buffer = recibir_buffer_completo(fd_cpu);
 			tamanio = extraer_int_del_buffer(buffer);
 
 			int dir_fisica_origen = extraer_int_del_buffer(buffer);
-			int dir_fisica_estino = extraer_int_del_buffer(buffer);
+			int dir_fisica_destino = extraer_int_del_buffer(buffer);
 
-			ejecutar_copy_string (pid,dir_fisica_origen,dir_fisica_estino,tamanio);
+			void* aux = ejecutar_mov_in(tamanio, dir_fisica_origen);
+			ejecutar_mov_out(tamanio, dir_fisica_destino, aux);
+
+
 			destruir_buffer(buffer);
+			break;
 
-		break;*/
 		case -1:
 			log_error(logger_memoria, "La CPU se desconecto de Memoria. Terminando servidor.");
 			desconexion_cpu_memoria = 1;
 			break;
+
 		default:
 			log_warning(logger_memoria, "Operacion desconocida de CPU-Memoria. cod_op:%d", cod_op);
 			break;
@@ -140,15 +163,24 @@ void escuchar_mensajes_cpu_memoria()
 	}
 }
 
-void ejecutar_copy_string(int pid, int dir_fisica_origen, int dir_fisica_estino, int tamanio)
+void ejecutar_copy_string(int pid, int dir_fisica_origen, int dir_fisica_destino, int tamanio)
 {
+	
+	memcpy(dir_fisica_destino, dir_fisica_origen, tamanio);
 }
 
-void ejecutar_mov_out(int pid, int dir_fisica, void *datos)
+void ejecutar_mov_out(int tamanio, int dir_fisica, void *datos) //chequear pagina por pid?
 {
+	memcpy(memoria_RAM + dir_fisica, datos, tamanio);
 }
-void ejecutar_mov_in(int pid, int dir_fisica)
+void* ejecutar_mov_in(int tamanio, int dir_fisica)
 {
+	void* datos = malloc(tamanio);
+	memcpy(datos, memoria_RAM + dir_fisica, tamanio);
+
+	void* datos_aux = &datos;
+	free(datos);
+	return datos_aux;
 }
 /*
 void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)

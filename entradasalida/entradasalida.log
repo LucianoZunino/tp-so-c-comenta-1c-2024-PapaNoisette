@@ -892,3 +892,102 @@
 [INFO] 21:31:31:190 entradasalida/(10963:10963): Arranca el modulo  Entrada/Salida
 [ERROR] 21:31:31:190 entradasalida/(10963:10963): Error conectando al Servidor,apagado o invalido
 >>>>>>> b056c6fe1ca1605e24807fe1eeed4c8ecac5a2da
+[INFO] 13:43:32:403 entradasalida/(3989:3989): Arranca el modulo  Entrada/Salida
+[INFO] 13:43:32:403 entradasalida/(3989:3989): Handshake OK
+[INFO] 13:43:32:403 entradasalida/(3989:3989): Handshake OK
+[INFO] 13:46:37:183 entradasalida/(4448:4448): Arranca el modulo  Entrada/Salida
+[INFO] 13:46:37:184 entradasalida/(4448:4448): Handshake OK
+[INFO] 13:46:37:184 entradasalida/(4448:4448): Handshake OK
+[INFO] 13:48:35:044 entradasalida/(4892:4892): Arranca el modulo  Entrada/Salida
+[INFO] 13:48:35:045 entradasalida/(4892:4892): Handshake OK
+[INFO] 13:48:35:045 entradasalida/(4892:4892): Handshake OK
+[INFO] 13:53:01:475 entradasalida/(5492:5492): Arranca el modulo  Entrada/Salida
+[INFO] 13:53:01:476 entradasalida/(5492:5492): Handshake OK
+[INFO] 13:53:01:476 entradasalida/(5492:5492): Handshake OK
+[INFO] 13:58:24:292 entradasalida/(5971:5971): Arranca el modulo  Entrada/Salida
+[INFO] 13:58:24:292 entradasalida/(5971:5971): Handshake OK
+[INFO] 13:58:24:292 entradasalida/(5971:5971): Handshake OK
+[INFO] 14:13:12:398 entradasalida/(6903:6903): Arranca el modulo  Entrada/Salida
+[INFO] 14:13:12:399 entradasalida/(6903:6903): Handshake OK
+[INFO] 14:13:12:399 entradasalida/(6903:6903): Handshake OK
+[INFO] 14:14:08:742 entradasalida/(7264:7264): Arranca el modulo  Entrada/Salida
+[INFO] 14:14:08:742 entradasalida/(7264:7264): Handshake OK
+[INFO] 14:14:08:743 entradasalida/(7264:7264): Handshake OK
+[INFO] 14:18:12:997 entradasalida/(7751:7751): Arranca el modulo  Entrada/Salida
+[INFO] 14:18:12:998 entradasalida/(7751:7751): Handshake OK
+[INFO] 14:18:12:998 entradasalida/(7751:7751): Handshake OK
+[INFO] 16:40:32:108 entradasalida/(12833:12833): Arranca el modulo  Entrada/Salida
+[INFO] 16:40:32:108 entradasalida/(12833:12833): Handshake OK
+[INFO] 16:40:32:108 entradasalida/(12833:12833): Handshake OK
+[INFO] 16:48:26:697 entradasalida/(13736:13736): Arranca el modulo  Entrada/Salida
+[INFO] 16:48:26:698 entradasalida/(13736:13736): Handshake OK
+[INFO] 16:48:26:698 entradasalida/(13736:13736): Handshake OK
+[INFO] 16:52:33:831 entradasalida/(14177:14177): Arranca el modulo  Entrada/Salida
+[INFO] 16:52:33:832 entradasalida/(14177:14177): Handshake OK
+[INFO] 16:52:33:832 entradasalida/(14177:14177): Handshake OK
+[INFO] 16:59:47:149 entradasalida/(14700:14700): Arranca el modulo  Entrada/Salida
+[INFO] 16:59:47:149 entradasalida/(14700:14700): Handshake OK
+[INFO] 16:59:47:149 entradasalida/(14700:14700): Handshake OK
+[INFO] 17:03:22:367 entradasalida/(15102:15102): Arranca el modulo  Entrada/Salida
+[INFO] 17:03:22:368 entradasalida/(15102:15102): Handshake OK
+[INFO] 17:03:22:368 entradasalida/(15102:15102): Handshake OK
+[INFO] 17:05:07:821 entradasalida/(15561:15561): Arranca el modulo  Entrada/Salida
+[INFO] 17:05:07:822 entradasalida/(15561:15561): Handshake OK
+[INFO] 17:05:07:822 entradasalida/(15561:15561): Handshake OK
+[INFO] 17:05:19:836 entradasalida/(15907:15907): Arranca el modulo  Entrada/Salida
+[INFO] 17:05:19:837 entradasalida/(15907:15907): Handshake OK
+[INFO] 17:05:19:837 entradasalida/(15907:15907): Handshake OK
+[INFO] 17:06:49:061 entradasalida/(16265:16265): Arranca el modulo  Entrada/Salida
+[INFO] 17:06:49:062 entradasalida/(16265:16265): Handshake OK
+[INFO] 17:06:49:062 entradasalida/(16265:16265): Handshake OK
+[INFO] 17:08:53:365 entradasalida/(16709:16709): Arranca el modulo  Entrada/Salida
+[INFO] 17:08:53:365 entradasalida/(16709:16709): Handshake OK
+[INFO] 17:08:53:365 entradasalida/(16709:16709): Handshake OK
+[INFO] 17:10:05:996 entradasalida/(17134:17134): Arranca el modulo  Entrada/Salida
+[INFO] 17:10:05:997 entradasalida/(17134:17134): Handshake OK
+[INFO] 17:10:05:997 entradasalida/(17134:17134): Handshake OK
+[INFO] 17:11:51:375 entradasalida/(17609:17609): Arranca el modulo  Entrada/Salida
+[INFO] 17:11:51:375 entradasalida/(17609:17609): Handshake OK
+[INFO] 17:11:51:376 entradasalida/(17609:17609): Handshake OK
+[INFO] 17:18:19:813 entradasalida/(18117:18117): Arranca el modulo  Entrada/Salida
+[INFO] 17:18:19:814 entradasalida/(18117:18117): Handshake OK
+[INFO] 17:18:19:814 entradasalida/(18117:18117): Handshake OK
+[INFO] 17:18:35:749 entradasalida/(18464:18464): Arranca el modulo  Entrada/Salida
+[INFO] 17:18:35:749 entradasalida/(18464:18464): Handshake OK
+[INFO] 17:18:35:749 entradasalida/(18464:18464): Handshake OK
+[INFO] 17:19:33:915 entradasalida/(18837:18837): Arranca el modulo  Entrada/Salida
+[INFO] 17:19:33:915 entradasalida/(18837:18837): Handshake OK
+[INFO] 17:19:33:915 entradasalida/(18837:18837): Handshake OK
+[INFO] 17:22:16:797 entradasalida/(19275:19275): Arranca el modulo  Entrada/Salida
+[INFO] 17:22:16:798 entradasalida/(19275:19275): Handshake OK
+[INFO] 17:22:16:798 entradasalida/(19275:19275): Handshake OK
+[INFO] 17:23:37:960 entradasalida/(19664:19664): Arranca el modulo  Entrada/Salida
+[INFO] 17:23:37:964 entradasalida/(19664:19664): Handshake OK
+[INFO] 17:23:37:964 entradasalida/(19664:19664): Handshake OK
+[INFO] 17:24:43:255 entradasalida/(20046:20046): Arranca el modulo  Entrada/Salida
+[INFO] 17:24:43:255 entradasalida/(20046:20046): Handshake OK
+[INFO] 17:24:43:255 entradasalida/(20046:20046): Handshake OK
+[INFO] 17:25:44:475 entradasalida/(20410:20410): Arranca el modulo  Entrada/Salida
+[INFO] 17:25:44:476 entradasalida/(20410:20410): Handshake OK
+[INFO] 17:25:44:476 entradasalida/(20410:20410): Handshake OK
+[INFO] 17:26:18:491 entradasalida/(20834:20834): Arranca el modulo  Entrada/Salida
+[INFO] 17:26:18:491 entradasalida/(20834:20834): Handshake OK
+[INFO] 17:26:18:492 entradasalida/(20834:20834): Handshake OK
+[INFO] 17:28:34:093 entradasalida/(21304:21304): Arranca el modulo  Entrada/Salida
+[INFO] 17:28:34:094 entradasalida/(21304:21304): Handshake OK
+[INFO] 17:28:34:094 entradasalida/(21304:21304): Handshake OK
+[INFO] 17:31:45:307 entradasalida/(21766:21766): Arranca el modulo  Entrada/Salida
+[INFO] 17:31:45:307 entradasalida/(21766:21766): Handshake OK
+[INFO] 17:31:45:307 entradasalida/(21766:21766): Handshake OK
+[INFO] 17:34:33:078 entradasalida/(22216:22216): Arranca el modulo  Entrada/Salida
+[INFO] 17:34:33:079 entradasalida/(22216:22216): Handshake OK
+[INFO] 17:34:33:079 entradasalida/(22216:22216): Handshake OK
+[INFO] 17:34:49:328 entradasalida/(22581:22581): Arranca el modulo  Entrada/Salida
+[INFO] 17:34:49:328 entradasalida/(22581:22581): Handshake OK
+[INFO] 17:34:49:328 entradasalida/(22581:22581): Handshake OK
+[INFO] 17:37:07:562 entradasalida/(23073:23073): Arranca el modulo  Entrada/Salida
+[INFO] 17:37:07:563 entradasalida/(23073:23073): Handshake OK
+[INFO] 17:37:07:563 entradasalida/(23073:23073): Handshake OK
+[INFO] 17:37:31:736 entradasalida/(23430:23430): Arranca el modulo  Entrada/Salida
+[INFO] 17:37:31:736 entradasalida/(23430:23430): Handshake OK
+[INFO] 17:37:31:736 entradasalida/(23430:23430): Handshake OK

@@ -62,7 +62,7 @@ void escuchar_mensajes_kernel_interrupt(){
 			buffer = recibir_buffer_completo(fd_kernel_interrupt);
 			motivo_interrupcion motivo = extraer_int_del_buffer(buffer);
 			enviar_proceso_por_paquete(EXEC, NULL,fd_cpu_interrupt, motivo);
-			break;
+				break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Interrupt. Terminando servidor.");
 				desconexion_kernel_interrupt = 1;

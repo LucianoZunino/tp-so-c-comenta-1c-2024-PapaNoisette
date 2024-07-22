@@ -72,8 +72,9 @@ void ejecutar_jnz(char *registro, char *numero_instruccion)
 {
    if (get_registro(registro) != 0)
    {
-      ejecutar_set(PROGRAM_COUNTER, numero_instruccion);
+      ejecutar_set("PC", atoi(numero_instruccion));
    }
+
 }
 
 int ejecutar_resize(char *tamanio)
@@ -139,6 +140,7 @@ void ejecutar_copy_string(char *tamanio)
 
 }
 
+
 void ejecutar_wait(char *recurso)
 {
    log_info(logger_cpu, " ENVIANDO WAIT A KERNEL");
@@ -186,12 +188,13 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion)
    t_buffer *buffer_a_enviar = crear_buffer();
 
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
+   cargar_int_al_buffer(buffer_a_enviar, tam_registro);
    cargar_int_al_buffer(buffer_a_enviar, dir_fisica);
 
    t_paquete *paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
    enviar_paquete(paquete, fd_memoria);
    eliminar_paquete(paquete);
-   while (recibir_operacion(fd_memoria) != MOV_IN)
+   while (recibir_operacion(fd_memoria) != MEMORIA_MOV_IN)
    {
       log_info(logger_cpu, "Esperando repuesta a MOV_IN ");
    }
@@ -202,13 +205,12 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion)
    // LOG OBLIGATORIO
    log_info(logger_cpu, "PID: %d -ACCION LEER - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica, datos);
    // guardo los datos recibidos en el registro indicado
-   ejecutar_set(registro_direccion, datos);
+   ejecutar_set(registro_direccion, &datos); //*(int*)datos
    log_info(logger_cpu, "Se realizo correctamente el MOV_IN");
    return 0;
 }
 
-void ejecutar_mov_out(char *registro_direccion, char *registro_datos ) // done, testear
-{
+void ejecutar_mov_out(char *registro_direccion, char *registro_datos ){
 
    /*
     Lee el valor del Registro Datos y lo escribe en la dirección física de memoria obtenida a
@@ -217,40 +219,47 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos ) // done, 
    */printf("flag  registro_datos %s-registro_direccion %s\n",registro_datos,registro_direccion);
 
    log_info(logger_cpu, " ENVIANDO MOV OUT A MEMORIA");
-printf("flag  movout1\n");
+   printf("flag  movout1\n");
    // me copio el valor que hay en registro datos
    long int datos_escribir = get_registro(registro_datos);
-printf("flag  movout2\n");
+   printf("flag  movout2\n");
 
    // obtengo la dir logica segun el registro
    uint32_t dir_logica;
    dir_logica = get_registro(registro_direccion);
-printf("flag  movout33 dir_logica%d\n",dir_logica);
-printf("flag  movout33 datos_escribir%d\n",datos_escribir);
+   printf("flag  movout33 dir_logica%d\n",dir_logica);
+   printf("flag  movout33 datos_escribir%d\n",datos_escribir);
 
    // obtengo  la dir fisica
    uint32_t dir_fisica = traducir_direccion_logica(dir_logica);
    printf("flag  movout33 dir_fisica%d\n",dir_fisica);
 
-printf("flag  movout41\n");
+   printf("flag  movout41\n");
 
    // LOG OBLIGATORIO
    log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica, datos_escribir);
 
+   // agregamos el tamaño para el memcpy en memoria
+   int tam_registro = get_tamanio_registro(registro_datos);
+
    // envio todo el paquete a escribir
    t_buffer *buffer_a_enviar = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
+   cargar_int_al_buffer(buffer_a_enviar, tam_registro);
    cargar_int_al_buffer(buffer_a_enviar, dir_fisica);
    printf("flag  movout5\n");
 
-   cargar_datos_al_buffer(buffer_a_enviar, datos_escribir,strlen(datos_escribir)); // lo trato como void* por ahora creo es lo mas conveniente
+   cargar_int_al_buffer(buffer_a_enviar, datos_escribir); // lo trato como void* por ahora creo es lo mas conveniente
+   // ANTES ERA: cargar_datos_al_buffer(buffer_a_enviar, datos_escribir, sizeof(int));
+   printf("flag  movout6\n");
    t_paquete *paquete = crear_paquete(MEMORIA_MOV_OUT, buffer_a_enviar);
+   printf("flag  movout7\n");
    enviar_paquete(paquete, fd_memoria);
+   printf("flag  movout8\n");
    eliminar_paquete(paquete);
 }
 
-void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo)
-{
+void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo){
    // IO_GEN_SLEEP (Interfaz, Unidades de trabajo):
    // Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.instruccion
      printf("ejecutar_io_gen_sleep  \n");
@@ -270,8 +279,7 @@ void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo)
    eliminar_paquete(paquete);
 }
 
-void ejecutar_io_stdin_read(char *interfaz, char *reg_direccion, char *reg_tamanio)
-{
+void ejecutar_io_stdin_read(char *interfaz, char *reg_direccion, char *reg_tamanio){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz ingresada se lea desde el
     STDIN (Teclado) un valor cuyo tamaño está delimitado por el valor del Registro Tamaño
@@ -288,14 +296,13 @@ void ejecutar_io_stdin_read(char *interfaz, char *reg_direccion, char *reg_taman
    cargar_string_al_buffer(paquete->buffer, interfaz);
 
    cargar_int_al_buffer(paquete->buffer, dir_logica);
-      cargar_int_al_buffer(paquete->buffer, tamanio);
+   cargar_int_al_buffer(paquete->buffer, tamanio);
 
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 
 }
-void ejecutar_io_stdout_write(char *interfaz, char *reg_direccion, char *reg_tamanio)
-{
+void ejecutar_io_stdout_write(char *interfaz, char *reg_direccion, char *reg_tamanio){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada, se lea desde la
     posición de memoria indicada por la Dirección Lógica almacenada en el Registro Dirección,
@@ -315,8 +322,7 @@ void ejecutar_io_stdout_write(char *interfaz, char *reg_direccion, char *reg_tam
    eliminar_paquete(paquete);
 }
 
-void ejecutar_io_fs_create(char *interfaz, char *nombre_archivo)
-{
+void ejecutar_io_fs_create(char *interfaz, char *nombre_archivo){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
    se cree un archivo en el FS montado en dicha interfaz.
@@ -330,8 +336,7 @@ void ejecutar_io_fs_create(char *interfaz, char *nombre_archivo)
    eliminar_paquete(paquete);
 }
 
-void ejecutar_io_fs_delete(char *interfaz, char *nombre_archivo)
-{
+void ejecutar_io_fs_delete(char *interfaz, char *nombre_archivo){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
    se elimine un archivo en el FS montado en dicha interfaz
@@ -346,8 +351,7 @@ void ejecutar_io_fs_delete(char *interfaz, char *nombre_archivo)
 }
 //IO_FS_TRUNCATE Int4 notas.txt ECX
 
-void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tamanio)
-{
+void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tamanio){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
    se modifique el tamaño del archivo en el FS montado en dicha interfaz,
@@ -366,8 +370,7 @@ void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tam
 }
 
 
-void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo)
-{
+void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
    se lea desde Memoria la cantidad de bytes indicadas por el Registro Tamaño a partir de la dirección lógica
@@ -390,8 +393,7 @@ void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direcc
    eliminar_paquete(paquete);
 }
 
-void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo)
-{
+void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada,
    se lea desde el archivo a partir del valor del Registro Puntero Archivo la cantidad de bytes indicada
@@ -414,13 +416,11 @@ void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direcci
    eliminar_paquete(paquete);
 }
 
-
 void  ejecutar_exit(){
-      log_info(logger_cpu, "EJECUTANO EXIT");
-      t_buffer *buffer_a_enviar = crear_buffer();
- t_paquete *paquete = crear_paquete(KERNEL_EXIT, buffer_a_enviar);
-    agregar_pcb(paquete,EXEC);
+   log_info(logger_cpu, "EJECUTANDO EXIT");
+   t_buffer *buffer_a_enviar = crear_buffer();
+   t_paquete *paquete = crear_paquete(KERNEL_EXIT, buffer_a_enviar);
+   agregar_pcb(paquete,EXEC);
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
-
 }

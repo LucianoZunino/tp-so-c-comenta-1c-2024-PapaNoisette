@@ -120,17 +120,17 @@ int decode_excute()
     }
     else if (strcmp(instruccion, "COPY_STRING") == 0)
     {
-       // ejecutar_copy_string(instr_arg1);
+        ejecutar_copy_string(instr_arg1);
         return CONTINUAR_CICLO;
     }
     else if (strcmp(instruccion, "WAIT") == 0)
     {
-       // ejecutar_wait(instr_arg1);
+        ejecutar_wait(instr_arg1);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "SIGNAL") == 0)
     {
-       // ejecutar_signal(instr_arg1);
+        ejecutar_signal(instr_arg1);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "IO_GEN_SLEEP") == 0)
@@ -142,37 +142,37 @@ int decode_excute()
     }
     else if (strcmp(instruccion, "IO_STDIN_READ") == 0)
     {
-       // ejecutar_io_stdin_read(instr_arg1, instr_arg2, instr_arg3);
+        ejecutar_io_stdin_read(instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "IO_STDOUT_WRITE") == 0)
     {
-       // ejecutar_io_stdout_write(instr_arg1, instr_arg2, instr_arg3);
+        ejecutar_io_stdout_write(instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "IO_FS_CREATE") == 0)
     {
-       // ejecutar_io_fs_create(instr_arg1, instr_arg2);
+        ejecutar_io_fs_create(instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "IO_FS_DELETE") == 0)
     {
-       // ejecutar_io_fs_delete(instr_arg1, instr_arg2);
+        ejecutar_io_fs_delete(instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "IO_FS_TRUNCATE") == 0)
     {
-       // ejecutar_io_fs_truncate(instr_arg1, instr_arg2, instr_arg3);
+        ejecutar_io_fs_truncate(instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "IO_FS_WRITE") == 0)
     {
-       // ejecutar_io_fs_write(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
+        ejecutar_io_fs_write(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "IO_FS_READ") == 0)
     {
-       // ejecutar_io_fs_read(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
+        ejecutar_io_fs_read(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         return SALIR_DE_CICLO;
     }
     else if (strcmp(instruccion, "EXIT") == 0)

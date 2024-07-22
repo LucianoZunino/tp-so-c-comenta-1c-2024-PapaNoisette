@@ -6,7 +6,7 @@
 
 typedef struct{
     int numero_de_marco; // Número de marco de la página en la memoria física
-    int bit_presencia; // Bit de validez, 1 si la página está en memoria, 0 si no
+    //int bit_presencia; // Bit de validez, 1 si la página está en memoria, 0 si no
 } Pagina;
 
 typedef struct {
