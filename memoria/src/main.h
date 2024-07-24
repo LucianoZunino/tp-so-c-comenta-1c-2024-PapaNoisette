@@ -30,6 +30,7 @@ extern int fd_kernel;
 extern int fd_entradasalida;
 
 extern void* memoria_RAM;
+extern t_list *lista_procesos;
 
 typedef struct{
 

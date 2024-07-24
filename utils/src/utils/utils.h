@@ -62,6 +62,7 @@ typedef enum
 	MEMORIA_COPY_STRING,
 	MEMORIA_MOV_OUT,
 	MEMORIA_MOV_IN,
+	MEMORIA_ERROR,
 	//COPY_STRING_LEER, // cpu-> MEMORIA solicito la info en la dir fisica
 	//COPY_STRING_LEER_RESPUESTA,//memoria->cpu ,memoria me devuelve lo solicitado
 	//COPY_STRING_ESCRIBIR, // cpu-> MEMORIA , le vuelvo a enviar la info recortada

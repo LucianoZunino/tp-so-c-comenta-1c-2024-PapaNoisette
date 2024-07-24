@@ -110,7 +110,7 @@ void escuchar_mensajes_cpu_memoria()
 			void* datos_aux = &datos;
 			printf("flag  mem_mov_out3\n");
 			printf("flag  mem_mov_out4\n");
-			ejecutar_mov_out (tamanio, dir_fisica, datos_aux);
+			ejecutar_mov_out (tamanio, dir_fisica, pid, datos_aux);
 			usleep(retardo_respuesta);
 			
 			destruir_buffer(buffer);
@@ -122,17 +122,27 @@ void escuchar_mensajes_cpu_memoria()
 			pid = extraer_int_del_buffer(buffer);
 			tamanio = extraer_int_del_buffer(buffer);
 			dir_fisica = extraer_int_del_buffer(buffer);
-			printf("flag  mem_mov_in1\n");
-			void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica);
-			printf("flag  mem_mov_in2\n");
+			
 			buffer_a_enviar = crear_buffer();
-			printf("flag  mem_mov_in3\n");
+
+			void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica, pid);
+			if(datos_a_devolver == NULL){
+				log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para leer %i bytes \n", tamanio);
+
+				cargar_int_al_buffer(buffer_a_enviar, -1);
+				paquete = crear_paquete(MEMORIA_ERROR, buffer_a_enviar);
+			}else{
+				cargar_datos_al_buffer(buffer_a_enviar, datos_a_devolver, tamanio);
+				paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
+			}
+			
 			//cargar_int_al_buffer(pid); CREO QUE NO ES NECESARIO ENVIARLO
-			cargar_datos_al_buffer(buffer_a_enviar, datos_a_devolver, tamanio);
-			paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar); //SI COLISIONA CAMBIAR COD_OP
+			
+			//paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar); //SI COLISIONA CAMBIAR COD_OP
 			enviar_paquete(paquete, fd_cpu);
 			usleep(retardo_respuesta);
 			eliminar_paquete(paquete);
+			free(datos_a_devolver);
 			break;
 
 		case MEMORIA_COPY_STRING: //DESDE CPU SE HACE DICHA LOGICA. SOLICITAS UNA LECTURA, CON EL DATO QUE TE DEVUELVE, REALIZAR UNA ESCRITURA.
@@ -144,8 +154,8 @@ void escuchar_mensajes_cpu_memoria()
 			int dir_fisica_origen = extraer_int_del_buffer(buffer);
 			int dir_fisica_destino = extraer_int_del_buffer(buffer);
 
-			void* aux = ejecutar_mov_in(tamanio, dir_fisica_origen);
-			ejecutar_mov_out(tamanio, dir_fisica_destino, aux);
+			void* aux = ejecutar_mov_in(tamanio, dir_fisica_origen, pid);
+			ejecutar_mov_out(tamanio, dir_fisica_destino, pid, aux);
 
 
 			destruir_buffer(buffer);
@@ -163,25 +173,131 @@ void escuchar_mensajes_cpu_memoria()
 	}
 }
 
-void ejecutar_copy_string(int pid, int dir_fisica_origen, int dir_fisica_destino, int tamanio)
-{
-	
-	memcpy(dir_fisica_destino, dir_fisica_origen, tamanio);
+
+void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
+	int indice_de_marco;
+	printf("flag_OUT 1\n" );
+	if(!validar_espacio_de_memoria(pid, dir_fisica, tamanio, &indice_de_marco)){
+		return;
+	}
+	printf("flag_OUT 2\n" );
+	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
+	printf("flag_OUT 3\n" );
+	int base = 0;
+	int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
+	printf("flag_OUT 4\n" );
+	while(base <= tamanio){
+		printf("flag_OUT 5\n" );
+		int direccion_fin_pagina = pagina_actual * tam_pagina + tam_pagina;
+		int espacio_libre_en_pagina = direccion_fin_pagina - dir_fisica;
+		int resto_de_escritura = tamanio - base;
+		
+		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
+		if(resto_de_escritura >= espacio_libre_en_pagina){
+			memcpy((char*)memoria_RAM + dir_fisica, datos + base, espacio_libre_en_pagina);
+			base += espacio_libre_en_pagina + 1;
+		}else{
+			memcpy((char*)memoria_RAM + dir_fisica, (char*)datos + base, resto_de_escritura);
+			base += resto_de_escritura;
+		}
+		printf("flag_OUT 6\n" );
+		indice_de_marco++;
+		if(indice_de_marco >= list_size(proceso_actual->tabla_paginas)){
+			printf("flag_OUT 6.1\n" );
+			log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para escribir %i bytes desde la direccion especificada \n", tamanio);
+			return NULL;
+		}
+		pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
+		printf("flag_OUT 7\n" );
+		if(pagina_actual == NULL){
+			log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para escribir %i bytes desde la direccion especificada\n", tamanio);
+			return;
+		}
+		dir_fisica = pagina_actual * tam_pagina;
+	}
+	printf("flag_OUT 8\n" );
 }
 
-void ejecutar_mov_out(int tamanio, int dir_fisica, void *datos) //chequear pagina por pid?
-{
-	memcpy(memoria_RAM + dir_fisica, datos, tamanio);
-}
-void* ejecutar_mov_in(int tamanio, int dir_fisica)
-{
+void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
+
+	printf("flag1\n" );
+	int indice_de_marco;
 	void* datos = malloc(tamanio);
-	memcpy(datos, memoria_RAM + dir_fisica, tamanio);
+	printf("flag2\n" );
+	if(!validar_espacio_de_memoria(pid, dir_fisica, tamanio, &indice_de_marco)){
+		printf("flag2.1\n" );
+		return NULL;
+	}
+	printf("flag3\n" );
+	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
+	int base = 0;
+	int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
+	while(base <= tamanio){
+		printf("flag4\n" );
+		int direccion_fin_pagina = pagina_actual * tam_pagina + tam_pagina;
 
-	void* datos_aux = &datos;
-	free(datos);
-	return datos_aux;
+		int espacio_libre_en_pagina = direccion_fin_pagina - dir_fisica;
+		int resto_de_lectura = tamanio - base;
+		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
+		if(resto_de_lectura >= espacio_libre_en_pagina){
+			memcpy(datos + base, memoria_RAM + dir_fisica , espacio_libre_en_pagina);
+			base += espacio_libre_en_pagina + 1;
+		}else{
+			memcpy(datos + base, memoria_RAM + dir_fisica, resto_de_lectura);
+			base += resto_de_lectura;
+		}
+		printf("flag5\n" );
+		indice_de_marco++;
+		if(indice_de_marco >= list_size(proceso_actual->tabla_paginas)){
+			printf("flag5.1\n" );
+			return NULL;
+		}
+
+		pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
+		printf("flag6.0\n" );
+		if(pagina_actual == NULL){
+			printf("flag5.2\n" );
+			return NULL;
+		}
+		printf("flag6.1\n" );
+		dir_fisica = pagina_actual * tam_pagina;
+	}
+	printf("flag7\n" );
+	return datos;
 }
+
+
+
+
+bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de_marco){ // CAPAZ ROMPE
+	printf("vlag1\n");
+	bool contiene_direccion = false;
+
+	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
+	if (proceso_actual == NULL){
+		log_error(logger_memoria, "No existe proceso con PID: %i", pid);
+		return contiene_direccion;
+	}
+	printf("vlag2\n");
+	for(int i = 0; i < list_size(proceso_actual->tabla_paginas); i++){
+		printf("vlag3\n");
+		int pagina_actual = list_get(proceso_actual->tabla_paginas, i);
+		printf("vlag4\n");
+		int inicio_marco_actual = pagina_actual * tam_pagina;
+		printf("vlag4.1\n");
+		if(inicio_marco_actual <= dir_fisica && inicio_marco_actual + tam_pagina >= dir_fisica){ //DIRECCION DENTRO DE LAS PAGS DEL PROCESO
+			printf("vlag5\n");
+			contiene_direccion = true;
+			*indice_de_marco = i;
+			printf("vlag6\n");
+			return contiene_direccion;
+		}
+	}
+	printf("vlag7\n");
+	return contiene_direccion;
+}
+
+
 /*
 void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)
 {

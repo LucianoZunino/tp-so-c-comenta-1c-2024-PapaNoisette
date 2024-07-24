@@ -167,14 +167,14 @@ void ejecutar_signal(char *recurso)
    eliminar_paquete(paquete);
 }
 
-void ejecutar_mov_in(char *registro_datos, char *registro_direccion)
-{
+void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
 
    /*
     Lee el valor de memoria correspondiente a la Dirección Lógica que se encuentra en el Registro
     Dirección y lo almacena en el Registro Datos.
 
    */
+   
    log_info(logger_cpu, " ENVIANDO MOV IN A MEMORIA");
    int dir_logica = -1;
    // obtengo la dir logica
@@ -194,11 +194,17 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion)
    t_paquete *paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
    enviar_paquete(paquete, fd_memoria);
    eliminar_paquete(paquete);
-   while (recibir_operacion(fd_memoria) != MEMORIA_MOV_IN)
-   {
-      log_info(logger_cpu, "Esperando repuesta a MOV_IN ");
-   }
+   
+   op_code operacion = recibir_operacion(fd_memoria);
    t_buffer *buffer = crear_buffer();
+   if(operacion == MEMORIA_ERROR){ // Antes iba un while
+      log_error(logger_cpu, "Error, no se pudo leer en el PID: %i direccion fisica: %i\n ", EXEC->pid, dir_fisica);
+      buffer = recibir_buffer_completo(fd_memoria);
+      destruir_buffer(buffer);
+      return 0;
+   }
+
+   
    buffer = recibir_buffer_completo(fd_memoria);
    void *datos = extraer_datos_del_buffer(buffer);
 
@@ -207,6 +213,8 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion)
    // guardo los datos recibidos en el registro indicado
    ejecutar_set(registro_direccion, &datos); //*(int*)datos
    log_info(logger_cpu, "Se realizo correctamente el MOV_IN");
+   destruir_buffer(buffer);
+
    return 0;
 }
 

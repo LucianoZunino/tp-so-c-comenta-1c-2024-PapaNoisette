@@ -173,11 +173,11 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
 
             for(int i = 0; i < paginas_a_agregar_o_quitar; i++){
 
-               int nueva_pagina ;
+                int nueva_pagina;
 
                 //nueva_pagina->bit_presencia = 1;
                 nueva_pagina = asignar_y_marcar_frame_ocupado(proceso->pid);
-                list_add(proceso->tabla_paginas, nueva_pagina);
+                list_add(proceso->tabla_paginas, nueva_pagina); // Agrega numero de pagina a la tabla de paginas del proceso
                 // printf("agrego nueva pagina al pid %d bit %d nuevo marco %d \n", proceso->pid,nueva_pagina->bit_presencia,nueva_pagina->numero_de_marco);
                 // free(nueva_pagina);
             }
@@ -240,6 +240,13 @@ int asignar_y_marcar_frame_ocupado(int pid){
         if(!frame->ocupado){
             frame->ocupado = 1;
             frame->pid = pid;
+
+            /*
+            
+            Proceso tiene una lista de tabla_de_paginas que cada tabla tiene un Struc PAGINA->numero_de_marco
+            
+             */
+
             list_replace(lista_de_frames, i, frame); // remplazo en el bitmap de frames
             return i;
         }
@@ -303,7 +310,7 @@ void print_lista_procesos(char *path_log){
 }
 
 Proceso *buscar_proceso(t_list *lista, int pid){
-    // REVISAR SI RESIVE T_LIST
+    // REVISAR SI RECIBE T_LIST
     for(unsigned int i = 0; i < list_size(lista); i++){
         Proceso *proceso = list_get(lista, i);
         if(proceso->pid == pid){
