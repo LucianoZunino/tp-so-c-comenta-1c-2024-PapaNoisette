@@ -10,7 +10,7 @@ printf("Mostrar TLB: \n");
 list_iterate(tlb,mostrar_entrada);
 
 }
-
+/*HACER TRADUCCION LOGICA A FISICA*/
 int traducir_direccion_logica(int a){
    return a;
    // [numero_pagina | desplazamiento]
@@ -26,7 +26,7 @@ int calcular_desplazamiento(int dir_logica, int numero_pagina)
    return dir_logica - numero_pagina * tamanio_pagina;
 }
 
-
+/*MODIFICAR LA FORMA DE REMOVER ESTÁ MAL*/
 void agregar_entrada_tlb(t_entrada_tlb *entrada)
 {
 
@@ -82,7 +82,7 @@ int buscar_marco_tlb(int pid, int dir_logica)
    {
       //LOG OBLIGATORIO
       log_info(logger_cpu, "PID: %d -TLB HIT - Pagina: %d", pid, pagina);
-printf("algoritmo :%s\n",algoritmo_tlb);
+      printf("algoritmo :%s\n",algoritmo_tlb);
       //REAJUSTAMOS LA TLB SI ES LRU     
        if (strcmp(algoritmo_tlb,"LRU")==0){
 
@@ -97,7 +97,7 @@ printf("algoritmo :%s\n",algoritmo_tlb);
 
 }
 
-
+/*ESTO ESTÁ RARO NO ME GUSTA LA IDEA DE UN WHILE(TRUE) */
 int obtener_marco_en_memoria(int pid, int pagina)//obtengo el marco en memoria
 {
 printf("Se consultara a memoria el marco correspondiente al PID: %d  y la PAGINA: %d\n",pid, pagina);
@@ -110,7 +110,7 @@ printf("Se consultara a memoria el marco correspondiente al PID: %d  y la PAGINA
    cargar_int_al_buffer(paquete->buffer, pagina);
    enviar_paquete(paquete, fd_memoria);
    eliminar_paquete(paquete);
-t_buffer * buffer=crear_buffer();
+   t_buffer * buffer=crear_buffer();
 
    int marco = -1; // inicializo asi para saber que no llego la respuesta
    while (marco == -1)

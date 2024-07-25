@@ -11,7 +11,7 @@ void iniciar_cpu()
 	EXEC=malloc(sizeof(t_pcb));
 	EXEC->registros_cpu=malloc(sizeof(t_registros_cpu));
 	EXEC->estado=malloc(sizeof(estado_pcb));
-	iniciar_pcb();
+	iniciar_pcb(); //ESTA BIEN ESTO?
 	
 
 }
@@ -155,11 +155,11 @@ int consultar_tamanio_pagina_memoria()
 
    int nuevo_tam_pagina = -1; // inicializo asi para saber que no llego la respuesta
 
-   while (nuevo_tam_pagina == -1)
+   while (nuevo_tam_pagina == -1) 
    {
 
       // si memoria no me contesta estoy al horno
-      int cod_op = recibir_operacion(fd_memoria);
+      int cod_op = recibir_operacion(fd_memoria); 
 
       if (cod_op == CPU_CONSULTA_TAM_PAGINA)
       {
@@ -168,8 +168,8 @@ int consultar_tamanio_pagina_memoria()
          nuevo_tam_pagina = extraer_int_del_buffer(buffer);
       }
    }
-   log_info(logger_cpu, "SE RECIBIO DE MEMORIA EL TAMAÑO DE PAGINA= %d", nuevo_tam_pagina);
-         destruir_buffer(buffer);
+      log_info(logger_cpu, "SE RECIBIO DE MEMORIA EL TAMAÑO DE PAGINA= %d", nuevo_tam_pagina);
+      destruir_buffer(buffer);
       printf("destruir_buffer\n");
 
    return nuevo_tam_pagina;

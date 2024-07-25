@@ -98,7 +98,7 @@ int ejecutar_resize(char *tamanio)
 //--tiempo de retardo establecido 
    t_buffer *buffer = crear_buffer();
    log_info(logger_cpu, " ESPERANDO RESPUESTA\n");
-sleep(2);
+   sleep(2);
    int respuesta_resize = recibir_operacion(fd_memoria); // respuesta_resize deveria ser del tipo op_code?
    if (respuesta_resize == RESIZE_OK)
    {
@@ -236,7 +236,7 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos ){
    uint32_t dir_logica;
    dir_logica = get_registro(registro_direccion);
    printf("flag  movout33 dir_logica%d\n",dir_logica);
-   printf("flag  movout33 datos_escribir%d\n",datos_escribir);
+   printf("flag  movout33 datos_escribir%d\n",datos_escribir);//si lo casteamos a un void?
 
    // obtengo  la dir fisica
    uint32_t dir_fisica = traducir_direccion_logica(dir_logica);
@@ -249,16 +249,16 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos ){
 
    // agregamos el tamaño para el memcpy en memoria
    int tam_registro = get_tamanio_registro(registro_datos);
-
+   void* data = &datos_escribir;
    // envio todo el paquete a escribir
    t_buffer *buffer_a_enviar = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar, tam_registro);
-   cargar_int_al_buffer(buffer_a_enviar, dir_fisica);
+   cargar_int_al_buffer(buffer_a_enviar, dir_fisica); 
    printf("flag  movout5\n");
 
-   cargar_int_al_buffer(buffer_a_enviar, datos_escribir); // lo trato como void* por ahora creo es lo mas conveniente
-   // ANTES ERA: cargar_datos_al_buffer(buffer_a_enviar, datos_escribir, sizeof(int));
+   //cargar_int_al_buffer(buffer_a_enviar, datos_escribir); // lo trato como void* por ahora creo es lo mas conveniente //ACA ESTA EL PROBLEMA CREO
+   cargar_datos_al_buffer(buffer_a_enviar, data, sizeof(int));
    printf("flag  movout6\n");
    t_paquete *paquete = crear_paquete(MEMORIA_MOV_OUT, buffer_a_enviar);
    printf("flag  movout7\n");

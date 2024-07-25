@@ -23,7 +23,7 @@ t_buffer * buffer=crear_buffer();
 			   // EXEC=malloc(sizeof(t_pcb));
 				EXEC = deserializar_pcb(buffer); 
 				print_pcb(EXEC);
-    //sleep(2);
+    			//sleep(2);
 
 					while (ciclo_de_instruccion(EXEC) == 0){
 							print_pcb(EXEC);
@@ -58,10 +58,10 @@ void escuchar_mensajes_kernel_interrupt(){
 				aceptar_handshake(logger_cpu, fd_kernel_interrupt, cod_op);
 				break;
 			case INTERRUPCION:
-			t_buffer* buffer = crear_buffer();
-			buffer = recibir_buffer_completo(fd_kernel_interrupt);
-			motivo_interrupcion motivo = extraer_int_del_buffer(buffer);
-			enviar_proceso_por_paquete(EXEC, NULL,fd_cpu_interrupt, motivo);
+				t_buffer* buffer = crear_buffer();
+				buffer = recibir_buffer_completo(fd_kernel_interrupt);
+				motivo_interrupcion motivo = extraer_int_del_buffer(buffer);
+				enviar_proceso_por_paquete(EXEC, NULL,fd_cpu_interrupt, motivo);
 				break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Interrupt. Terminando servidor.");

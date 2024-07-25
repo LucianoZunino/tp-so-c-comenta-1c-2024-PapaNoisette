@@ -73,7 +73,7 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-int main2 (){
+int main2(){
     iniciar_memoria();
     printf("Memoria iniciada, lista de mini PCB size: %i\n", list_size(lista_de_instrucciones_por_proceso));
   	log_info(logger_memoria, "Arranca el modulo MEMORIA");

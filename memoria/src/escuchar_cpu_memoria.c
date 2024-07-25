@@ -105,7 +105,7 @@ void escuchar_mensajes_cpu_memoria()
 			tamanio = extraer_int_del_buffer(buffer);
 			dir_fisica = extraer_int_del_buffer(buffer);
 			printf("flag  mem_mov_out1\n");
-			int datos = extraer_datos_del_buffer(buffer);
+			void* datos = extraer_datos_del_buffer(buffer);
 			printf("flag  mem_mov_out2\n");
 			void* datos_aux = &datos;
 			printf("flag  mem_mov_out3\n");
@@ -175,7 +175,7 @@ void escuchar_mensajes_cpu_memoria()
 
 
 void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
-	int indice_de_marco;
+	int indice_de_marco = 0;
 	printf("flag_OUT 1\n" );
 	if(!validar_espacio_de_memoria(pid, dir_fisica, tamanio, &indice_de_marco)){
 		return;
@@ -191,29 +191,53 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 		int direccion_fin_pagina = pagina_actual * tam_pagina + tam_pagina;
 		int espacio_libre_en_pagina = direccion_fin_pagina - dir_fisica;
 		int resto_de_escritura = tamanio - base;
-		
+
+		printf("------------\n");
+		printf("Direccion fin de pagina: %i\n", direccion_fin_pagina);
+		printf("Espacio libre en pagina: %i\n", espacio_libre_en_pagina);
+		printf("Resto de escritura: %i\n", resto_de_escritura);
+		printf("Resto de TAMANIO: %i\n", tamanio);
+		printf("------------\n");
+
+		printf("flag_OUT 5.0\n" );
 		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
 		if(resto_de_escritura >= espacio_libre_en_pagina){
-			memcpy((char*)memoria_RAM + dir_fisica, datos + base, espacio_libre_en_pagina);
+			printf("flag_OUT 5.1\n" );
+			memcpy(memoria_RAM + dir_fisica, datos + base, espacio_libre_en_pagina);
 			base += espacio_libre_en_pagina + 1;
+			printf("flag_OUT 5.2\n" );
 		}else{
-			memcpy((char*)memoria_RAM + dir_fisica, (char*)datos + base, resto_de_escritura);
+			printf("flag_OUT 5.3\n" );
+			memcpy(memoria_RAM + dir_fisica, datos + base, resto_de_escritura);
 			base += resto_de_escritura;
+			return;
+			printf("flag_OUT 5.4\n" );
 		}
 		printf("flag_OUT 6\n" );
 		indice_de_marco++;
+
+		printf("------------\n");
+		printf("Indice de marco: %i\n", indice_de_marco);
+		printf("Tamaño de tabla de paginas del proceso: %i\n", list_size(proceso_actual->tabla_paginas));
+		printf("------------\n");
+
 		if(indice_de_marco >= list_size(proceso_actual->tabla_paginas)){
 			printf("flag_OUT 6.1\n" );
-			log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para escribir %i bytes desde la direccion especificada \n", tamanio);
+			log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para escribir %i bytes desde la direccion especificada INDICE_ERRONEO\n", tamanio);
 			return NULL;
 		}
 		pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
 		printf("flag_OUT 7\n" );
 		if(pagina_actual == NULL){
-			log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para escribir %i bytes desde la direccion especificada\n", tamanio);
+			log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para escribir %i bytes desde la direccion especificada, PAG NULL\n", tamanio);
 			return;
 		}
 		dir_fisica = pagina_actual * tam_pagina;
+
+		printf("------------\n");
+		printf("Direccion fisica: %i\n", dir_fisica);
+		printf("------------\n");
+
 	}
 	printf("flag_OUT 8\n" );
 }
@@ -242,9 +266,12 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 		if(resto_de_lectura >= espacio_libre_en_pagina){
 			memcpy(datos + base, memoria_RAM + dir_fisica , espacio_libre_en_pagina);
 			base += espacio_libre_en_pagina + 1;
+			printf("flag4.1\n" );
 		}else{
 			memcpy(datos + base, memoria_RAM + dir_fisica, resto_de_lectura);
 			base += resto_de_lectura;
+			printf("flag4.2\n" );
+			return datos;
 		}
 		printf("flag5\n" );
 		indice_de_marco++;
