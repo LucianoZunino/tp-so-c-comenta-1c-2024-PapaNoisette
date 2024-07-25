@@ -15,12 +15,10 @@ int fd_kernel;
 int fd_entradasalida;
 
 int main(int argc, char* argv[]){
-    decir_hola("Memoria");
     // Iniciar Memoria
     iniciar_memoria();
     printf("Memoria iniciada, lista de mini PCB size: %i\n", list_size(lista_de_instrucciones_por_proceso));
-  	log_info(logger_memoria, "Arranca el modulo MEMORIA");
-    printf("path_instrucciones%s\n",path_instrucciones);
+  	//log_info(logger_memoria, "Arranca el modulo MEMORIA");
 
     // Levantar Server Memoria
    	fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, ">>> Server Memoria escuchando... <<<");

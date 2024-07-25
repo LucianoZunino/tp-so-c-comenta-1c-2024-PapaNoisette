@@ -1,11 +1,9 @@
 #include "escuchar_cpu_memoria.h"
 //void* memoria_RAM;
-void escuchar_mensajes_cpu_memoria()
-{
+void escuchar_mensajes_cpu_memoria(){
 	bool desconexion_cpu_memoria = 0;
 
-	while (!desconexion_cpu_memoria)
-	{
+	while (!desconexion_cpu_memoria){
 
 		int pid;
 		int pagina;
@@ -19,8 +17,7 @@ void escuchar_mensajes_cpu_memoria()
 		t_buffer *buffer;
 		int tamanio;
 		int dir_fisica;
-		switch (cod_op)
-		{
+		switch (cod_op){
 
 		case HANDSHAKE_CPU:
 			aceptar_handshake(logger_memoria, fd_cpu, cod_op);
@@ -110,11 +107,12 @@ void escuchar_mensajes_cpu_memoria()
 			void* datos_aux = &datos;
 			printf("flag  mem_mov_out3\n");
 			printf("flag  mem_mov_out4\n");
-			ejecutar_mov_out (tamanio, dir_fisica, pid, datos_aux);
+			ejecutar_mov_out(tamanio, dir_fisica, pid, datos_aux);
 			usleep(retardo_respuesta);
 			
-			print_lista_de_frames("lista_de_frames_resize_reducir_MOV_OUT.txt");
-        	print_lista_procesos("lista_de_procesos_resize_reducir_MOV_OUT.txt");
+			print_lista_de_frames("lista_de_frames_resize_MOV_OUT.txt");
+        	print_lista_procesos("lista_de_procesos_resize_MOV_OUT.txt");
+			print_memoria_RAM("contenido_memoria_RAM_MOV_OUT.txt");
 
 			destruir_buffer(buffer);
 			break;
@@ -129,6 +127,9 @@ void escuchar_mensajes_cpu_memoria()
 			buffer_a_enviar = crear_buffer();
 
 			void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica, pid);
+
+			printf("##### DATOS A DEVOLVER DEL MOV_IN: %s #####", (char*)datos_a_devolver);
+
 			if(datos_a_devolver == NULL){
 				log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para leer %i bytes \n", tamanio);
 
@@ -138,6 +139,7 @@ void escuchar_mensajes_cpu_memoria()
 				cargar_datos_al_buffer(buffer_a_enviar, datos_a_devolver, tamanio);
 				paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
 			}
+			//ejemplo_MOV_IN();
 			
 			//cargar_int_al_buffer(pid); CREO QUE NO ES NECESARIO ENVIARLO
 			
@@ -147,8 +149,9 @@ void escuchar_mensajes_cpu_memoria()
 			eliminar_paquete(paquete);
 			free(datos_a_devolver);
 
-			print_lista_de_frames("lista_de_frames_resize_MOV_IN.txt");
-        	print_lista_procesos("lista_de_procesos_resize_MOV_IN.txt");
+			print_lista_de_frames("lista_de_frames_MOV_IN.txt");
+        	print_lista_procesos("lista_de_procesos_MOV_IN.txt");
+			print_memoria_RAM("contenido_memoria_RAM_MOV_IN.txt");
 
 			break;
 
@@ -179,7 +182,6 @@ void escuchar_mensajes_cpu_memoria()
 		}
 	}
 }
-
 
 void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 	int indice_de_marco = 0;
@@ -250,7 +252,6 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 }
 
 void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
-
 	printf("flag1\n" );
 	int indice_de_marco;
 	void* datos = malloc(tamanio);
@@ -269,9 +270,21 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 
 		int espacio_libre_en_pagina = direccion_fin_pagina - dir_fisica;
 		int resto_de_lectura = tamanio - base;
+
+		printf("------------\n");
+		printf("Direccion fin de pagina: %i\n", direccion_fin_pagina);
+		printf("Espacio libre en pagina: %i\n", espacio_libre_en_pagina);
+		printf("Resto de lectura: %i\n", resto_de_lectura);
+		printf("############\n");
+		printf("Datos: %d\n", *(int*)datos);
+		printf("Base: %i\n", base);
+		usleep(2000000);
+		printf("------------\n");
+
 		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
 		if(resto_de_lectura >= espacio_libre_en_pagina){
-			memcpy(datos + base, memoria_RAM + dir_fisica , espacio_libre_en_pagina);
+			memcpy(datos + base, memoria_RAM + dir_fisica , espacio_libre_en_pagina); // NO va al reves?
+			//memcpy(1, memoria_RAM, espacio_libre_en_pagina);
 			base += espacio_libre_en_pagina + 1;
 			printf("flag4.1\n" );
 		}else{
@@ -299,9 +312,6 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 	printf("flag7\n" );
 	return datos;
 }
-
-
-
 
 bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de_marco){ // CAPAZ ROMPE
 	printf("vlag1\n");
@@ -331,6 +341,36 @@ bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de
 	return contiene_direccion;
 }
 
+void MOV_IN(int src_addr, int dest_addr, int size) {
+    // Verificar que las direcciones y el tamaño sean válidos
+    if (src_addr < 0 || src_addr >= tam_memoria || 
+        dest_addr < 0 || dest_addr >= tam_memoria || 
+        size < 0 || src_addr + size > tam_memoria || dest_addr + size > tam_memoria) {
+        printf("Error: Direcciones o tamaño inválidos\n");
+        return;
+    }
+
+    // Mover los datos desde la dirección de origen a la dirección de destino
+    memcpy((char *)memoria_RAM + dest_addr, (char *)memoria_RAM + src_addr, size);
+}
+
+void ejemplo_MOV_IN() {
+    // Inicializar algunos datos en la memoria
+    char *data = "Hello, World!";
+    memcpy(memoria_RAM, data, strlen(data) + 1);  // Copiar "Hello, World!" a la memoria desde el inicio
+
+    // Imprimir contenido inicial de la memoria
+    printf("Contenido inicial de la memoria:\n");
+    printf("%s\n", (char *)memoria_RAM);
+
+    // Mover 10 bytes desde la dirección 0 a la dirección 100
+    MOV_IN(0, 100, 10);
+
+    // Imprimir el contenido de la memoria después del movimiento
+    printf("Contenido de la memoria después de MOV_IN:\n");
+    printf("Desde dirección 0: %s\n", (char *)memoria_RAM);
+    printf("Desde dirección 100: %.*s\n", 10, (char *)memoria_RAM + 100);
+}
 
 /*
 void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)

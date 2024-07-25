@@ -1,11 +1,7 @@
-
 #include "instrucciones.h"
 
-
-
-void ejecutar_set(char *registro, int valor)
-{
-      log_info(logger_cpu,"ejecutando set,  valor: %d, registro destino %s\n", valor,registro);
+void ejecutar_set(char *registro, int valor){
+      log_info(logger_cpu,"ejecutando set,  valor: %d, registro destino %s\n", valor, registro);
 
    if (strcmp(registro, "AX") == 0)
    {
@@ -140,7 +136,6 @@ void ejecutar_copy_string(char *tamanio)
 
 }
 
-
 void ejecutar_wait(char *recurso)
 {
    log_info(logger_cpu, " ENVIANDO WAIT A KERNEL");
@@ -153,6 +148,7 @@ void ejecutar_wait(char *recurso)
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 }
+
 void ejecutar_signal(char *recurso)
 {
    log_info(logger_cpu, " ENVIANDO SIGNAL A KERNEL");
@@ -207,9 +203,10 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    
    buffer = recibir_buffer_completo(fd_memoria);
    void *datos = extraer_datos_del_buffer(buffer);
+   //int datos = extraer_int_del_buffer(buffer);
 
    // LOG OBLIGATORIO
-   log_info(logger_cpu, "PID: %d -ACCION LEER - Direccion Fisica %d- Valor: %s", EXEC->pid, dir_fisica, datos);
+   log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %s", EXEC->pid, dir_fisica, datos);
    // guardo los datos recibidos en el registro indicado
    ejecutar_set(registro_direccion, &datos); //*(int*)datos
    log_info(logger_cpu, "Se realizo correctamente el MOV_IN");
@@ -218,7 +215,7 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    return 0;
 }
 
-void ejecutar_mov_out(char *registro_direccion, char *registro_datos ){
+void ejecutar_mov_out(char *registro_direccion, char *registro_datos){
 
    /*
     Lee el valor del Registro Datos y lo escribe en la dirección física de memoria obtenida a

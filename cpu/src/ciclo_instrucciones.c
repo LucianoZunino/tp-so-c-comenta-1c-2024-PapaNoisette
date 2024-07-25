@@ -19,21 +19,20 @@ pthread_mutex_t interrupcion_mutex;
 /// @note
 /// @param t_pcb
 /// @return t_instruccion
-void fetch()
-{   char buffer[100];
-    recv(fd_memoria,buffer,sizeof(100),MSG_DONTWAIT);//borro el buffer 
-    printf("buffer,%s\n",buffer);
+void fetch(){   
+    char buffer[100];
+    recv(fd_memoria, buffer, sizeof(100), MSG_DONTWAIT); //borro el buffer 
+    //printf("buffer, %s\n", buffer);
     log_info(logger_cpu, "Ejecutando FETCH PID: %i Program Counter: %i", EXEC->pid, EXEC->program_counter);
 
    // enviar_memoria_solicitar_instruccion(EXEC, fd_memoria);
-    enviar_memoria_solicitar_instruccion(EXEC->pid,EXEC->program_counter, fd_memoria);
+    enviar_memoria_solicitar_instruccion(EXEC->pid, EXEC->program_counter, fd_memoria);
 
     // la instruccion sin parsear tipo "IO_FS_READ Int4 notas.txt BX ECX EDX"
     char *cpu_respuesta_instruccion = malloc(100);
 
     op_code codigo_operacion = recibir_operacion(fd_memoria);
-    if (codigo_operacion == MEMORIA_ENVIA_INSTRUCCION)
-    {
+    if(codigo_operacion == MEMORIA_ENVIA_INSTRUCCION){
         t_buffer *buffer = crear_buffer();
         buffer = recibir_buffer_completo(fd_memoria);
 
@@ -42,12 +41,13 @@ void fetch()
         destruir_buffer(buffer);
     }
 
-    printf("\nINSTRUCCION RECIBIDA DE MEMORIA: %s  \n\n", cpu_respuesta_instruccion);
+    printf("\n|--------------------------------------------------\n");
+    printf("| Instrucción recibida de memoria: %s\n", cpu_respuesta_instruccion);
+    printf("|--------------------------------------------------\n\n");
 
     char **array_instruccion = string_split(cpu_respuesta_instruccion, " ");
 
-    for (int i = string_array_size(array_instruccion); i <= 5; i++)
-    {
+    for(int i = string_array_size(array_instruccion); i <= 5; i++){
         string_array_push(&array_instruccion, "");
     }
 
@@ -67,12 +67,12 @@ void fetch()
     printf("instr_arg4   %s\n", instr_arg4);
     printf("instr_arg5   %s\n", instr_arg5);*/
 }
+
 /// @brief Procesa una instruccion para un proceso
 /// @note Esta etapa consiste en interpretar qué instrucción es la que se va a ejecutar y si la misma requiere de una traducción de dirección lógica a dirección física.
 /// @param t_instruccion, t_pcb
 /// @return retorna un flag para sabes si sigue el ciclo o se interrumpe
-int decode_excute()
-{
+int decode_excute(){
     EXEC->program_counter += 1; // lo hago aca para que en tal caso el jnz lo sobreescriba
 
     // loggear_ejecucion(instruccion);

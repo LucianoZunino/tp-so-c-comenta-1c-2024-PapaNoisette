@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <utils/hello.h>
 #include <utils/utils.h>
 #include "main.h"
 
@@ -28,7 +27,6 @@ int grado_actual_multiprogramacion = 0;
 
 
 int main(int argc, char* argv[]){
-    decir_hola("Kernel");
 
     // Iniciar Kernel
     iniciar_kernel();
@@ -55,6 +53,7 @@ int main(int argc, char* argv[]){
         log_error(logger_kernel, "No se pudo crear el hilo de escucha E/S.");
         return EXIT_FAILURE;
     }
+    printf("\n");
     pthread_detach(hilo_escucha_io);
 //     fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
 

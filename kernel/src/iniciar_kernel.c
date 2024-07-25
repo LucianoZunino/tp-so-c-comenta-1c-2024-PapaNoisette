@@ -198,10 +198,7 @@ void finalizar_kernel(){
 void esperar_clientes(){
     int i = 0;
     interfaces = list_create();
-    printf("ENTRAMOS EN esperar_clientes \n");
     while(1){
-        
-        printf("antes de esperar_cliente \n");
         int socket;// = malloc(sizeof(int));  //LIBERAR MEMORIA CUANDO SE DESCONECTE IO
         socket = esperar_cliente(fd_kernel, logger_kernel, "entradasalida");
         printf("Socket: %i, despues de esperar_cliente \n", socket);

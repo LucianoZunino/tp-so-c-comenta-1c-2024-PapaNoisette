@@ -61,14 +61,15 @@ void loggear_ejecucion(t_instruccion *instruccion) // log obligatorio
             instruccion->arg3);
 }*/
 
-void imprimir_config_cpu()
-{
-   printf("IP_MEMORIA:%s\n", ip_memoria);
-   printf("PUERTO_MEMORIA:%s\n", puerto_memoria);
-   printf("PUERTO_ESCUCHA_DISPATCH:%s\n", puerto_escucha_dispatch);
-   printf("PUERTO_ESCUCHA_INTERRUPT:%s\n", puerto_escucha_interrupt);
-   printf("CANTIDAD_ENTRADAS_TLB:%d\n", cantidad_entradas_tlb);
-   printf("ALGORITMO_TLB:%s\n", algoritmo_tlb);
+void imprimir_config_cpu(){
+   printf("\n============================================================\n");
+   printf("IP de Memoria: %s\n", ip_memoria);
+   printf("Puerto de Memoria: %s\n", puerto_memoria);
+   printf("Puerto de escucha de Dispatch: %s\n", puerto_escucha_dispatch);
+   printf("Puerto de escucha de Interrupt: %s\n", puerto_escucha_interrupt);
+   printf("Cantidad de entradas de la TLB: %d\n", cantidad_entradas_tlb);
+   printf("Algortimo de la TLB: %s\n", algoritmo_tlb);
+   printf("============================================================\n\n");
 }
 
 void finalizar_cpu()
@@ -159,9 +160,9 @@ int consultar_tamanio_pagina_memoria()
    {
 
       // si memoria no me contesta estoy al horno
-      int cod_op = recibir_operacion(fd_memoria); 
+      int cod_op = recibir_operacion(fd_memoria);
 
-      if (cod_op == CPU_CONSULTA_TAM_PAGINA)
+      if(cod_op == CPU_CONSULTA_TAM_PAGINA)
       {
 
          buffer = recibir_buffer_completo(fd_memoria);

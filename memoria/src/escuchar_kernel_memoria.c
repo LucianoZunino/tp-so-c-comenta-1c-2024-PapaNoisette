@@ -5,12 +5,9 @@ void escuchar_mensajes_kernel_memoria(){
 	t_buffer* buffer;
     int pid;
 	while(!desconexion_kernel_memoria){
-		printf("FLAG 1\n");
         int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
-		printf("FLAG 2\n");
         switch(cod_op){
 			case  HANDSHAKE_KERNEL:
-                printf("FLAG HANDSHAKE_KERNEL\n");
 				aceptar_handshake(logger_memoria, fd_kernel, cod_op);
 				break;
 			case MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS:
@@ -26,9 +23,7 @@ void escuchar_mensajes_kernel_memoria(){
                 int numero_paginas_inicial = 0; // Número de páginas inicial
                 memoria_crear_proceso(pid);
 
-                printf("Antes de enviar_ok\n");
                 enviar_ok(KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS, fd_kernel);
-                printf("Después de enviar_ok\n");
                 destruir_buffer(buffer);
 				break;
 

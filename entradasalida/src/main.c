@@ -18,7 +18,6 @@ int fd_kernel;
 
 int main(int argc, char** argv[]){
     //if(argc < 2 ){log_error(logger_entradasalida, "Debe pasar el archivo de configuracion y el nombre por parametro"); abort();}
-    decir_hola("una Interfaz de Entrada/Salida");
 
     // Iniciar interfaz I/O
     iniciar_entradasalida(); //argv[1]

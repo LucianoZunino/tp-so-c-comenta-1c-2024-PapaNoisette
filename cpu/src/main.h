@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
-#include <utils/hello.h>
 #include <utils/utils.h>
 #include <utils/mensajes.h>
 #include "ciclo_instrucciones.h"

@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include <utils/hello.h>
 //#include <utils/utils.h>
 #include "main.h"
 
@@ -29,7 +28,7 @@ int main(int argc, char* argv[]){
 	iniciar_cpu();
 	
 
-  	log_info(logger_cpu, "Arranca el modulo CPU");
+  	//log_info(logger_cpu, "Arranca el modulo CPU");
     // Inicia el server de cpu dispatch
 	fd_cpu_dispatch = iniciar_servidor(puerto_escucha_dispatch, logger_cpu, ">>> Server CPU-Dispatch iniciado <<<");
  
@@ -37,7 +36,7 @@ int main(int argc, char* argv[]){
 	fd_cpu_interrupt = iniciar_servidor(puerto_escucha_interrupt, logger_cpu, ">>> Server CPU-Interrupt iniciado <<<");
 
 	fd_memoria = crear_conexion(ip_memoria, puerto_memoria, logger_cpu);
-	log_info(logger_cpu,">>>CPU se conecta al server MEMORIA<<<");
+	log_info(logger_cpu, ">>> CPU conectado al servidor de Memoria <<<");
 	//Handshake CPU - Memoria
 	if (realizar_handshake(logger_cpu, fd_memoria, HANDSHAKE_CPU) == -1){
         return EXIT_FAILURE;

@@ -106,12 +106,10 @@ int iniciar_servidor(char *puerto, t_log *logger, char *mensaje_servidor)
 	return socket_servidor;
 }
 
-int esperar_cliente(int socket_servidor, t_log *logger, char *cliente)
-{
+int esperar_cliente(int socket_servidor, t_log *logger, char *cliente){
 
 	// Aceptamos un nuevo cliente
 	int socket_cliente = accept(socket_servidor, NULL, NULL);
-	printf("Despues del accept\n");
 	log_info(logger, "Se conecto el cliente: %s\n", cliente);
 
 	return socket_cliente;
@@ -393,43 +391,38 @@ void rechazar_handshake(t_log *logger, int socket_cliente)
 	send(socket_cliente, &result_error, sizeof(int), 0);
 }
 
-void print_registros (t_registros_cpu *registros){
-printf("printeo registros \n");
-printf(">>registros - AX: %d\n",registros->AX);
-printf(">>registros - BX: %d\n",registros->BX);
-printf(">>registros - CX: %d\n",registros->CX);
-printf(">>registros - DX: %d\n",registros->DX);
-printf(">>registros - EAX: %d\n",registros->EAX);
-printf(">>registros - EBX: %d\n",registros->EBX);
-printf(">>registros - ECX: %d\n",registros->ECX);
-printf(">>registros - EDX: %d\n",registros->EDX);
-printf(">>registros - SI: %d\n",registros->SI);
-printf(">>registros - DI: %d\n",registros->DI);
-
-
+void print_registros(t_registros_cpu *registros){
+	printf("========== Registros del procesador ==========\n");
+	printf(">> Registros - AX: %d\n",registros->AX);
+	printf(">> Registros - BX: %d\n",registros->BX);
+	printf(">> Registros - CX: %d\n",registros->CX);
+	printf(">> Registros - DX: %d\n",registros->DX);
+	printf(">> Registros - EAX: %d\n",registros->EAX);
+	printf(">> Registros - EBX: %d\n",registros->EBX);
+	printf(">> Registros - ECX: %d\n",registros->ECX);
+	printf(">> Registros - EDX: %d\n",registros->EDX);
+	printf(">> Registros - SI: %d\n",registros->SI);
+	printf(">> Registros - DI: %d\n",registros->DI);
+	printf("==============================================\n\n");
 }
 
 print_pcb(t_pcb *pcb){
-	printf("\n------------------>>>>>>>>   printeo pcb \n");
-	printf(">>pcb pid: %d\n",pcb->pid);
-	printf(">>pcb program_counter: %d\n",pcb->program_counter);
-	printf(">>pcb quantum: %d\n",pcb->quantum);
-	printf(">>pcb estado: %d\n",pcb->estado);
-	print_registros (pcb->registros_cpu);
-    printf(">>Fin pcb: \n");
+	printf("\n=============  PCB del Proceso =============\n");
+	printf(">> PCB - pid: %d\n",pcb->pid);
+	printf(">> PCB - program_counter: %d\n",pcb->program_counter);
+	printf(">> PCB - quantum: %d\n",pcb->quantum);
+	printf(">> PCB - estado: %d\n",pcb->estado);
+	print_registros(pcb->registros_cpu);
 }
 
-t_pcb* deserializar_pcb(t_buffer* buffer)
-	{
-     t_pcb *pcb = malloc(sizeof(t_pcb)); // ESTA MEMORIA CUANDO SE LIBERA?
-	//t_pcb *pcb;
-	    pcb->registros_cpu = malloc(sizeof(t_registros_cpu));
-
-     pcb->pid = extraer_int_del_buffer(buffer);
-     pcb->program_counter = extraer_int_del_buffer(buffer);
-	 pcb->registros_cpu=extraer_datos_del_buffer(buffer);
-     pcb->quantum = extraer_int_del_buffer(buffer);
-     pcb->estado = extraer_int_del_buffer(buffer);
-	 //pcb->motivo = extraer_int_del_buffer(buffer);
-	 return pcb;
-	}
+t_pcb* deserializar_pcb(t_buffer* buffer){
+	t_pcb *pcb = malloc(sizeof(t_pcb)); // ESTA MEMORIA CUANDO SE LIBERA?
+	pcb->registros_cpu = malloc(sizeof(t_registros_cpu));
+	pcb->pid = extraer_int_del_buffer(buffer);
+	pcb->program_counter = extraer_int_del_buffer(buffer);
+	pcb->registros_cpu=extraer_datos_del_buffer(buffer);
+	pcb->quantum = extraer_int_del_buffer(buffer);
+	pcb->estado = extraer_int_del_buffer(buffer);
+	//pcb->motivo = extraer_int_del_buffer(buffer);
+	return pcb;
+}

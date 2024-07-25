@@ -14,27 +14,6 @@ void iniciar_memoria(){
     iniciar_logger_memoria();
     iniciar_config_memoria();
     inicializar_estructuras_memoria();
-    print_lista_de_frames("listadeframes1.txt");
-    print_lista_procesos("lista_procesos1.txt");
-    // Inicializa la tabla de páginas y el espacio de memoria
-    // TablaDePaginas tabla_de_paginas;
-    // inicializar_tabla_paginas(&tabla_de_paginas, numero_paginas);
-    // void *memoria = asignar_memoria(tam_pagina * numero_paginas); // 32 * 128 = 4096
-
-    // Ejemplo de asignación de páginas
-    // asignar_marco_a_tabla(&tabla_de_paginas, 2, 5);
-    /*
-    // Dirección virtual a traducir (por ejemplo, byte 100 de la página 0)
-    unsigned int virtual_address = 100;
-    void *physical_address = translate(&page_table, memoria, virtual_address);
-
-    if (physical_address != NULL) {
-        printf("Dirección física: %p\n", physical_address);
-    }*/
-
-    // Limpia la memoria
-    // free(tabla_de_paginas.pagina);
-    // free(memoria);
 }
 
 void inicializar_estructuras_memoria(){
@@ -48,6 +27,7 @@ void inicializar_estructuras_memoria(){
         log_error(logger_memoria, "Error al asignar memoria\n");
         return EXIT_FAILURE;
     }
+    memset(memoria_RAM, 0, tam_memoria); // Poner todo el espacio asignado en 0
 
     // Inicializar bitmap de frames
     for(int i = 0; i < cantidad_de_marcos; i++){
@@ -70,12 +50,14 @@ void iniciar_logger_memoria(){
 }
 
 void imprimir_config_memoria(){
-    printf("\nPUERTO_ESCUCHA:%s\n", puerto_escucha);
-    printf("TAM_MEMORIA:%d\n", tam_memoria);
-    printf("TAM_PAGINA:%d\n", tam_pagina);
-    printf("PATH_INSTRUCCIONES:%s\n", path_instrucciones);
-    printf("RETARDO_RESPUESTA:%d\n", retardo_respuesta);
-    printf("CANTIDA_DE_MARCOS:%d\n\n", cantidad_de_marcos);
+    printf("\n============================================================\n");
+    printf("Puerto de escucha: %s\n", puerto_escucha);
+    printf("Tamaño de la memoria RAM: %d\n", tam_memoria);
+    printf("Tamaño de página: %d\n", tam_pagina);
+    printf("Path de instrucciones: %s\n", path_instrucciones);
+    printf("Retardo de respuesta: %d\n", retardo_respuesta);
+    printf("Cantidad de marcos (Frames): %d\n", cantidad_de_marcos);
+    printf("============================================================\n\n");
 }
 
 void iniciar_config_memoria(){
@@ -100,17 +82,17 @@ void eliminar_estructuras_memoria(){
     list_destroy_and_destroy_elements(lista_de_miniPcb,);
     list_destroy_and_destroy_elements(lista_de_frames,);
     list_destroy_and_destroy_elements(lista_procesos,);
+    list_destroy_and_destroy_elements(lista_de_frames, free);
+    list_destroy_and_destroy_elements(lista_procesos, free);
+    free(memoria_RAM);
     */
 }
-
-//////// a otro file
 
 /// @brief Crea un proceso para un pid
 /// @note Crea una estructura Proceso para un nuevo proceso,
 //        inicializa su tabla de páginas y devuelve un puntero a esta estructura
 /// @param pid, numero_paginas
 /// @return  Proceso
-
 void memoria_crear_proceso(int pid){
     // inicio la Proceso
     Proceso *proceso = (Proceso *)malloc(sizeof(Proceso)); // Se le asigna un espacio de memoria a esa tabla
@@ -135,6 +117,7 @@ void memoria_crear_proceso(int pid){
     list_add(lista_procesos, proceso);
     print_lista_de_frames("lista_de_frames_inicializado.txt");
     print_lista_procesos("lista_procesos_inicializado.txt");
+    print_memoria_RAM("contenido_memoria_RAM_inicializada.txt");
 }
 
 /// @brief  Redimensiona la tábla de páginas del proceso
@@ -142,7 +125,6 @@ void memoria_crear_proceso(int pid){
 //        inicializa su tabla de páginas y devuelve un puntero a esta estructura
 /// @param pid, numero_paginas
 /// @return  Proceso
-
 int resize_tamano_proceso(int pid, int nuevo_tamano){
 
     Proceso *proceso = buscar_proceso(lista_procesos, pid);
@@ -225,7 +207,6 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
 
 /// @brief Cuenta los frames libres que tiene disponible memoria para todos los procesos
 /// @return  cantidad_disponible
-
 int contar_frames_libres(){
     int cantidad_disponible = 0;
     for(int i = 0; i < cantidad_de_marcos; i++){
@@ -245,12 +226,6 @@ int asignar_y_marcar_frame_ocupado(int pid){
             frame->ocupado = 1;
             frame->pid = pid;
 
-            /*
-            
-            Proceso tiene una lista de tabla_de_paginas que cada tabla tiene un Struc PAGINA->numero_de_marco
-            
-             */
-
             list_replace(lista_de_frames, i, frame); // remplazo en el bitmap de frames
 
             return i;
@@ -269,6 +244,32 @@ void liberar_frame(int numero_de_marco){
         list_replace(lista_de_frames, numero_de_marco, frame);
         log_info(logger_memoria, "Se libero el frame :%d\n", numero_de_marco);
     }
+}
+
+void print_memoria_RAM(char *path_log){
+    FILE *archivo = fopen(path_log, "w");
+    int numero_frame = 0;
+
+    if(archivo == NULL){
+        printf("Error al abrir el archivo\n");
+        return;
+    }
+
+    fprintf(archivo, "Contenido de la memoria RAM:\n\n");
+    fprintf(archivo, "------------------ Frame %d -------------------\n", numero_frame);
+
+    for(int i = 0; i < tam_memoria; i++){
+        fprintf(archivo, "%02X ", ((unsigned char *)memoria_RAM)[i]);
+        if((i + 1) % 16 == 0){
+            fprintf(archivo, "\n");
+        }
+        if((i + 1) % 32 == 0 && (i + 1) != tam_memoria){
+            numero_frame++;
+            fprintf(archivo, "------------------ Frame %d -------------------\n", numero_frame);
+        }
+    }
+
+    fclose(archivo);
 }
 
 void print_lista_de_frames(char *path_log){
@@ -307,7 +308,7 @@ void print_lista_procesos(char *path_log){
         for(int j = 0; j < list_size(proceso->tabla_paginas); j++){
             int frame = list_get(proceso->tabla_paginas, j); 
 
-            fprintf(archivo, "--------numero_de_marco: %d\n", frame);
+            fprintf(archivo, "\tPagina %d -> Frame %d\n", j, frame);
         }
     }
 
@@ -349,10 +350,8 @@ void escribir_memoria(int marco, void *buffer, size_t tamano){ //mov out
 void esperar_clientes(){
     int i = 0;
     lista_de_interfaces = list_create();
-    printf("ENTRAMOS EN esperar_clientes de memoria\n");
 
     while(1){
-        printf("antes de esperar_cliente \n");
         int socket;// = malloc(sizeof(int));  //LIBERAR MEMORIA CUANDO SE DESCONECTE IO
         socket = esperar_cliente(fd_memoria, logger_memoria, "entradasalida");
         printf("Socket: %i, despues de esperar_cliente \n", socket);
@@ -360,7 +359,6 @@ void esperar_clientes(){
         t_interfaz* interfaz = malloc(sizeof(t_interfaz));
         
         interfaz->socket = socket;
-        printf("Antes de crear el hilo\n");
         interfaz->cola_espera = list_create();
         sem_init(&interfaz->sem_espera, 1, 0);
         pthread_mutex_init(&interfaz->mutex_interfaz, NULL);
