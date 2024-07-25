@@ -113,6 +113,9 @@ void escuchar_mensajes_cpu_memoria()
 			ejecutar_mov_out (tamanio, dir_fisica, pid, datos_aux);
 			usleep(retardo_respuesta);
 			
+			print_lista_de_frames("lista_de_frames_resize_reducir_MOV_OUT.txt");
+        	print_lista_procesos("lista_de_procesos_resize_reducir_MOV_OUT.txt");
+
 			destruir_buffer(buffer);
 			break;
 		case MEMORIA_MOV_IN: //ESCRITURA
@@ -143,6 +146,10 @@ void escuchar_mensajes_cpu_memoria()
 			usleep(retardo_respuesta);
 			eliminar_paquete(paquete);
 			free(datos_a_devolver);
+
+			print_lista_de_frames("lista_de_frames_resize_MOV_IN.txt");
+        	print_lista_procesos("lista_de_procesos_resize_MOV_IN.txt");
+
 			break;
 
 		case MEMORIA_COPY_STRING: //DESDE CPU SE HACE DICHA LOGICA. SOLICITAS UNA LECTURA, CON EL DATO QUE TE DEVUELVE, REALIZAR UNA ESCRITURA.

@@ -133,6 +133,8 @@ void memoria_crear_proceso(int pid){
     printf("proceso->tabla_paginas  list size%d\n", list_size(proceso->tabla_paginas));
     printf("PID: %d - Tabla de páginas creada con 0 páginas\n", pid);
     list_add(lista_procesos, proceso);
+    print_lista_de_frames("lista_de_frames_inicializado.txt");
+    print_lista_procesos("lista_procesos_inicializado.txt");
 }
 
 /// @brief  Redimensiona la tábla de páginas del proceso
@@ -183,6 +185,8 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
             }
 
             printf("PID: %d - Redimensionado a %d páginas\n", proceso->pid, numero_paginas_nuevo);
+            print_lista_de_frames("lista_de_frames_resize_ampliar.txt");
+            print_lista_procesos("lista_de_procesos_resize_ampliar.txt");
         }
         else{
          // OUT_OF_MEMORY
@@ -212,10 +216,10 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
         }
 
         printf("PID: %d - Redimensionado a %d páginas\n", proceso->pid, numero_paginas_nuevo);
+        print_lista_de_frames("lista_de_frames_resize_reducir.txt");
+        print_lista_procesos("lista_de_procesos_resize_reducir.txt");
     }
 
-    print_lista_de_frames("listadeframes5.txt");
-    print_lista_procesos("lista_procesos5.txt");
     return 0;
 }
 
@@ -248,6 +252,7 @@ int asignar_y_marcar_frame_ocupado(int pid){
              */
 
             list_replace(lista_de_frames, i, frame); // remplazo en el bitmap de frames
+
             return i;
         }
     }
