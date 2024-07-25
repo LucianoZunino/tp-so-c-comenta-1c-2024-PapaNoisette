@@ -2,7 +2,7 @@
 bin/
 obj/
 *.log
-*.txt
+#*.txt
 
 # Eclipse files
 .settings/
