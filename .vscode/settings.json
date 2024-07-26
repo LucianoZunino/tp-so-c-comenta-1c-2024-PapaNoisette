@@ -8,6 +8,9 @@
         "utils.h": "c",
         "escuchar_kernel_entradasalida.h": "c",
         "iniciar_entradasalida.h": "c",
-        "escuchar_memoria_entradasalida.h": "c"
+        "escuchar_memoria_entradasalida.h": "c",
+        "mensajes.h": "c",
+        "semaphore.h": "c",
+        "helpers.h": "c"
     }
 }

@@ -12,7 +12,6 @@
 #include "escuchar_kernel_memoria.h"
 #include <utils/mensajes.h>
 
-
 extern t_log* logger_memoria;
 
 extern char* puerto_escucha;

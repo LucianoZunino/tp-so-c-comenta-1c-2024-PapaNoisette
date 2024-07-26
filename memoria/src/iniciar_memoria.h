@@ -35,4 +35,14 @@ int recibir_path_kernel(int socket);
 //void guardar_instrucciones_en_memoria(t_pcb* pcb,char* path);
 int asignar_frame(int);//nacho: esta funcion falta definirla o no se si te referis a asignar_y_marcar_frame_ocupado
 void esperar_clientes();
+
+void iniciar_logger_memoria();
+
+void imprimir_config_memoria();
+
+void print_memoria_RAM(char *path_log);
+
+void print_lista_de_frames(char *path_log);
+
+void print_lista_procesos(char *path_log);
 #endif
