@@ -18,10 +18,19 @@ list_iterate(tlb,mostrar_entrada);
 
 /*HACER TRADUCCION LOGICA A FISICA*/
 t_dir_fisica* traducir_direccion_logica(int dir_logica){
+   
    t_dir_fisica* dir_fisica = malloc(sizeof(t_dir_fisica));
+   if (presencia_en_tlb(dir_logica)){
+      buscar_marco_tlb(dir_fisica ,dir_logica);
+
+   }
+   
+   
    dir_fisica->pagina =  calcular_numero_de_pagina(int dir_logica);
    dir_fisica->offset = calcular_desplazamiento(dir_logica,dir_fisica->pagina);
-   return dir_fisica //hacer free una vez utilizada
+
+   uint32_t direccion_fisica = marco * tamanio_pagina + desplazamiento;
+   return dir_fisica; //hacer free una vez utilizada
    // [numero_pagina | desplazamiento]
 }
 
@@ -77,6 +86,7 @@ int buscar_marco_tlb(int pid, int dir_logica)
          return 1;
    }
    t_entrada_tlb *entrada = list_find(tlb, _closure_find_entrada);
+
 
    // TLB MISS
    if (entrada == NULL) 

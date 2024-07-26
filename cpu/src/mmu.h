@@ -16,6 +16,7 @@ typedef struct{
     int pid;
     int pagina;
     int marco;
+    int instante;
     //se puede agregar otra variable segun enunciado
 } t_entrada_tlb;
     

@@ -10,7 +10,7 @@ void escuchar_mensajes_cpu_memoria(){
 		int marco;
 		int cod_op = recibir_operacion(fd_cpu);
 		t_paquete *paquete;
-				t_paquete *paquete2;
+		t_paquete *paquete2;
 		t_buffer *buffer_a_enviar2;
 
 		t_buffer *buffer_a_enviar;
@@ -47,18 +47,19 @@ void escuchar_mensajes_cpu_memoria(){
 		case CPU_CONSULTA_FRAME: // no se si no hay que hacerlo tambieen en io
 			usleep(retardo_respuesta);
 			/*
-						pid = recibir_int(fd_cpu);
-						int pagina = extraer_int_del_buffer(buffer);
-						int marco = -1;
-						marco = buscar_marco(pid, pagina);
-						buffer_a_enviar = crear_buffer();
-						paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
-						cargar_int_al_buffer(paquete->buffer, marco);
-						enviar_paquete(paquete, fd_cpu);
-						eliminar_paquete(paquete);
-						// LOG OBLIGATORIO
-						log_info(logger_memoria, "Acceso a Tabla de Páginas PID: %d - Página: %d - Marco: %d\n", pid, pagina, marco);
-						destruir_buffer(buffer);
+			buffer = recibir_buffer_completo(fd_cpu);
+			pid = extraer_int_del_buffer(buffer);
+			int pagina = extraer_int_del_buffer(buffer);
+			
+			marco = buscar_marco(pid, pagina);
+			buffer_a_enviar = crear_buffer();
+			paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
+			cargar_int_al_buffer(paquete->buffer, marco);
+			enviar_paquete(paquete, fd_cpu);
+			eliminar_paquete(paquete);
+			// LOG OBLIGATORIO
+			log_info(logger_memoria, "Acceso a Tabla de Páginas PID: %d - Página: %d - Marco: %d\n", pid, pagina, marco);
+			destruir_buffer(buffer);
 			*/
 			break;
 		case MEMORIA_RESIZE:
@@ -408,11 +409,3 @@ void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)
 	log_info(logger_memoria, "Error, no hay pid cargado en memoria \n");
 }
 */
-/*
-int buscar_marco(int pid, int num_pagina)
-{
-	int marco = -1;
-	TablaDePaginasPorProceso *tabla_pag_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
-	marco = tabla_pag_proceso->tabla_paginas->pagina[num_pagina].numero_de_marco;
-	return marco;
-}*/
