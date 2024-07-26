@@ -1,5 +1,6 @@
 #include "escuchar_cpu_memoria.h"
-//void* memoria_RAM;
+#include "iniciar_memoria.h"
+
 void escuchar_mensajes_cpu_memoria(){
 	bool desconexion_cpu_memoria = 0;
 
@@ -46,12 +47,12 @@ void escuchar_mensajes_cpu_memoria(){
 			break;
 		case CPU_CONSULTA_FRAME: // no se si no hay que hacerlo tambieen en io
 			usleep(retardo_respuesta);
-			/*
 			buffer = recibir_buffer_completo(fd_cpu);
 			pid = extraer_int_del_buffer(buffer);
 			int pagina = extraer_int_del_buffer(buffer);
 			
-			marco = buscar_marco(pid, pagina);
+			marco = obtener_marco(pid, pagina);
+
 			buffer_a_enviar = crear_buffer();
 			paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
 			cargar_int_al_buffer(paquete->buffer, marco);
@@ -60,7 +61,6 @@ void escuchar_mensajes_cpu_memoria(){
 			// LOG OBLIGATORIO
 			log_info(logger_memoria, "Acceso a Tabla de Páginas PID: %d - Página: %d - Marco: %d\n", pid, pagina, marco);
 			destruir_buffer(buffer);
-			*/
 			break;
 		case MEMORIA_RESIZE:
 

@@ -231,20 +231,23 @@ int asignar_y_marcar_frame_ocupado(int pid){
 }
 
 /// @brief Devuelve el número de marco correspondiente
-/// @note Crea una estructura Proceso para un nuevo proceso,
-//        inicializa su tabla de páginas y devuelve un puntero a esta estructura
+/// @note Obtiene la estructura del Proceso por PID y recorre su tabla
+///       de páginas para obtener el número de marco en donde está la página
+///       pasada por parámetro.
 /// @param pid, numero_pagina
 /// @return Frame
-int buscar_marco(int pid, int numero_pagina){
-	for(int i = 0; i < cantidad_de_marcos; i++){
-        Frame *frame = list_get(lista_de_frames, i);
+int obtener_marco(int pid, int numero_pagina){
 
-        if(frame->pid == pid){
-            frame->ocupado = 0;
-            list_replace(lista_de_frames, i, frame);
-            log_info(logger_memoria, "Se libero el frame :%d\n", i);
+    Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
+
+    for(int pag = 0; pag < list_size(proceso_actual->tabla_paginas); pag++){
+        if(pag == numero_pagina){
+            int frame = list_get(proceso_actual->tabla_paginas, pag);
+            return frame;
         }
     }
+    
+    return NULL;
 }
 
 /// @brief Marca el frame como libre y se lo desasigna al proceso que lo estaba usando

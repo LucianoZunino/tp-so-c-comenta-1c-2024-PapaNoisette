@@ -6,7 +6,6 @@
 
 typedef struct{
     int numero_de_marco; // Número de marco de la página en la memoria física
-    //int bit_presencia; // Bit de validez, 1 si la página está en memoria, 0 si no
 } Pagina;
 
 typedef struct {
@@ -22,18 +21,15 @@ typedef struct {
 void iniciar_memoria();
 void iniciar_config_memoria();
 void inicializar_estructuras_memoria();
-//void inicializar_tabla_paginas(TablaDePaginas *tabla);
 void memoria_crear_proceso(int pid);
 int resize_tamano_proceso( int pid, int nuevo_tamano);
-//void asignar_marco_a_tabla(TablaDePaginas *tabla, int numero_pagina, int numero_marco);
 int contar_frames_libres();
 int asignar_y_marcar_frame_ocupado(int pid);
 void liberar_frame(int numero_de_marco);
 Proceso* buscar_proceso(t_list* lista, int pid);
+int obtener_marco(int pid, int numero_pagina);
 void finalizar_memoria();
 int recibir_path_kernel(int socket);
-//void guardar_instrucciones_en_memoria(t_pcb* pcb,char* path);
-int asignar_frame(int);//nacho: esta funcion falta definirla o no se si te referis a asignar_y_marcar_frame_ocupado
 void esperar_clientes();
 
 void iniciar_logger_memoria();
