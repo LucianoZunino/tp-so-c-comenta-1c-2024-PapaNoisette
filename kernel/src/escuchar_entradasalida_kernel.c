@@ -23,6 +23,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 	pthread_detach(hilo_lista_espera);
 
 	// Mensaje ES semaforo datos
+	enviar_ok(NUEVA_CONEXION_IO, socket);
 
 	while(!desconexion_entradasalida_kernel){
 		int cod_op = recibir_operacion(socket); // recv() es bloqueante por ende no queda loopeando infinitamente
@@ -77,7 +78,9 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 
 				t_interfaz* interfaz = list_get(interfaces, indice_interfaz);  // Verificar que list_get modifica la lista
 
-				memcpy(interfaz->nombre, nombre, sizeof(nombre));
+				memcpy(interfaz->nombre, nombre, strlen(nombre));
+
+				printf("Conectada interfaz: %s", nombre);
 
 				break;
 				

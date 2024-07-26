@@ -5,6 +5,9 @@
         "main.h": "c",
         "escuchar_cpu_memoria.h": "c",
         "consola_interactiva.h": "c",
-        "utils.h": "c"
+        "utils.h": "c",
+        "escuchar_kernel_entradasalida.h": "c",
+        "iniciar_entradasalida.h": "c",
+        "escuchar_memoria_entradasalida.h": "c"
     }
 }

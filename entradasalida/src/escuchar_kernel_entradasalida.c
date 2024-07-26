@@ -24,6 +24,8 @@ void escuchar_instrucciones_generica(){
 				destruir_buffer(buffer);
 				break;
 			default: // La instruccion es incorrecta
+				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
+
 				t_buffer* buffer_kernel;
 				buffer_kernel = recibir_buffer_completo(fd_kernel);
 				int process_id = extraer_int_del_buffer(buffer_kernel);
@@ -71,6 +73,8 @@ void escuchar_instrucciones_stdin(){
 				destruir_buffer(buffer);
 				break;
 			default: // La instruccion es incorrecta
+				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
+				
 				buffer = recibir_buffer_completo(fd_kernel);
 				int process_id = extraer_int_del_buffer(buffer);
 				free(buffer);
@@ -118,9 +122,9 @@ void escuchar_instrucciones_stdout(){
 				break;
 
 			default: // La instruccion es incorrecta
-				printf("b\n");
+				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
+
 				buffer = recibir_buffer_completo(fd_kernel);
-				printf("c\n");
 				int process_id = extraer_int_del_buffer(buffer);
 				free(buffer);
 
@@ -345,6 +349,7 @@ void escuchar_instrucciones_dialfs(){
 				break;
 
 			default: // La instruccion es incorrecta
+				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
 				error_io:
 				printf("b\n");
 				buffer = recibir_buffer_completo(fd_kernel);

@@ -10,9 +10,9 @@ void* bloques_dat;
 t_bitarray* bitmap;
 t_list* archivos_metadata;
 
-void iniciar_entradasalida(){
+void iniciar_entradasalida(char* path){
     iniciar_logger_entradasalida();
-    iniciar_config_entradasalida("entradasalida.config");
+    iniciar_config_entradasalida(path);
     iniciar_estructuras();
     if(tipo_de_interfaz == DIAL_FS){
         iniciar_lista_metadatas();
@@ -27,7 +27,7 @@ void iniciar_logger_entradasalida(){
 void iniciar_config_entradasalida(char* config){
     printf("INICIAR CONFIG ENTRADASALIDA \n");
     config_entradasalida = iniciar_config(config);
-
+    printf("flag\n");
     ip_kernel = config_get_string_value(config_entradasalida, "IP_KERNEL");
     puerto_kernel = config_get_string_value(config_entradasalida, "PUERTO_KERNEL");
     tipo_de_interfaz = leer_tipo_interfaz(config_entradasalida);
@@ -121,7 +121,7 @@ void iniciar_lista_metadatas(){
 	//strcpy(path_bloques, tomar_nombre_devolver_path("bloques.dat"));
 
 
-    char* path_bitmap = tomar_nombre_devolver_path("bloques.dat");
+    char* path_bitmap = tomar_nombre_devolver_path("bitmap.dat");
     //strcpy(path_bitmap, tomar_nombre_devolver_path("bloques.dat"));
 
     DIR* directorio = opendir(path_base_dialfs);
