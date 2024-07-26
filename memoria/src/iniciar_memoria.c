@@ -23,6 +23,7 @@ void inicializar_estructuras_memoria(){
 
     // Asignacion de memoria contigua
     memoria_RAM = malloc(tam_memoria);
+    memset(memoria_RAM, '\n', tam_memoria);
     if(memoria_RAM == NULL){
         log_error(logger_memoria, "Error al asignar memoria\n");
         return EXIT_FAILURE;
