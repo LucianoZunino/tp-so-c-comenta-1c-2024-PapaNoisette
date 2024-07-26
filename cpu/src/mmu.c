@@ -1,18 +1,27 @@
 
 #include "mmu.h"
+
 void mostrar_entrada(t_entrada_tlb*entrada ){
 printf("pid :%d  pagina: %d marco: %d\n",entrada->pid,entrada->pagina,entrada->marco);
 
 }
 void mostrar_tlb(){
 printf("Mostrar TLB: \n");
-
 list_iterate(tlb,mostrar_entrada);
-
 }
+
+
+
+
+/*---------------------------------------- TLB ----------------------------------------*/
+
+
 /*HACER TRADUCCION LOGICA A FISICA*/
-int traducir_direccion_logica(int a){
-   return a;
+t_dir_fisica* traducir_direccion_logica(int dir_logica){
+   t_dir_fisica* dir_fisica = malloc(sizeof(t_dir_fisica));
+   dir_fisica->pagina =  calcular_numero_de_pagina(int dir_logica);
+   dir_fisica->offset = calcular_desplazamiento(dir_logica,dir_fisica->pagina);
+   return dir_fisica //hacer free una vez utilizada
    // [numero_pagina | desplazamiento]
 }
 
@@ -43,7 +52,6 @@ void agregar_entrada_tlb(t_entrada_tlb *entrada)
       list_add(tlb, entrada);
    }
 }
-
 
 //-1 :tlb deshabilitada       obtener_marco_en_memoria(pid, pagina);
 // 1 :tlb miss       obtener_marco_en_memoria(pid, pagina);

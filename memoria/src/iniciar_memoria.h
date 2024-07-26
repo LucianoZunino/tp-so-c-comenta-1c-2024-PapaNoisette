@@ -19,11 +19,7 @@ typedef struct {
     int pid; // PID del proceso que está utilizando el frame
 } Frame;
 
-void print_lista_procesos(char * path_log);
-void print_lista_de_frames(char * path_log);
-
 void iniciar_memoria();
-void iniciar_logger_memoria();
 void iniciar_config_memoria();
 void inicializar_estructuras_memoria();
 //void inicializar_tabla_paginas(TablaDePaginas *tabla);
@@ -33,7 +29,6 @@ int resize_tamano_proceso( int pid, int nuevo_tamano);
 int contar_frames_libres();
 int asignar_y_marcar_frame_ocupado(int pid);
 void liberar_frame(int numero_de_marco);
-void imprimir_config_memoria();
 Proceso* buscar_proceso(t_list* lista, int pid);
 void finalizar_memoria();
 int recibir_path_kernel(int socket);
