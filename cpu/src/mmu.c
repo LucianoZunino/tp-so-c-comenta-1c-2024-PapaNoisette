@@ -15,9 +15,13 @@ list_iterate(tlb,mostrar_entrada);
 
 /*---------------------------------------- TLB ----------------------------------------*/
 
+int traducir_direccion_logica(int a){ // VIEJO DE NACHO - BORRAR
+   return a; // VIEJO DE NACHO - BORRAR
+} // VIEJO DE NACHO - BORRAR
+
 
 /*HACER TRADUCCION LOGICA A FISICA*/
-t_dir_fisica* traducir_direccion_logica(int dir_logica){
+/*t_dir_fisica* traducir_direccion_logica(int dir_logica){ // NUEVO DE LUCHO - AGREGAR
    
    t_dir_fisica* dir_fisica = malloc(sizeof(t_dir_fisica));
    if (presencia_en_tlb(dir_logica)){
@@ -32,7 +36,7 @@ t_dir_fisica* traducir_direccion_logica(int dir_logica){
    uint32_t direccion_fisica = marco * tamanio_pagina + desplazamiento;
    return dir_fisica; //hacer free una vez utilizada
    // [numero_pagina | desplazamiento]
-}
+}*/
 
 int calcular_numero_de_pagina(int dir_logica)
 {

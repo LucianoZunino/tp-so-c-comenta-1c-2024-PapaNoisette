@@ -119,22 +119,26 @@ int ejecutar_resize(char *tamanio)
 }
 void ejecutar_copy_string(char *tamanio)
 {
-   t_dir_fisica* dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI);
-   t_dir_fisica* dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI);
+   //t_dir_fisica* dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI); // NUEVO DE LUCHO - AGREGAR
+   //t_dir_fisica* dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI);
+   int dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI); // VIEJO DE NACHO - BORRAR
+   int dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI); // VIEJO DE NACHO - BORRAR
 
    log_info(logger_cpu, " Ejecutando  COPY_STRING");
    t_buffer *buffer_a_enviar_leer = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar_leer, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar_leer, tamanio);
 
-   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si->offset);
-   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_di->offset);
+   //cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si->offset);
+   //cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_di->offset);
+   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si); // VIEJO DE NACHO - BORRAR
+   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_di); // VIEJO DE NACHO - BORRAR
 
    t_paquete *paquete_leer = crear_paquete(MEMORIA_COPY_STRING, buffer_a_enviar_leer);
    enviar_paquete(paquete_leer, fd_memoria);
    eliminar_paquete(paquete_leer);
-   free(dir_fisica_si);
-   free(dir_fisica_di);
+   //free(dir_fisica_si); // NUEVO DE LUCHO - AGREGAR
+   //free(dir_fisica_di); // NUEVO DE LUCHO - AGREGAR
 
 }
 
@@ -180,14 +184,16 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    //calculo el tamaño a leer en memoria 
    int tam_registro = get_tamanio_registro(registro_datos);
    // obtengo  la dir fisica
-   t_dir_fisica* dir_fisica = traducir_direccion_logica(dir_logica);
+   //t_dir_fisica* dir_fisica = traducir_direccion_logica(dir_logica); // NUEVO DE LUCHO - AGREGAR 
+   int dir_fisica = traducir_direccion_logica(dir_logica); // VIEJO DE NACHO - BORRAR
 
    // envio todo el paquete a escribir
    t_buffer *buffer_a_enviar = crear_buffer();
 
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar, tam_registro);
-   cargar_int_al_buffer(buffer_a_enviar, dir_fisica->offset);
+   //cargar_int_al_buffer(buffer_a_enviar, dir_fisica->offset); // NUEVO DE LUCHO - AGREGAR 
+   cargar_int_al_buffer(buffer_a_enviar, dir_fisica); // VIEJO DE NACHO - BORRAR
 
    t_paquete *paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
    enviar_paquete(paquete, fd_memoria);
@@ -196,7 +202,8 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    op_code operacion = recibir_operacion(fd_memoria);
    t_buffer *buffer = crear_buffer();
    if(operacion == MEMORIA_ERROR){ // Antes iba un while
-      log_error(logger_cpu, "Error, no se pudo leer en el PID: %i direccion fisica: %i\n ", EXEC->pid, dir_fisica->offset);
+      //log_error(logger_cpu, "Error, no se pudo leer en el PID: %i direccion fisica: %i\n ", EXEC->pid, dir_fisica->offset); // NUEVO DE LUCHO - AGREGAR 
+      log_error(logger_cpu, "Error, no se pudo leer en el PID: %i direccion fisica: %i\n ", EXEC->pid, dir_fisica); // VIEJO DE NACHO - BORRAR
       buffer = recibir_buffer_completo(fd_memoria);
       destruir_buffer(buffer);
       return 0;
@@ -208,12 +215,14 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    //int datos = extraer_int_del_buffer(buffer);
 
    // LOG OBLIGATORIO
-   log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %s", EXEC->pid, dir_fisica->offset, datos);
+   //log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %s", EXEC->pid, dir_fisica->offset, datos); // NUEVO DE LUCHO - AGREGAR 
+   log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %s", EXEC->pid, dir_fisica, datos); // VIEJO DE NACHO - BORRAR
+
    // guardo los datos recibidos en el registro indicado
    ejecutar_set(registro_direccion, &datos); //*(int*)datos
    log_info(logger_cpu, "Se realizo correctamente el MOV_IN");
    destruir_buffer(buffer);
-   free(dir_fisica);
+   //free(dir_fisica); // NUEVO DE LUCHO - AGREGAR
 
    return 0;
 }
@@ -239,13 +248,16 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos){
    printf("flag  movout33 datos_escribir%d\n",datos_escribir);//si lo casteamos a un void?
 
    // obtengo  la dir fisica
-   t_dir_fisica* dir_fisica = traducir_direccion_logica(dir_logica);
-   printf("flag  movout33 dir_fisica %d\n",dir_fisica->offset);
+   //t_dir_fisica* dir_fisica = traducir_direccion_logica(dir_logica); // NUEVO DE LUCHO - AGREGAR
+   uint32_t dir_fisica = traducir_direccion_logica(dir_logica); // VIEJO DE NACHO - BORRAR
+   //printf("flag  movout33 dir_fisica %d\n",dir_fisica->offset); // NUEVO DE LUCHO - AGREGAR
+   printf("flag  movout33 dir_fisica %d\n", dir_fisica); // VIEJO DE NACHO - BORRAR
 
    printf("flag  movout41\n");
 
    // LOG OBLIGATORIO
-   log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica->offset, datos_escribir);
+   //log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica->offset, datos_escribir); // NUEVO DE LUCHO - AGREGAR
+   log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica, datos_escribir); // VIEJO DE NACHO - BORRAR
 
    // agregamos el tamaño para el memcpy en memoria
    int tam_registro = get_tamanio_registro(registro_datos);
@@ -254,7 +266,8 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos){
    t_buffer *buffer_a_enviar = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar, tam_registro);
-   cargar_int_al_buffer(buffer_a_enviar, dir_fisica->offset); 
+   //cargar_int_al_buffer(buffer_a_enviar, dir_fisica->offset); // NUEVO DE LUCHO - AGREGAR
+   cargar_int_al_buffer(buffer_a_enviar, dir_fisica); // VIEJO DE NACHO - BORRAR
    printf("flag  movout5\n");
 
    //cargar_int_al_buffer(buffer_a_enviar, datos_escribir); // lo trato como void* por ahora creo es lo mas conveniente //ACA ESTA EL PROBLEMA CREO
@@ -265,7 +278,7 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos){
    enviar_paquete(paquete, fd_memoria);
    printf("flag  movout8\n");
    eliminar_paquete(paquete);
-   free(dir_fisica);
+   //free(dir_fisica); // NUEVO DE LUCHO - AGREGAR
 }
 
 void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo){
