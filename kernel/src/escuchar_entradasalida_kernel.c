@@ -80,7 +80,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 
 				memcpy(interfaz->nombre, nombre, strlen(nombre));
 
-				printf("Conectada interfaz: %s", nombre);
+				printf("Conectada interfaz: %s\n", nombre);
 
 				break;
 				

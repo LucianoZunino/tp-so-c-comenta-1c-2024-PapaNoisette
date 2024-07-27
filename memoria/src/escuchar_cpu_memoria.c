@@ -45,7 +45,7 @@ void escuchar_mensajes_cpu_memoria(){
 			eliminar_paquete(paquete);
 
 			break;
-		case CPU_CONSULTA_FRAME: // no se si no hay que hacerlo tambieen en io
+		case CPU_CONSULTA_FRAME:
 			usleep(retardo_respuesta);
 			buffer = recibir_buffer_completo(fd_cpu);
 			pid = extraer_int_del_buffer(buffer);
@@ -102,18 +102,21 @@ void escuchar_mensajes_cpu_memoria(){
 			pid = extraer_int_del_buffer(buffer);
 			tamanio = extraer_int_del_buffer(buffer);
 			dir_fisica = extraer_int_del_buffer(buffer);
-			printf("flag  mem_mov_out1\n");
-			void* datos = extraer_datos_del_buffer(buffer);
-			printf("flag  mem_mov_out2\n");
-			void* datos_aux = &datos;
-			printf("flag  mem_mov_out3\n");
-			printf("flag  mem_mov_out4\n");
+			int datos = extraer_int_del_buffer(buffer);
+			
+			printf("\n### Llega del MOV_OUT -> Datos a escribir en memoria: %i #####\n\n", datos);
+
+			void* datos_aux = malloc(sizeof(int)); // Utilizado para la conversión
+			*(int *)datos_aux = datos; // Transforma un int en un void*
+
 			ejecutar_mov_out(tamanio, dir_fisica, pid, datos_aux);
 			usleep(retardo_respuesta);
 			
 			print_lista_de_frames("lista_de_frames_resize_MOV_OUT.txt");
         	print_lista_procesos("lista_de_procesos_resize_MOV_OUT.txt");
 			print_memoria_RAM("contenido_memoria_RAM_MOV_OUT.txt");
+
+			free(datos_aux); // Libera el void pedido para la conversión
 
 			destruir_buffer(buffer);
 			break;
@@ -129,7 +132,7 @@ void escuchar_mensajes_cpu_memoria(){
 
 			void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica, pid);
 
-			printf("##### DATOS A DEVOLVER DEL MOV_IN: %s #####", (char*)datos_a_devolver);
+			printf("\n##### DATOS A DEVOLVER DEL MOV_IN: %i #####\n\n", (int)datos_a_devolver);
 
 			if(datos_a_devolver == NULL){
 				log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para leer %i bytes \n", tamanio);
@@ -183,6 +186,8 @@ void escuchar_mensajes_cpu_memoria(){
 		}
 	}
 }
+
+
 
 void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 	int indice_de_marco = 0;
@@ -277,7 +282,7 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 		printf("Espacio libre en pagina: %i\n", espacio_libre_en_pagina);
 		printf("Resto de lectura: %i\n", resto_de_lectura);
 		printf("############\n");
-		printf("Datos: %d\n", *(int*)datos);
+//		printf("Datos: %d\n", *(int*)datos);
 		printf("Base: %i\n", base);
 		usleep(2000000);
 		printf("------------\n");
@@ -407,5 +412,4 @@ void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)
 		}
 	}
 	log_info(logger_memoria, "Error, no hay pid cargado en memoria \n");
-}
-*/
+}*/

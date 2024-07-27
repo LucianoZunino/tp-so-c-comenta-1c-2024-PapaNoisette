@@ -208,7 +208,6 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
       destruir_buffer(buffer);
       return 0;
    }
-
    
    buffer = recibir_buffer_completo(fd_memoria);
    void *datos = extraer_datos_del_buffer(buffer);
@@ -216,7 +215,7 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
 
    // LOG OBLIGATORIO
    //log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %s", EXEC->pid, dir_fisica->offset, datos); // NUEVO DE LUCHO - AGREGAR 
-   log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %s", EXEC->pid, dir_fisica, datos); // VIEJO DE NACHO - BORRAR
+   log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %d", EXEC->pid, dir_fisica, datos); // VIEJO DE NACHO - BORRAR
 
    // guardo los datos recibidos en el registro indicado
    ejecutar_set(registro_direccion, &datos); //*(int*)datos
@@ -227,56 +226,42 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    return 0;
 }
 
+/*
+   Lee el valor del Registro Datos y lo escribe en la dirección física de memoria obtenida a
+   partir de la Dirección Lógica almacenada en el Registro Dirección.
+*/
 void ejecutar_mov_out(char *registro_direccion, char *registro_datos){
 
-   /*
-    Lee el valor del Registro Datos y lo escribe en la dirección física de memoria obtenida a
-    partir de la Dirección Lógica almacenada en el Registro Dirección.
+   printf("Registro Datos %s - Registro Dirección %s\n", registro_datos, registro_direccion);
 
-   */printf("flag  registro_datos %s-registro_direccion %s\n",registro_datos,registro_direccion);
-
-   log_info(logger_cpu, " ENVIANDO MOV OUT A MEMORIA");
-   printf("flag  movout1\n");
-   // me copio el valor que hay en registro datos
-   long int datos_escribir = get_registro(registro_datos);
-   printf("flag  movout2\n");
-
-   // obtengo la dir logica segun el registro
-   uint32_t dir_logica;
-   dir_logica = get_registro(registro_direccion);
-   printf("flag  movout33 dir_logica%d\n",dir_logica);
-   printf("flag  movout33 datos_escribir%d\n",datos_escribir);//si lo casteamos a un void?
+   int datos_escribir = get_registro(registro_datos); // Copio el valor que hay en registro datos
+   uint32_t dir_logica = get_registro(registro_direccion); // Obtengo la dir logica segun el registro
 
    // obtengo  la dir fisica
    //t_dir_fisica* dir_fisica = traducir_direccion_logica(dir_logica); // NUEVO DE LUCHO - AGREGAR
-   uint32_t dir_fisica = traducir_direccion_logica(dir_logica); // VIEJO DE NACHO - BORRAR
-   //printf("flag  movout33 dir_fisica %d\n",dir_fisica->offset); // NUEVO DE LUCHO - AGREGAR
-   printf("flag  movout33 dir_fisica %d\n", dir_fisica); // VIEJO DE NACHO - BORRAR
-
-   printf("flag  movout41\n");
+   int dir_fisica = traducir_direccion_logica(dir_logica); // VIEJO DE NACHO - BORRAR
 
    // LOG OBLIGATORIO
-   //log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica->offset, datos_escribir); // NUEVO DE LUCHO - AGREGAR
-   log_info(logger_cpu, "PID: %d -ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica, datos_escribir); // VIEJO DE NACHO - BORRAR
+   //log_info(logger_cpu, "PID: %d - ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica->offset, datos_escribir); // NUEVO DE LUCHO - AGREGAR
+   log_info(logger_cpu, "PID: %d - ACCION ESCRIBIR - Direccion Fisica %d - Valor: %d", EXEC->pid, dir_fisica, datos_escribir); // VIEJO DE NACHO - BORRAR
+   
+   int tam_registro = get_tamanio_registro(registro_datos); // Agregamos el tamanio para el memcpy en memoria
+   // void* data = malloc(tam_registro);
+   // memmove(data, &datos_escribir, sizeof(datos_escribir));
 
-   // agregamos el tamaño para el memcpy en memoria
-   int tam_registro = get_tamanio_registro(registro_datos);
-   void* data = &datos_escribir;
+   printf("\n### Envia el MOV_OUT -> Datos a escribir en memoria: %i #####\n\n", datos_escribir);
+
    // envio todo el paquete a escribir
    t_buffer *buffer_a_enviar = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar, tam_registro);
    //cargar_int_al_buffer(buffer_a_enviar, dir_fisica->offset); // NUEVO DE LUCHO - AGREGAR
    cargar_int_al_buffer(buffer_a_enviar, dir_fisica); // VIEJO DE NACHO - BORRAR
-   printf("flag  movout5\n");
+   cargar_int_al_buffer(buffer_a_enviar, datos_escribir); // lo trato como void* por ahora creo es lo mas conveniente //ACA ESTA EL PROBLEMA CREO
+   //cargar_datos_al_buffer(buffer_a_enviar, data, sizeof(datos_escribir));
 
-   //cargar_int_al_buffer(buffer_a_enviar, datos_escribir); // lo trato como void* por ahora creo es lo mas conveniente //ACA ESTA EL PROBLEMA CREO
-   cargar_datos_al_buffer(buffer_a_enviar, data, sizeof(int));
-   printf("flag  movout6\n");
    t_paquete *paquete = crear_paquete(MEMORIA_MOV_OUT, buffer_a_enviar);
-   printf("flag  movout7\n");
    enviar_paquete(paquete, fd_memoria);
-   printf("flag  movout8\n");
    eliminar_paquete(paquete);
    //free(dir_fisica); // NUEVO DE LUCHO - AGREGAR
 }
@@ -324,6 +309,7 @@ void ejecutar_io_stdin_read(char *interfaz, char *reg_direccion, char *reg_taman
    eliminar_paquete(paquete);
 
 }
+
 void ejecutar_io_stdout_write(char *interfaz, char *reg_direccion, char *reg_tamanio){
    /*
    Esta instrucción solicita al Kernel que mediante la interfaz seleccionada, se lea desde la
@@ -390,7 +376,6 @@ void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tam
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 }
-
 
 void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direccion, char *reg_tamanio, char *reg_puntero_archivo){
    /*

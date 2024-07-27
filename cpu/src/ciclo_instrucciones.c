@@ -199,8 +199,7 @@ int ciclo_de_instruccion() // FETCH->EXECUTE
     fetch(); 
 
 
-     estado_ciclo = decode_excute(); 
-    printf("fin a ciclo_de_instruccion   \n");
+    estado_ciclo = decode_excute();
 
  /*
 
