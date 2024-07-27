@@ -10,7 +10,7 @@ typedef struct{
 
 typedef struct {
     int pid;
-    t_list * tabla_paginas; // list del tipo  PAGINA
+    t_list * tabla_paginas; // Una lista que adentro va a contener datos de tipo Pagina
 } Proceso;
 
 typedef struct {
@@ -19,26 +19,24 @@ typedef struct {
 } Frame;
 
 void iniciar_memoria();
-void iniciar_config_memoria();
 void inicializar_estructuras_memoria();
+void inicializar_semaforos();
+void iniciar_config_memoria();
+void finalizar_memoria();
+void eliminar_estructuras_memoria();
 void memoria_crear_proceso(int pid);
-int resize_tamano_proceso( int pid, int nuevo_tamano);
+int resize_tamano_proceso(int pid, int nuevo_tamano);
 int contar_frames_libres();
 int asignar_y_marcar_frame_ocupado(int pid);
-void liberar_frame(int numero_de_marco);
-Proceso* buscar_proceso(t_list* lista, int pid);
 int obtener_marco(int pid, int numero_pagina);
-void finalizar_memoria();
-int recibir_path_kernel(int socket);
+void liberar_frame(int numero_de_marco);
+Proceso *buscar_proceso(t_list *lista, int pid);
+void finalizar_proceso(int pid);
 void esperar_clientes();
-
 void iniciar_logger_memoria();
-
 void imprimir_config_memoria();
-
 void print_memoria_RAM(char *path_log);
-
 void print_lista_de_frames(char *path_log);
-
 void print_lista_procesos(char *path_log);
+
 #endif

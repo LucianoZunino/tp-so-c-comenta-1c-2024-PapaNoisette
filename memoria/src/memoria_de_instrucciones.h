@@ -5,8 +5,7 @@
 #include "utils/mensajes.h"
 #include <utils/mensajes.h>
 
-void guardar_instrucciones_en_memoria(int pid,char* path);
-//void enviar_instruccion_a_cpu(t_pcb *pcb, int socket);
-void enviar_instruccion_a_cpu(int pid,int program_counter,int socket);
+void guardar_instrucciones_en_memoria(int pid, char* path);
+void enviar_instruccion_a_cpu(int pid, int program_counter, int socket);
 
 #endif

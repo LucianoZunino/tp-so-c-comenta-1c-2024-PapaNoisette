@@ -8,24 +8,23 @@ void guardar_instrucciones_en_memoria(int pid, char* path){
 
     if(archivo == NULL){
         log_error(logger_memoria, "No se pudo abrir el archivo %s",path_final);
-
         return;
     }
-    instrucciones_proceso->pid = malloc(sizeof(int));//creo que esta de mas
+
+    instrucciones_proceso->pid = malloc(sizeof(int)); //creo que esta de mas
     instrucciones_proceso->pid = pid;
     instrucciones_proceso->lista_de_instrucciones = list_create(); // Crea una lista ej => ["MOVE AX BX", "ADD DX CX"]
 
     char linea[100]; 
     
     while(fgets(linea, sizeof(linea), archivo) != NULL){
-        // Eliminar el salto de línea al final de la línea leída
-        linea[strcspn(linea, "\n")] = '\0';
-        // Crear una copia de la línea leída para almacenarla en la lista
-        char* linea_copia = strdup(linea);
+        linea[strcspn(linea, "\n")] = '\0'; // Eliminar el salto de línea al final de la línea leída
+        char* linea_copia = strdup(linea); // Crear una copia de la línea leída para almacenarla en la lista
         printf("Procesada linea \" %s \" \n", linea_copia);
         char* linea_a_agregar = malloc(sizeof(linea_copia)); // HACER FREE AL SACAR EL PROCESO DE MEMORIA
         list_add(instrucciones_proceso->lista_de_instrucciones, linea_copia); // Agrega las intrucciones a la lista
     }
+
     fclose(archivo);
     printf("Archivo cerrado\n");
     printf("Size de instrucciones_proceso: %i\n", list_size(lista_de_instrucciones_por_proceso));

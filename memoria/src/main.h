@@ -31,10 +31,8 @@ extern void* memoria_RAM;
 extern t_list *lista_procesos;
 
 typedef struct{
-
     int pid;
     t_list *lista_de_instrucciones;
-
 } t_instrucciones_por_proceso;
 
 extern t_list *lista_de_instrucciones_por_proceso;

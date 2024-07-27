@@ -22,7 +22,6 @@ void escuchar_mensajes_cpu_memoria(){
 
 		case HANDSHAKE_CPU:
 			aceptar_handshake(logger_memoria, fd_cpu, cod_op);
-
 			break;
 		case CPU_SOLICITA_INSTRUCCION:
 			printf("-CASE--CPU_SOLICITA_INSTRUCCION :\n");
@@ -43,7 +42,6 @@ void escuchar_mensajes_cpu_memoria(){
 			cargar_int_al_buffer(paquete->buffer, tam_pagina);
 			enviar_paquete(paquete, fd_cpu);
 			eliminar_paquete(paquete);
-
 			break;
 		case CPU_CONSULTA_FRAME:
 			usleep(retardo_respuesta);
@@ -93,7 +91,6 @@ void escuchar_mensajes_cpu_memoria(){
 				enviar_paquete(paquete2, fd_cpu);
 				eliminar_paquete(paquete2);
 			}
-
 			break;
 		case MEMORIA_MOV_OUT: //LECTURA
 			log_info(logger_memoria, "MOV_OUT");
@@ -347,6 +344,7 @@ bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de
 	return contiene_direccion;
 }
 
+// ---------- FUNCIONES PARA PROBAR LA ESCRITURA - NO ES PARTE DEL TP ----------
 void MOV_IN(int src_addr, int dest_addr, int size) {
     // Verificar que las direcciones y el tamaño sean válidos
     if (src_addr < 0 || src_addr >= tam_memoria || 
@@ -360,6 +358,7 @@ void MOV_IN(int src_addr, int dest_addr, int size) {
     memcpy((char *)memoria_RAM + dest_addr, (char *)memoria_RAM + src_addr, size);
 }
 
+// ---------- FUNCIONES PARA PROBAR LA ESCRITURA - NO ES PARTE DEL TP ----------
 void ejemplo_MOV_IN() {
     // Inicializar algunos datos en la memoria
     char *data = "Hello, World!";
@@ -377,39 +376,3 @@ void ejemplo_MOV_IN() {
     printf("Desde dirección 0: %s\n", (char *)memoria_RAM);
     printf("Desde dirección 100: %.*s\n", 10, (char *)memoria_RAM + 100);
 }
-
-/*
-void enviar_instruccion_a_cpu(t_pcb *pcb, int socket)
-{
-
-	if (list_size(lista_de_instrucciones_por_proceso) < 1)
-	{
-		printf("No se cargaron pcbs en memoria: \n");
-		return 0;
-	}
-
-	for (int i = 0; i <= list_size(lista_de_instrucciones_por_proceso); i++)
-	{
-
-		t_instrucciones_por_proceso *instrucciones_proceso = list_get(lista_de_instrucciones_por_proceso, i);
-		if (instrucciones_proceso->pid == pcb->pid)
-		{
-
-			int pc = pcb->program_counter;
-			char *instruccion = list_get(instrucciones_proceso->lista_de_instrucciones, pc);
-
-			if (strlen(instruccion) != 0)
-			{
-				enviar_instruccion(instruccion, socket);
-				log_info(logger_memoria, "INSTRUCCION ENVIADA A CPU:  %s   PROGRAM_COUNTER:%d\n", instruccion, pc);
-			}
-			else
-			{
-				log_error(logger_memoria, "No hay instruccion para el pcb:  %d\n", instrucciones_proceso->pid);
-			}
-
-			return;
-		}
-	}
-	log_info(logger_memoria, "Error, no hay pid cargado en memoria \n");
-}*/

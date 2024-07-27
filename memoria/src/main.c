@@ -15,21 +15,17 @@ int fd_kernel;
 int fd_entradasalida;
 
 int main(int argc, char* argv[]){
-    // Iniciar Memoria
-    iniciar_memoria();
-    printf("Memoria iniciada, lista de mini PCB size: %i\n", list_size(lista_de_instrucciones_por_proceso));
-  	//log_info(logger_memoria, "Arranca el modulo MEMORIA");
+    
+    iniciar_memoria(); // Inicia Memoria
+    printf("Memoria iniciada, lista de instrucciones por proceso: %i\n", list_size(lista_de_instrucciones_por_proceso));
 
-    // Levantar Server Memoria
-   	fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, ">>> Server Memoria escuchando... <<<");
+   	fd_memoria = iniciar_servidor(puerto_escucha, logger_memoria, ">>> Server Memoria escuchando... <<<"); // Levantar Server Memoria
 
-    // Esperar conexion de CPU
-    log_info(logger_memoria, "Esperando conexión de CPU");
-    fd_cpu = esperar_cliente(fd_memoria, logger_memoria, "CPU");
+    log_info(logger_memoria, "Esperando conexión de CPU"); 
+    fd_cpu = esperar_cliente(fd_memoria, logger_memoria, "CPU"); // Esperar conexion de CPU
 
-    // Esperar conexion de KERNEL
-    log_info(logger_memoria, "Esperando conexión de Kernel");
-    fd_kernel = esperar_cliente(fd_memoria, logger_memoria, "KERNEL");
+    log_info(logger_memoria, "Esperando conexión de Kernel"); 
+    fd_kernel = esperar_cliente(fd_memoria, logger_memoria, "KERNEL"); // Esperar conexion de Kernel
 
     /* Tenemos que escuchar más de un cliente
     // Esperar conexion de E/S
@@ -37,7 +33,7 @@ int main(int argc, char* argv[]){
     fd_entradasalida = esperar_cliente(fd_memoria, logger_memoria, "E/S");
     */
 
-    log_info(logger_memoria, "Esperando conexion de Interfaz E/S");
+    log_info(logger_memoria, "Esperando conexión de Interfaz E/S");
     pthread_t hilo_escucha_io;
 
     if(pthread_create(&hilo_escucha_io, NULL, esperar_clientes, NULL) == -1){
@@ -65,8 +61,8 @@ int main(int argc, char* argv[]){
 	pthread_join(hilo_entradasalida_memoria, NULL); // Frena el hilo principal hasta que el hilo_entradasalida_memoria no finalice
 	// Porque si se el hilo_entradasalida_memoria se desacopla del principal termina el modulo Memoria
     */
-    // Finalizar Memoria
-   	finalizar_memoria();
+    
+   	finalizar_memoria(); // Finaliza Memoria
 
     return 0;
 }

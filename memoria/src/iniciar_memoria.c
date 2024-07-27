@@ -1,5 +1,4 @@
 #include "iniciar_memoria.h"
-//#include "helpers.h"
 
 t_config *config_memoria;
 int cantidad_de_marcos;
