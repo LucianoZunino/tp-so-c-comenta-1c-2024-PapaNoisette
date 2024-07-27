@@ -22,7 +22,6 @@ int fd_kernel_interrupt;
 uint32_t PROGRAM_COUNTER=0;
 
 t_registros_cpu * registros_cpu;
-t_list * tlb;
 
 int main(int argc, char* argv[]){
 	iniciar_cpu();

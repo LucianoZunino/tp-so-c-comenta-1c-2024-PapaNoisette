@@ -1,6 +1,7 @@
 #include "iniciar_cpu.h"
 
 t_config *config_cpu;
+t_list* tlb;
 
 void iniciar_cpu()
 {
@@ -12,8 +13,6 @@ void iniciar_cpu()
 	EXEC->registros_cpu=malloc(sizeof(t_registros_cpu));
 	EXEC->estado=malloc(sizeof(estado_pcb));
 	iniciar_pcb(); //ESTA BIEN ESTO?
-	
-
 }
 
 void iniciar_pcb(){

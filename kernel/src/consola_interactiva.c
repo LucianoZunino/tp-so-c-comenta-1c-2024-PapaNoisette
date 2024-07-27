@@ -140,9 +140,9 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
             break;
 
         default:
-             log_error(logger_kernel, "Comando no reconocido");
-             exit(EXIT_FAILURE);
-         
+            log_error(logger_kernel, "Comando no reconocido");
+            //exit(EXIT_FAILURE);
+            break;
 
     }
 

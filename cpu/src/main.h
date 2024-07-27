@@ -12,11 +12,6 @@
 #include "iniciar_cpu.h"
 #include "mmu.h"
 
-typedef struct
-{
-    int pagina;
-    int offset;
-} t_dir_fisica;
 
 //Variables de la config
 extern t_log* logger_cpu;
