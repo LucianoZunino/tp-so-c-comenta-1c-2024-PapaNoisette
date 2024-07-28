@@ -129,14 +129,23 @@ void escuchar_mensajes_cpu_memoria(){
 
 			void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica, pid);
 
-			printf("\n##### DATOS A DEVOLVER DEL MOV_IN: %i #####\n\n", (int)datos_a_devolver);
+			// ES UN PRINT PARA VER LOS DATOS A ENVIAR EN BYTES POR EL VOID*
+			if(datos_a_devolver != NULL){
+				printf("##### DATOS A DEVOLVER DEL MOV_IN: #####\n");
+				unsigned char* byte_datos = (unsigned char*)datos_a_devolver;
+				for (int i = 0; i < tamanio; i++) {
+					printf("byte %d: %02X\n", i, byte_datos[i]);
+				}
+				printf("\n");
+			}
+			// --------------------------------------------------------------
 
 			if(datos_a_devolver == NULL){
 				log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para leer %i bytes \n", tamanio);
-
 				cargar_int_al_buffer(buffer_a_enviar, -1);
 				paquete = crear_paquete(MEMORIA_ERROR, buffer_a_enviar);
-			}else{
+			}
+			else{
 				cargar_datos_al_buffer(buffer_a_enviar, datos_a_devolver, tamanio);
 				paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
 			}
@@ -153,9 +162,7 @@ void escuchar_mensajes_cpu_memoria(){
 			print_lista_de_frames("lista_de_frames_MOV_IN.txt");
         	print_lista_procesos("lista_de_procesos_MOV_IN.txt");
 			print_memoria_RAM("contenido_memoria_RAM_MOV_IN.txt");
-
 			break;
-
 		case MEMORIA_COPY_STRING: //DESDE CPU SE HACE DICHA LOGICA. SOLICITAS UNA LECTURA, CON EL DATO QUE TE DEVUELVE, REALIZAR UNA ESCRITURA.
 			log_info(logger_memoria, "COPY_STRING");
 
@@ -171,20 +178,16 @@ void escuchar_mensajes_cpu_memoria(){
 
 			destruir_buffer(buffer);
 			break;
-
 		case -1:
 			log_error(logger_memoria, "La CPU se desconecto de Memoria. Terminando servidor.");
 			desconexion_cpu_memoria = 1;
 			break;
-
 		default:
 			log_warning(logger_memoria, "Operacion desconocida de CPU-Memoria. cod_op:%d", cod_op);
 			break;
 		}
 	}
 }
-
-
 
 void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 	int indice_de_marco = 0;
@@ -255,22 +258,20 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 }
 
 void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
-	printf("flag1\n" );
 	int indice_de_marco;
 	void* datos = malloc(tamanio);
-	printf("flag2\n" );
+
 	if(!validar_espacio_de_memoria(pid, dir_fisica, tamanio, &indice_de_marco)){
-		printf("flag2.1\n" );
+		free(datos);
 		return NULL;
 	}
-	printf("flag3\n" );
+
 	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
 	int base = 0;
 	int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
-	while(base <= tamanio){
-		printf("flag4\n" );
-		int direccion_fin_pagina = pagina_actual * tam_pagina + tam_pagina;
 
+	while(base <= tamanio){
+		int direccion_fin_pagina = pagina_actual * tam_pagina + tam_pagina;
 		int espacio_libre_en_pagina = direccion_fin_pagina - dir_fisica;
 		int resto_de_lectura = tamanio - base;
 
@@ -279,25 +280,45 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 		printf("Espacio libre en pagina: %i\n", espacio_libre_en_pagina);
 		printf("Resto de lectura: %i\n", resto_de_lectura);
 		printf("############\n");
-//		printf("Datos: %d\n", *(int*)datos);
+		//printf("Datos: %d\n", *(int*)datos);
 		printf("Base: %i\n", base);
-		usleep(2000000);
 		printf("------------\n");
 
 		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
 		if(resto_de_lectura >= espacio_libre_en_pagina){
-			memcpy(datos + base, memoria_RAM + dir_fisica , espacio_libre_en_pagina); // NO va al reves?
+
+			// ES UN PRINT PARA VER LOS DATOS ENVIADOS EN BYTES POR EL VOID*
+			unsigned char* byte_memoria = (unsigned char*)memoria_RAM;
+			printf("\nContenido de memoria desde la dirección física %d:\n", dir_fisica);
+			for (int i = 0; i < tamanio; i++) {
+				printf("byte %d: %02X\n", dir_fisica + i, byte_memoria[dir_fisica + i]);
+			}
+			printf("\n");
+			// --------------------------------------------------------------
+
+			memcpy(datos + base, memoria_RAM + dir_fisica, espacio_libre_en_pagina);
 			//memcpy(1, memoria_RAM, espacio_libre_en_pagina);
-			base += espacio_libre_en_pagina + 1;
-			printf("flag4.1\n" );
-		}else{
+			base += espacio_libre_en_pagina + 1; // Porque más uno?
+		}
+		else{
+
+			// ES UN PRINT PARA VER LOS DATOS ENVIADOS EN BYTES POR EL VOID*
+			unsigned char* byte_memoria = (unsigned char*)memoria_RAM;
+			printf("\nContenido de memoria desde la dirección física %d:\n", dir_fisica);
+			for (int i = 0; i < tamanio; i++) {
+				printf("byte %d: %02X\n", dir_fisica + i, byte_memoria[dir_fisica + i]);
+			}
+			printf("\n");
+			// --------------------------------------------------------------
+
 			memcpy(datos + base, memoria_RAM + dir_fisica, resto_de_lectura);
 			base += resto_de_lectura;
-			printf("flag4.2\n" );
+
 			return datos;
 		}
-		printf("flag5\n" );
+
 		indice_de_marco++;
+
 		if(indice_de_marco >= list_size(proceso_actual->tabla_paginas)){
 			printf("flag5.1\n" );
 			return NULL;
@@ -305,13 +326,16 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 
 		pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
 		printf("flag6.0\n" );
+
 		if(pagina_actual == NULL){
 			printf("flag5.2\n" );
 			return NULL;
 		}
+
 		printf("flag6.1\n" );
 		dir_fisica = pagina_actual * tam_pagina;
 	}
+
 	printf("flag7\n" );
 	return datos;
 }

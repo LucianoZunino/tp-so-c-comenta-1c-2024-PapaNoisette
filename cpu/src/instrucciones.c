@@ -73,8 +73,7 @@ void ejecutar_jnz(char *registro, char *numero_instruccion)
 
 }
 
-int ejecutar_resize(char *tamanio)
-{
+int ejecutar_resize(char *tamanio){
    /*Solicitará a la Memoria ajustar el tamaño del proceso al tamaño pasado por parámetro.
     En caso de que la respuesta de la memoria sea Out of Memory, se deberá devolver el contexto
     de ejecución al Kernel informando de esta situación.*/
@@ -117,8 +116,8 @@ int ejecutar_resize(char *tamanio)
    sleep(2);
 
 }
-void ejecutar_copy_string(char *tamanio)
-{
+
+void ejecutar_copy_string(char *tamanio){
    //t_dir_fisica* dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI); // NUEVO DE LUCHO - AGREGAR
    //t_dir_fisica* dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI);
    int dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI); // VIEJO DE NACHO - BORRAR
@@ -142,8 +141,7 @@ void ejecutar_copy_string(char *tamanio)
 
 }
 
-void ejecutar_wait(char *recurso)
-{
+void ejecutar_wait(char *recurso){
    log_info(logger_cpu, " ENVIANDO WAIT A KERNEL");
 
    t_buffer *buffer = crear_buffer();
@@ -155,8 +153,7 @@ void ejecutar_wait(char *recurso)
    eliminar_paquete(paquete);
 }
 
-void ejecutar_signal(char *recurso)
-{
+void ejecutar_signal(char *recurso){
    log_info(logger_cpu, " ENVIANDO SIGNAL A KERNEL");
 
   //devuelvo contexto por solicitar llamada a kernel
@@ -169,29 +166,22 @@ void ejecutar_signal(char *recurso)
    eliminar_paquete(paquete);
 }
 
+/*
+   Lee el valor de memoria correspondiente a la Dirección Lógica que se encuentra en el Registro
+   Dirección y lo almacena en el Registro Datos.
+*/
 void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
-
-   /*
-    Lee el valor de memoria correspondiente a la Dirección Lógica que se encuentra en el Registro
-    Dirección y lo almacena en el Registro Datos.
-
-   */
-   
-   log_info(logger_cpu, " ENVIANDO MOV IN A MEMORIA");
+   log_info(logger_cpu, "ENVIANDO MOV IN A MEMORIA");
    int dir_logica = -1;
-   // obtengo la dir logica
-   dir_logica = get_registro(registro_direccion);
-   //calculo el tamaño a leer en memoria 
-   int tam_registro = get_tamanio_registro(registro_datos);
+   dir_logica = get_registro(registro_direccion); // obtengo la dir logica
+   int tam_registro = get_tamanio_registro(registro_datos); //calculo el tamaño a leer en memoria 
+   uint32_t dir_fisica = traducir_direccion_logica(dir_logica);
 
-   uint32_t dir_fisica = traducir_direccion_logica(dir_logica); // VIEJO DE NACHO - BORRAR
-
-   // envio todo el paquete a escribir
    t_buffer *buffer_a_enviar = crear_buffer();
 
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar, tam_registro);
-   cargar_int_al_buffer(buffer_a_enviar, dir_fisica); // VIEJO DE NACHO - BORRAR
+   cargar_int_al_buffer(buffer_a_enviar, dir_fisica);
 
    t_paquete *paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
    enviar_paquete(paquete, fd_memoria);
@@ -200,8 +190,7 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    op_code operacion = recibir_operacion(fd_memoria);
    t_buffer *buffer = crear_buffer();
    if(operacion == MEMORIA_ERROR){ // Antes iba un while
-      
-      log_error(logger_cpu, "Error, no se pudo leer en el PID: %i direccion fisica: %i\n ", EXEC->pid, dir_fisica); // VIEJO DE NACHO - BORRAR
+      log_error(logger_cpu, "Error, no se pudo leer en el PID: %i direccion fisica: %i\n ", EXEC->pid, dir_fisica);
       buffer = recibir_buffer_completo(fd_memoria);
       destruir_buffer(buffer);
       return 0;
@@ -209,17 +198,29 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    
    buffer = recibir_buffer_completo(fd_memoria);
    void *datos = extraer_datos_del_buffer(buffer);
-   //int datos = extraer_int_del_buffer(buffer);
+
+   // ES UN PRINT PARA VER LOS DATOS RECIBIDOS EN BYTES POR EL VOID*
+   printf("\n##### DATOS A RECIBIDOS DEL MOV_IN: #####\n");
+   unsigned char* byte_datos = (unsigned char*)datos;
+   for (int i = 0; i < tam_registro; i++) {
+      printf("byte %d: %02X\n", i, byte_datos[i]);
+   }
+   printf("\n");
+   // --------------------------------------------------------------
+
+   int datos_a_int;
+   memcpy(&datos_a_int, byte_datos, sizeof(int)); // Transforma lo obtenido por el void* en int para poder almacenarlo en el registro correspondiente
 
    // LOG OBLIGATORIO
-   log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %d", EXEC->pid, dir_fisica, datos); // VIEJO DE NACHO - BORRAR
+   //log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %d", EXEC->pid, dir_fisica, datos);
+   log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %d", EXEC->pid, dir_fisica, datos_a_int);
 
    // guardo los datos recibidos en el registro indicado
-   ejecutar_set(registro_direccion, &datos); //*(int*)datos
+   ejecutar_set(registro_datos, datos_a_int); // ANTES ESTABA registro_direccion y &datos
    log_info(logger_cpu, "Se realizo correctamente el MOV_IN");
+
    destruir_buffer(buffer);
-
-
+   free(datos);
    return 0;
 }
 
