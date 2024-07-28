@@ -12,8 +12,8 @@ void escuchar_mensajes_memoria_entradasalida(){
 			case IO_STDOUT_WRITE_FS:
 				buffer = recibir_buffer_completo(fd_memoria);
 
-				char* mensaje = extraer_string_del_buffer(buffer);
-				printf(mensaje);
+				void* mensaje = extraer_datos_del_buffer(buffer);
+				printf("%s", (char*)mensaje);
 
 				destruir_buffer(buffer);
 				sem_post(&sem_stdout);
@@ -27,6 +27,17 @@ void escuchar_mensajes_memoria_entradasalida(){
 				destruir_buffer(buffer);
 				sem_post(&sem_fs_write);
 
+				break;
+			case MEMORIA_ERROR:
+				
+				buffer = recibir_buffer_completo(fd_memoria);
+				int pid = extraer_int_del_buffer(buffer);
+				int dir_fisica = extraer_int_del_buffer(buffer);
+				log_error(logger_entradasalida, "Error, no se pudo leer en el PID: %i direccion fisica: %i\n ", pid, dir_fisica);
+
+				sem_post(&sem_stdout);
+      			
+      			destruir_buffer(buffer);
 				break;
 			case -1:
 				log_error(logger_entradasalida, "La Memoria se desconecto de Entradasalida. Terminando servidor.");

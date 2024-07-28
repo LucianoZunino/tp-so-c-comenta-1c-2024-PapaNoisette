@@ -189,12 +189,16 @@ int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
 
 int buscar_interfaz(char* nombre) {
     t_interfaz* interfaz;
+    printf("\n\n BUSCAR_INTERFAZ BUSCANDO NOMBRE: %s\n\n", nombre);
     for(int i = 0; i<list_size(interfaces); i++){
+        printf("\n\n DENTRO DEL FOR DE BUSCAR_INTERFAZ\n\n");
         interfaz = list_get(interfaces, i);
+        printf("\n\n DENTRO DEL FOR DE BUSCAR_INTERFAZ LUEGO DE LIST_GET: %s\n\n", interfaz->nombre);
         if (string_equals_ignore_case(interfaz->nombre, nombre)) {
             return i;
         }  
     }
+    log_error(logger_kernel, "No se pudo encontrar la interfaz %s", nombre);
     return NULL;
 }
 
@@ -220,6 +224,7 @@ void cambio_de_estado(t_pcb* pcb, int estado_nuevo){
         leer_pids_cola(E_PRIORIDAD);
     }
     pcb->estado = estado_nuevo;
+    
 }
 
 void leer_pids_cola(estado_pcb estado){
@@ -229,4 +234,12 @@ void leer_pids_cola(estado_pcb estado){
         log_info(logger_kernel ,"   - PID: %i \n", pcb_actual->pid);
     }
 
+}
+
+bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb){
+    if(indice_de_interfaz == NULL){
+			enviar_a_exit(pcb, "No se pudo encontrar la interfaz");
+			sem_post(&sem_EXEC);
+			return false;
+	}
 }

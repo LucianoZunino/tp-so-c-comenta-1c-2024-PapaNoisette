@@ -9,8 +9,8 @@ void escuchar_instrucciones_stdin();
 void escuchar_instrucciones_stdout();
 void escuchar_instrucciones_dialfs();
 
-void solicitar_almacen_memoria(int direccion, char* mensaje, op_code cod_op);
-void solicitar_lectura_memoria(int direccion, int tamanio, op_code cod_op);
+void solicitar_almacen_memoria(int pid, int direccion, char* mensaje, op_code cod_op);
+void solicitar_lectura_memoria(int pid, int direccion, int tamanio, op_code cod_op);
 void notificar_fin(int fd_kernel, int pid);
 bool verificar_escritura_archivo(char* path, int reg_tamanio, int reg_puntero_archivo);
 void liberar_archivo_bitmap(char* path);

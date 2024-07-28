@@ -34,7 +34,8 @@ typedef enum
 	MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS,
 	LIBERAR_PROCESO_EN_MEMORIA,		 // EN ELIMINAR PROCESO KERNEL -> SOLICITA A MEMORIA LIBERAR MEMORIA DE DICHO PID
 	// KERNEL-CPU
-	IO_GEN_SLEEP_FS,				// le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
+					// le pongo _FS al final por que sino hay conflicto con la isntruccion IO_GEN_SLEEP
+	IO_GEN_SLEEP_FS,
 	IO_STDIN_READ_FS,
 	IO_STDOUT_WRITE_FS,
 	IO_FS_CREATE_FS,

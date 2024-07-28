@@ -53,32 +53,28 @@ void ejecutar_set(char *registro, int valor){
    }
 }
 
-void ejecutar_sum(char *registro_destino, char *registro_origen)
-{
+void ejecutar_sum(char *registro_destino, char *registro_origen){
    int sum = get_registro(registro_destino) + get_registro(registro_origen);
-
    ejecutar_set(registro_destino, sum);
 }
-void ejecutar_sub(char *registro_destino, char *registro_origen)
-{
+
+void ejecutar_sub(char *registro_destino, char *registro_origen){
    int sub = get_registro(registro_destino) - get_registro(registro_origen);
    ejecutar_set(registro_destino, sub);
 }
-void ejecutar_jnz(char *registro, char *numero_instruccion)
-{
-   if (get_registro(registro) != 0)
-   {
+
+void ejecutar_jnz(char *registro, char *numero_instruccion){
+   if(get_registro(registro) != 0){
       ejecutar_set("PC", atoi(numero_instruccion));
    }
-
 }
 
+/*
+   Solicitará a la Memoria ajustar el tamaño del proceso al tamaño pasado por parámetro.
+   En caso de que la respuesta de la memoria sea Out of Memory, se deberá devolver el contexto
+   de ejecución al Kernel informando de esta situación.
+*/
 int ejecutar_resize(char *tamanio){
-   /*Solicitará a la Memoria ajustar el tamaño del proceso al tamaño pasado por parámetro.
-    En caso de que la respuesta de la memoria sea Out of Memory, se deberá devolver el contexto
-    de ejecución al Kernel informando de esta situación.*/
-
-
    t_buffer *buffer_a_enviar = crear_buffer();
 
    cargar_int_al_buffer(buffer_a_enviar, EXEC->pid);  // Proceso al que se le reajustara su tamaño en memoria
@@ -90,7 +86,7 @@ int ejecutar_resize(char *tamanio){
    enviar_paquete(paquete, fd_memoria);
    eliminar_paquete(paquete);
 
-//--tiempo de retardo establecido 
+   //--tiempo de retardo establecido 
    t_buffer *buffer = crear_buffer();
    log_info(logger_cpu, " ESPERANDO RESPUESTA\n");
    sleep(2);
@@ -118,27 +114,21 @@ int ejecutar_resize(char *tamanio){
 }
 
 void ejecutar_copy_string(char *tamanio){
-   //t_dir_fisica* dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI); // NUEVO DE LUCHO - AGREGAR
-   //t_dir_fisica* dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI);
-   int dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI); // VIEJO DE NACHO - BORRAR
-   int dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI); // VIEJO DE NACHO - BORRAR
+   int dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI);
+   int dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI);
 
-   log_info(logger_cpu, " Ejecutando  COPY_STRING");
+   log_info(logger_cpu, "Ejecutando COPY_STRING");
+
    t_buffer *buffer_a_enviar_leer = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar_leer, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar_leer, tamanio);
-
-   //cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si->offset);
-   //cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_di->offset);
-   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si); // VIEJO DE NACHO - BORRAR
-   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_di); // VIEJO DE NACHO - BORRAR
+   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si);
+   cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_di);
 
    t_paquete *paquete_leer = crear_paquete(MEMORIA_COPY_STRING, buffer_a_enviar_leer);
    enviar_paquete(paquete_leer, fd_memoria);
+   
    eliminar_paquete(paquete_leer);
-   //free(dir_fisica_si); // NUEVO DE LUCHO - AGREGAR
-   //free(dir_fisica_di); // NUEVO DE LUCHO - AGREGAR
-
 }
 
 void ejecutar_wait(char *recurso){
@@ -422,7 +412,7 @@ void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direcci
    eliminar_paquete(paquete);
 }
 
-void  ejecutar_exit(){
+void ejecutar_exit(){
    log_info(logger_cpu, "EJECUTANDO EXIT");
    t_buffer *buffer_a_enviar = crear_buffer();
    t_paquete *paquete = crear_paquete(KERNEL_EXIT, buffer_a_enviar);

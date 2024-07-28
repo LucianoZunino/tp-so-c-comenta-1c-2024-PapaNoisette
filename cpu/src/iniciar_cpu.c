@@ -39,8 +39,7 @@ void iniciar_logger_cpu()
    logger_cpu = iniciar_logger("cpu.log", "cpu");
 }
 
-void iniciar_config_cpu()
-{
+void iniciar_config_cpu(){
    config_cpu = iniciar_config("cpu.config");
 
    ip_memoria = config_get_string_value(config_cpu, "IP_MEMORIA");
@@ -71,21 +70,18 @@ void imprimir_config_cpu(){
    printf("============================================================\n\n");
 }
 
-void finalizar_cpu()
-{
+void finalizar_cpu(){
    config_destroy(config_cpu);
    log_destroy(logger_cpu);
 }
 
-int get_tamanio_registro(char *registro)
-{
+int get_tamanio_registro(char *registro){
    if (strcmp(registro, "AX") == 0 || strcmp(registro, "BX") == 0 ||
        strcmp(registro, "CX") == 0 || strcmp(registro, "DX") == 0)
    {
       return 1;
    }
-   else
-   {
+   else{
       return 4;
    }
 }

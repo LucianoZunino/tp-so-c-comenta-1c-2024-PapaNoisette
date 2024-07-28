@@ -198,15 +198,16 @@ void finalizar_kernel(){
 void esperar_clientes(){
     int i = 0;
     interfaces = list_create();
+    
     while(1){
-        int socket;// = malloc(sizeof(int));  //LIBERAR MEMORIA CUANDO SE DESCONECTE IO
-        socket = esperar_cliente(fd_kernel, logger_kernel, "entradasalida");
-        printf("Socket: %i, despues de esperar_cliente \n", socket);
-        if (socket == -1) return;
+        int* socket = malloc(sizeof(int));  //LIBERAR MEMORIA CUANDO SE DESCONECTE IO
+        *socket = esperar_cliente(fd_kernel, logger_kernel, "");
+        printf("Socket: %i, despues de esperar_cliente \n", *socket);
+        if(*socket == -1) return;
         t_interfaz* interfaz = malloc(sizeof(t_interfaz));
         
-    
-        interfaz->socket = socket;
+        
+        interfaz->socket = *socket;
         printf("Antes de crear el hilo\n");
         interfaz->cola_espera = list_create();
         sem_init(&interfaz->sem_espera, 1, 0);
@@ -216,7 +217,7 @@ void esperar_clientes(){
         printf("tam interfaces: %i\n", list_size(interfaces));
 
         pthread_t hilo_interfaz;
-        pthread_create(&hilo_interfaz, NULL, (void *)(escuchar_mensajes_entradasalida_kernel), (i));
+        pthread_create(&hilo_interfaz, NULL, (void*)escuchar_mensajes_entradasalida_kernel, i);
         pthread_detach(hilo_interfaz);
         printf("FIN DEL WHILE esperar_clientes \n");
         

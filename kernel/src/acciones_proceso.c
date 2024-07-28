@@ -33,14 +33,12 @@ void imprimir_colas(){
 }
 
 void crear_proceso(char* path){
-    
     t_pcb *nuevo_pcb = crear_pcb();
 
     nuevo_pcb->estado = E_NEW;
     pthread_mutex_lock(&mutex_NEW);
     list_add(NEW, nuevo_pcb);
     pthread_mutex_unlock(&mutex_NEW);
-   
 
    // enviar_proceso_por_paquete(nuevo_pcb, path, fd_memoria, MEMORIA_SOLICITAR_INICIALIZAR_ESTRUCTURAS);
     t_buffer* buffer_a_enviar = crear_buffer();
@@ -64,8 +62,6 @@ void crear_proceso(char* path){
 
     imprimir_new();
 }
-
-
 
 t_pcb *crear_pcb(){
 
@@ -95,8 +91,6 @@ t_pcb *crear_pcb(){
     return pcb;
 }
 
-
-
 void eliminar_proceso() {
     sem_wait(&sem_EXIT);
     
@@ -110,7 +104,6 @@ void eliminar_proceso() {
     pthread_mutex_lock(&mutex_multiprogramacion);
     grado_actual_multiprogramacion--;
     pthread_mutex_unlock(&mutex_multiprogramacion);
-
     
     liberar_recursos_de(pcb);
 
@@ -119,7 +112,6 @@ void eliminar_proceso() {
     }else{
         diferencia_de_multiprogramacion--;
     }
-
 
     log_info(logger_kernel, "Se elimina el proceso %i en EXIT", pid);
     pcb_destruir(pcb);
@@ -132,7 +124,6 @@ void solicitar_liberar_en_memoria(int pid) {
     enviar_paquete(paquete, fd_memoria);
     eliminar_paquete(paquete);
 }
-
 
 void liberar_recursos_de(t_pcb* pcb) {
     // Recorremos todos los recursos de la lista de recursos disponibles
@@ -148,8 +139,10 @@ void liberar_recursos_de(t_pcb* pcb) {
         }
         // Sacamos de la cola de espera
         while(lista_contiene_pcb(recurso->cola_de_espera->elements, pcb)){
+            int indice = buscar_index_por_pid(recurso->cola_de_espera->elements, pcb->pid);
+
             pthread_mutex_lock(&recurso->mutex);
-            list_remove(recurso->cola_de_espera->elements, pcb);
+            list_remove_and_destroy_element(recurso->cola_de_espera->elements, indice, (void*)pcb_destruir);
             pthread_mutex_unlock(&recurso->mutex);
         }
     }

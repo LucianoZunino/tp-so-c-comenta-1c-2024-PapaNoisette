@@ -61,7 +61,6 @@ void escuchar_mensajes_cpu_memoria(){
 			destruir_buffer(buffer);
 			break;
 		case MEMORIA_RESIZE:
-
 			log_info(logger_memoria, "MEMORIA_RESIZE");
 
 			buffer = recibir_buffer_completo(fd_cpu);
@@ -70,7 +69,6 @@ void escuchar_mensajes_cpu_memoria(){
 
 			usleep(retardo_respuesta);
 
-			// TablaDePaginasPorProceso *tabla_de_paginas_del_proceso = buscar_tabla_por_pid(lista_de_tablas_de_paginas_por_proceso, pid);
 			int resultado = resize_tamano_proceso(pid, nuevo_tamano);
 			if (resultado == 0)
 			{ // 0 -> Ok | -1 -> OUT_OF_MEMORY
@@ -167,14 +165,14 @@ void escuchar_mensajes_cpu_memoria(){
 			log_info(logger_memoria, "COPY_STRING");
 
 			buffer = recibir_buffer_completo(fd_cpu);
-			tamanio = extraer_int_del_buffer(buffer);
 
-			int dir_fisica_origen = extraer_int_del_buffer(buffer);
-			int dir_fisica_destino = extraer_int_del_buffer(buffer);
+			pid = extraer_int_del_buffer(buffer);
+			tamanio = extraer_int_del_buffer(buffer);
+			int dir_fisica_origen = extraer_int_del_buffer(buffer); // Registro SI
+			int dir_fisica_destino = extraer_int_del_buffer(buffer); // Registro DI
 
 			void* aux = ejecutar_mov_in(tamanio, dir_fisica_origen, pid);
 			ejecutar_mov_out(tamanio, dir_fisica_destino, pid, aux);
-
 
 			destruir_buffer(buffer);
 			break;
@@ -191,18 +189,17 @@ void escuchar_mensajes_cpu_memoria(){
 
 void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 	int indice_de_marco = 0;
-	printf("flag_OUT 1\n" );
+	
 	if(!validar_espacio_de_memoria(pid, dir_fisica, tamanio, &indice_de_marco)){
 		return;
 	}
-	printf("flag_OUT 2\n" );
+	
 	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
-	printf("flag_OUT 3\n" );
 	int base = 0;
 	int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
-	printf("flag_OUT 4\n" );
+
 	while(base <= tamanio){
-		printf("flag_OUT 5\n" );
+
 		int direccion_fin_pagina = pagina_actual * tam_pagina + tam_pagina;
 		int espacio_libre_en_pagina = direccion_fin_pagina - dir_fisica;
 		int resto_de_escritura = tamanio - base;
@@ -214,21 +211,17 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 		printf("Resto de TAMANIO: %i\n", tamanio);
 		printf("------------\n");
 
-		printf("flag_OUT 5.0\n" );
 		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
 		if(resto_de_escritura >= espacio_libre_en_pagina){
-			printf("flag_OUT 5.1\n" );
+			
 			memcpy(memoria_RAM + dir_fisica, datos + base, espacio_libre_en_pagina);
 			base += espacio_libre_en_pagina + 1;
-			printf("flag_OUT 5.2\n" );
+			
 		}else{
-			printf("flag_OUT 5.3\n" );
 			memcpy(memoria_RAM + dir_fisica, datos + base, resto_de_escritura);
 			base += resto_de_escritura;
 			return;
-			printf("flag_OUT 5.4\n" );
 		}
-		printf("flag_OUT 6\n" );
 		indice_de_marco++;
 
 		printf("------------\n");
@@ -237,24 +230,24 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 		printf("------------\n");
 
 		if(indice_de_marco >= list_size(proceso_actual->tabla_paginas)){
-			printf("flag_OUT 6.1\n" );
+
 			log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para escribir %i bytes desde la direccion especificada INDICE_ERRONEO\n", tamanio);
 			return NULL;
 		}
+
 		pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
-		printf("flag_OUT 7\n" );
+
 		if(pagina_actual == NULL){
 			log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para escribir %i bytes desde la direccion especificada, PAG NULL\n", tamanio);
 			return;
 		}
+
 		dir_fisica = pagina_actual * tam_pagina;
 
 		printf("------------\n");
 		printf("Direccion fisica: %i\n", dir_fisica);
 		printf("------------\n");
-
 	}
-	printf("flag_OUT 8\n" );
 }
 
 void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
@@ -320,23 +313,18 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 		indice_de_marco++;
 
 		if(indice_de_marco >= list_size(proceso_actual->tabla_paginas)){
-			printf("flag5.1\n" );
 			return NULL;
 		}
 
 		pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
-		printf("flag6.0\n" );
 
 		if(pagina_actual == NULL){
-			printf("flag5.2\n" );
 			return NULL;
 		}
 
-		printf("flag6.1\n" );
 		dir_fisica = pagina_actual * tam_pagina;
 	}
 
-	printf("flag7\n" );
 	return datos;
 }
 
@@ -345,7 +333,7 @@ bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de
 	bool contiene_direccion = false;
 
 	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
-	if (proceso_actual == NULL){
+	if(proceso_actual == NULL){
 		log_error(logger_memoria, "No existe proceso con PID: %i", pid);
 		return contiene_direccion;
 	}
@@ -364,16 +352,17 @@ bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de
 			return contiene_direccion;
 		}
 	}
+
 	printf("vlag7\n");
 	return contiene_direccion;
 }
 
 // ---------- FUNCIONES PARA PROBAR LA ESCRITURA - NO ES PARTE DEL TP ----------
-void MOV_IN(int src_addr, int dest_addr, int size) {
+void MOV_IN(int src_addr, int dest_addr, int size){
     // Verificar que las direcciones y el tamaño sean válidos
-    if (src_addr < 0 || src_addr >= tam_memoria || 
+    if(src_addr < 0 || src_addr >= tam_memoria || 
         dest_addr < 0 || dest_addr >= tam_memoria || 
-        size < 0 || src_addr + size > tam_memoria || dest_addr + size > tam_memoria) {
+        size < 0 || src_addr + size > tam_memoria || dest_addr + size > tam_memoria){
         printf("Error: Direcciones o tamaño inválidos\n");
         return;
     }
@@ -383,7 +372,7 @@ void MOV_IN(int src_addr, int dest_addr, int size) {
 }
 
 // ---------- FUNCIONES PARA PROBAR LA ESCRITURA - NO ES PARTE DEL TP ----------
-void ejemplo_MOV_IN() {
+void ejemplo_MOV_IN(){
     // Inicializar algunos datos en la memoria
     char *data = "Hello, World!";
     memcpy(memoria_RAM, data, strlen(data) + 1);  // Copiar "Hello, World!" a la memoria desde el inicio
@@ -400,3 +389,4 @@ void ejemplo_MOV_IN() {
     printf("Desde dirección 0: %s\n", (char *)memoria_RAM);
     printf("Desde dirección 100: %.*s\n", 10, (char *)memoria_RAM + 100);
 }
+// -----------------------------------------------------------------------------

@@ -2,34 +2,44 @@
 #include <readline/readline.h>
 #include <dirent.h>
 
-
 void escuchar_instrucciones_generica(){
-	printf("escuchar1\n");
+	printf("\nENTRO DENTRO DE ESCUCHAR_INSTRUCCIONES_GENERICA()\n");
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
+		printf("\n\n\nANTES DE RECIBIR COD_OP\n\n\n");
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
+		printf("\n\n\nDESPUES DE RECIBIR EL COD_OP: %i\n\n\n", cod_op);
 		switch(cod_op){
-			case IO_GEN_SLEEP_FS:
+			case IO_GEN_SLEEP_FS: // LLEGA COD_OP 8 ERRONEO Y TIENE QUE LLEGAR UN 9
+
+				printf("\n\n\nENTRO A IO_GEN_SLEEP_FS\n\n\n");
 				
-				t_buffer* buffer;
+				t_buffer* buffer = crear_buffer();
 				buffer = recibir_buffer_completo(fd_kernel);
 				
 				int pid = extraer_int_del_buffer(buffer);
 				int unidades = extraer_int_del_buffer(buffer);
-
+				
+				printf("\n\n\nENTRO A IO_GEN_SLEEP_FS\n\n\n");
 				usleep(unidades * tiempo_unidad_trabajo);
-
+				printf("\n\n\nENTRO A IO_GEN_SLEEP_FS\n\n\n");
 				notificar_fin(fd_kernel, pid);
-
+				printf("\n\n\nENTRO A IO_GEN_SLEEP_FS\n\n\n");
 				destruir_buffer(buffer);
+				break;
+			case NUEVA_CONEXION_IO: // Puede ser qu e el ok llegue x acá en lugar de recibirlo en el recibir_ok()
+
+				printf("\n\nRecibir ok?\n\n");
+				
 				break;
 			default: // La instruccion es incorrecta
 				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
+				printf("\n\n\n COD_OP2: %i\n\n\n", cod_op);
 
 				t_buffer* buffer_kernel;
 				buffer_kernel = recibir_buffer_completo(fd_kernel);
 				int process_id = extraer_int_del_buffer(buffer_kernel);
-				free(buffer_kernel);
+				destruir_buffer(buffer_kernel);
 
 				buffer_kernel = crear_buffer();
 				cargar_int_al_buffer(buffer_kernel, process_id);
@@ -37,6 +47,7 @@ void escuchar_instrucciones_generica(){
 				t_paquete* paquete = crear_paquete(ERROR_IO, buffer_kernel);
 				enviar_paquete(paquete, fd_kernel);
 
+				printf("\n\n\n:(\n\n");
 				eliminar_paquete(paquete);
 				break;
 		}
@@ -62,13 +73,21 @@ void escuchar_instrucciones_stdin(){
 				printf("\nIngrese hasta %i caracteres\n", reg_tamanio);
 				char* input = readline("> ");
 				char* mensaje;
+				
+    
+    			//while(reg_tamanio != string_length(input))
+    			//{
+        		//	printf("\nLA CADENA INGRESADA DEBE SER DE UNA LONGITUD == %d\n",reg_tamanio);
+        		//	input = readline(">");
+    			//}
 				memcpy(mensaje, input, reg_tamanio);
 
-				solicitar_almacen_memoria(reg_direccion, mensaje, IO_STDIN_READ_FS);
+				solicitar_almacen_memoria(pid, reg_direccion, mensaje, IO_STDIN_READ_FS);
 
 				// ESPERAR ERROR MEMORIA?
 
 				notificar_fin(fd_kernel, pid);
+        		
 
 				destruir_buffer(buffer);
 				break;
@@ -107,7 +126,7 @@ void escuchar_instrucciones_stdout(){
 				int reg_direccion = extraer_int_del_buffer(buffer);
 				int reg_tamanio = extraer_int_del_buffer(buffer);
 
-				solicitar_lectura_memoria(reg_direccion, reg_tamanio, IO_STDOUT_WRITE_FS);
+				solicitar_lectura_memoria(pid, reg_direccion, reg_tamanio, IO_STDOUT_WRITE_FS);
 
 				sem_wait(&sem_stdout);
 
@@ -223,7 +242,7 @@ void escuchar_instrucciones_dialfs(){
 				reg_tamanio = extraer_int_del_buffer(buffer);
 				reg_puntero_archivo = extraer_int_del_buffer(buffer);
 
-				solicitar_lectura_memoria(reg_direccion, reg_tamanio, IO_STDOUT_WRITE_FS);
+				solicitar_lectura_memoria(pid ,reg_direccion ,reg_tamanio ,IO_STDOUT_WRITE_FS);
 				sem_wait(&sem_fs_write);
 
 				if(!verificar_escritura_archivo(nombre, reg_tamanio, reg_puntero_archivo)){
@@ -267,7 +286,7 @@ void escuchar_instrucciones_dialfs(){
 
 				memcpy(leido, aux, reg_tamanio);
 
-				solicitar_almacen_memoria(reg_direccion, leido, IO_FS_READ_FS);
+				solicitar_almacen_memoria(pid, reg_direccion, leido, IO_FS_READ_FS);
 
 				// devolver
 				notificar_fin(fd_kernel, pid);
@@ -378,12 +397,15 @@ void notificar_fin(int fd_kernel, int pid){
 	t_paquete* paquete = crear_paquete(FIN_IO, buffer);
 	enviar_paquete(paquete, fd_kernel);
 
+	printf("\n\nADENTRO DE NOTIFICAR_FIN\n\n");
+
 	eliminar_paquete(paquete);
 	free(buffer);
 }
 
-void solicitar_lectura_memoria(int direccion, int tamanio, op_code cod_op){
+void solicitar_lectura_memoria(int pid, int direccion, int tamanio, op_code cod_op){
 	t_buffer* buffer = crear_buffer();
+	cargar_int_al_buffer(buffer, pid);
 	cargar_int_al_buffer(buffer, direccion);
 	cargar_int_al_buffer(buffer, tamanio);
 
@@ -395,10 +417,12 @@ void solicitar_lectura_memoria(int direccion, int tamanio, op_code cod_op){
 	//free(buffer);
 }
 
-void solicitar_almacen_memoria(int direccion, char* mensaje, op_code cod_op){
+void solicitar_almacen_memoria(int pid, int direccion, char* mensaje, op_code cod_op){ //MENSAJE NO DEBERIA SER UN VOID*??
 	t_buffer* buffer = crear_buffer();
+	cargar_int_al_buffer(buffer, pid);
 	cargar_int_al_buffer(buffer, direccion);
 	cargar_string_al_buffer(buffer, mensaje);
+	//cargar_datos_al_buffer(buffer, mensaje);
 
 	t_paquete* paquete = crear_paquete(cod_op, buffer);
 

@@ -71,14 +71,9 @@ void finalizar_memoria(){
 }
 
 void eliminar_estructuras_memoria(){
-    /*
-    list_destroy_and_destroy_elements(lista_de_miniPcb,);
-    list_destroy_and_destroy_elements(lista_de_frames,);
-    list_destroy_and_destroy_elements(lista_procesos,);
-    list_destroy_and_destroy_elements(lista_de_frames, free);
-    list_destroy_and_destroy_elements(lista_procesos, free);
+    //list_destroy_and_destroy_elements(lista_de_frames,);
+    //list_destroy_and_destroy_elements(lista_procesos,);
     free(memoria_RAM);
-    */
 }
 
 /// @brief Crea un proceso con el PID pasado

@@ -26,7 +26,9 @@ void escuchar_mensajes_dispatch_kernel()
 			int puntero_archivo;
 			t_interfaz *interfaz;
 			t_buffer *buffer;
+			t_buffer* buffer1;
 			t_paquete *paquete;
+			t_paquete *paquete1;
 
 			
 		case FIN_DE_QUANTUM:
@@ -60,6 +62,10 @@ void escuchar_mensajes_dispatch_kernel()
    			log_info(logger_kernel, " Se recibio solicitud de sleep para la interfaz: %s por el tiempo:%d",nombre_interfaz,tiempo);
 		
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+				break;
+			}
+
 			interfaz = list_get(interfaces, indice_interfaz);
 
 			bloquear_proceso(pcb, interfaz->nombre);
@@ -68,22 +74,23 @@ void escuchar_mensajes_dispatch_kernel()
 			destruir_buffer(buffer);
 
 
-			buffer = crear_buffer();
-			paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer); // aca no iria generica?
-			cargar_int_al_buffer(paquete->buffer,pcb->pid);
-			cargar_int_al_buffer(paquete->buffer, tiempo);
+			buffer1 = crear_buffer();
+			
+			cargar_int_al_buffer(buffer1, pcb->pid);
+			cargar_int_al_buffer(buffer1, tiempo);
 
+			paquete1 = crear_paquete(IO_GEN_SLEEP_FS, buffer1); // aca no iria generica?
 
 			pthread_mutex_lock(&interfaz->mutex_interfaz);
 
-			list_add(interfaz->cola_espera, paquete);
+			list_add(interfaz->cola_espera, paquete1);
 
 			pthread_mutex_unlock(&interfaz->mutex_interfaz);
 
 			sem_post(&interfaz->sem_espera);		
 
-			destruir_buffer(buffer);
-printf("destruir_buffer \n");
+			//destruir_buffer(buffer1);
+			printf("destruir_buffer \n");
 			break;
 
 		case IO_STDIN_READ_FS:
@@ -96,6 +103,9 @@ printf("destruir_buffer \n");
 			registro_tamanio = extraer_int_del_buffer(buffer);
 
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+				break;
+			}
 			interfaz = list_get(interfaces, indice_interfaz);
 
 			destruir_buffer(buffer);
@@ -116,7 +126,7 @@ printf("destruir_buffer \n");
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
-			destruir_buffer(buffer);
+			//destruir_buffer(buffer);
 
 			break;
 
@@ -130,6 +140,9 @@ printf("destruir_buffer \n");
 			registro_tamanio = extraer_int_del_buffer(buffer);
 
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+				break;
+			}
 			interfaz = list_get(interfaces, indice_interfaz);
 
 			destruir_buffer(buffer);
@@ -150,7 +163,7 @@ printf("destruir_buffer \n");
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
-			destruir_buffer(buffer);
+			//destruir_buffer(buffer);
 
 			break;
 
@@ -166,6 +179,9 @@ printf("destruir_buffer \n");
 			
 			//resolver io_fs_read
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+				break;
+			}
 			interfaz = list_get(interfaces, indice_interfaz);
 			
 			destruir_buffer(buffer);
@@ -188,7 +204,7 @@ printf("destruir_buffer \n");
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
-			destruir_buffer(buffer);
+			//destruir_buffer(buffer);
 
 			break;
 		case IO_FS_WRITE_FS:
@@ -202,6 +218,9 @@ printf("destruir_buffer \n");
 
 			//resolver io_fs_write
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+				break;
+			}
 			interfaz = list_get(interfaces, indice_interfaz);
 
 			destruir_buffer(buffer);
@@ -224,7 +243,7 @@ printf("destruir_buffer \n");
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
-			destruir_buffer(buffer);
+			//destruir_buffer(buffer);
 
 			break;
 
@@ -237,6 +256,9 @@ printf("destruir_buffer \n");
 			
 			//resolver io_fs_truncate
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+				break;
+			}
 			interfaz = list_get(interfaces, indice_interfaz);
 
 			destruir_buffer(buffer);
@@ -258,7 +280,7 @@ printf("destruir_buffer \n");
 			sem_post(&sem_EXEC);
 
 			
-			destruir_buffer(buffer);
+			//destruir_buffer(buffer);
 
 			break;
 		case IO_FS_CREATE_FS:
@@ -268,6 +290,9 @@ printf("destruir_buffer \n");
 			nombre_archivo = extraer_string_del_buffer(buffer);
 			//resolver io_fs_create
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+				break;
+			}
 			interfaz = list_get(interfaces, indice_interfaz);
 			
 			paquete = crear_paquete(IO_FS_CREATE_FS, buffer);
@@ -284,7 +309,7 @@ printf("destruir_buffer \n");
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 			
-			destruir_buffer(buffer);
+			//destruir_buffer(buffer);
 
 			break;
 		case IO_FS_DELETE_FS:
@@ -295,6 +320,9 @@ printf("destruir_buffer \n");
 
 			//resolver io_fs_delete
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
+			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+				break;
+			}
 			interfaz = list_get(interfaces, indice_interfaz);
 			
 			destruir_buffer(buffer);
@@ -314,7 +342,7 @@ printf("destruir_buffer \n");
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 			
-			destruir_buffer(buffer);
+			//destruir_buffer(buffer);
 
 			break;
 

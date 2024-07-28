@@ -1,9 +1,7 @@
 #include "escuchar_entradasalida_kernel.h"
 
-
 pthread_mutex_t mutex_PRIORIDAD;
 sem_t sem_ocupado;
-
 
 void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
     bool desconexion_entradasalida_kernel = 0;
@@ -14,7 +12,6 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 	t_interfaz* interfaz = list_get(interfaces, indice_interfaz);
 	int socket = interfaz->socket;
 
-
 	sem_init(&sem_ocupado, 1, 1);
 
 	// HILO LISTA DE ESPERA
@@ -23,11 +20,12 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 	pthread_detach(hilo_lista_espera);
 
 	// Mensaje ES semaforo datos
-	enviar_ok(NUEVA_CONEXION_IO, socket);
+	//enviar_ok(NUEVA_CONEXION_IO, socket);
 
 	while(!desconexion_entradasalida_kernel){
 		int cod_op = recibir_operacion(socket); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
+
 			t_buffer* buffer;
 			int pid;
 
@@ -56,6 +54,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				}
 				
 				sem_post(&sem_ocupado);
+
 				break;
 			case ERROR_IO:
 				buffer = recibir_buffer_completo(socket);
@@ -70,7 +69,6 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 
 				sem_post(&sem_ocupado);
 				break;
-
 			case NUEVA_CONEXION_IO:
 				buffer = recibir_buffer_completo(socket);
 
@@ -83,7 +81,6 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				printf("Conectada interfaz: %s\n", nombre);
 
 				break;
-				
 			case -1:
 				log_error(logger_kernel, "La Entradasalida se desconecto de Kernel. Terminando servidor.");
 				desconexion_entradasalida_kernel = 1;
@@ -96,14 +93,16 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 }
 
 void esperar_entradasalida(int indice){
-
 	t_interfaz* interfaz = list_get(interfaces, indice);
-	sem_wait(&sem_ocupado);
-	sem_wait(&interfaz->sem_espera);
 
-	pthread_mutex_lock(&(interfaz->mutex_interfaz));
-	t_paquete* paquete = list_remove(interfaz->cola_espera, 0);
-	pthread_mutex_unlock(&(interfaz->mutex_interfaz));
+	while(true){
+		sem_wait(&sem_ocupado);
+		sem_wait(&interfaz->sem_espera);
 
-	enviar_paquete(paquete, interfaz->socket);
+		pthread_mutex_lock(&(interfaz->mutex_interfaz));
+		t_paquete* paquete = list_remove(interfaz->cola_espera, 0);
+		pthread_mutex_unlock(&(interfaz->mutex_interfaz));
+
+		enviar_paquete(paquete, interfaz->socket);
+	}
 }
