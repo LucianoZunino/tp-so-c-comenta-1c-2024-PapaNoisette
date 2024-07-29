@@ -27,16 +27,12 @@ int main(int argc, char* argv[]){
     if(tipo_de_interfaz != GENERICA){
         fd_memoria = crear_conexion(ip_memoria, puerto_memoria, logger_entradasalida);
     }
-    
+
     fd_kernel = crear_conexion(ip_kernel, puerto_kernel, logger_entradasalida); // Se conecta como cliente a KERNEL
-    
+
     // if(realizar_handshake(logger_entradasalida, fd_kernel, HANDSHAKE_ENTRADASALIDA) == -1){
     //     return EXIT_FAILURE;
     // }
-
-    if(realizar_handshake(logger_entradasalida, fd_memoria, HANDSHAKE_ENTRADASALIDA) == -1){
-        return EXIT_FAILURE;
-    }
 
     // Escucha los mensajes Memoria-E/S
     if(tipo_de_interfaz != GENERICA){
@@ -44,7 +40,7 @@ int main(int argc, char* argv[]){
 	    pthread_create(&hilo_memoria_entradasalida, NULL, (void*)escuchar_mensajes_memoria_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	    pthread_detach(hilo_memoria_entradasalida); // Hace que el hilo se desacople del principal y se ejecute en paralelo
     }
-    
+   
     //recibir_ok(fd_kernel); // Espera que kernel cree la conexion
 
     t_buffer *buffer = crear_buffer();
@@ -52,6 +48,7 @@ int main(int argc, char* argv[]){
     t_paquete *paquete = crear_paquete(NUEVA_CONEXION_IO, buffer);
     enviar_paquete(paquete, fd_kernel);
     eliminar_paquete(paquete);
+
 
     // Escucha los mensajes Kernel-E/S
     pthread_t hilo_kernel_entradasalida;

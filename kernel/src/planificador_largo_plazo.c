@@ -22,7 +22,7 @@ void planificador_largo_plazo() {
         pthread_mutex_lock(&mutex_NEW);
         t_pcb *new_pcb = list_remove(NEW, 0);
         pthread_mutex_unlock(&mutex_NEW);
-        cambio_de_estado(new_pcb, E_READY);
+        
         //new_pcb->estado = E_READY;
 
         pthread_mutex_lock(&mutex_multiprogramacion); 
@@ -32,6 +32,7 @@ void planificador_largo_plazo() {
         pthread_mutex_lock(&mutex_READY);
         list_add(READY, new_pcb);
         pthread_mutex_unlock(&mutex_READY);
+        cambio_de_estado(new_pcb, E_READY);
         sem_post(&sem_READY);
     }
 }

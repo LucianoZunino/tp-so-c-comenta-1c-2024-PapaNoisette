@@ -364,11 +364,9 @@ int enviar_handshake(t_log *logger, int socket_cliente, op_code handshake)
 	return resultado;
 }
 
-int realizar_handshake(t_log *logger, int socket_servidor, op_code handshake)
-{
+int realizar_handshake(t_log *logger, int socket_servidor, op_code handshake){
 
-	if (enviar_handshake(logger, socket_servidor, handshake) == -1)
-	{
+	if(enviar_handshake(logger, socket_servidor, handshake) == -1){
 		close(socket_servidor);
 		log_error(logger, "No se pudo realizar el handshake con el servidor");
 		return -1;

@@ -4,6 +4,7 @@ pthread_mutex_t mutex_PRIORIDAD;
 sem_t sem_ocupado;
 
 void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
+//void escuchar_mensajes_entradasalida_kernel(){
     bool desconexion_entradasalida_kernel = 0;
 
 	printf("Indice interfaz: %i\n", indice_interfaz);
@@ -13,12 +14,11 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 	int socket = interfaz->socket;
 
 	sem_init(&sem_ocupado, 1, 1);
-
-	// HILO LISTA DE ESPERA
+	 // HILO LISTA DE ESPERA
 	pthread_t hilo_lista_espera;
 	pthread_create(&hilo_lista_espera, NULL, esperar_entradasalida, indice_interfaz); // Valgrind?
 	pthread_detach(hilo_lista_espera);
-
+	 
 	// Mensaje ES semaforo datos
 	//enviar_ok(NUEVA_CONEXION_IO, socket);
 
@@ -33,26 +33,34 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				aceptar_handshake(logger_kernel, socket, cod_op);
 				break;
 			case FIN_IO:
-				pid = recibir_int(socket);
+				printf("\n\n\nLLEGUE A FIN_IO\n\n\n");
+				buffer = recibir_buffer_completo(socket);
+				pid = extraer_int_del_buffer(buffer);
+				//pid = recibir_int(socket); QUE MIERDA ES ESTA FUNCIÓN?
+				printf("\n\n\nRECIBIDO_BUFFER\n\n\n");
 				int index = buscar_index_por_pid(BLOCKED, pid);
-				t_pcb* pcb = list_get(BLOCKED, index);
-				list_remove_and_destroy_element(BLOCKED, index, pcb_destruir);
+				printf("\n\n\nPOST_INDEX\n\n\n");
 
-				if (pcb->quantum < quantum){
-					cambio_de_estado(pcb, E_PRIORIDAD);
+				t_pcb* pcb = list_remove(BLOCKED, index);				
+
+				printf("\n\nDESPUES DE ELIMINAR DE BLOCKED\n\n\n");
+				if(pcb->quantum < quantum){
 					pcb->estado = E_PRIORIDAD;
                 	pthread_mutex_lock(&mutex_PRIORIDAD);
 					list_add(PRIORIDAD, pcb);
 					pthread_mutex_unlock(&mutex_PRIORIDAD);
-				} else {
-					
-					cambio_de_estado(pcb, E_READY);
+					cambio_de_estado(pcb, E_PRIORIDAD);
+				}
+				else{
 					//pcb->estado = E_READY;
                 	pthread_mutex_lock(&mutex_READY);
 					list_add(READY, pcb);
 					pthread_mutex_unlock(&mutex_READY);
+					cambio_de_estado(pcb, E_READY);
+					sem_post(&sem_READY);
 				}
 				
+				printf("\n\n\n PASA LOS IF DE FIN_IO\n\n\n");
 				sem_post(&sem_ocupado);
 
 				break;
@@ -101,8 +109,11 @@ void esperar_entradasalida(int indice){
 
 		pthread_mutex_lock(&(interfaz->mutex_interfaz));
 		t_paquete* paquete = list_remove(interfaz->cola_espera, 0);
+		
 		pthread_mutex_unlock(&(interfaz->mutex_interfaz));
 
+		printf("\n\nCodigo de operacion instruccion IO:%i\n\n", paquete->codigo_operacion);
 		enviar_paquete(paquete, interfaz->socket);
+		eliminar_paquete(paquete); //Si rompe es esto
 	}
 }

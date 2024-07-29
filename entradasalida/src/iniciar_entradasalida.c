@@ -13,6 +13,7 @@ t_list* archivos_metadata;
 void iniciar_entradasalida(char* path){
     iniciar_logger_entradasalida();
     iniciar_config_entradasalida(path);
+    printf("flag post config IO\n");
     iniciar_estructuras();
     if(tipo_de_interfaz == DIAL_FS){
         iniciar_lista_metadatas();

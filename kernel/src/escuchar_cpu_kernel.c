@@ -6,11 +6,12 @@ pthread_mutex_t mutex_BLOCKED;
 void escuchar_mensajes_dispatch_kernel()
 {
 	bool desconexion_dispatch_kernel = 0;
-	while (!desconexion_dispatch_kernel)
+	while(!desconexion_dispatch_kernel)
 	{
 		
 		int cod_op = recibir_operacion(fd_cpu_dispatch); // recv() es bloqueante por ende no queda loopeando infinitamente
-		switch (cod_op)
+		printf("\n\n\nCOD_OP DESDE E.CPU ANTES DEL SWITCH: %i\n\n\n", cod_op);
+		switch(cod_op)
 		{
 			t_pcb *pcb;
 			int pid;
@@ -30,6 +31,7 @@ void escuchar_mensajes_dispatch_kernel()
 			t_paquete *paquete;
 			t_paquete *paquete1;
 
+			printf("\n\n\nCOD_OP DESDE E.CPU: %i\n\n\n", cod_op);
 			
 		case FIN_DE_QUANTUM:
 
@@ -54,7 +56,8 @@ void escuchar_mensajes_dispatch_kernel()
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
 			pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
 			pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
-			sem_post(&sem_desalojo);
+			validar_desalojo();
+			//sem_post(&sem_desalojo);
 			bloquear_proceso(pcb, interfaz->nombre);
  
 			nombre_interfaz = extraer_string_del_buffer(buffer);
@@ -89,11 +92,13 @@ void escuchar_mensajes_dispatch_kernel()
 
 			sem_post(&interfaz->sem_espera);		
 
+			//enviar_paquete(paquete1, fd_entradasalida); // Prueba IO
 			//destruir_buffer(buffer1);
 			printf("destruir_buffer \n");
 			break;
 
 		case IO_STDIN_READ_FS:
+			if(0 == NULL){printf("LDFNGJAFSÑ\n\n");}
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
 			pcb = deserializar_pcb(buffer);	 
 			pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
@@ -102,34 +107,45 @@ void escuchar_mensajes_dispatch_kernel()
 			registro_direccion = extraer_int_del_buffer(buffer);
 			registro_tamanio = extraer_int_del_buffer(buffer);
 
+			printf("\n\nDESPUES DE EXTRAER EL BUFFER\n\n");
+			validar_desalojo();
+			
+			
 			indice_interfaz = buscar_interfaz(nombre_interfaz);
 			if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
 				break;
 			}
+			
 			interfaz = list_get(interfaces, indice_interfaz);
 
 			destruir_buffer(buffer);
+			
+			buffer1 = crear_buffer();
+			paquete1 = crear_paquete(IO_STDIN_READ_FS, buffer1);
+			cargar_int_al_buffer(paquete1->buffer, pcb->pid);
+			cargar_int_al_buffer(paquete1->buffer, registro_direccion);
+			cargar_int_al_buffer(paquete1->buffer, registro_tamanio);
 
-			buffer = crear_buffer();
-			paquete = crear_paquete(IO_STDIN_READ_FS, buffer);
-			cargar_int_al_buffer(paquete->buffer,pcb->pid);
-			cargar_int_al_buffer(paquete->buffer, registro_direccion);
-			cargar_int_al_buffer(paquete->buffer, registro_tamanio);
+			printf("\n\nANTES DE BLOQUEAR EL PROCESO\n\n");
 
 			pthread_mutex_lock(&interfaz->mutex_interfaz);
-			list_add(interfaz->cola_espera, paquete);
+			list_add(interfaz->cola_espera, paquete1);
 			pthread_mutex_unlock(&interfaz->mutex_interfaz);
-
+			printf("\n\n DESPUES DE AGREGAR A COLA DE ESPERA EL PROCESO\n\n");
 			sem_post(&interfaz->sem_espera);
-
-			sem_post(&sem_desalojo);
+			printf("Despues de sem_espera\n\n");
+			
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
+			printf("\n\n\nCodigo de Operacion (Deberia ser 10): %i \n\n", paquete1->codigo_operacion);
+
+			//enviar_paquete(paquete, fd_entradasalida); // Prueba IO
 			//destruir_buffer(buffer);
+			//eliminar_paquete(paquete);
+			printf("\n\n\nSE ENVIA EL PROCESO A IO \n\n");
 
 			break;
-
 		case IO_STDOUT_WRITE_FS:
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
 			pcb = deserializar_pcb(buffer);	
@@ -159,11 +175,13 @@ void escuchar_mensajes_dispatch_kernel()
 
 			sem_post(&interfaz->sem_espera);
 
-			sem_post(&sem_desalojo);
+			validar_desalojo();
+			//sem_post(&sem_desalojo);
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
 			//destruir_buffer(buffer);
+			//enviar_paquete(paquete, fd_entradasalida); // Prueba IO
 
 			break;
 
@@ -200,11 +218,13 @@ void escuchar_mensajes_dispatch_kernel()
 
 			sem_post(&interfaz->sem_espera);
 
-			sem_post(&sem_desalojo);
+			validar_desalojo();
+			//sem_post(&sem_desalojo);
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
 			//destruir_buffer(buffer);
+			//enviar_paquete(paquete, fd_entradasalida); // Prueba IO
 
 			break;
 		case IO_FS_WRITE_FS:
@@ -238,8 +258,9 @@ void escuchar_mensajes_dispatch_kernel()
 			pthread_mutex_unlock(&interfaz->mutex_interfaz);
 
 			sem_post(&interfaz->sem_espera);
-
-			sem_post(&sem_desalojo);
+			
+			validar_desalojo();
+			//sem_post(&sem_desalojo);
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
@@ -275,7 +296,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			sem_post(&interfaz->sem_espera);
 
-			sem_post(&sem_desalojo);
+			validar_desalojo(); //sem_post(&sem_desalojo);
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 
@@ -305,7 +326,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			sem_post(&interfaz->sem_espera);
 
-			sem_post(&sem_desalojo);
+			validar_desalojo(); // sem_post(&sem_desalojo);
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 			
@@ -338,7 +359,7 @@ void escuchar_mensajes_dispatch_kernel()
 
 			sem_post(&interfaz->sem_espera);
 
-			sem_post(&sem_desalojo);
+			validar_desalojo(); // sem_post(&sem_desalojo);
 			bloquear_proceso(pcb, interfaz->nombre);
 			sem_post(&sem_EXEC);
 			
@@ -352,7 +373,8 @@ void escuchar_mensajes_dispatch_kernel()
 		case KERNEL_EXIT:
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
 			pcb = deserializar_pcb(buffer);
-			sem_post(&sem_desalojo);
+			validar_desalojo();
+			//sem_post(&sem_desalojo);
 			sem_post(&sem_EXEC);
 			
 			enviar_a_exit(pcb, "SUCCESS");
@@ -363,8 +385,9 @@ void escuchar_mensajes_dispatch_kernel()
 		case KERNEL_WAIT: // ponernos de acuerdo con nacho como envia el recurso solicitado
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
 			pcb = deserializar_pcb(buffer);
-
-			sem_post(&sem_desalojo);
+			
+			validar_desalojo();
+			//sem_post(&sem_desalojo);
 			usleep(20);
 			pcb->quantum = RUNNING->quantum;
 
@@ -389,8 +412,9 @@ void escuchar_mensajes_dispatch_kernel()
 			buffer = recibir_buffer_completo(fd_cpu_dispatch);
 			pcb = deserializar_pcb(buffer);
 			char *recurso = extraer_string_del_buffer(buffer);
-
-			sem_post(&sem_desalojo);
+			
+			validar_desalojo();
+			//sem_post(&sem_desalojo);
 			pcb->quantum = RUNNING->quantum;
 
 			sumar_instancia(recurso, pcb);
@@ -420,14 +444,13 @@ void escuchar_mensajes_dispatch_kernel()
 	}
 }
 
-void bloquear_proceso(t_pcb *pcb, char* motivo)
-{
+void bloquear_proceso(t_pcb *pcb, char* motivo){	
+	printf("\n\n DENTRO DE BLOQUEAR_PROCESO ANTES CAMBIO_DE_ESTADO\n\n");
 	cambio_de_estado(pcb, E_BLOCKED);
 	//pcb->estado = E_BLOCKED;
+	printf("\n\n DENTRO DE BLOQUEAR_PROCESO ANTES DE AGREGAR A BLOCKED\n\n");
 	pthread_mutex_lock(&mutex_BLOCKED);
 	list_add(BLOCKED, pcb);
 	pthread_mutex_unlock(&mutex_BLOCKED);
-	log_info("PID: %i -Motivo de bloque: %s", pcb->pid, motivo);
-	
+	log_info(logger_kernel, "PID: %i - Motivo de bloqueo: %s", pcb->pid, motivo);
 }
-

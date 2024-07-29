@@ -11,7 +11,6 @@ void interrumpir_cpu(t_pcb *pcb, motivo_interrupcion motivo){
 
 void pcb_destruir(t_pcb *pcb){
     if (pcb != NULL){
-        
         free(pcb->registros_cpu);
         free(pcb->quantum);
         free(pcb->estado);
@@ -84,7 +83,7 @@ void enviar_a_exit(t_pcb* pcb, char* motivo){
 	list_add(EXIT, pcb);
 	pthread_mutex_unlock(&mutex_EXIT);
     sem_post(&sem_EXIT); //agregue este semaforo
-    log_info("Finaliza el proceso <%i> - Motivo: <%s>", pcb->pid, motivo);
+    log_info(logger_kernel,"Finaliza el proceso <%i> - Motivo: <%s>", pcb->pid, motivo);
 }
 
 
@@ -199,13 +198,15 @@ int buscar_interfaz(char* nombre) {
         }  
     }
     log_error(logger_kernel, "No se pudo encontrar la interfaz %s", nombre);
-    return NULL;
+    return -1;
 }
 
 bool lista_contiene_pcb(t_list* lista, t_pcb* pcb){
     for(int i = 0; i < list_size(lista); i ++){
-        t_pcb* aux;
-        if(aux->pid == pcb->pid){return true;}
+        t_pcb* aux = list_get(lista, i);
+        if(aux->pid == pcb->pid){
+            return true;
+        }
     }
     return false;
 }
@@ -215,16 +216,15 @@ void cambio_de_estado(t_pcb* pcb, int estado_nuevo){
     char* string_estado_anterior = estado_pcb_desc[estado];
     char* string_estado_actual = estado_pcb_desc[estado_nuevo];
     log_info(logger_kernel ,"PID: <%i> - Estado Anterior: <%s> - Estado Actual: <%s>", pcb->pid, string_estado_anterior, string_estado_actual );
-    if (estado_nuevo == E_READY ){
+    if(estado_nuevo == E_READY){
         log_info(logger_kernel ,"Cola Ready: \n");
         leer_pids_cola(E_READY);
     }
-    if (estado_nuevo == E_PRIORIDAD){
+    if(estado_nuevo == E_PRIORIDAD){
         log_info(logger_kernel ,"Cola prioridad: \n");
         leer_pids_cola(E_PRIORIDAD);
     }
     pcb->estado = estado_nuevo;
-    
 }
 
 void leer_pids_cola(estado_pcb estado){
@@ -237,9 +237,19 @@ void leer_pids_cola(estado_pcb estado){
 }
 
 bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb){
-    if(indice_de_interfaz == NULL){
-			enviar_a_exit(pcb, "No se pudo encontrar la interfaz");
-			sem_post(&sem_EXEC);
-			return false;
+    printf("\n\nADENTRO DE VERIFICAR EXISTENCIA DE INTERFAZ\n\n");
+    if(indice_de_interfaz == -1){
+        printf("\n\nADENTRO DEL IF DE VERIFICAR EXISTENCIA DE INTERFAZ\n\n");
+        enviar_a_exit(pcb, "No se pudo encontrar la interfaz");
+        sem_post(&sem_EXEC);
+        return false;
+	}
+    return true;
+}
+
+void validar_desalojo(){
+    if(string_equals_ignore_case(algoritmo_planificacion, "RR") || string_equals_ignore_case(algoritmo_planificacion, "VRR")){
+		sem_post(&sem_desalojo);
+		printf("Despues de sem_desalojo\n\n");
 	}
 }

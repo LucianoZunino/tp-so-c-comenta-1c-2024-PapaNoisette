@@ -131,7 +131,7 @@ void escuchar_mensajes_cpu_memoria(){
 			if(datos_a_devolver != NULL){
 				printf("##### DATOS A DEVOLVER DEL MOV_IN: #####\n");
 				unsigned char* byte_datos = (unsigned char*)datos_a_devolver;
-				for (int i = 0; i < tamanio; i++) {
+				for(int i = 0; i < tamanio; i++){
 					printf("byte %d: %02X\n", i, byte_datos[i]);
 				}
 				printf("\n");
@@ -198,6 +198,8 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 	int base = 0;
 	int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
 
+	printf("\n\nPAGINA ACTUAL: %i\n\n", pagina_actual);
+
 	while(base <= tamanio){
 
 		int direccion_fin_pagina = pagina_actual * tam_pagina + tam_pagina;
@@ -212,14 +214,28 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 		printf("------------\n");
 
 		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
+
+		// ES UN PRINT PARA VER LOS DATOS A ENVIAR EN BYTES POR EL VOID*
+		if(datos != NULL){
+			printf("##### DATOS LEIDOS DEL STDIN_READ: #####\n");
+			unsigned char* byte_datos = (unsigned char*)datos;
+			for(int i = 0; i < tamanio; i++){
+				printf("byte %d: %02X\n", i, byte_datos[i]);
+			}
+			printf("\n");
+		}
+
 		if(resto_de_escritura >= espacio_libre_en_pagina){
-			
+			printf("\nMEMCOPY IF \n");
 			memcpy(memoria_RAM + dir_fisica, datos + base, espacio_libre_en_pagina);
 			base += espacio_libre_en_pagina + 1;
-			
+			printf("\nPOST-MEMCOPY IF \n");
 		}else{
+			printf("\nMEMCOPY ELSE \n");
 			memcpy(memoria_RAM + dir_fisica, datos + base, resto_de_escritura);
 			base += resto_de_escritura;
+			printf("\nPOST-MEMCOPY ELSE \n");
+			print_memoria_RAM("contenido_memoria_RAM_STDIN_READ.txt");
 			return;
 		}
 		indice_de_marco++;
@@ -283,7 +299,7 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 			// ES UN PRINT PARA VER LOS DATOS ENVIADOS EN BYTES POR EL VOID*
 			unsigned char* byte_memoria = (unsigned char*)memoria_RAM;
 			printf("\nContenido de memoria desde la dirección física %d:\n", dir_fisica);
-			for (int i = 0; i < tamanio; i++) {
+			for(int i = 0; i < tamanio; i++){
 				printf("byte %d: %02X\n", dir_fisica + i, byte_memoria[dir_fisica + i]);
 			}
 			printf("\n");
@@ -298,7 +314,7 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 			// ES UN PRINT PARA VER LOS DATOS ENVIADOS EN BYTES POR EL VOID*
 			unsigned char* byte_memoria = (unsigned char*)memoria_RAM;
 			printf("\nContenido de memoria desde la dirección física %d:\n", dir_fisica);
-			for (int i = 0; i < tamanio; i++) {
+			for(int i = 0; i < tamanio; i++){
 				printf("byte %d: %02X\n", dir_fisica + i, byte_memoria[dir_fisica + i]);
 			}
 			printf("\n");

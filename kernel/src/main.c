@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
     // Se conecta como cliente a MEMORIA
     fd_memoria = crear_conexion(ip_memoria, puerto_memoria, logger_kernel);
 
-    // Esperar conexion de E/S
+    //Esperar conexion de E/S
     log_info(logger_kernel, "Esperando conexion de Interfaz E/S");
     pthread_t hilo_escucha_io;
     if (pthread_create(&hilo_escucha_io, NULL, (void *)(esperar_clientes), NULL) == -1){
@@ -55,7 +55,8 @@ int main(int argc, char* argv[]){
     }
     printf("\n");
     pthread_detach(hilo_escucha_io);
-//     fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
+
+   // fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
 
     // HANDSHAKE KERNEL - CPU DISPATCH
     if (realizar_handshake(logger_kernel, fd_cpu_dispatch, HANDSHAKE_KERNEL) == -1){
@@ -105,9 +106,9 @@ int main(int argc, char* argv[]){
 	pthread_detach(hilo_memoria_kernel); // Hace que el hilo se desacople del principal y se ejecute en paralelo
 
     // Escuchar los mensajes de E/S-Kernel
-    pthread_t hilo_entradasalida_kernel;
-	pthread_create(&hilo_entradasalida_kernel, NULL, (void*)escuchar_mensajes_entradasalida_kernel, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
-	pthread_detach(hilo_entradasalida_kernel); // Hace que el hilo se desacople del principal y se ejecute en paralelo
+    // pthread_t hilo_entradasalida_kernel;
+	// pthread_create(&hilo_entradasalida_kernel, NULL, (void*)escuchar_mensajes_entradasalida_kernel, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
+	// pthread_detach(hilo_entradasalida_kernel); // Hace que el hilo se desacople del principal y se ejecute en paralelo
 
     // Kernel se conectó con CPU (Dispatch e Interrupt) y con Memoria. Ahora se hacen los handshakes.
     

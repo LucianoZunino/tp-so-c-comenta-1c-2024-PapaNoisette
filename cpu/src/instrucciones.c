@@ -192,7 +192,7 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    // ES UN PRINT PARA VER LOS DATOS RECIBIDOS EN BYTES POR EL VOID*
    printf("\n##### DATOS A RECIBIDOS DEL MOV_IN: #####\n");
    unsigned char* byte_datos = (unsigned char*)datos;
-   for (int i = 0; i < tam_registro; i++) {
+   for(int i = 0; i < tam_registro; i++){
       printf("byte %d: %02X\n", i, byte_datos[i]);
    }
    printf("\n");
@@ -284,6 +284,7 @@ void ejecutar_io_stdin_read(char *interfaz, char *reg_direccion, char *reg_taman
    */
 
    int dir_logica = get_registro(reg_direccion);
+   int dir_fisica = (int) traducir_direccion_logica(dir_logica);
    int tamanio = get_registro(reg_tamanio);
    // envio todo el paquete de lo que necesito leer
    t_buffer *buffer = crear_buffer();
@@ -291,7 +292,8 @@ void ejecutar_io_stdin_read(char *interfaz, char *reg_direccion, char *reg_taman
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
 
-   cargar_int_al_buffer(paquete->buffer, dir_logica);
+   //cargar_int_al_buffer(paquete->buffer, dir_logica);
+   cargar_int_al_buffer(paquete->buffer, dir_fisica);
    cargar_int_al_buffer(paquete->buffer, tamanio);
 
    enviar_paquete(paquete, fd_kernel_dispatch);
@@ -307,13 +309,14 @@ void ejecutar_io_stdout_write(char *interfaz, char *reg_direccion, char *reg_tam
 
    */
    int dir_logica = get_registro(reg_direccion);
+   int dir_fisica = traducir_direccion_logica(dir_logica); //En realidad es fisica
    int tamanio = get_registro(reg_tamanio);
 
    t_buffer *buffer = crear_buffer();
    t_paquete *paquete = crear_paquete(IO_STDOUT_WRITE_FS, buffer);
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
-   cargar_int_al_buffer(paquete->buffer, dir_logica);
+   cargar_int_al_buffer(paquete->buffer, dir_fisica);
    cargar_int_al_buffer(paquete->buffer, tamanio);
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
@@ -372,7 +375,7 @@ void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direcc
    se lea desde Memoria la cantidad de bytes indicadas por el Registro Tamaño a partir de la dirección lógica
    que se encuentra en el Registro Dirección y se escriban en el archivo a partir del valor del Registro Puntero Archivo.
    */
-   int dir_logica = get_registro(reg_direccion);
+   int dir_logica = traducir_direccion_logica(reg_direccion); //En realidad es fisica
    int tamanio = get_registro(reg_tamanio);
    int puntero_archivo = get_registro(reg_puntero_archivo);
 
@@ -396,7 +399,7 @@ void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direcci
    por Registro Tamaño y se escriban en la Memoria a partir de la dirección lógica indicada en el Registro Dirección.
 
    */
-   int dir_logica = get_registro(reg_direccion);
+   int dir_logica = traducir_direccion_logica(reg_direccion); //En realidad es fisica
    int tamanio = get_registro(reg_tamanio);
    int puntero_archivo = get_registro(reg_puntero_archivo);
 

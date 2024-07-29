@@ -27,7 +27,7 @@ void iniciar_kernel(){
     iniciar_semaforos();
     iniciar_colas_estados();
     iniciar_recursos();
-    //imprimir_config_kernel();
+    imprimir_config_kernel();
 }
 
 void iniciar_logger_kernel(){
@@ -163,13 +163,14 @@ void iniciar_colas_estados() {
 
 
 void iniciar_recursos(){
-    int length = sizeof(instancias_recursos) / sizeof(instancias_recursos[0]);
+
+    int length = sizeof(instancias_recursos) / sizeof(instancias_recursos);
 
     t_list* recursos_disponibles = list_create();
 
     for (int i = 0; i < length; i++){
         t_recurso* nuevo_recurso = malloc (sizeof(t_recurso)); //HACER FREE CUANDO SE ELIMINA TODO
-        char* nombre = recursos[i];
+        char* nombre = (char*)recursos[i];
         int instancias = instancias_recursos[i];
         t_queue* cola_de_espera = queue_create();
         t_list* pcb_asignados = list_create();

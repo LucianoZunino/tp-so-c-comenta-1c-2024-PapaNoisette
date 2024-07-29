@@ -26,5 +26,6 @@ bool lista_contiene_pcb(t_list* lista, t_pcb* pcb);
 void cambio_de_estado(t_pcb* pcb, int estado);
 void enviar_a_exit(t_pcb* pcb, char* motivo);
 bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb);
+void validar_desalojo();
 
 #endif

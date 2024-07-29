@@ -1,7 +1,7 @@
 #include "mmu.h"
 
 void mostrar_entrada(t_entrada_tlb*entrada ){
-   printf("pid :%d  pagina: %d marco: %d\n",entrada->pid,entrada->pagina,entrada->marco);
+   printf("pid :%d  pagina: %d marco: %d\n", entrada->pid, entrada->pagina, entrada->marco);
 }
 
 void mostrar_tlb(){

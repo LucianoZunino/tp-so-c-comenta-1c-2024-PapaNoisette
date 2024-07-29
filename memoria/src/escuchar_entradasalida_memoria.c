@@ -2,46 +2,51 @@
 
 
 void escuchar_mensajes_entradasalida_memoria(int indice){
-		t_buffer* buffer;
-		int dir_fisica;
-		int tamanio;
-		int pid;
-		t_interfaz* interfaz = list_get(lista_de_interfaces, indice);
+//void escuchar_mensajes_entradasalida_memoria(){
+	t_buffer* buffer;
+	int dir_fisica;
+	int tamanio;
+	int pid;
+	t_interfaz* interfaz = list_get(lista_de_interfaces, indice);
 
     bool desconexion_entradasalida_memoria = 0;
 	while(!desconexion_entradasalida_memoria){
 		int cod_op = recibir_operacion(interfaz->socket); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
-			//case PROTOCOLOS_A_DEFINIR:
-			//	break;
 			case HANDSHAKE_ENTRADASALIDA:
-				aceptar_handshake(logger_memoria, fd_entradasalida, cod_op);
+				aceptar_handshake(logger_memoria, interfaz->socket, cod_op);
 				break;
 			case IO_STDIN_READ_FS:
-
 				log_info(logger_memoria, "IO_STDIN_READ_FS");
-				buffer = recibir_buffer_completo(fd_entradasalida);
-				//no se si no hace falta el tamaño
+				
+				buffer = recibir_buffer_completo(interfaz->socket);
+				printf("\n\nRECIBE BUFFER\n\n");
 				pid = extraer_int_del_buffer(buffer);
 				dir_fisica = extraer_int_del_buffer(buffer);
-				tamanio = extraer_int_del_buffer(buffer);
+
+				printf("\nDirección fisica recibida de entrada y salida: %i\n", dir_fisica);
+
+				//tamanio = extraer_int_del_buffer(buffer); //no se si no hace falta el tamaño
+				printf("\n\nANTES DE EXTRAR CHAR* DATOS\n\n");
 				char* datos = extraer_string_del_buffer(buffer);
-				ejecutar_stdin_read(pid, tamanio, dir_fisica, datos);
+
+				printf("\nMensaje recibido de entrada y salida: %s\n", datos);
+				
+				ejecutar_stdin_read(pid, strlen(datos), dir_fisica, datos);
+				
 				destruir_buffer(buffer);
 				break;
-			
 			case IO_STDOUT_WRITE_FS:
 				log_info(logger_memoria, "IO_STDOUT_WRITE_FS");
-				buffer = recibir_buffer_completo(fd_entradasalida);
+				buffer = recibir_buffer_completo(interfaz->socket);
 				pid = extraer_int_del_buffer(buffer);
 				dir_fisica = extraer_int_del_buffer(buffer);
 				tamanio=extraer_int_del_buffer(buffer);
 				ejecutar_stdout_write(pid, tamanio ,dir_fisica);
 				destruir_buffer(buffer);
 				break;
-
 			case -1:
-				log_error(logger_memoria, "La Entradasalida se desconecto de Memoria. Terminando servidor.");
+				log_error(logger_memoria, "El modulo de Entradasalida se desconecto de Memoria. Terminando servidor.");
 				desconexion_entradasalida_memoria = 1;
 				break;
 			default:
@@ -52,7 +57,9 @@ void escuchar_mensajes_entradasalida_memoria(int indice){
 }
 
 void ejecutar_stdin_read(int pid, int tamanio , int dir_fisica, char* datos){
-	void* datos_aux = (void*) datos; //posible malloc
+	printf("\n\n\n ENTRA A STDIN_READ, ANTES DE VOID* \n\n\n");
+	void* datos_aux = (void*)datos; //posible malloc
+	printf("\n\nCopia Void* datos - llegara el HOLA?\n");
 	ejecutar_mov_out(tamanio, dir_fisica, pid, datos_aux);
 }
 

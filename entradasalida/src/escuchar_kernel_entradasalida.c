@@ -56,44 +56,47 @@ void escuchar_instrucciones_generica(){
 
 
 void escuchar_instrucciones_stdin(){
-	printf("escuchar2\n");
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
+		printf("\n\n\nANTES DE COD_OP EN ESCUCHAR_INSTRUCCIONES_STDIN\n\n\n");
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
+		printf("\n\n\nCOD_OP DESDE ENTRADA SALIDA: %i\n\n\n", cod_op);
 		switch(cod_op){
 			t_buffer* buffer;
 			int pid;
 			case IO_STDIN_READ_FS:
+
+				printf("\n\nINGRESA A IO_STDIN_READ_FS\n\n");
+
 				buffer = recibir_buffer_completo(fd_kernel);
-				
 				pid = extraer_int_del_buffer(buffer);
 				int reg_direccion = extraer_int_del_buffer(buffer);
 				int reg_tamanio = extraer_int_del_buffer(buffer);
 
 				printf("\nIngrese hasta %i caracteres\n", reg_tamanio);
-				char* input = readline("> ");
-				char* mensaje;
+				char* input;
+				input = readline("\n> ");
+				//char* mensaje;
 				
     
-    			//while(reg_tamanio != string_length(input))
-    			//{
-        		//	printf("\nLA CADENA INGRESADA DEBE SER DE UNA LONGITUD == %d\n",reg_tamanio);
-        		//	input = readline(">");
-    			//}
-				memcpy(mensaje, input, reg_tamanio);
+    			while(reg_tamanio != string_length(input))
+    			{
+        			printf("\nLA CADENA INGRESADA DEBE SER DE UNA LONGITUD == %d\n",reg_tamanio);
+        			input = readline(">");
+    			}
+				//memcpy(mensaje, input, reg_tamanio);
 
-				solicitar_almacen_memoria(pid, reg_direccion, mensaje, IO_STDIN_READ_FS);
+				solicitar_almacen_memoria(pid, reg_direccion, input, IO_STDIN_READ_FS);
 
 				// ESPERAR ERROR MEMORIA?
 
 				notificar_fin(fd_kernel, pid);
         		
-
 				destruir_buffer(buffer);
 				break;
 			default: // La instruccion es incorrecta
 				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
-				
+				printf("\n\n\nCOD_OP DESDE ENTRADA SALIDA: %i\n\n\n", cod_op);
 				buffer = recibir_buffer_completo(fd_kernel);
 				int process_id = extraer_int_del_buffer(buffer);
 				free(buffer);
@@ -400,7 +403,6 @@ void notificar_fin(int fd_kernel, int pid){
 	printf("\n\nADENTRO DE NOTIFICAR_FIN\n\n");
 
 	eliminar_paquete(paquete);
-	free(buffer);
 }
 
 void solicitar_lectura_memoria(int pid, int direccion, int tamanio, op_code cod_op){
@@ -421,6 +423,8 @@ void solicitar_almacen_memoria(int pid, int direccion, char* mensaje, op_code co
 	t_buffer* buffer = crear_buffer();
 	cargar_int_al_buffer(buffer, pid);
 	cargar_int_al_buffer(buffer, direccion);
+	printf("\n\n\n direccion desde io: %i \n\n\n",direccion);
+	printf("\n\n\n mensaje desde io: %s \n\n\n", mensaje);
 	cargar_string_al_buffer(buffer, mensaje);
 	//cargar_datos_al_buffer(buffer, mensaje);
 
