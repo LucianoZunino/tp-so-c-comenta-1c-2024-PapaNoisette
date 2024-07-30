@@ -8,7 +8,6 @@ char* ip_kernel;
 char* puerto_kernel;
 char* ip_memoria;
 char* puerto_memoria;
-char* path_base_dialfs;
 int block_size;
 int block_count;
 int retraso_compactacion;
@@ -49,7 +48,6 @@ int main(int argc, char* argv[]){
     enviar_paquete(paquete, fd_kernel);
     eliminar_paquete(paquete);
 
-
     // Escucha los mensajes Kernel-E/S
     pthread_t hilo_kernel_entradasalida;
     switch(tipo_de_interfaz){
@@ -62,6 +60,7 @@ int main(int argc, char* argv[]){
 	        pthread_join(hilo_kernel_entradasalida, NULL);
             break;
         case STDOUT:
+            printf("\n\nDENTRO DE CASE STDOUT ANTES DE CREAR HILO\n\n");
             pthread_create(&hilo_kernel_entradasalida, NULL, escuchar_instrucciones_stdout, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	        pthread_join(hilo_kernel_entradasalida, NULL);
             break;

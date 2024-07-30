@@ -1,5 +1,5 @@
 #include "escuchar_entradasalida_memoria.h"
-
+int socket_entradasalida;
 
 void escuchar_mensajes_entradasalida_memoria(int indice){
 //void escuchar_mensajes_entradasalida_memoria(){
@@ -8,6 +8,8 @@ void escuchar_mensajes_entradasalida_memoria(int indice){
 	int tamanio;
 	int pid;
 	t_interfaz* interfaz = list_get(lista_de_interfaces, indice);
+
+	socket_entradasalida = interfaz->socket;
 
     bool desconexion_entradasalida_memoria = 0;
 	while(!desconexion_entradasalida_memoria){
@@ -64,17 +66,39 @@ void ejecutar_stdin_read(int pid, int tamanio , int dir_fisica, char* datos){
 }
 
 void ejecutar_stdout_write(int pid, int tamanio, int dir_fisica){
-	void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica, pid);
-
+	void* datos_aux = ejecutar_mov_in(tamanio, dir_fisica, pid);
+	char* datos_a_devolver = malloc(tamanio);
 	t_buffer* buffer = crear_buffer();
+	t_paquete* paquete;
 
-	if(datos_a_devolver == NULL){
+	if(datos_aux == NULL){
 		log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para leer %i bytes \n", tamanio);
 		cargar_int_al_buffer(buffer, pid);
 		cargar_int_al_buffer(buffer, dir_fisica);
-		t_paquete* paquete = crear_paquete(MEMORIA_ERROR, buffer);
-	}else{
-		cargar_datos_al_buffer(buffer, datos_a_devolver, tamanio);
-		t_paquete* paquete = crear_paquete(MEMORIA_MOV_IN, buffer);
+		paquete = crear_paquete(MEMORIA_ERROR, buffer);
 	}
+	else{
+		memcpy(datos_a_devolver, datos_aux, tamanio);
+		
+		printf("\n\nChar* datos a devolver: %s \n\n", datos_a_devolver);
+
+		// ES UN PRINT PARA VER LOS DATOS A ENVIAR EN BYTES POR EL VOID*
+		if(datos_a_devolver != NULL){
+			printf("##### DATOS A DEVOLVER DEL MOV_IN: #####\n");
+			unsigned char* byte_datos = (unsigned char*)datos_a_devolver;
+			for(int i = 0; i < tamanio; i++){
+				printf("byte %d: %02X\n", i, byte_datos[i]);
+			}
+			printf("\n");
+		}
+		// --------------------------------------------------------------
+
+		cargar_int_al_buffer(buffer, pid);
+		cargar_string_al_buffer(buffer, datos_a_devolver);
+		paquete = crear_paquete(IO_STDOUT_WRITE_FS, buffer);
+	}
+	
+	enviar_paquete(paquete, socket_entradasalida); // socket es interfaz->socket
+	eliminar_paquete(paquete);
+	free(datos_a_devolver);
 }

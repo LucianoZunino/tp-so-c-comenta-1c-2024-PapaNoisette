@@ -81,6 +81,7 @@ extern sem_t sem_desalojo;
 extern pthread_mutex_t socket_memoria_mutex;
 
 extern t_list *lista_de_estados;
+extern t_list *recursos_disponibles;
 
 
 #endif 

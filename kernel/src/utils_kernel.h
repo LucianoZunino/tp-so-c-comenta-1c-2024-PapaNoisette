@@ -25,6 +25,7 @@ int buscar_interfaz(char* nombre);
 bool lista_contiene_pcb(t_list* lista, t_pcb* pcb);
 void cambio_de_estado(t_pcb* pcb, int estado);
 void enviar_a_exit(t_pcb* pcb, char* motivo);
+void leer_pids_cola(estado_pcb estado);
 bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb);
 void validar_desalojo();
 

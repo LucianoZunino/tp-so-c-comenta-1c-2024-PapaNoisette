@@ -114,7 +114,7 @@ void escuchar_instrucciones_stdin(){
 }
 
 void escuchar_instrucciones_stdout(){
-	printf("escuchar3\n");
+	printf("Dentro de funcion escuchar_instrucciones_stdout\n");
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
@@ -122,18 +122,16 @@ void escuchar_instrucciones_stdout(){
 			t_buffer* buffer = crear_buffer();
 			int pid;
 			case IO_STDOUT_WRITE_FS:
-				printf("a\n");
+				printf("Dentro del case IO_STDOUT_WRITE_FS\n");
 				buffer = recibir_buffer_completo(fd_kernel);
 				
 				pid = extraer_int_del_buffer(buffer);
 				int reg_direccion = extraer_int_del_buffer(buffer);
 				int reg_tamanio = extraer_int_del_buffer(buffer);
 
+				printf("\n\nRecibido de kernel Tamanio: %i --- Direccion Fisica: %i\n\n", reg_tamanio, reg_direccion);
+
 				solicitar_lectura_memoria(pid, reg_direccion, reg_tamanio, IO_STDOUT_WRITE_FS);
-
-				sem_wait(&sem_stdout);
-
-				notificar_fin(fd_kernel, pid);
 
 				destruir_buffer(buffer);
 				break;

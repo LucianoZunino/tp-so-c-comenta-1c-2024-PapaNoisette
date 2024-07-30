@@ -26,9 +26,10 @@ void escuchar_mensajes_kernel_memoria(){
                 destruir_buffer(buffer);
 				break;
             case LIBERAR_PROCESO_EN_MEMORIA:
-                buffer = recibir_buffer_completo(fd_memoria);
+                buffer = recibir_buffer_completo(fd_kernel);
                 pid = extraer_int_del_buffer(buffer);
                 finalizar_proceso(pid);
+                destruir_buffer(buffer);
                 break;
 			case -1:
 				log_error(logger_memoria, "El Kernel se desconecto de Memoria. Terminando servidor.");

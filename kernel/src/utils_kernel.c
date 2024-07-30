@@ -1,6 +1,6 @@
 #include "utils_kernel.h"
 
-t_list* recursos_disponibles;
+
 pthread_mutex_t mutex_recursos_disponibles;
 char* estado_pcb_desc[6] = {"NEW", "READY", "BLOCKED", "EXIT", "PRIORIDAD", "EXECUTE"};
 
@@ -12,8 +12,8 @@ void interrumpir_cpu(t_pcb *pcb, motivo_interrupcion motivo){
 void pcb_destruir(t_pcb *pcb){
     if (pcb != NULL){
         free(pcb->registros_cpu);
-        free(pcb->quantum);
-        free(pcb->estado);
+        //free(pcb->quantum);
+        //free(pcb->estado);
         free(pcb);
     }
 }
@@ -40,19 +40,19 @@ int buscar_index_por_pid(t_list* lista, int pid) {
 t_pcb* buscar_pcb_por_pid(int pid){
     unsigned int index;
     t_pcb* pcb;
-    if (index = buscar_index_por_pid(NEW, pid) != -1){
+    if ((index = buscar_index_por_pid(NEW, pid)) != -1){
         pthread_mutex_lock(&mutex_NEW);
         pcb = list_remove(NEW, index);
         pthread_mutex_unlock(&mutex_NEW);
-    } else if (index = buscar_index_por_pid(READY, pid) != -1){ 
+    } else if ((index = buscar_index_por_pid(READY, pid)) != -1){ 
         pthread_mutex_lock(&mutex_READY);
         pcb = (t_pcb*) list_remove(READY, index);
         pthread_mutex_unlock(&mutex_READY);
-    } else if (index = buscar_index_por_pid(BLOCKED, pid) != -1){ 
+    } else if ((index = buscar_index_por_pid(BLOCKED, pid)) != -1){ 
         pthread_mutex_lock(&mutex_BLOCKED);
         pcb = list_remove(BLOCKED, index);
         pthread_mutex_unlock(&mutex_BLOCKED);
-    } else if (index = buscar_index_por_pid(PRIORIDAD, pid) != -1){ 
+    } else if ((index = buscar_index_por_pid(PRIORIDAD, pid)) != -1){ 
         pthread_mutex_lock(&mutex_PRIORIDAD);
         pcb = list_remove(PRIORIDAD, index);
         pthread_mutex_unlock(&mutex_PRIORIDAD);
@@ -69,10 +69,15 @@ void pasar_proceso_a_exit(int pid, char* motivo){
 
 
 int buscar_recurso(char* recurso){
-    for (unsigned int i = 0; i < list_size(recursos); i++){
-        if (string_equals_ignore_case(list_get(recursos, i), recurso))
+   
+    for (unsigned int i = 0; i < list_size(recursos_disponibles); i++){
+        t_recurso* recurso_aux = list_get(recursos_disponibles, i);
+        if (string_equals_ignore_case(recurso_aux->nombre, recurso)){
+            
             return i;
+        }
     }
+    
     return -1;
 }
 
@@ -128,10 +133,11 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
 }
 
 int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
-    int index = buscar_recurso(nombre_recurso);
+    int index = buscar_recurso(nombre_recurso); // TODO: Ver caso recurso no existe
     t_recurso* recurso = list_get(recursos_disponibles, index);
 
-    if(lista_contiene_pcb(recurso->pcb_asignados, pcb)){
+    if(!lista_contiene_pcb(recurso->pcb_asignados, pcb)){
+        
         return -1;
     }
     
@@ -188,11 +194,11 @@ int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
 
 int buscar_interfaz(char* nombre) {
     t_interfaz* interfaz;
-    printf("\n\n BUSCAR_INTERFAZ BUSCANDO NOMBRE: %s\n\n", nombre);
+
     for(int i = 0; i<list_size(interfaces); i++){
-        printf("\n\n DENTRO DEL FOR DE BUSCAR_INTERFAZ\n\n");
+        
         interfaz = list_get(interfaces, i);
-        printf("\n\n DENTRO DEL FOR DE BUSCAR_INTERFAZ LUEGO DE LIST_GET: %s\n\n", interfaz->nombre);
+        
         if (string_equals_ignore_case(interfaz->nombre, nombre)) {
             return i;
         }  
@@ -202,12 +208,15 @@ int buscar_interfaz(char* nombre) {
 }
 
 bool lista_contiene_pcb(t_list* lista, t_pcb* pcb){
+    
     for(int i = 0; i < list_size(lista); i ++){
         t_pcb* aux = list_get(lista, i);
         if(aux->pid == pcb->pid){
+           
             return true;
         }
     }
+    
     return false;
 }
 
@@ -237,9 +246,9 @@ void leer_pids_cola(estado_pcb estado){
 }
 
 bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb){
-    printf("\n\nADENTRO DE VERIFICAR EXISTENCIA DE INTERFAZ\n\n");
+    
     if(indice_de_interfaz == -1){
-        printf("\n\nADENTRO DEL IF DE VERIFICAR EXISTENCIA DE INTERFAZ\n\n");
+        
         enviar_a_exit(pcb, "No se pudo encontrar la interfaz");
         sem_post(&sem_EXEC);
         return false;
@@ -250,6 +259,6 @@ bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb){
 void validar_desalojo(){
     if(string_equals_ignore_case(algoritmo_planificacion, "RR") || string_equals_ignore_case(algoritmo_planificacion, "VRR")){
 		sem_post(&sem_desalojo);
-		printf("Despues de sem_desalojo\n\n");
+		
 	}
 }

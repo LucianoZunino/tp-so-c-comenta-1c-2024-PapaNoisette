@@ -20,6 +20,7 @@ sem_t sem_estructuras_inicializadas;
 sem_t sem_planificador_LP_detenido;
 sem_t sem_planificador_CP_detenido;
 t_list* lista_de_estados;
+t_list* recursos_disponibles;
 
 void iniciar_kernel(){
     iniciar_logger_kernel();
@@ -164,14 +165,14 @@ void iniciar_colas_estados() {
 
 void iniciar_recursos(){
 
-    int length = sizeof(instancias_recursos) / sizeof(instancias_recursos);
+    //int length = sizeof(instancias_recursos);
 
-    t_list* recursos_disponibles = list_create();
-
-    for (int i = 0; i < length; i++){
+    recursos_disponibles = list_create();
+    printf("Lista de Rescursos tamanio\n\n" );
+    for (int i = 0; recursos[i] != NULL; i++){
         t_recurso* nuevo_recurso = malloc (sizeof(t_recurso)); //HACER FREE CUANDO SE ELIMINA TODO
         char* nombre = (char*)recursos[i];
-        int instancias = instancias_recursos[i];
+        int instancias = atoi(instancias_recursos[i]);
         t_queue* cola_de_espera = queue_create();
         t_list* pcb_asignados = list_create();
         pthread_mutex_t mutex;
@@ -185,6 +186,8 @@ void iniciar_recursos(){
 
         list_add(recursos_disponibles, nuevo_recurso);
     }
+
+    printf("Lista de Rescursos tamanio: %i\n\n", list_size(recursos_disponibles));
 
     flag_planificacion_detenido = 0;
 }

@@ -78,11 +78,11 @@ t_pcb *crear_pcb(){
     iniciar_registros(pcb);
     
 
-    pcb->quantum = malloc(sizeof(int));
+    //pcb->quantum = malloc(sizeof(int));
     
     pcb->quantum = quantum;
 
-    pcb->estado = malloc(sizeof(pcb->estado));
+    //pcb->estado = malloc(sizeof(pcb->estado));
 
 
 
@@ -92,29 +92,30 @@ t_pcb *crear_pcb(){
 }
 
 void eliminar_proceso() {
-    sem_wait(&sem_EXIT);
-    printf("\nAntes de tomar pcb\n\n");
-    pthread_mutex_lock(&mutex_EXIT);
-    t_pcb* pcb = list_remove(EXIT, 0);
-    pthread_mutex_unlock(&mutex_EXIT);
-    int pid = pcb->pid;
-    printf("\n\n\nANTES DE SOLICITAR LIBERAR MEMORIA\n\n\n");
-    solicitar_liberar_en_memoria(pid);
-    printf("\n\n\n DESPUES DE SOLICITAR LIBERAR MEMORIA\n\n\n");
-    pthread_mutex_lock(&mutex_multiprogramacion);
-    grado_actual_multiprogramacion--;
-    pthread_mutex_unlock(&mutex_multiprogramacion);
-    printf("\n\n\nANTES DE SOLICITAR LIBERAR RECURSOS\n\n\n");
-    liberar_recursos_de(pcb);
-    printf("\n\n\nDESPUES DE SOLICITAR LIBERAR RECURSOS\n\n\n");
-    if(diferencia_de_multiprogramacion <= 0){
-        sem_post(&sem_MULTIPROGRAMACION);
-    }else{
-        diferencia_de_multiprogramacion--;
-    }
+    while(1){
+        sem_wait(&sem_EXIT);
+        pthread_mutex_lock(&mutex_EXIT);
+        t_pcb* pcb = list_remove(EXIT, 0);
+        pthread_mutex_unlock(&mutex_EXIT);
+        int pid = pcb->pid;
+        
+        solicitar_liberar_en_memoria(pid);
+        
+        pthread_mutex_lock(&mutex_multiprogramacion);
+        grado_actual_multiprogramacion--;
+        pthread_mutex_unlock(&mutex_multiprogramacion);
+        
+        liberar_recursos_de(pcb);
+        
+        if(diferencia_de_multiprogramacion <= 0){
+            sem_post(&sem_MULTIPROGRAMACION);
+        }else{
+            diferencia_de_multiprogramacion--;
+        }
 
-    log_info(logger_kernel, "Se elimina el proceso %i en EXIT", pid);
-    pcb_destruir(pcb);
+        log_info(logger_kernel, "Se elimina el proceso %i en EXIT", pid);
+        pcb_destruir(pcb);
+    }
 }
 
 void solicitar_liberar_en_memoria(int pid) {
@@ -127,20 +128,18 @@ void solicitar_liberar_en_memoria(int pid) {
 
 void liberar_recursos_de(t_pcb* pcb) {
     // Recorremos todos los recursos de la lista de recursos disponibles
-    printf("\n DENTRO DE LIBERAR_RECURSOS_dE\n\n");
-    printf("\nTamaño de lista de recursos_disponibles: %i\n", list_size(recursos_disponibles));
+    int length = list_size(recursos_disponibles);
 
     for(int i = 0; i < list_size(recursos_disponibles); i++){
         // Tomamos un recurso
         t_recurso* recurso = list_get(recursos_disponibles, i);
-        printf("\n Despues de tomar recurso\n\n");
         // Sumamos instancias por cada recurso que se le haya asignado al p
         int instancias = 0;
         while(instancias >= 0){
             //sacamos de la lista de asignadoos
             instancias = sumar_instancia(recurso->nombre, pcb);
         }
-        printf("\n Despues de while tomar instancias\n\n");
+        
         // Sacamos de la cola de espera
         while(lista_contiene_pcb(recurso->cola_de_espera->elements, pcb)){
             int indice = buscar_index_por_pid(recurso->cola_de_espera->elements, pcb->pid);
@@ -150,9 +149,9 @@ void liberar_recursos_de(t_pcb* pcb) {
             pthread_mutex_unlock(&recurso->mutex);
             pcb_destruir(pcb_a_destruir);
         }
-        printf("\n Despues de while cola de espera\n\n");
+       
     }
-    printf("\n\n\nFIN LIBERAR_RECURSOS_DE\n\n\n");
+    
 }
 
 void mostrar_procesos_por_estado(){
