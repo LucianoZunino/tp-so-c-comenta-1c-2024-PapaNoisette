@@ -1,11 +1,9 @@
 #include "iniciar_entradasalida.h"
 #include <dirent.h>
-#include <fcntl.h> // Para open
-#include <sys/stat.h> // Para los modos de apertura y permisos
-#include <unistd.h> // Para close
-#include <stdio.h> // Para perror
-
-char* path_base_dialfs;
+#include <fcntl.h> // Necesaria para fopen
+#include <sys/stat.h> // Necesaria para fopen
+#include <unistd.h> // Necesaria para fopen
+#include <stdio.h> // Necesaria para fopen
 
 t_config* config_entradasalida;
 sem_t sem_stdout;
@@ -15,19 +13,17 @@ int fd_bitmap;
 void* bloques_dat;
 t_bitarray* bitmap;
 t_list* archivos_metadata;
+char* path_dialfs = NULL;
 
 void iniciar_entradasalida(char* path){
-    printf("\n\nPATH QUE RECIBE DEL CONFIG: %s\n\n", path);
     iniciar_logger_entradasalida();
     iniciar_config_entradasalida(path);
-    printf("flag post config IO\n");
     iniciar_estructuras();
     printf("Estructuras Inicializadas\n");
     imprimir_config_entradasalida();
     if(tipo_de_interfaz == DIAL_FS){
         iniciar_lista_metadatas();
     }
-    imprimir_config_entradasalida();
 }
 
 void iniciar_logger_entradasalida(){
@@ -37,11 +33,11 @@ void iniciar_logger_entradasalida(){
 void iniciar_config_entradasalida(char* config){
     printf("INICIAR CONFIG ENTRADASALIDA \n");
     config_entradasalida = iniciar_config(config);
-    printf("flag\n");
     ip_kernel = config_get_string_value(config_entradasalida, "IP_KERNEL");
     puerto_kernel = config_get_string_value(config_entradasalida, "PUERTO_KERNEL");
     tipo_de_interfaz = leer_tipo_interfaz(config_entradasalida);
-   // log_info(logger_auxiliar, "Tipo interfaz: %d", TIPO_INTERFAZ);
+    //path_base_dialfs = config_get_string_value(config_entradasalida, "PATH_BASE_DIALFS");
+    //log_info(logger_auxiliar, "Tipo interfaz: %d", TIPO_INTERFAZ);
     switch(tipo_de_interfaz){
         case GENERICA:
             tiempo_unidad_trabajo = config_get_int_value(config_entradasalida, "TIEMPO_UNIDAD_TRABAJO");            
@@ -56,14 +52,15 @@ void iniciar_config_entradasalida(char* config){
             puerto_memoria = config_get_string_value(config_entradasalida, "PUERTO_MEMORIA");
             break;
         case DIAL_FS:
-            printf("\n\nENTRANDO AL CASE DIAL_FS\n\n");
             tiempo_unidad_trabajo = config_get_int_value(config_entradasalida, "TIEMPO_UNIDAD_TRABAJO");
             ip_memoria = config_get_string_value(config_entradasalida, "IP_MEMORIA");
             puerto_memoria = config_get_string_value(config_entradasalida, "PUERTO_MEMORIA");
-            path_base_dialfs = config_get_string_value(config_entradasalida, "PATH_BASE_DIALFS");
+            path_dialfs = config_get_string_value(config_entradasalida, "PATH_BASE_DIALFS");
             block_size = config_get_int_value(config_entradasalida, "BLOCK_SIZE");
             block_count = config_get_int_value(config_entradasalida, "BLOCK_COUNT");
             retraso_compactacion = config_get_int_value(config_entradasalida, "RETRASO_COMPACTACION");
+            //path_dialfs = strdup(path_base_dialfs); // Por algun motivo del universo path_base_dialfs se libera la memoria a la que apunta y se pierde la referencia
+                                                    // strdup(path_base_dialfs) hace una copia a otra variable. En algún lado habria que hacer free(path_dialfs)
             break;   
         }
 }
@@ -127,6 +124,8 @@ void iniciar_estructuras(){
 }
 
 void iniciar_lista_metadatas(){
+    printf("\nPATH DE FS DISPONIBLE DENTRO DE iniciar_lista_metadatas: %s\n", path_base_dialfs);
+
     archivos_metadata = list_create();
 
     //char* path_bloques = tomar_nombre_devolver_path("bloques.dat");
@@ -136,9 +135,6 @@ void iniciar_lista_metadatas(){
     //char* path_bitmap = tomar_nombre_devolver_path("bitmap.dat");
     //strcpy(path_bitmap, tomar_nombre_devolver_path("bloques.dat"));
     DIR* directorio = opendir(path_base_dialfs);
-
-    printf("\n\nPATH DE FS: %s\n\n", path_base_dialfs);
-
     
     if(directorio == NULL){
         log_error(logger_entradasalida, "No se pudo abrir el directorio %s", path_base_dialfs); //hacer algo mas?
@@ -166,11 +162,12 @@ void iniciar_lista_metadatas(){
 }
 
 char* tomar_nombre_devolver_path(char* nombre){
+    printf("\nPATH DE FS DISPONIBLE DENTRO DE tomar_nombre_devolver_path: %s\n", path_base_dialfs);
 
     char* path_base = malloc(sizeof(path_base_dialfs));
     path_base = path_base_dialfs;
     
-    if (path_base == NULL) {
+    if(path_base == NULL){
         fprintf(stderr, "Error: path_base_dialfs no está inicializado.\n");
         return NULL;
     }

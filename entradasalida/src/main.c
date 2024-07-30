@@ -11,6 +11,7 @@ char* puerto_memoria;
 int block_size;
 int block_count;
 int retraso_compactacion;
+char* path_base_dialfs;
 
 int fd_memoria;
 int fd_kernel;
