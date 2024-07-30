@@ -375,7 +375,8 @@ void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direcc
    se lea desde Memoria la cantidad de bytes indicadas por el Registro Tamaño a partir de la dirección lógica
    que se encuentra en el Registro Dirección y se escriban en el archivo a partir del valor del Registro Puntero Archivo.
    */
-   int dir_logica = traducir_direccion_logica(reg_direccion); //En realidad es fisica
+   int dir_logica = get_registro(reg_direccion);
+   int dir_fisica = (int) traducir_direccion_logica(dir_logica);
    int tamanio = get_registro(reg_tamanio);
    int puntero_archivo = get_registro(reg_puntero_archivo);
 
@@ -384,7 +385,7 @@ void ejecutar_io_fs_write(char *interfaz, char *nombre_archivo, char *reg_direcc
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);
-   cargar_int_al_buffer(paquete->buffer, dir_logica);
+   cargar_int_al_buffer(paquete->buffer, dir_fisica);
    cargar_int_al_buffer(paquete->buffer, tamanio);
    cargar_int_al_buffer(paquete->buffer, puntero_archivo);
 
@@ -399,7 +400,8 @@ void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direcci
    por Registro Tamaño y se escriban en la Memoria a partir de la dirección lógica indicada en el Registro Dirección.
 
    */
-   int dir_logica = traducir_direccion_logica(reg_direccion); //En realidad es fisica
+   int dir_logica = get_registro(reg_direccion);
+   int dir_fisica = (int) traducir_direccion_logica(dir_logica);
    int tamanio = get_registro(reg_tamanio);
    int puntero_archivo = get_registro(reg_puntero_archivo);
 
@@ -408,7 +410,7 @@ void ejecutar_io_fs_read(char *interfaz, char *nombre_archivo, char *reg_direcci
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);
-   cargar_int_al_buffer(paquete->buffer, dir_logica);
+   cargar_int_al_buffer(paquete->buffer, dir_fisica);
    cargar_int_al_buffer(paquete->buffer, tamanio);
    cargar_int_al_buffer(paquete->buffer, puntero_archivo);
    enviar_paquete(paquete, fd_kernel_dispatch);

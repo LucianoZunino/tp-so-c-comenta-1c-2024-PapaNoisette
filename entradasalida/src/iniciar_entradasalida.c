@@ -6,7 +6,6 @@
 #include <stdio.h> // Necesaria para fopen
 #include <math.h>
 
-
 t_config* config_entradasalida;
 sem_t sem_stdout;
 sem_t sem_fs_write;
@@ -78,7 +77,6 @@ void imprimir_config_entradasalida(){
     printf("============================================================\n\n");
 }
 
-
 void iniciar_estructuras(){
     sem_init(&sem_stdout, 1, 0);
     sem_init(&sem_fs_write, 1, 0);
@@ -124,7 +122,7 @@ void iniciar_estructuras(){
         
         //int size = ceil(block_count/8);
         int size = redondear_up(block_count, 8);
-        bitmap = bitarray_create_with_mode(bitarray, size, LSB_FIRST);
+        bitmap = bitarray_create_with_mode(bitarray, size, MSB_FIRST);
         if (lseek(fd_bitmap, 0, SEEK_END) == 0) { 
             for(int i = 0; i < bitarray_get_max_bit(bitmap); i++) {
                 bitarray_clean_bit(bitmap, i); 
@@ -185,6 +183,16 @@ char* tomar_nombre_devolver_path(char* nombre){
 }
 
 int redondear_up(int divisor, int dividendo){
+    if(divisor == 0){
+        return 1;
+    }
+    if(divisor % dividendo != 0){
+        return (divisor/dividendo) + 1;
+    }
+    return divisor/dividendo;
+}
+
+int redondear_up_con_cero(int divisor, int dividendo){
     if(divisor % dividendo != 0){
         return (divisor/dividendo) + 1;
     }
@@ -197,16 +205,21 @@ void finalizar_entradasalida(){
 }
 
 int leer_tipo_interfaz(t_config* config_entradasalida){
-        char* tipo = config_get_string_value(config_entradasalida, "TIPO_INTERFAZ");
-    if ( string_equals_ignore_case(tipo, "GENERICA") ) {
+    char* tipo = config_get_string_value(config_entradasalida, "TIPO_INTERFAZ");
+
+    if(string_equals_ignore_case(tipo, "GENERICA")){
         return GENERICA;
-    } else if ( string_equals_ignore_case(tipo, "STDIN") ) {
+    }
+    else if(string_equals_ignore_case(tipo, "STDIN")){
         return STDIN;
-    } else if ( string_equals_ignore_case(tipo, "STDOUT") ) {
+    }
+    else if(string_equals_ignore_case(tipo, "STDOUT")){
         return STDOUT;
-    } else if ( string_equals_ignore_case(tipo, "DIALFS") ) {
+    }
+    else if(string_equals_ignore_case(tipo, "DIALFS")){
         return DIAL_FS;
-    } else {
+    }
+    else{
         log_error(logger_entradasalida, "Tipo de interfaz no reconocida: %s", tipo);
         return (-1);
     }

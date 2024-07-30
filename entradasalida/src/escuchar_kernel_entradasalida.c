@@ -326,7 +326,7 @@ void escuchar_instrucciones_dialfs(){
 				//TODO
 				//Queremos agrandar o achicar?
 
-				int cantidad_nueva_de_bloques = (int)ceil(nuevo_tamanio/block_size);
+				int cantidad_nueva_de_bloques = redondear_up(nuevo_tamanio, block_size);
 				int cantidad_actual_de_bloques = redondear_up(tamanio_archivo, block_size);
 				printf("\nredondear_up(%i, %i) = %i\n",tamanio_archivo, block_size, cantidad_actual_de_bloques);
 
@@ -356,7 +356,7 @@ void escuchar_instrucciones_dialfs(){
 					printf("\nDESPUES DE ELSE-IF\n");
 					// verificar que haya espacio
 					// chequeamos si entra
-					int bloque_fin_archivo = inicio_archivo + redondear_up(tamanio_archivo, block_size);
+					int bloque_fin_archivo = inicio_archivo + redondear_up_con_cero(tamanio_archivo, block_size);
 					int i = 1;
 
 					while(i <= diferencia){
@@ -372,8 +372,13 @@ void escuchar_instrucciones_dialfs(){
 						printf("\nDIFERENCIA: %i\n", diferencia);
 						config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
 						//Seteo los Bloques como ocupados
-						for(int j = 1; j <= diferencia; j++){
-							bitarray_set_bit(bitmap, bloque_fin_archivo + j); // bitarray_set_bit(bitmap, i);
+						// for(int j = 1; j <= diferencia; j++){
+						// 	bitarray_set_bit(bitmap, bloque_fin_archivo + j); // bitarray_set_bit(bitmap, i);
+						// }
+						int j = 1;
+						while (j <= diferencia){
+							bitarray_set_bit(bitmap, bloque_fin_archivo + j);
+							j++;
 						}
 
 						config_save(config);
@@ -393,7 +398,7 @@ void escuchar_instrucciones_dialfs(){
 				break;
 			default: // La instruccion es incorrecta
 				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salidaaaaa");
-				error_io:
+					error_io:
 				printf("b\n");
 				buffer = recibir_buffer_completo(fd_kernel);
 				printf("c\n");
@@ -459,7 +464,7 @@ int buscar_lugar_bitmap(int tamanio){
 	int contador_libres = 0;
 	int contador_libres_continuo = 0;
 	printf("\n tamanio: %i\n", tamanio);
-
+	
 	while(i < block_count){
 		if(bitarray_test_bit(bitmap, i) == 0){
 			

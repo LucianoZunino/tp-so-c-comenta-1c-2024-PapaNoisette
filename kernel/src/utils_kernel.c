@@ -258,6 +258,7 @@ bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb){
 
 void validar_desalojo(){
     if(string_equals_ignore_case(algoritmo_planificacion, "RR") || string_equals_ignore_case(algoritmo_planificacion, "VRR")){
+        
 		sem_post(&sem_desalojo);
 		
 	}

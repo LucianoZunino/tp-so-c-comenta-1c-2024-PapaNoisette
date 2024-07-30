@@ -182,6 +182,7 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				break;
 			case IO_FS_READ_FS:
+				printf("\nFLAG0\n");
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
@@ -190,40 +191,50 @@ void escuchar_mensajes_dispatch_kernel(){
 				tamanio = extraer_int_del_buffer(buffer);
 				puntero_archivo = extraer_int_del_buffer(buffer);
 
-				
+				printf("\nFLAG1\n");
 				//resolver io_fs_read
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
+				printf("\nFLAG2\n");
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
+					
+					printf("\nFLAG3\n");
 					break;
 				}
+				printf("\nFLAG4\n");
 				interfaz = list_get(interfaces, indice_interfaz);
-				
+				printf("\nFLAG5\n");
 				destruir_buffer(buffer);
+				printf("\nFLAG6\n");
 				buffer = crear_buffer();
-
+				printf("\nFLAG7\n");
 				paquete = crear_paquete(IO_FS_READ_FS, buffer);
 				cargar_int_al_buffer(paquete->buffer, pcb->pid);
 				cargar_string_al_buffer(paquete->buffer, nombre_archivo);
-				cargar_string_al_buffer(paquete->buffer, dir_logica);
+				cargar_int_al_buffer(paquete->buffer, dir_logica);
 				cargar_int_al_buffer(paquete->buffer, tamanio);
 				cargar_int_al_buffer(paquete->buffer, puntero_archivo);
+				printf("\nFLAG8\n");
 				
 				pthread_mutex_lock(&interfaz->mutex_interfaz);
 				list_add(interfaz->cola_espera, paquete);
 				pthread_mutex_unlock(&interfaz->mutex_interfaz);
-
+				printf("\nFLAG9\n");
 				sem_post(&interfaz->sem_espera);
-
+				printf("\nFLAG10\n");
 				validar_desalojo();
+				printf("\nFLAG11\n");
 				//sem_post(&sem_desalojo);
 				bloquear_proceso(pcb, interfaz->nombre);
+				printf("\nFLAG12\n");
 				sem_post(&sem_EXEC);
+				printf("\nFLAG13\n");
 
 				//destruir_buffer(buffer);
 				//enviar_paquete(paquete, fd_entradasalida); // Prueba IO
 
 				break;
 			case IO_FS_WRITE_FS:
+				
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
@@ -231,7 +242,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				dir_logica = extraer_int_del_buffer(buffer);
 				tamanio = extraer_int_del_buffer(buffer);
 				puntero_archivo = extraer_int_del_buffer(buffer);
-
+				
 				//resolver io_fs_write
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
@@ -245,7 +256,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				paquete = crear_paquete(IO_FS_WRITE_FS, buffer);
 				cargar_int_al_buffer(paquete->buffer, pcb->pid);
 				cargar_string_al_buffer(paquete->buffer, nombre_archivo);
-				cargar_string_al_buffer(paquete->buffer, dir_logica);
+				cargar_int_al_buffer(paquete->buffer, dir_logica);
 				cargar_int_al_buffer(paquete->buffer, tamanio);
 				cargar_int_al_buffer(paquete->buffer, puntero_archivo);
 				
