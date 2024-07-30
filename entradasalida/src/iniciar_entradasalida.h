@@ -5,8 +5,6 @@
 #include <utils/utils.h>
 #include <sys/mman.h>
 
-extern char* path_dialfs;
-
 void iniciar_entradasalida();
 void iniciar_logger_entradasalida();
 void iniciar_config_entradasalida(char* config);

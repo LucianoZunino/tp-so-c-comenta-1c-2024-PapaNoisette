@@ -61,13 +61,12 @@ void escuchar_instrucciones_stdin(){
 		printf("\n\n\nANTES DE COD_OP EN ESCUCHAR_INSTRUCCIONES_STDIN\n\n\n");
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
 		printf("\n\n\nCOD_OP DESDE ENTRADA SALIDA: %i\n\n\n", cod_op);
+		
 		switch(cod_op){
 			t_buffer* buffer;
 			int pid;
+
 			case IO_STDIN_READ_FS:
-
-				printf("\n\nINGRESA A IO_STDIN_READ_FS\n\n");
-
 				buffer = recibir_buffer_completo(fd_kernel);
 				pid = extraer_int_del_buffer(buffer);
 				int reg_direccion = extraer_int_del_buffer(buffer);
@@ -79,8 +78,7 @@ void escuchar_instrucciones_stdin(){
 				//char* mensaje;
 				
     
-    			while(reg_tamanio != string_length(input))
-    			{
+    			while(reg_tamanio != string_length(input)){
         			printf("\nLA CADENA INGRESADA DEBE SER DE UNA LONGITUD == %d\n",reg_tamanio);
         			input = readline(">");
     			}
@@ -114,7 +112,6 @@ void escuchar_instrucciones_stdin(){
 }
 
 void escuchar_instrucciones_stdout(){
-	printf("Dentro de funcion escuchar_instrucciones_stdout\n");
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
@@ -175,6 +172,8 @@ void escuchar_instrucciones_dialfs(){
 			t_config* config;
 
 			case IO_FS_CREATE_FS:
+				
+				printf("ENTRO A IO_FS_CREATE_FS\n");
 
 				buffer = recibir_buffer_completo(fd_kernel);
 				
@@ -182,16 +181,19 @@ void escuchar_instrucciones_dialfs(){
 				nombre = extraer_string_del_buffer(buffer);
 
 				usleep(tiempo_unidad_trabajo);
-
-				char* path;
-				strcpy(path, tomar_nombre_devolver_path(nombre));
-				eliminar_segun(nombre);
+				
+				char* path = string_duplicate(tomar_nombre_devolver_path(nombre));
+				
+				eliminar_segun(path);
+				
 				list_add(archivos_metadata, path);
 
-				// Chequear si hay lugar en bitmap
+				// Chequear si hay lugar en bitmap	
 				int direccion = buscar_lugar_bitmap(1);
+				
 				// Asignar lugar en bitmap
 				bitarray_set_bit(bitmap, direccion);
+				
 				// Crear archivo metadata
 				FILE* archivo = fopen(path, "w");
 				fclose(archivo);
@@ -208,27 +210,29 @@ void escuchar_instrucciones_dialfs(){
 				notificar_fin(fd_kernel, pid);
 
 				destruir_buffer(buffer);
-				config_destroy(config);
+				config_destroy(config); //HAY QUE COMENTAR ESTE? O EL DE DELETE?
 				break;
 
 			case IO_FS_DELETE_FS:
 				buffer = recibir_buffer_completo(fd_kernel);
-				
+				printf("ENTRO A IO_FS_DELETE_FS\n");
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
-
+				char* path1 = tomar_nombre_devolver_path(nombre);
 				usleep(tiempo_unidad_trabajo);
-
+		
 				liberar_archivo_bitmap(nombre);
+				
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC); //dudoso, pero creo que va
 
-				remove(nombre);
+				remove(path1);
 
 				// devolver
 				notificar_fin(fd_kernel, pid);
-
 				destruir_buffer(buffer);
-				config_destroy(config);
+				
+				//config_destroy(config);
+				
 				break;
 
 			case IO_FS_WRITE_FS:
@@ -298,11 +302,14 @@ void escuchar_instrucciones_dialfs(){
 				break;
 
 			case IO_FS_TRUNCATE_FS:
+				printf("\nENTRO A IO_FS_TRUNCATE_FS\n");
 				buffer = recibir_buffer_completo(fd_kernel);
 				
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 				int nuevo_tamanio = extraer_int_del_buffer(buffer);
+
+				printf("\nDESPUES DE EXTRAER A IO_FS_TRUNCATE_FS\n");
 
 				usleep(tiempo_unidad_trabajo);
 
@@ -313,6 +320,7 @@ void escuchar_instrucciones_dialfs(){
 				}
 				int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
 				int inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
+				printf("\nDESPUES DE CARGAR CONFIG\n");
 				//TODO
 				//Queremos agrandar o achicar?
 
@@ -325,51 +333,53 @@ void escuchar_instrucciones_dialfs(){
 					log_info(logger_entradasalida, "Archivo de mismo tamanio en bloques, no hace falta truncar");
 					break;
 				}
-
-				if (cantidad_actual_de_bloques > cantidad_nueva_de_bloques){
+				printf("\nDESPUES DE 1ER IF\n");
+				if(cantidad_actual_de_bloques > cantidad_nueva_de_bloques){
 					//si achicamos solo achicamos el archivo de metadata y marcamos los bloques restantes libres en el bitmap
-					
 					config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
 					config_save(config);
 
 					liberar_bloques_desde_hasta(inicio_archivo + cantidad_nueva_de_bloques, inicio_archivo + cantidad_actual_de_bloques);
-
+					printf("\nDESPUES DE 2DO IFn");
 				}else{
 					// si queremos agrandar
+					printf("\nDENTRO DEL ELSE\n");
 					diferencia = abs(diferencia);
 
-					if (buscar_lugar_bitmap(diferencia) < 0){
+					if(buscar_lugar_bitmap(diferencia) < 0){
 						log_error(logger_entradasalida, "No hay espacio suficiente para truncar este archivo");
 						break;
 					}
-				// verificar que haya espacio
-				// chequeamos si entra
+					printf("\nDESPUES DE ELSE-IF\n");
+					// verificar que haya espacio
+					// chequeamos si entra
 					int fin_archivo = inicio_archivo + redondear_up(tamanio_archivo, block_size);
 					int i = 0;
+
 					for(i = 1; i <= diferencia; i++){
 						if(bitarray_test_bit(bitmap, fin_archivo + i) == 1){
 							compactar(nombre, config, nuevo_tamanio);
 							break;
 						}
 					}
+					printf("\nDESPUES DE ELSE-FOR\n");
 
-					if (i >= diferencia){
+					if(i >= diferencia){
 						config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
 						config_save(config);
 					}
-
+					printf("\nDESPUES DE ELSE-IF2\n");
 				}
-				//
+
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
+				printf("\nFIN TRUNCANTE\n");
 				break;
-				
 			case -1:
 				log_error(logger_entradasalida, "El Kernel se desconecto de E/S.\n");
 				desconexion_kernel_entradasalida = 1;
 				break;
-
 			default: // La instruccion es incorrecta
-				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
+				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salidaaaaa");
 				error_io:
 				printf("b\n");
 				buffer = recibir_buffer_completo(fd_kernel);
@@ -398,7 +408,6 @@ void notificar_fin(int fd_kernel, int pid){
 	t_paquete* paquete = crear_paquete(FIN_IO, buffer);
 	enviar_paquete(paquete, fd_kernel);
 
-	printf("\n\nADENTRO DE NOTIFICAR_FIN\n\n");
 
 	eliminar_paquete(paquete);
 }
@@ -421,8 +430,6 @@ void solicitar_almacen_memoria(int pid, int direccion, char* mensaje, op_code co
 	t_buffer* buffer = crear_buffer();
 	cargar_int_al_buffer(buffer, pid);
 	cargar_int_al_buffer(buffer, direccion);
-	printf("\n\n\n direccion desde io: %i \n\n\n",direccion);
-	printf("\n\n\n mensaje desde io: %s \n\n\n", mensaje);
 	cargar_string_al_buffer(buffer, mensaje);
 	//cargar_datos_al_buffer(buffer, mensaje);
 
@@ -435,16 +442,27 @@ void solicitar_almacen_memoria(int pid, int direccion, char* mensaje, op_code co
 }
 
 int buscar_lugar_bitmap(int tamanio){
-	int i = 0;
+	off_t i = 0;
 	int contador_libres = 0;
 	int contador_libres_continuo = 0;
+	printf("\n tamanio: %i\n", tamanio);
+
 	while(i < block_count){
 		if(bitarray_test_bit(bitmap, i) == 0){
+			
 			contador_libres ++;
 			contador_libres_continuo ++;
-			if (contador_libres_continuo >= tamanio){return i - tamanio;}
+			
+			if(contador_libres_continuo >= tamanio){
+				printf("\n\nvalor i: %i ----- valor tamanio: %i ----- contador_libres_continuo: %i \n\n", i, tamanio, contador_libres_continuo);
+				if(i == 0){
+					return i;
+				}
+				
+				return i - tamanio;
+			}
 		}
-		if(bitarray_test_bit(bitmap, i) == 1){
+		else{
 			contador_libres_continuo = 0;
 		}
 
@@ -453,10 +471,14 @@ int buscar_lugar_bitmap(int tamanio){
 	
 	if(contador_libres >= tamanio){
 		// TODO: comprimir() -> buscar
+		printf("\n 1er if: contador_libres: %i\n", contador_libres);
+		printf("\n 1er if: contador_libres_continuo: %i\n", contador_libres_continuo);
 		return -1;
 	}
 	else{
 		// TODO: DEVUELVE ERROR, NO HAY ESPACIO.
+		printf("\n 2er if: contador_libres: %i\n", contador_libres);
+		printf("\n 2er if: contador_libres_continuo: %i\n", contador_libres_continuo);
 		return -1;
 	}
 }
@@ -570,7 +592,7 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 	}
 
 	for(int i = 0; i < bloques_desplazados; i++){
-		bitarray_set_bit(bitmap, i);
+		bitarray_set_bit(bitmap, i); // bitarray_set_bit(bitmap, i);
 	}
 
 
@@ -585,139 +607,4 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 	config_destroy(config);
 	usleep(retraso_compactacion);
 }
-
-
-/*
- case FS_TRUNCATE:
-            log_info(logger, "PID: %d - Operacion: FS_TRUNCATE", pid);
-            uint32_t* puntero_nuevo_tamanio = ((uint32_t*) sacar_de_paquete(paquete->buffer, &desplazamiento));
-            uint32_t nuevo_tamanio = *puntero_nuevo_tamanio;
-            free(puntero_nuevo_tamanio);
-
-            uint32_t cantidad_nueva_de_bloques = cantidad_bloques_segun_bytes(nuevo_tamanio, tamanio_bloque);//La cantidad de bloques en la va a quedar el archivo
-
-            //Bloque inicial del archivo post ser truncado. Puede ser el mismo que el original o variar si se compacta el fs
-            int bloque_inicial_nuevo = bloque_inicial_archivo;
-
-            //Cantidad de bloques del archivo (previo a truncarlo)
-            int cant_actual_bloques = cantidad_bloques_segun_bytes(tamanio_inicial_archivo, tamanio_bloque); 
-
-            //Esto se podría omitir porque el asignar ya tiene la lógica de verificar si hay suficientes bloques libres, pero cortarlo ahora te ahorra de hacer muchas cosas
-            //Verificas si la cantidad nueva de bloques es mayor que la cantidad total de bloques del fs -> no te importa el estado de los bloques
-            if (cantidad_nueva_de_bloques > cantidad_total_de_bloques){
-                    log_error(logger, "No hay espacio suficiente para hacer tal cambio, recordar que el espacio total es de %d", tamanio_bloque * cantidad_total_de_bloques);
-                    break;
-            }
-
-            log_info(logger, "PID: <%d>-Truncar Archivo: <%s> Tamaño: <%d>", pid, nombre_archivo, nuevo_tamanio);
-
-            int resultado_asignar_bloques = 0;
-
-            if(cantidad_nueva_de_bloques > cant_actual_bloques){
-
-                //Cantidad de bloques a agregar (se le resta la cantidad actual para saber cuántos debemos agregar)
-                int cantidad_de_bloques_a_agregar = cantidad_nueva_de_bloques - 
-    if(
-        bloque_desde_donde_extender != -1 &&
-        bloque_desde_donde_extender == bloque_inicial // Si no son iguales, signbloques_a_agregar, ultimo_bloque_archivo);
-                if(resultado_asignar_bloques == -2){
-                    log_info(logger, "PID: <%d> - Inicio Compactación", pid);
-                    usleep(retardo_compactacion * 1000);
-                    compactar(nombres_archivos_metadata, metadata, bitmap, tamanio_bloque, cantidad_total_de_bloques, tamanio_inicial_archivo, nuevo_tamanio, bloque_inicial_archivo, bloques, path_archivo);
-                    log_info(logger, "PID: <%d> - Fin Compactación", pid);
-                }
-                if(resultado_asignar_bloques == -1) {
-                    log_error(logger, "No se pudo asignar los bloques necesarios");
-                    break;
-                }
-
-            } else if(cantidad_nueva_de_bloques < cant_actual_bloques){
-
-                int cantidad_bloques_a_liberar = cant_actual_bloques - cantidad_nueva_de_bloques;
-                int primer_bloque_desde_donde_liberar = ultimo_bloque_archivo - cantidad_bloques_a_liberar; 
-                liberar_bloques_desde_hasta(bitmap, primer_bloque_desde_donde_liberar, ultimo_bloque_archivo);
-
-            }
-            
-            //Cambiar archivo de metadata
-            char* string_nuevo_tamanio = string_itoa(nuevo_tamanio);
-    if(
-        bloque_desde_donde_extender != -1 &&
-        bloque_desde_donde_extender == bloque_inicial // Si no son iguales, sign
-            free(string_nuevo_tamanio);
-            
-            config_destroy(metadata);
-            
-            break;
-        case FS_WRITE:
-            log_info(logger, "PID: %d - Operacion: FS_WRITE", pid);
-            char *resultado = NULL;
-            uint32_t bytes_leidos = 0;
-
-            while(paquete->buffer->size > desplazamiento){
-                t_dato_paginado* dato_pagina = (t_dato_paginado*) sacar_de_paquete(paquete->buffer, &desplazamiento);//t_dato_paginado tiene dirección física y tamanio a escribir desde esa dirección física
-
-                solicitar_texto_memoria(conexion_memoria, pid, dato_pagina->direccion_fisica, dato_pagina->tamanio);
-
-                t_paquete *paquete_memoria = recibir_paquete(conexion_memoria);
-
-                if(paquete_memoria->codigo_operacion != LECTURA_ESP_USUARIO) {
-                    log_error(logger, "Error al recibir contenido de memoria");
-                    break;
-                }
-
-                resultado = realloc(resultado, paquete_memoria->buffer->size + bytes_leidos);
-
-    if(
-        bloque_desde_donde_extender != -1 &&
-        bloque_desde_donde_extender == bloque_inicial // Si no son iguales, sign
-
-                eliminar_paquete(paquete_memoria);
-
-                free(dato_pagina);
-            }
-    if(
-        bloque_desde_donde_extender != -1 &&
-        bloque_desde_donde_extender == bloque_inicial // Si no son iguales, sign
-
-            memcpy(bloques + primer_byte_a_operar, resultado, tamanio_a_operar);
-            msync(bloques, cantidad_total_de_bloques * tamanio_bloque, MS_SYNC);
-
-            log_info(logger, "PID: <%d> - Escribir Archivo: <%s> - Tamaño a Escribir: <%d> - Puntero Archivo: <%d>", pid, nombre_archivo, tamanio_a_operar, desplazamiento_sobre_archivo);
-            log_debug(logger, "IO_FS_WRITE TEXTO ESCRITO EN ARCHIVO %s ", resultado);
-
-            free(resultado);
-
-            config_destroy(metadata);
-            
-            break;
-    if(
-        bloque_desde_donde_extender != -1 &&
-        bloque_desde_donde_extender == bloque_inicial // Si no son iguales, sign
-int asignar_bloques(t_bitarray* bitmap, int cantidad_bloques_a_agregar, int bloque_inicial){//Bloque inicial es bloque desde donde voy a asignar y no tu último bloque
-
-    if(cantidad_bloques_a_agregar == 0)
-        return bloque_inicial;
-
-    int bloque_inicial_nuevo = bloque_inicial;
-    int bloque_desde_donde_extender = buscar_bloque_con_n_bloques_libres_contiguos(bitmap, cantidad_bloques_a_agregar, bloque_inicial);
-
-    if(
-        bloque_desde_donde_extender != -1 &&
-        bloque_desde_donde_extender == bloque_inicial // Si no son iguales, significa que no se puede extender desde el bloque inicial
-    ){
-        extender_bloques(bitmap, cantidad_bloques_a_agregar , bloque_inicial);
-    } else {
-        int cantidad_bloques_sin_asignar = cantidad_bloques_libres(bitmap);
-        if(cantidad_bloques_sin_asignar >= cantidad_bloques_a_agregar){
-           return -2;
-           //Acá el bloque inicial es el nuevo bloque inicial -> 
-        } else {
-           return -1;
-        }
-    }
-
-    return bloque_inicial_nuevo;
-}
-*/
 

@@ -17,9 +17,7 @@ int fd_memoria;
 int fd_kernel;
 
 int main(int argc, char* argv[]){
-    //if(argc < 3 ){log_error(logger_entradasalida, "Debe pasar el archivo de configuracion y el nombre por parametro"); abort();}
-    printf("Cantidad de argumentos: %i\n", argc);
-    // Iniciar interfaz I/O
+
     iniciar_entradasalida(argv[2]); //argv[1]
     log_info(logger_entradasalida, "Arranca el modulo Entrada/Salida");
 
@@ -27,9 +25,9 @@ int main(int argc, char* argv[]){
     if(tipo_de_interfaz != GENERICA){
         fd_memoria = crear_conexion(ip_memoria, puerto_memoria, logger_entradasalida);
     }
-
+  
     fd_kernel = crear_conexion(ip_kernel, puerto_kernel, logger_entradasalida); // Se conecta como cliente a KERNEL
-
+   
     // if(realizar_handshake(logger_entradasalida, fd_kernel, HANDSHAKE_ENTRADASALIDA) == -1){
     //     return EXIT_FAILURE;
     // }
@@ -48,7 +46,7 @@ int main(int argc, char* argv[]){
     t_paquete *paquete = crear_paquete(NUEVA_CONEXION_IO, buffer);
     enviar_paquete(paquete, fd_kernel);
     eliminar_paquete(paquete);
-
+    
     // Escucha los mensajes Kernel-E/S
     pthread_t hilo_kernel_entradasalida;
     switch(tipo_de_interfaz){
@@ -61,7 +59,6 @@ int main(int argc, char* argv[]){
 	        pthread_join(hilo_kernel_entradasalida, NULL);
             break;
         case STDOUT:
-            printf("\n\nDENTRO DE CASE STDOUT ANTES DE CREAR HILO\n\n");
             pthread_create(&hilo_kernel_entradasalida, NULL, escuchar_instrucciones_stdout, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	        pthread_join(hilo_kernel_entradasalida, NULL);
             break;
@@ -72,7 +69,6 @@ int main(int argc, char* argv[]){
     }
 	// Frena el hilo principal hasta que el hilo_kernel_entradasalida no finalice
 	// Porque si se el hilo_kernel_entradasalida se desacopla del principal termina el modulo Entradasalida
-
     finalizar_entradasalida(); // Finalizar Interfaz E/S
 
     return 0;

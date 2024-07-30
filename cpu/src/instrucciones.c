@@ -364,7 +364,7 @@ void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tam
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);
-   
+   cargar_int_al_buffer(paquete->buffer, tamanio);
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
 }
