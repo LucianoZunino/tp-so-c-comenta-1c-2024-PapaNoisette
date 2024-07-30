@@ -52,22 +52,25 @@ void iniciar_config_kernel(){
 }
 
 void imprimir_config_kernel(){
-    printf("PUERTO_ESCUCHA: %s\n",puerto_escucha);
-    printf("IP_MEMORIA: %s\n",ip_memoria);
-    printf("PUERTO_MEMORIA: %s\n",puerto_memoria);
-    printf("IP_CPU: %s\n",ip_cpu);
-    printf("PUERTO_CPU_DISPATCH: %s\n",puerto_cpu_dispatch);
-    printf("PUERTO_CPU_INTERRUPT: %s\n",puerto_cpu_interrupt);
-    printf("ALGORITMO_PLANIFICACION: %s\n",algoritmo_planificacion);
-    printf("QUANTUM: %d\n",quantum);
+    printf("\n============================================================\n");
+    printf("Puerto de escucha: %s\n", puerto_escucha);
+    printf("IP de Memoria: %s\n", ip_memoria);
+    printf("Puerto de Memoria: %s\n", puerto_memoria);
+    printf("IP CPU: %s\n", ip_cpu);
+    printf("Puerto de CPU Dispatch: %s\n", puerto_cpu_dispatch);
+    printf("Puerto de CPU Interrupt: %s\n", puerto_cpu_interrupt);
+    printf("Algoritmo de planificación: %s\n", algoritmo_planificacion);
+    printf("Quantum: %d\n", quantum);
+    printf("-------------------------------------------------------------\n");
     for(int i=0; i<largo_array(recursos); i++){
-        printf("RECURSOS: %s\n",recursos[i]);
+        printf("Recursos: %s\n", recursos[i]);
     }
     for(int i=0; i<largo_array(instancias_recursos); i++){
-        printf("INSTANCIAS_RECURSOS: %s\n",instancias_recursos[i]);
+        printf("Instancias de recursos: %s\n", instancias_recursos[i]);
 
     }
-    printf("GRADO_MULTIPROGRAMACION: %d\n",grado_multiprogramacion);
+    printf("Grado de multiprogramación: %d\n", grado_multiprogramacion);
+    printf("============================================================\n\n");
 }
 
 void iniciar_semaforos(){
