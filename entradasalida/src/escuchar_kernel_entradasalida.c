@@ -1,6 +1,7 @@
 #include "escuchar_kernel_entradasalida.h"
 #include <readline/readline.h>
 #include <dirent.h>
+#include <math.h>
 
 void escuchar_instrucciones_generica(){
 	printf("\nENTRO DENTRO DE ESCUCHAR_INSTRUCCIONES_GENERICA()\n");
@@ -184,7 +185,9 @@ void escuchar_instrucciones_dialfs(){
 				
 				char* path = string_duplicate(tomar_nombre_devolver_path(nombre));
 				
-				eliminar_segun(path);
+				if(eliminar_segun(path) != NULL){ // Si el archivo ya existe y se crea otro con el mismo nombre se debería eliminar
+					liberar_archivo_bitmap(nombre);
+				}
 				
 				list_add(archivos_metadata, path);
 
@@ -240,12 +243,11 @@ void escuchar_instrucciones_dialfs(){
 				
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
-
-				usleep(tiempo_unidad_trabajo);
-
 				reg_direccion = extraer_int_del_buffer(buffer);
 				reg_tamanio = extraer_int_del_buffer(buffer);
 				reg_puntero_archivo = extraer_int_del_buffer(buffer);
+
+				usleep(tiempo_unidad_trabajo);
 
 				solicitar_lectura_memoria(pid ,reg_direccion ,reg_tamanio ,IO_STDOUT_WRITE_FS);
 				sem_wait(&sem_fs_write);
@@ -316,7 +318,7 @@ void escuchar_instrucciones_dialfs(){
 				config = config_create(tomar_nombre_devolver_path(nombre));
 				if(config == NULL){
 					log_error(logger_entradasalida, "Error, no se encontro el archivo en el path.\n");
-					break;
+					goto finFs;
 				}
 				int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
 				int inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
@@ -324,14 +326,15 @@ void escuchar_instrucciones_dialfs(){
 				//TODO
 				//Queremos agrandar o achicar?
 
-				int cantidad_nueva_de_bloques = redondear_up(nuevo_tamanio, block_size);
+				int cantidad_nueva_de_bloques = (int)ceil(nuevo_tamanio/block_size);
 				int cantidad_actual_de_bloques = redondear_up(tamanio_archivo, block_size);
+				printf("\nredondear_up(%i, %i) = %i\n",tamanio_archivo, block_size, cantidad_actual_de_bloques);
 
 				int diferencia = cantidad_actual_de_bloques - cantidad_nueva_de_bloques;
 
 				if(diferencia == 0){
 					log_info(logger_entradasalida, "Archivo de mismo tamanio en bloques, no hace falta truncar");
-					break;
+					goto finFs;
 				}
 				printf("\nDESPUES DE 1ER IF\n");
 				if(cantidad_actual_de_bloques > cantidad_nueva_de_bloques){
@@ -346,32 +349,42 @@ void escuchar_instrucciones_dialfs(){
 					printf("\nDENTRO DEL ELSE\n");
 					diferencia = abs(diferencia);
 
-					if(buscar_lugar_bitmap(diferencia) < 0){
-						log_error(logger_entradasalida, "No hay espacio suficiente para truncar este archivo");
-						break;
+					if(buscar_lugar_bitmap(diferencia) == -2){ // -2 seria como un codigo de error, pq -1 ya lo usamos para otro
+						log_error(logger_entradasalida, "No hay espacio suficiente en el FileSystem para truncar este archivo");
+						goto finFs;
 					}
 					printf("\nDESPUES DE ELSE-IF\n");
 					// verificar que haya espacio
 					// chequeamos si entra
-					int fin_archivo = inicio_archivo + redondear_up(tamanio_archivo, block_size);
-					int i = 0;
+					int bloque_fin_archivo = inicio_archivo + redondear_up(tamanio_archivo, block_size);
+					int i = 1;
 
-					for(i = 1; i <= diferencia; i++){
-						if(bitarray_test_bit(bitmap, fin_archivo + i) == 1){
+					while(i <= diferencia){
+						if(bitarray_test_bit(bitmap, bloque_fin_archivo + i) == 1){
 							compactar(nombre, config, nuevo_tamanio);
-							break;
+							goto finFs;
 						}
+						i++;
 					}
 					printf("\nDESPUES DE ELSE-FOR\n");
 
 					if(i >= diferencia){
+						printf("\nDIFERENCIA: %i\n", diferencia);
 						config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
+						//Seteo los Bloques como ocupados
+						for(int j = 1; j <= diferencia; j++){
+							bitarray_set_bit(bitmap, bloque_fin_archivo + j); // bitarray_set_bit(bitmap, i);
+						}
+
 						config_save(config);
 					}
 					printf("\nDESPUES DE ELSE-IF2\n");
 				}
 
+					finFs:
+				notificar_fin(fd_kernel, pid);
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
+				config_destroy(config);
 				printf("\nFIN TRUNCANTE\n");
 				break;
 			case -1:
@@ -442,7 +455,7 @@ void solicitar_almacen_memoria(int pid, int direccion, char* mensaje, op_code co
 }
 
 int buscar_lugar_bitmap(int tamanio){
-	off_t i = 0;
+	int i = 0;
 	int contador_libres = 0;
 	int contador_libres_continuo = 0;
 	printf("\n tamanio: %i\n", tamanio);
@@ -479,7 +492,7 @@ int buscar_lugar_bitmap(int tamanio){
 		// TODO: DEVUELVE ERROR, NO HAY ESPACIO.
 		printf("\n 2er if: contador_libres: %i\n", contador_libres);
 		printf("\n 2er if: contador_libres_continuo: %i\n", contador_libres_continuo);
-		return -1;
+		return -2;
 	}
 }
 
@@ -519,12 +532,11 @@ void liberar_bloques_desde_hasta(inicio, fin){
 	}
 }
 
-void eliminar_segun(char* nombre){
+void* eliminar_segun(char* nombre){
 	for(int i = 0; i<list_size(archivos_metadata); i++){
 		char* path = list_get(archivos_metadata, i);
 		if(strcmp(path, tomar_nombre_devolver_path(nombre))){
-			list_remove(archivos_metadata, i);
-			break;
+			return list_remove(archivos_metadata, i);
 		}
 	}
 }
