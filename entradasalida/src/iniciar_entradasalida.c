@@ -5,8 +5,6 @@
 #include <unistd.h> // Para close
 #include <stdio.h> // Para perror
 
-char* path_base_dialfs;
-
 t_config* config_entradasalida;
 sem_t sem_stdout;
 sem_t sem_fs_write;
@@ -37,7 +35,6 @@ void iniciar_logger_entradasalida(){
 void iniciar_config_entradasalida(char* config){
     printf("INICIAR CONFIG ENTRADASALIDA \n");
     config_entradasalida = iniciar_config(config);
-    printf("flag\n");
     ip_kernel = config_get_string_value(config_entradasalida, "IP_KERNEL");
     puerto_kernel = config_get_string_value(config_entradasalida, "PUERTO_KERNEL");
     tipo_de_interfaz = leer_tipo_interfaz(config_entradasalida);
@@ -56,7 +53,6 @@ void iniciar_config_entradasalida(char* config){
             puerto_memoria = config_get_string_value(config_entradasalida, "PUERTO_MEMORIA");
             break;
         case DIAL_FS:
-            printf("\n\nENTRANDO AL CASE DIAL_FS\n\n");
             tiempo_unidad_trabajo = config_get_int_value(config_entradasalida, "TIEMPO_UNIDAD_TRABAJO");
             ip_memoria = config_get_string_value(config_entradasalida, "IP_MEMORIA");
             puerto_memoria = config_get_string_value(config_entradasalida, "PUERTO_MEMORIA");
