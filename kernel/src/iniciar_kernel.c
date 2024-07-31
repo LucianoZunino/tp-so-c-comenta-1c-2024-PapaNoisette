@@ -176,7 +176,8 @@ void iniciar_recursos(){
         t_recurso* nuevo_recurso = malloc (sizeof(t_recurso)); //HACER FREE CUANDO SE ELIMINA TODO
         char* nombre = (char*)recursos[i];
         int instancias = atoi(instancias_recursos[i]);
-        t_queue* cola_de_espera = queue_create();
+        //t_list* cola_de_espera = list_create();
+        t_queue * cola_de_espera = queue_create();
         t_list* pcb_asignados = list_create();
         pthread_mutex_t mutex;
         pthread_mutex_init(&mutex, NULL);

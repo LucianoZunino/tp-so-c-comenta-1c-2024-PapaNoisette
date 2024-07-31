@@ -12,28 +12,28 @@ void iniciar_cpu()
 	EXEC=malloc(sizeof(t_pcb));
 	EXEC->registros_cpu=malloc(sizeof(t_registros_cpu));
 	EXEC->estado=malloc(sizeof(estado_pcb));
-	iniciar_pcb(); //ESTA BIEN ESTO?
+	//iniciar_pcb(); //ESTA BIEN ESTO?
 }
 
-void iniciar_pcb(){
-   EXEC->estado=0;
-	EXEC->pid=0;
-	EXEC->program_counter=0;
-	EXEC->quantum=0;
-	EXEC->registros_cpu->AX=0;
-   EXEC->registros_cpu->BX=0;
-	EXEC->registros_cpu->CX=0;
-   EXEC->registros_cpu->DX=0;
-   EXEC->registros_cpu->EAX=0;
-	EXEC->registros_cpu->EBX=0;
-	EXEC->registros_cpu->ECX=0;
-   EXEC->registros_cpu->EDX=0;
-	EXEC->registros_cpu->SI=0;
-	EXEC->registros_cpu->DI=0;
+//void iniciar_pcb(){
+//   EXEC->estado=0;
+//	EXEC->pid=0;
+//	EXEC->program_counter=0;
+//	EXEC->quantum=0;
+//	EXEC->registros_cpu->AX=0;
+//   EXEC->registros_cpu->BX=0;
+//	EXEC->registros_cpu->CX=0;
+//   EXEC->registros_cpu->DX=0;
+//   EXEC->registros_cpu->EAX=0;
+//	EXEC->registros_cpu->EBX=0;
+//	EXEC->registros_cpu->ECX=0;
+//   EXEC->registros_cpu->EDX=0;
+//	EXEC->registros_cpu->SI=0;
+//	EXEC->registros_cpu->DI=0;
 
 	
 
-}
+//}
 void iniciar_logger_cpu()
 {
    logger_cpu = iniciar_logger("cpu.log", "cpu");

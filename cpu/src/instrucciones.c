@@ -5,47 +5,47 @@ void ejecutar_set(char *registro, int valor){
 
    if (strcmp(registro, "AX") == 0)
    {
-      EXEC->registros_cpu->AX = valor;
+      EXEC->registros_cpu->AX = (uint8_t) valor;
    }
    else if (strcmp(registro, "BX") == 0)
    {
-      EXEC->registros_cpu->BX = valor;
+      EXEC->registros_cpu->BX = (uint8_t) valor;
    }
    else if (strcmp(registro, "CX") == 0)
    {
-      EXEC->registros_cpu->CX = valor;
+      EXEC->registros_cpu->CX = (uint8_t) valor;
    }
    else if (strcmp(registro, "DX") == 0)
    {
-      EXEC->registros_cpu->DX = valor;
+      EXEC->registros_cpu->DX = (uint8_t) valor;
    }
    else if (strcmp(registro, "EAX") == 0)
    {
-      EXEC->registros_cpu->EAX = valor;
+      EXEC->registros_cpu->EAX = (uint32_t) valor;
    }
    else if (strcmp(registro, "EBX") == 0)
    {
-      EXEC->registros_cpu->EBX = valor;
+      EXEC->registros_cpu->EBX = (uint32_t) valor;
    }
    else if (strcmp(registro, "ECX") == 0)
    {
-      EXEC->registros_cpu->ECX = valor;
+      EXEC->registros_cpu->ECX = (uint32_t) valor;
    }
    else if (strcmp(registro, "EDX") == 0)
    {
-      EXEC->registros_cpu->EDX = valor;
+      EXEC->registros_cpu->EDX = (uint32_t) valor;
    }
    else if (strcmp(registro, "SI") == 0)
    {
-      EXEC->registros_cpu->SI = valor;
+      EXEC->registros_cpu->SI = (uint32_t) valor;
    }
    else if (strcmp(registro, "DI") == 0)
    {
-      EXEC->registros_cpu->DI = valor;
+      EXEC->registros_cpu->DI = (uint32_t) valor;
    }
    else if (strcmp(registro, "PC") == 0)
    {
-      EXEC->program_counter = valor;
+      EXEC->program_counter = (uint32_t) valor;
    }
    else
    {
@@ -132,7 +132,7 @@ void ejecutar_copy_string(char *tamanio){
 }
 
 void ejecutar_wait(char *recurso){
-   log_info(logger_cpu, " ENVIANDO WAIT A KERNEL");
+   log_info(logger_cpu, "ENVIANDO WAIT A KERNEL");
 
    t_buffer *buffer = crear_buffer();
    t_paquete *paquete = crear_paquete(KERNEL_WAIT, buffer);
@@ -144,7 +144,7 @@ void ejecutar_wait(char *recurso){
 }
 
 void ejecutar_signal(char *recurso){
-   log_info(logger_cpu, " ENVIANDO SIGNAL A KERNEL");
+   log_info(logger_cpu, "ENVIANDO SIGNAL A KERNEL");
 
   //devuelvo contexto por solicitar llamada a kernel
 
@@ -361,6 +361,8 @@ void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tam
 
    t_buffer *buffer = crear_buffer();
    t_paquete *paquete = crear_paquete(IO_FS_TRUNCATE_FS, buffer);
+   printf("\nENIVA DESDE CPU REGISTRO ECX: %i\n", EXEC->registros_cpu->ECX);
+   printf("\nENIVA DESDE CPU REGISTRO ECX: %i\n", get_registro("ECX"));
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);

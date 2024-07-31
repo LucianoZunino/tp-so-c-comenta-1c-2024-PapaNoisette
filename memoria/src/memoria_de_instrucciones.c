@@ -3,7 +3,7 @@
 void guardar_instrucciones_en_memoria(int pid, char* path){
     t_instrucciones_por_proceso* instrucciones_proceso = malloc(sizeof(t_instrucciones_por_proceso));
     //char *path_final=strcat(strcat(path_instrucciones,"/"),path);
-    char *path_final="/home/utnso/scripts-pruebas/instrucciones.txt";
+    char *path_final = "/home/utnso/scripts-pruebas/instrucciones.txt";
     FILE* archivo = fopen(path_final, "r");
 
     if(archivo == NULL){
@@ -48,15 +48,15 @@ void enviar_instruccion_a_cpu(int pid, int program_counter, int socket){
 
 			if(strlen(instruccion) != 0){
 				enviar_instruccion(instruccion, socket);
-				log_info(logger_memoria, "INSTRUCCION ENVIADA A CPU:  %s,PROGRAM_COUNTER:%d\n", instruccion, program_counter);
+				log_info(logger_memoria, "INSTRUCCION ENVIADA A CPU: %s, PROGRAM_COUNTER: %d\n", instruccion, program_counter);
 			}
 			else{
-				log_error(logger_memoria, "No hay instruccion para el pcb:  %d\n", instrucciones_proceso->pid);
+				log_error(logger_memoria, "No hay instruccion para el pcb: %d\n", instrucciones_proceso->pid);
 			}
 
 			return;
 		}
 	}
     
-	log_info(logger_memoria, "Error, no hay pid cargado en memoria \n");
+	log_info(logger_memoria, "Error, no hay pid cargado en memoria\n");
 }

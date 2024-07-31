@@ -67,7 +67,8 @@ void agregar_pcb (t_paquete *paquete, t_pcb *pcb)
     cargar_int_al_buffer(paquete->buffer, pcb->pid);
     //cargar_datos_al_buffer(paquete->buffer, pcb->instrucciones, sizeof(pcb->instrucciones));
     cargar_int_al_buffer(paquete->buffer, pcb->program_counter);
-    cargar_datos_al_buffer(paquete->buffer, pcb->registros_cpu, sizeof(pcb->registros_cpu));
+    //cargar_datos_al_buffer(paquete->buffer, pcb->registros_cpu, sizeof(pcb->registros_cpu));
+    cargar_registros_al_buffer(pcb->registros_cpu, paquete->buffer);
     cargar_int_al_buffer(paquete->buffer, pcb->quantum);
     cargar_datos_al_buffer(paquete->buffer, &pcb->estado, sizeof(pcb->estado));
     //cargar_int_al_buffer(paquete->buffer, &pcb->motivo, sizeof(pcb->motivo));

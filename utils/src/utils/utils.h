@@ -211,6 +211,8 @@ void enviar_paquete(t_paquete *paquete, int socket_cliente);
 //t_instruccion *deserializar_instruccion(void *stream);
 //t_list *parsear_archivo_instrucciones(char *path_archivo, t_log *logger);
 t_pcb *deserializar_pcb(t_buffer *buffer);
+t_registros_cpu* deserializar_registros_cpu(t_buffer *buffer);
+void cargar_registros_al_buffer(t_registros_cpu* registros, t_buffer* buffer);
 
 // Funciones auxiliares
 int largo_array(char **array);

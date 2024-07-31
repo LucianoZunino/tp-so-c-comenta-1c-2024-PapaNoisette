@@ -91,44 +91,69 @@ void enviar_a_exit(t_pcb* pcb, char* motivo){
     log_info(logger_kernel,"Finaliza el proceso <%i> - Motivo: <%s>", pcb->pid, motivo);
 }
 
-
 void restar_instancia(char* nombre_recurso, t_pcb *pcb){
+    printf("\n\n INICIAR_ RESTAR_INSTACIA \n\n");
     int index = buscar_recurso(nombre_recurso);
     t_recurso* recurso = list_get(recursos_disponibles, index);
-
-    if (recurso->instancias <= 0){ //caso en el que no hay recurso de instancia disponible
+    printf("\n\n ANTES: if(recurso->instancias <= 0) \n\n");
+    if(recurso->instancias <= 0){ //caso en el que no hay recurso de instancia disponible
         pthread_mutex_lock(&mutex_BLOCKED);
+        printf("\nLIST_ADD ANTES\n");
 	    list_add(BLOCKED, pcb);
+        printf("\nLIST_ADD DESPUES\n");
 	    pthread_mutex_unlock(&mutex_BLOCKED);
         cambio_de_estado(pcb, E_BLOCKED); //FALTABA CAMBIAR EL ESTADO
 
         pthread_mutex_lock(&recurso->mutex);
-        list_add(recurso->cola_de_espera, pcb);
+        printf("\nQUEUE_PUSH ANTES\n");
+        queue_push(recurso->cola_de_espera, pcb);
+        printf("\nQUEUE_PUSH DESPUES\n");
         pthread_mutex_unlock(&recurso->mutex);
-    } else { //caso en el que hay recurso de instancia disponible
+
+        printf("\n\n caso en el que no hay recurso de instancia disponible \n\n");
+        printf("\n TAMANIO DE COLA DE ESPERA: %i DEL RECURSO: %s \n", queue_size(recurso->cola_de_espera), recurso->nombre);
+        t_pcb* pcb_provisorio = list_get(recurso->pcb_asignados, list_size(recurso->pcb_asignados) - 1 );
+        printf("\n recurso asignado: %s al pcb: %i \n", recurso->nombre, pcb_provisorio->pid);
+        printf("\n TAMANIO RECURSOS ASIGNADOS: %i\n", list_size(recurso->pcb_asignados));
+
+
+    }
+    else{ //caso en el que hay recurso de instancia disponible
         pthread_mutex_lock(&recurso->mutex);
         recurso->instancias =- 1;
         pthread_mutex_unlock(&recurso->mutex);
-        
+        printf("\n AMTES DE AGREGAR A PCB_ASIGNADOS\n");
         pthread_mutex_lock(&recurso->mutex);
         list_add(recurso->pcb_asignados, pcb);
         pthread_mutex_unlock(&recurso->mutex);
+        
+        printf("\nDENTRO DEL EEEEELSE:\n");
+        printf("\n TAMANIO DE COLA DE ESPERA: %i DEL RECURSO: %s \n", queue_size(recurso->cola_de_espera), recurso->nombre);
+        t_pcb* pcb_provisorio = list_get(recurso->pcb_asignados, list_size(recurso->pcb_asignados) - 1 );
+        printf("\n recurso asignado: %s al pcb: %i \n", recurso->nombre, pcb_provisorio->pid);
+        printf("\n TAMANIO RECURSOS ASIGNADOS: %i\n", list_size(recurso->pcb_asignados));
         
         if(pcb->quantum != quantum){ // CUANDO SE UTILIZA VRR, SE CONTEMPLA EL CASO DE PRIORIDAD POR QUANTUM
             pthread_mutex_lock(&mutex_PRIORIDAD);
 			list_add(PRIORIDAD, pcb);
 			pthread_mutex_unlock(&mutex_PRIORIDAD);
             cambio_de_estado(pcb, E_PRIORIDAD);
-        }else {
+            //sem_post(&sem_READY);
+            printf("\nDentro del IF\n");
+        }
+        else{
             pthread_mutex_lock(&mutex_READY);
 			list_add(READY, pcb);
 			pthread_mutex_unlock(&mutex_READY);
             cambio_de_estado(pcb, E_READY);
+            //sem_post(&sem_READY);
+            printf("\nDentro del ELSE\n");
         }
-        
+        printf("\n\nflag1\n\n");
         list_remove(recursos_disponibles, index); //se actualiza la lista de recursos_disponibles
+        printf("\n\nflag2\n\n");
         list_add_in_index(recursos_disponibles, index, &recurso);
-
+        printf("\n\nflag3\n\n");
     }
 }
 
@@ -263,3 +288,4 @@ void validar_desalojo(){
 		
 	}
 }
+

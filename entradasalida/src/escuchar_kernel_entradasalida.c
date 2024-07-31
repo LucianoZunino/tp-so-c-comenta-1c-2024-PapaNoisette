@@ -259,6 +259,8 @@ void escuchar_instrucciones_dialfs(){
 				
 				aux = bloques_dat + reg_puntero_archivo;
 
+				printf("\nDatos a escribir en disco: %s\n", (char*)datos);
+
 				memcpy(aux, datos, reg_tamanio); 
 
 				msync(bloques_dat, block_size*block_count, MS_SYNC);
@@ -292,6 +294,8 @@ void escuchar_instrucciones_dialfs(){
 				aux = bloques_dat + reg_puntero_archivo;
 
 				memcpy(leido, aux, reg_tamanio);
+
+				printf("\nString a pasar a memoria: %s\n", leido);
 
 				solicitar_almacen_memoria(pid, reg_direccion, leido, IO_FS_READ_FS);
 

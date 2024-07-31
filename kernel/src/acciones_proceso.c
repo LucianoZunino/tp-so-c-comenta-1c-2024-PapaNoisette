@@ -173,6 +173,19 @@ void mostrar_procesos_de(t_list* lista_actual){
 }
 
 void iniciar_registros(t_pcb* pcb){
+   /*
+    pcb->registros_cpu->AX  = malloc(sizeof(pcb->registros_cpu->AX));
+    pcb->registros_cpu->BX = malloc(sizeof(pcb->registros_cpu->BX));
+    pcb->registros_cpu->CX = malloc(sizeof(pcb->registros_cpu->CX));
+    pcb->registros_cpu->DX = malloc(sizeof(pcb->registros_cpu->DX));
+    pcb->registros_cpu->EAX = malloc(sizeof(pcb->registros_cpu->EAX));
+    pcb->registros_cpu->EBX = malloc(sizeof(pcb->registros_cpu->EBX));
+    pcb->registros_cpu->ECX = malloc(sizeof(pcb->registros_cpu->ECX));
+    pcb->registros_cpu->EDX = malloc(sizeof(pcb->registros_cpu->EDX));
+    pcb->registros_cpu->SI = malloc(sizeof(pcb->registros_cpu->SI));
+    pcb->registros_cpu->DI = malloc(sizeof(pcb->registros_cpu->DI));
+*/
+    
     pcb->registros_cpu->AX = 0;
     pcb->registros_cpu->BX = 0;
     pcb->registros_cpu->CX = 0;
@@ -183,4 +196,5 @@ void iniciar_registros(t_pcb* pcb){
     pcb->registros_cpu->EDX = 0;
     pcb->registros_cpu->SI = 0;
     pcb->registros_cpu->DI = 0;
+    
 }
