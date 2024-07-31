@@ -177,7 +177,7 @@ char* tomar_nombre_devolver_path(char* nombre){
 
     strcat(archivo_a_devolver, nombre); // Concatenar nombre al final
 
-    //free(path_base); EN ALGUN LADO HAY QUE HACERLO
+    free(path_base); // SI ROMPE ES POR ESTO
 
     return archivo_a_devolver;
 }

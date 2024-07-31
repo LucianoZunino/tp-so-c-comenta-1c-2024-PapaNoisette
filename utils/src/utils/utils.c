@@ -418,101 +418,14 @@ t_pcb* deserializar_pcb(t_buffer* buffer){
 	pcb->registros_cpu = malloc(sizeof(t_registros_cpu));
 	pcb->pid = extraer_int_del_buffer(buffer);
 	pcb->program_counter = extraer_int_del_buffer(buffer);
-	//pcb->registros_cpu= extraer_datos_del_buffer(buffer);
-	printf("\nANTES DE DESERIALIZAR\n");
 	pcb->registros_cpu = deserializar_registros_cpu(buffer);
-	printf("DESPUES DE DESERIALIZAR\n");
-	printf("DESERIALIZACION PCB ECXXXXXXX: %i\n", pcb->registros_cpu->ECX);
-
 	pcb->quantum = extraer_int_del_buffer(buffer);
 	pcb->estado = extraer_int_del_buffer(buffer);
 	//pcb->motivo = extraer_int_del_buffer(buffer);
 	return pcb;
 }
 
-// t_registros_cpu* deserializar_registros_cpu(t_buffer* buffer){
-// 	t_registros_cpu* registros;
-// 	registros->AX = (uint8_t*)extraer_datos_del_buffer(buffer);
-// 	registros->BX = (uint8_t*)extraer_datos_del_buffer(buffer);
-// 	registros->CX = (uint8_t*)extraer_datos_del_buffer(buffer);
-// 	registros->DX = (uint8_t*)extraer_datos_del_buffer(buffer);
-// 	registros->EAX = (uint32_t*)extraer_datos_del_buffer(buffer);
-// 	registros->EBX = (uint32_t*)extraer_datos_del_buffer(buffer);
-// 	registros->ECX = (uint32_t*)extraer_datos_del_buffer(buffer);
-// 	registros->EDX = (uint32_t*)extraer_datos_del_buffer(buffer);
-// 	registros->SI = (uint32_t*)extraer_datos_del_buffer(buffer);
-// 	registros->DI = (uint32_t*)extraer_datos_del_buffer(buffer);
-// 	return registros;
-// }
-
-
-t_registros_cpu* deserializar_registros_cpu(t_buffer* buffer){
-	t_registros_cpu* registros;
-
-	uint8_t* AX_aux = (uint8_t*)extraer_datos_del_buffer(buffer);
-	registros->AX = *AX_aux;
-	free(AX_aux);
-
-	printf("\nEXTRAIGO EL PRIMER REGISTRO\n");
-	uint8_t* BX_aux = (uint8_t*)extraer_datos_del_buffer(buffer);
-	registros->BX = *BX_aux;
-	free(BX_aux);
-
-	uint8_t* CX_aux = (uint8_t*)extraer_datos_del_buffer(buffer);
-	registros->CX = *CX_aux;
-	free(CX_aux);
-
-	uint8_t* DX_aux = (uint8_t*)extraer_datos_del_buffer(buffer);
-	registros->DX = *DX_aux;
-	free(DX_aux);
-
-	uint32_t* EAX_aux = (uint32_t*)extraer_datos_del_buffer(buffer);
-	registros->EAX = *EAX_aux;
-	free(EAX_aux);
-
-	uint32_t* EBX_aux = (uint32_t*)extraer_datos_del_buffer(buffer);
-	registros->EBX = *EBX_aux;
-	free(EBX_aux);
-
-	uint32_t* ECX_aux = (uint32_t*)extraer_datos_del_buffer(buffer);
-	registros->ECX = *ECX_aux;
-	free(ECX_aux);
-
-	uint32_t* EDX_aux = (uint32_t*)extraer_datos_del_buffer(buffer);
-	registros->EDX = *EDX_aux;
-	free(EDX_aux);
-
-	uint32_t* SI_aux = (uint32_t*)extraer_datos_del_buffer(buffer);
-	registros->SI = *SI_aux;
-	free(SI_aux);
-
-	uint32_t* DI_aux = (uint32_t*)extraer_datos_del_buffer(buffer);
-	registros->DI = *DI_aux;
-	free(DI_aux);
-	
-	return registros;
-}
-
-
 void cargar_registros_al_buffer(t_registros_cpu* registros, t_buffer* buffer){
-	printf("\nDENTRO DE CARGAR_REGISTROS\n");
-	cargar_datos_al_buffer(buffer, &registros->AX, sizeof(uint8_t));
-	printf("\nDENTRo DE CARGAR_REGISTROS EN EL MEDIO\n");
-	cargar_datos_al_buffer(buffer, &registros->BX, sizeof(uint8_t));
-	cargar_datos_al_buffer(buffer, &registros->CX, sizeof(uint8_t));
-	cargar_datos_al_buffer(buffer, &registros->DX, sizeof(uint8_t));
-	cargar_datos_al_buffer(buffer, &registros->EAX, sizeof(uint32_t));
-	cargar_datos_al_buffer(buffer, &registros->EBX, sizeof(uint32_t));
-	cargar_datos_al_buffer(buffer, &registros->ECX, sizeof(uint32_t));
-	cargar_datos_al_buffer(buffer, &registros->EDX, sizeof(uint32_t));
-	cargar_datos_al_buffer(buffer, &registros->SI, sizeof(uint32_t));
-	cargar_datos_al_buffer(buffer, &registros->DI, sizeof(uint32_t));
-	printf("\nDENTRo DE CARGAR_REGISTROS ABAJO DE TODO\n");
-}
-
-
-/*void cargar_registros_al_buffer(t_registros_cpu* registros, t_buffer* buffer){
-	printf("\nDENTRO DE CARGAR_REGISTROS\n");
 
 	void* registro_AX = malloc(sizeof(uint8_t));
 	*(uint8_t *)registro_AX = registros->AX;
@@ -553,148 +466,40 @@ void cargar_registros_al_buffer(t_registros_cpu* registros, t_buffer* buffer){
 	void* registro_DI = malloc(sizeof(uint32_t));
 	*(uint32_t *)registro_DI = registros->DI;
 	cargar_datos_al_buffer(buffer, registro_DI, sizeof(uint32_t));
-
-	printf("\nDENTRo DE CARGAR_REGISTROS ABAJO DE TODO\n");
 }
-/*
-t_registros_cpu* deserializar_registros_cpu(t_buffer* buffer){
-	t_registros_cpu* registros;
 
-	//registros->AX = *(uint8_t*)extraer_datos_del_buffer(buffer);
-	//registros->BX = *(uint8_t*)extraer_datos_del_buffer(buffer);
-	//registros->CX = *(uint8_t*)extraer_datos_del_buffer(buffer);
-	//registros->DX = *(uint8_t*)extraer_datos_del_buffer(buffer);
-	//registros->EAX = *(uint32_t*)extraer_datos_del_buffer(buffer);
-	//registros->EBX = *(uint32_t*)extraer_datos_del_buffer(buffer);
-	//registros->ECX = *(uint32_t*)extraer_datos_del_buffer(buffer);
-	//registros->EDX = *(uint32_t*)extraer_datos_del_buffer(buffer);
-	//registros->SI = *(uint32_t*)extraer_datos_del_buffer(buffer);
-	//registros->DI = *(uint32_t*)extraer_datos_del_buffer(buffer);
-	
+t_registros_cpu* deserializar_registros_cpu(t_buffer* buffer){
+	t_registros_cpu* registros = malloc(sizeof(t_registros_cpu));
 	
 	void* registros_AX = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->AX, datos, sizeof(uint8_t));
+	memcpy(&registros->AX, registros_AX, sizeof(uint8_t));
 
 	void* registros_BX = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->BX, datos, sizeof(uint8_t));
+	memcpy(&registros->BX, registros_BX, sizeof(uint8_t));
 	
 	void* registros_CX = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->CX, datos, sizeof(uint8_t));
+	memcpy(&registros->CX, registros_CX, sizeof(uint8_t));
 
 	void* registros_DX = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->DX, datos, sizeof(uint8_t));
+	memcpy(&registros->DX, registros_DX, sizeof(uint8_t));
 	
 	void* registros_EAX = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->EAX, datos, sizeof(uint32_t));
+	memcpy(&registros->EAX, registros_EAX, sizeof(uint32_t));
 
 	void* registros_EBX = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->EBX, datos, sizeof(uint32_t));
+	memcpy(&registros->EBX, registros_EBX, sizeof(uint32_t));
 
 	void* registros_ECX = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->ECX, datos, sizeof(uint32_t));
+	memcpy(&registros->ECX, registros_ECX, sizeof(uint32_t));
 
 	void* registros_EDX = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->EDX, datos, sizeof(uint32_t));
+	memcpy(&registros->EDX, registros_EDX, sizeof(uint32_t));
 
 	void* registros_SI = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->SI, datos, sizeof(uint32_t));
+	memcpy(&registros->SI, registros_SI, sizeof(uint32_t));
 
 	void* registros_DI = extraer_datos_del_buffer(buffer);
-	memcpy(&registros->DI, datos, sizeof(uint32_t));
-
-	
+	memcpy(&registros->DI, registros_DI, sizeof(uint32_t));
 
 	return registros;
-}*/
-
- 
-
-/*t_registros_cpu* deserializar_registros_cpu(t_buffer* buffer){
-	t_registros_cpu* registros;
-	registros->AX = extraer_int_del_buffer(buffer);
-	registros->BX = extraer_int_del_buffer(buffer);
-	registros->CX = extraer_int_del_buffer(buffer);
-	registros->DX = extraer_int_del_buffer(buffer);
-	registros->EAX = extraer_int_del_buffer(buffer);
-	registros->EBX = extraer_int_del_buffer(buffer);
-	registros->ECX = extraer_int_del_buffer(buffer);
-	registros->EDX = extraer_int_del_buffer(buffer);
-	registros->SI = extraer_int_del_buffer(buffer);
-	registros->DI = extraer_int_del_buffer(buffer);
-	return registros;
-}*/
-
-//  void cargar_registros_al_buffer(t_registros_cpu* registros, t_buffer* buffer){
-//  	cargar_int_al_buffer(buffer, registros->AX);
-//  	cargar_int_al_buffer(buffer, registros->BX);
-//  	cargar_int_al_buffer(buffer, registros->CX);
-//  	cargar_int_al_buffer(buffer, registros->DX);
-//  	cargar_int_al_buffer(buffer, registros->EAX);
-//  	cargar_int_al_buffer(buffer, registros->EBX);
-//  	cargar_int_al_buffer(buffer, registros->ECX);
-//  	cargar_int_al_buffer(buffer, registros->EDX);
-//  	cargar_int_al_buffer(buffer, registros->SI);
-//  	cargar_int_al_buffer(buffer, registros->DI);
-//  }
-
-/*
-void cargar_registros_al_buffer(t_registros_cpu* registros, t_buffer* buffer){
-	int tamanio_registro = ((4 * sizeof(uint8_t)) + (6 * sizeof(uint32_t)));
-	void* stream_nuevo = malloc(buffer->size + tamanio_registro);
-	int d = 0;
-	memcpy(stream_nuevo, buffer->stream, buffer->size);
-	d = d + sizeof(buffer->stream);
-	memcpy(stream_nuevo + d , &(registros->AX), sizeof(uint8_t));
-    d += sizeof(uint8_t);
-    memcpy(stream_nuevo + d , &(registros->BX), sizeof(uint8_t));
-    d += sizeof(uint8_t);
-    memcpy(stream_nuevo + d , &(registros->CX), sizeof(uint8_t));
-    d += sizeof(uint8_t);
-    memcpy(stream_nuevo + d , &(registros->DX), sizeof(uint8_t));
-    d += sizeof(uint8_t);
-	memcpy(stream_nuevo + d, &(registros->EAX), sizeof(uint32_t));
-    d += sizeof(uint32_t);
-    memcpy(stream_nuevo + d, &(registros->EBX), sizeof(uint32_t));
-    d += sizeof(uint32_t);
-    memcpy(stream_nuevo + d, &(registros->ECX), sizeof(uint32_t));
-    d += sizeof(uint32_t);
-    memcpy(stream_nuevo + d, &(registros->EDX), sizeof(uint32_t));
-    d += sizeof(uint32_t);
-	memcpy(stream_nuevo + d , &(registros->SI), sizeof(uint32_t));
-    d += sizeof(uint32_t);
-    memcpy(stream_nuevo + d , &(registros->DI), sizeof(uint32_t));
-    d += sizeof(uint32_t);
-
-    memcpy(buffer->stream, &stream_nuevo, d);
-	buffer->size = d;
-	printf("SE CARGARON LOS REGISTROS\n\n\n");
-
 }
-t_registros_cpu* deserializar_registros_cpu(t_buffer* buffer){
-	printf("SE INICIA DESCARGA DE LOS REGISTROS\n\n\n");
-	int tamanio_registro = ((4 * sizeof(uint8_t)) + (6 * sizeof(uint32_t)));
-	t_registros_cpu* registro;// = malloc(tamanio_registro);
-	int d = 0;
-	memcpy(registro->AX, (uint8_t) buffer->stream + d, sizeof(uint8_t));
-	d += sizeof(uint8_t);
-	memcpy(registro->BX, (uint8_t) buffer->stream + d, sizeof(uint8_t));
-	d += sizeof(uint8_t);
-	memcpy(registro->CX, (uint8_t) buffer->stream + d, sizeof(uint8_t));
-	d += sizeof(uint8_t);
-	memcpy(registro->DX,(uint8_t) buffer->stream + d, sizeof(uint8_t));
-	d += sizeof(uint8_t);
-	memcpy(registro->EAX, (uint32_t) buffer->stream + d, sizeof(uint32_t));
-	d += sizeof(uint32_t);
-	memcpy(registro->EBX,(uint32_t)buffer->stream + d, sizeof(uint32_t));
-	d += sizeof(uint32_t);
-	memcpy(registro->ECX, (uint32_t) buffer->stream + d, sizeof(uint32_t));
-	d += sizeof(uint32_t);
-	memcpy(registro->EDX, (uint32_t) buffer->stream + d, sizeof(uint32_t));
-	d += sizeof(uint32_t);
-	memcpy(registro->SI, (uint32_t) buffer->stream + d, sizeof(uint32_t));
-	d += sizeof(uint32_t);
-	memcpy(registro->DI, (uint32_t) buffer->stream + d, sizeof(uint32_t));
-	d += sizeof(uint32_t);
-	printf("SE DESCARGARON LOS REGISTROS\n\n\n");
-}
-*/
