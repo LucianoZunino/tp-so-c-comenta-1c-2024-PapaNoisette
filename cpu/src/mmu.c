@@ -30,14 +30,12 @@ uint32_t traducir_direccion_logica(int dir_logica){
    int marco = -1;
    
    if(marco_en_tlb(pid, pagina, &marco)){
-      // TLB HIT
-      log_info(logger_cpu,"TLB Hit: \"PID: %d - TLB HIT - Pagina: %d\n",pid,pagina);
-      log_info(logger_cpu,"marco en tlb hit: %i", marco);
+      log_info(logger_cpu, "TLB Hit: \"PID: %d - TLB HIT - Página: %d\n\"", pid, pagina);
+      printf("Marco en TLB HIT: %i", marco);
       return calculo_dir_fisica(marco, offset);
    }
 
-   // TLB MISS
-   log_info(logger_cpu,"TLB Miss: \"PID: %d - TLB Miss - Pagina: %d\n",pid,pagina);
+   log_info(logger_cpu,"TLB Miss: \"PID: %d - TLB Miss - Página: %d\n\"", pid, pagina);
    
    t_buffer* buffer = crear_buffer();
    cargar_int_al_buffer(buffer, pid);

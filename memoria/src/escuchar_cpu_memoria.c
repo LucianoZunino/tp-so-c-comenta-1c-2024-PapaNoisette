@@ -22,9 +22,10 @@ void escuchar_mensajes_cpu_memoria(){
 
 		case HANDSHAKE_CPU:
 			aceptar_handshake(logger_memoria, fd_cpu, cod_op);
+
 			break;
 		case CPU_SOLICITA_INSTRUCCION:
-			printf("-CASE--CPU_SOLICITA_INSTRUCCION :\n");
+			printf("CPU solicita instrucción:\n");
 
 			buffer = recibir_buffer_completo(fd_cpu);
 			pid = extraer_int_del_buffer(buffer);
@@ -33,15 +34,17 @@ void escuchar_mensajes_cpu_memoria(){
 			usleep(retardo_respuesta);
 			enviar_instruccion_a_cpu(pid, program_counter, fd_cpu);
 			destruir_buffer(buffer);
+
 			break;
 		case CPU_CONSULTA_TAM_PAGINA:
-			printf("-CASE--CPU_CONSULTA_TAM_PAGINA :\n");
+			printf("-CASE-- CPU consulta tamaño de página:\n");
 
 			buffer_a_enviar2 = crear_buffer();
 			paquete = crear_paquete(CPU_CONSULTA_TAM_PAGINA, buffer_a_enviar2);
 			cargar_int_al_buffer(paquete->buffer, tam_pagina);
 			enviar_paquete(paquete, fd_cpu);
 			eliminar_paquete(paquete);
+
 			break;
 		case CPU_CONSULTA_FRAME:
 			usleep(retardo_respuesta);
@@ -50,19 +53,20 @@ void escuchar_mensajes_cpu_memoria(){
 			int pagina = extraer_int_del_buffer(buffer);
 			
 			marco = obtener_marco(pid, pagina);
+			log_info(logger_memoria, "Obtener Marco: \"PID: %d - OBTENER MARCO - Página: %d - Marco: %d\"\n", pid, pagina, marco);
 
 			buffer_a_enviar = crear_buffer();
 			paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
 			cargar_int_al_buffer(paquete->buffer, marco);
 			enviar_paquete(paquete, fd_cpu);
 			eliminar_paquete(paquete);
+
 			// LOG OBLIGATORIO
-			log_info(logger_memoria, "Acceso a Tabla de Páginas PID: %d - Página: %d - Marco: %d\n", pid, pagina, marco);
+			log_info(logger_memoria, "Acceso a Tabla de Páginas \"PID: %d - Página: %d - Marco: %d\"\n", pid, pagina, marco);
 			destruir_buffer(buffer);
+
 			break;
 		case MEMORIA_RESIZE:
-			log_info(logger_memoria, "MEMORIA_RESIZE");
-
 			buffer = recibir_buffer_completo(fd_cpu);
 			pid = extraer_int_del_buffer(buffer);
 			int nuevo_tamano = extraer_int_del_buffer(buffer);
@@ -70,25 +74,24 @@ void escuchar_mensajes_cpu_memoria(){
 			usleep(retardo_respuesta);
 
 			int resultado = resize_tamano_proceso(pid, nuevo_tamano);
-			if (resultado == 0)
-			{ // 0 -> Ok | -1 -> OUT_OF_MEMORY
+			if(resultado == 0){
+			 // 0 -> Ok | -1 -> OUT_OF_MEMORY
+			 	log_info(logger_memoria, "RESIZE OK");
 
-				log_info(logger_memoria, "RESIZE_OK");
 				buffer_a_enviar = crear_buffer();
 				paquete2 = crear_paquete(RESIZE_OK, buffer_a_enviar);
 				enviar_paquete(paquete2, fd_cpu);
 				eliminar_paquete(paquete2);
-
 				// RESOLVER ESTA PARTE QUE QUEDA PEGAD EL BUFFER
 			}
-			else
-			{
+			else{
 				log_info(logger_memoria, "RESIZE NOT OK OUT_OF_MEMORY");
 				buffer_a_enviar = crear_buffer();
 				paquete2 = crear_paquete(OUT_OF_MEMORY, buffer_a_enviar);
 				enviar_paquete(paquete2, fd_cpu);
 				eliminar_paquete(paquete2);
 			}
+
 			break;
 		case MEMORIA_MOV_OUT: //LECTURA
 			log_info(logger_memoria, "MOV_OUT");
@@ -114,6 +117,7 @@ void escuchar_mensajes_cpu_memoria(){
 			free(datos_aux); // Libera el void pedido para la conversión
 
 			destruir_buffer(buffer);
+
 			break;
 		case MEMORIA_MOV_IN: //ESCRITURA
 			log_info(logger_memoria, "MOV_IN");
@@ -160,9 +164,12 @@ void escuchar_mensajes_cpu_memoria(){
 			print_lista_de_frames("lista_de_frames_MOV_IN.txt");
         	print_lista_procesos("lista_de_procesos_MOV_IN.txt");
 			print_memoria_RAM("contenido_memoria_RAM_MOV_IN.txt");
+
 			break;
 		case MEMORIA_COPY_STRING: //DESDE CPU SE HACE DICHA LOGICA. SOLICITAS UNA LECTURA, CON EL DATO QUE TE DEVUELVE, REALIZAR UNA ESCRITURA.
 			log_info(logger_memoria, "COPY_STRING");
+
+			usleep(retardo_respuesta);
 
 			buffer = recibir_buffer_completo(fd_cpu);
 
@@ -177,13 +184,16 @@ void escuchar_mensajes_cpu_memoria(){
 			print_memoria_RAM("contenido_memoria_COPY_STRING.txt");
 
 			destruir_buffer(buffer);
+
 			break;
 		case -1:
 			log_error(logger_memoria, "La CPU se desconecto de Memoria. Terminando servidor.");
 			desconexion_cpu_memoria = 1;
+
 			break;
 		default:
 			log_warning(logger_memoria, "Operacion desconocida de CPU-Memoria. cod_op:%d", cod_op);
+			
 			break;
 		}
 	}
@@ -198,7 +208,10 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 	
 	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
 	int base = 0;
-	int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
+	pthread_mutex_lock(&mutex_lista_de_marcos);
+    int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);    
+    pthread_mutex_unlock(&mutex_lista_de_marcos);
+	
 
 	printf("\n\nPAGINA ACTUAL: %i\n\n", pagina_actual);
 
@@ -229,12 +242,16 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 
 		if(resto_de_escritura >= espacio_libre_en_pagina){
 			printf("\nMEMCOPY IF \n");
+			pthread_mutex_lock(&mutex_memoria_RAM);
 			memcpy(memoria_RAM + dir_fisica, datos + base, espacio_libre_en_pagina);
+			pthread_mutex_unlock(&mutex_memoria_RAM);
 			base += espacio_libre_en_pagina;
 			printf("\nPOST-MEMCOPY IF \n");
 		}else{
 			printf("\nMEMCOPY ELSE \n");
+			pthread_mutex_lock(&mutex_memoria_RAM);
 			memcpy(memoria_RAM + dir_fisica, datos + base, resto_de_escritura);
+			pthread_mutex_unlock(&mutex_memoria_RAM);
 			base += resto_de_escritura;
 			printf("\nPOST-MEMCOPY ELSE \n");
 			print_memoria_RAM("contenido_memoria_RAM_STDIN_READ.txt");
@@ -277,7 +294,10 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 		return NULL;
 	}
 
-	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
+	pthread_mutex_lock(&mutex_lista_de_procesos);
+    Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);    
+    pthread_mutex_unlock(&mutex_lista_de_procesos);
+	
 	int base = 0;
 	int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);
 
@@ -306,8 +326,9 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 			}
 			printf("\n");
 			// --------------------------------------------------------------
-
+			pthread_mutex_lock(&mutex_memoria_RAM);
 			memcpy(datos + base, memoria_RAM + dir_fisica, espacio_libre_en_pagina);
+			pthread_mutex_unlock(&mutex_memoria_RAM);
 			//memcpy(1, memoria_RAM, espacio_libre_en_pagina);
 			base += espacio_libre_en_pagina; // Porque más uno?
 		}
@@ -321,8 +342,9 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 			}
 			printf("\n");
 			// --------------------------------------------------------------
-
+			pthread_mutex_lock(&mutex_memoria_RAM);
 			memcpy(datos + base, memoria_RAM + dir_fisica, resto_de_lectura);
+			pthread_mutex_unlock(&mutex_memoria_RAM);
 			base += resto_de_lectura;
 
 			return datos;
@@ -349,8 +371,11 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de_marco){ // CAPAZ ROMPE
 
 	bool contiene_direccion = false;
-
-	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
+	
+	pthread_mutex_lock(&mutex_lista_de_procesos);
+    Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);    
+    pthread_mutex_unlock(&mutex_lista_de_procesos);
+	
 	if(proceso_actual == NULL){
 		log_error(logger_memoria, "No existe proceso con PID: %i", pid);
 		return contiene_direccion;

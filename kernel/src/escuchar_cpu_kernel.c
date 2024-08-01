@@ -32,7 +32,7 @@ void escuchar_mensajes_dispatch_kernel(){
 			printf("\n\n\nCOD_OP DESDE E.CPU: %i\n\n\n", cod_op);
 			
 			case FIN_DE_QUANTUM:
-
+				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer); // chequear si anda, sino usar deserealizar_pcb
 				sem_post(&sem_EXEC);
@@ -53,7 +53,6 @@ void escuchar_mensajes_dispatch_kernel(){
 			case IO_GEN_SLEEP_FS:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
-				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
 				validar_desalojo();
 				//sem_post(&sem_desalojo);
 				//bloquear_proceso(pcb, interfaz->nombre);
@@ -70,7 +69,7 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				interfaz = list_get(interfaces, indice_interfaz);
 
-				bloquear_proceso(pcb, interfaz->nombre);
+				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
 				destruir_buffer(buffer);
@@ -89,15 +88,15 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				pthread_mutex_unlock(&interfaz->mutex_interfaz);
 
-				sem_post(&interfaz->sem_espera);		
+				sem_post(&interfaz->sem_espera);	
 
-				//enviar_paquete(paquete1, fd_entradasalida); // Prueba IO
-				//destruir_buffer(buffer1);
-				printf("destruir_buffer \n");
+				bloquear_proceso(pcb, interfaz->nombre);
+
+		
 
 				break;
 			case IO_STDIN_READ_FS:
-				if(0 == NULL){printf("LDFNGJAFSÑ\n\n");}
+
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
 				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
@@ -106,7 +105,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				registro_direccion = extraer_int_del_buffer(buffer);
 				registro_tamanio = extraer_int_del_buffer(buffer);
 
-				printf("\n\nDESPUES DE EXTRAER EL BUFFER\n\n");
+
 				validar_desalojo();
 				
 				
@@ -125,34 +124,31 @@ void escuchar_mensajes_dispatch_kernel(){
 				cargar_int_al_buffer(paquete1->buffer, registro_direccion);
 				cargar_int_al_buffer(paquete1->buffer, registro_tamanio);
 
-				printf("\n\nANTES DE BLOQUEAR EL PROCESO\n\n");
+
 
 				pthread_mutex_lock(&interfaz->mutex_interfaz);
 				list_add(interfaz->cola_espera, paquete1);
 				pthread_mutex_unlock(&interfaz->mutex_interfaz);
-				printf("\n\n DESPUES DE AGREGAR A COLA DE ESPERA EL PROCESO\n\n");
+
 				sem_post(&interfaz->sem_espera);
-				printf("Despues de sem_espera\n\n");
+
 				
-				bloquear_proceso(pcb, interfaz->nombre);
+				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
-				printf("\n\n\nCodigo de Operacion (Deberia ser 10): %i \n\n", paquete1->codigo_operacion);
+				bloquear_proceso(pcb, interfaz->nombre);
 
-				//enviar_paquete(paquete, fd_entradasalida); // Prueba IO
-				//destruir_buffer(buffer);
-				//eliminar_paquete(paquete);
-				printf("\n\n\nSE ENVIA EL PROCESO A IO \n\n");
 
 				break;
 			case IO_STDOUT_WRITE_FS:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	
-				pcb->quantum = RUNNING->quantum; // Es necesario esperar al planificador?
 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
 				registro_direccion = extraer_int_del_buffer(buffer);
 				registro_tamanio = extraer_int_del_buffer(buffer);
+
+				validar_desalojo();//sem_post(&sem_desalojo);
 
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 
@@ -176,14 +172,11 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				sem_post(&interfaz->sem_espera);
 
-				validar_desalojo();
-				//sem_post(&sem_desalojo);
-				bloquear_proceso(pcb, interfaz->nombre);
+				
+				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
-				//destruir_buffer(buffer);
-				//enviar_paquete(paquete, fd_entradasalida); // Prueba IO
-
+				bloquear_proceso(pcb, interfaz->nombre);
 				break;
 			case IO_FS_READ_FS:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
@@ -194,7 +187,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				tamanio = extraer_int_del_buffer(buffer);
 				puntero_archivo = extraer_int_del_buffer(buffer);
 
-				//resolver io_fs_read
+				validar_desalojo();//sem_post(&sem_desalojo);
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
@@ -215,13 +208,10 @@ void escuchar_mensajes_dispatch_kernel(){
 				list_add(interfaz->cola_espera, paquete);
 				pthread_mutex_unlock(&interfaz->mutex_interfaz);
 				sem_post(&interfaz->sem_espera);
-				validar_desalojo();
-				//sem_post(&sem_desalojo);
-				bloquear_proceso(pcb, interfaz->nombre);
+				
+				
 				sem_post(&sem_EXEC);
-
-				//destruir_buffer(buffer);
-				//enviar_paquete(paquete, fd_entradasalida); // Prueba IO
+				bloquear_proceso(pcb, interfaz->nombre);
 
 				break;
 			case IO_FS_WRITE_FS:
@@ -234,7 +224,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				tamanio = extraer_int_del_buffer(buffer);
 				puntero_archivo = extraer_int_del_buffer(buffer);
 				
-				//resolver io_fs_write
+				validar_desalojo();
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
@@ -259,12 +249,12 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				sem_post(&interfaz->sem_espera);
 				
-				validar_desalojo();
+				
 				//sem_post(&sem_desalojo);
-				bloquear_proceso(pcb, interfaz->nombre);
+				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
-				//destruir_buffer(buffer);
+				bloquear_proceso(pcb, interfaz->nombre);
 
 				break;
 			case IO_FS_TRUNCATE_FS:
@@ -276,8 +266,8 @@ void escuchar_mensajes_dispatch_kernel(){
 				tamanio = extraer_int_del_buffer(buffer);
 
 				printf("\nLLEGA DE CPU REGISTRO ECX: %i\n", pcb->registros_cpu->ECX);
-				
-				//resolver io_fs_truncate
+				validar_desalojo(); //sem_post(&sem_desalojo);
+
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 				
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
@@ -301,13 +291,10 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				sem_post(&interfaz->sem_espera);
 				
-				validar_desalojo(); //sem_post(&sem_desalojo);
-				
-				bloquear_proceso(pcb, interfaz->nombre);
-				
+				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
-				
-				//destruir_buffer(buffer);
+
+				bloquear_proceso(pcb, interfaz->nombre);
 
 				break;
 			case IO_FS_CREATE_FS:
@@ -315,9 +302,10 @@ void escuchar_mensajes_dispatch_kernel(){
 				pcb = deserializar_pcb(buffer);	 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
 				nombre_archivo = extraer_string_del_buffer(buffer);
+				validar_desalojo(); // sem_post(&sem_desalojo);
 
 				printf("\n LLEGA DE CPU DI: %i\n ", pcb->registros_cpu->DI);
-				//resolver io_fs_create
+				
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
 					break;
@@ -334,11 +322,11 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				sem_post(&interfaz->sem_espera);
 
-				validar_desalojo(); // sem_post(&sem_desalojo);
-				bloquear_proceso(pcb, interfaz->nombre);
-				sem_post(&sem_EXEC);
 				
-				//destruir_buffer(buffer);
+				pcb->quantum = RUNNING->quantum;
+				sem_post(&sem_EXEC);
+				bloquear_proceso(pcb, interfaz->nombre);
+				
 
 				break;
 			case IO_FS_DELETE_FS:
@@ -346,8 +334,9 @@ void escuchar_mensajes_dispatch_kernel(){
 				pcb = deserializar_pcb(buffer);	 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
 				nombre_archivo = extraer_string_del_buffer(buffer);
+				validar_desalojo();
+				
 
-				//resolver io_fs_delete
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
 					break;
@@ -367,8 +356,9 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				sem_post(&interfaz->sem_espera);
 
-				validar_desalojo(); // sem_post(&sem_desalojo);
+				
 				bloquear_proceso(pcb, interfaz->nombre);
+				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 				
 				//destruir_buffer(buffer);
@@ -376,9 +366,11 @@ void escuchar_mensajes_dispatch_kernel(){
 				break;
 			// case ELIMINAR_PROCESO:
 			case KERNEL_EXIT:
+				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);
-				validar_desalojo();
+				
+				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 				
 				enviar_a_exit(pcb, "SUCCESS");
@@ -388,14 +380,16 @@ void escuchar_mensajes_dispatch_kernel(){
 				break;
 			case KERNEL_WAIT: // ponernos de acuerdo con nacho como envia el recurso solicitado
 				printf("\n INICIAR KERNEL WAIT\n");
+				validar_desalojo();//sem_post(&sem_desalojo)
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);
 				printf("\n ANTES DEL RECURSO_SOLICITADO\n");
 				// RECURSOS = ["RA", "RB", "RC"];
 				char *recurso_solicitado = extraer_string_del_buffer(buffer); // "RB"
 				printf("\n ANTES DE VALIDAR_DESALOJO\n");
+
+				;
 				pcb->quantum = RUNNING->quantum;
-				validar_desalojo(); //sem_post(&sem_desalojo);
 				
 				usleep(20);
 				//usleep(retardo_respuesta);
@@ -408,11 +402,12 @@ void escuchar_mensajes_dispatch_kernel(){
 				}
 				else{
 					printf("\n ANTES DEL RESTAR INSTANCIA\n");
-					restar_instancia(recursos_disponibles, pcb);
+					restar_instancia(recurso_solicitado, pcb);
 					printf("\n DESP DEL RESTAR INSTANCIA\n");
 				}
 				
 				printf("\n ANTES DEL SEM_EXEC \n");
+				
 				sem_post(&sem_EXEC);
 				
 				printf("\n ANTES DEL DESTRUIR BUFFER \n");
@@ -424,17 +419,36 @@ void escuchar_mensajes_dispatch_kernel(){
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);
 				char *recurso = extraer_string_del_buffer(buffer);
-				
-				validar_desalojo();
-				//sem_post(&sem_desalojo);
-				pcb->quantum = RUNNING->quantum;
 
+				validar_desalojo();//sem_post(&sem_desalojo);
+
+				printf("\n ####### ANTES DE SUMAR INSTANCIA A: %s ######\n", recurso);
 				sumar_instancia(recurso, pcb);
+				printf("\n ####### DESP DE SUMAR INSTANCIA ######\n");
+				
 
-				destruir_buffer(buffer);
-
+				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
+				if(pcb->estado == E_EXIT){
+					break;
+				}
+				
+				if(pcb->quantum != quantum){ // Devuelvo el proceso original a la cola de ready o de prioridad, segun corresponda
+                    pthread_mutex_lock(&mutex_PRIORIDAD);
+			        list_add(PRIORIDAD, pcb);
+			        pthread_mutex_unlock(&mutex_PRIORIDAD);
+                    cambio_de_estado(pcb, E_PRIORIDAD);
+                    sem_post(&sem_READY);
+                }else{
+					pthread_mutex_lock(&mutex_READY);
+			    	list_add(READY, pcb);
+			    	pthread_mutex_unlock(&mutex_READY);
+                	cambio_de_estado(pcb, E_READY);
+                	sem_post(&sem_READY);
+				}
+				destruir_buffer(buffer);
+				printf("\n FIN SIGNAL \n");
 				break;
 			case OUT_OF_MEMORY:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);

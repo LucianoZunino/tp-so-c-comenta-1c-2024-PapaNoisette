@@ -50,6 +50,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 					list_add(PRIORIDAD, pcb);
 					pthread_mutex_unlock(&mutex_PRIORIDAD);
 					cambio_de_estado(pcb, E_PRIORIDAD);
+					sem_post(&sem_READY);
 				}
 				else{
 					//pcb->estado = E_READY;

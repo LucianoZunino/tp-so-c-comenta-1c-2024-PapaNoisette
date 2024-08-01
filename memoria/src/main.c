@@ -66,33 +66,3 @@ int main(int argc, char* argv[]){
 
     return 0;
 }
-
-int main2(){
-    iniciar_memoria();
-    printf("Memoria iniciada, lista de mini PCB size: %i\n", list_size(lista_de_instrucciones_por_proceso));
-  	log_info(logger_memoria, "Arranca el modulo MEMORIA");
-
-    memoria_crear_proceso(9);
-
-    print_lista_de_frames("listadeframes1.txt");
-    print_lista_procesos("lista_procesos1.txt");
-    printf("resize_tamano_proceso\n");
-
-    resize_tamano_proceso(9,64); //2 frames
-    print_lista_de_frames("listadeframes2.txt");
-    print_lista_procesos("lista_procesos2.txt");
-
-    resize_tamano_proceso(9,128);//4 frames
-    print_lista_de_frames("listadeframes3.txt");
-    print_lista_procesos("lista_procesos3.txt");
-    printf("reduzco tamano_proceso\n");
-
-    resize_tamano_proceso(9,64);//2 frames
-    print_lista_de_frames("listadeframes4.txt");
-    print_lista_procesos("lista_procesos4.txt");
-    printf("flag\n");
-    
-    resize_tamano_proceso(9,5000);//2 frames
-    print_lista_de_frames("listadeframes5.txt");
-    print_lista_procesos("lista_procesos5.txt");
-}

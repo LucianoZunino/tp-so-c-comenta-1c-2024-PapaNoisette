@@ -27,6 +27,11 @@ extern int fd_cpu;
 extern int fd_kernel;
 extern int fd_entradasalida;
 
+extern pthread_mutex_t mutex_memoria_RAM;
+extern pthread_mutex_t mutex_lista_de_marcos;
+extern pthread_mutex_t mutex_lista_de_procesos;
+
+
 extern void* memoria_RAM;
 extern t_list *lista_procesos;
 

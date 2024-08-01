@@ -70,10 +70,10 @@ void pasar_proceso_a_exit(int pid, char* motivo){
 
 int buscar_recurso(char* recurso){
    
-    for (unsigned int i = 0; i < list_size(recursos_disponibles); i++){
+    for(unsigned int i = 0; i < list_size(recursos_disponibles); i++){
         t_recurso* recurso_aux = list_get(recursos_disponibles, i);
         char* nombre_recurso = string_duplicate(recurso_aux->nombre);
-        if (string_equals_ignore_case(nombre_recurso, recurso)){
+        if(string_equals_ignore_case(nombre_recurso, recurso)){
             return i;
         }
     }
@@ -88,12 +88,14 @@ void enviar_a_exit(t_pcb* pcb, char* motivo){
 	list_add(EXIT, pcb);
 	pthread_mutex_unlock(&mutex_EXIT);
     sem_post(&sem_EXIT); //agregue este semaforo
-    log_info(logger_kernel,"Finaliza el proceso <%i> - Motivo: <%s>", pcb->pid, motivo);
+    log_info(logger_kernel, "Finaliza el proceso <%i> - Motivo: <%s>", pcb->pid, motivo);
 }
 
 void restar_instancia(char* nombre_recurso, t_pcb *pcb){
     printf("\n\n INICIAR_ RESTAR_INSTACIA \n\n");
+    printf("\n------------------ Nombre del recurso desde restar_instancia: %s\n", nombre_recurso);
     int index = buscar_recurso(nombre_recurso);
+    printf("\nIndice del recurso: %i\n", index);
     t_recurso* recurso = list_get(recursos_disponibles, index);
     printf("\n\n ANTES: if(recurso->instancias <= 0) \n\n");
     if(recurso->instancias <= 0){ //caso en el que no hay recurso de instancia disponible
@@ -118,11 +120,11 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
         printf("\n recurso asignado: %s al pcb: %i \n", recurso->nombre, pcb_provisorio->pid);
         printf("\n TAMANIO RECURSOS ASIGNADOS: %i\n", list_size(recurso->pcb_asignados));
 
-
     }
     else{ //caso en el que hay recurso de instancia disponible
+        printf("\n####### ANTES DE recurso->mutex DENTRO DEL ELSE #######\n");
         pthread_mutex_lock(&recurso->mutex);
-        recurso->instancias =- 1;
+        recurso->instancias --;
         pthread_mutex_unlock(&recurso->mutex);
         printf("\n ANTES DE AGREGAR A PCB_ASIGNADOS\n");
         pthread_mutex_lock(&recurso->mutex);
@@ -141,6 +143,7 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
 			list_add(PRIORIDAD, pcb);
 			pthread_mutex_unlock(&mutex_PRIORIDAD);
             cambio_de_estado(pcb, E_PRIORIDAD);
+            sem_post(&sem_READY);
             //sem_post(&sem_READY);
             printf("\nDentro del IF\n");
         }
@@ -153,86 +156,81 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
             //sem_post(&sem_READY);
             printf("\nDentro del ELSE\n");
         }
-        printf("\n\nflag1\n\n");
-        list_remove(recursos_disponibles, index); //se actualiza la lista de recursos_disponibles
-        printf("\n\nflag2\n\n");
-        list_add_in_index(recursos_disponibles, index, &recurso);
-        printf("\n\nflag3\n\n");
+        // printf("\n\nflag1\n\n");
+        // list_remove(recursos_disponibles, index); //se actualiza la lista de recursos_disponibles
+        // printf("\n\nflag2\n\n");
+        // list_add_in_index(recursos_disponibles, index, &recurso);
+        // printf("\n\nflag3\n\n");
     }
 }
 
 int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
-    int index = buscar_recurso(nombre_recurso); // TODO: Ver caso recurso no existe
+    printf("\n ### INICIO SUMAR INSTANCIA ### \n");
+    int index = buscar_recurso(nombre_recurso);
+    
+    printf("\nDentro de sumar instancia -> INDEX: %i\n", index);
+
+    if(index < 0){
+		printf("\nADENTRO DEL IF BUSCAR RECURSO ANTES DE ENVIAR A EXIT\n");
+		enviar_a_exit(pcb, "INVALID_RESOURCE");
+		printf("\nADENTRO DEL IF BUSCAR RECURSO DESPUES DE ENVIAR A EXIT\n");
+	}
+
     t_recurso* recurso = list_get(recursos_disponibles, index);
 
     if(!lista_contiene_pcb(recurso->pcb_asignados, pcb)){
-        
         return -1;
     }
-    
+
+    printf("\n RECURSO: %s -- INTANCIAS: %i\n", recurso->nombre, recurso->instancias);
+
     if(recurso->instancias >= 0){
+        printf("\n IF INSTANCIAS => 0 \n");
+        
         pthread_mutex_lock(&recurso->mutex);
-        recurso->instancias =- 1;
+        recurso->instancias++;
         pthread_mutex_unlock(&recurso->mutex);
         
         if(!queue_is_empty(recurso->cola_de_espera)){ // Verifico que haya procesos esperando el recurso
-
+            printf("\n TIENE COLA DE ESPERA EL RECURSO: %s \n", recurso->nombre);
             t_pcb* nuevo_pcb = queue_pop(recurso->cola_de_espera); // Tomo el primero
-            
-            if(pcb->estado != E_EXIT){
-                if(pcb->quantum != quantum){ // Devuelvo el proceso original a la cola de ready o de prioridad, segun corresponda
-                    pthread_mutex_lock(&mutex_PRIORIDAD);
-			        list_add(PRIORIDAD, pcb);
-			        pthread_mutex_unlock(&mutex_PRIORIDAD);
-                    cambio_de_estado(pcb, E_PRIORIDAD);
-                }else {
-                    pthread_mutex_lock(&mutex_READY);
-			        list_add(READY, pcb);
-			        pthread_mutex_unlock(&mutex_READY);
-                    cambio_de_estado(pcb, E_READY);
-                    sem_post(&sem_READY);
-                }
-            }
+                
             // char* nombre = recurso.nombre;
+            printf("\n SE LE RESTA INSTANCIA AL PROCESO QUE ESTABA EN ESPERA: %i \n", nuevo_pcb->pid);
             restar_instancia(recurso->nombre, nuevo_pcb); // Llamo a la funcion para asignarle las instancia al nuevo proceso
 
-            // Sacamos el pcb de la lista de asignados
-            pthread_mutex_lock(&recurso->mutex);
-            int indice_pcb = buscar_index_por_pid(recurso->pcb_asignados, pcb->pid);
-            if (indice_pcb == (-1)){ 
-                log_error(logger_kernel, "NO SE ENCUENTRA EN PCB_ASIGNADOS");
-            }
-            list_remove(recurso->pcb_asignados, indice_pcb);
-            pthread_mutex_unlock(&recurso->mutex);
-            
-            //
+
             int index_pcb = buscar_index_por_pid(BLOCKED, nuevo_pcb->pid);
             pthread_mutex_lock(&mutex_BLOCKED);
             list_remove(BLOCKED, index_pcb);  // Elimino el nuevo proceso de la lista de bloqueados 
             pthread_mutex_unlock(&mutex_BLOCKED);
-
-
+            
         }
+        int indice_pcb = buscar_index_por_pid(recurso->pcb_asignados, pcb->pid);
+        if (indice_pcb == (-1)){ 
+            log_error(logger_kernel, "NO SE ENCUENTRA EN PCB_ASIGNADOS");
+        }
+        pthread_mutex_lock(&recurso->mutex);
+        list_remove(recurso->pcb_asignados, indice_pcb);
+        pthread_mutex_unlock(&recurso->mutex);
     }
 
-    pthread_mutex_lock(&mutex_recursos_disponibles);
-    list_remove(recursos_disponibles, index);
-    list_add_in_index(recursos_disponibles, index, &recurso);
-    pthread_mutex_unlock(&mutex_recursos_disponibles);
+
     return 1;
     }
 
-int buscar_interfaz(char* nombre) {
+int buscar_interfaz(char* nombre){
     t_interfaz* interfaz;
 
     for(int i = 0; i<list_size(interfaces); i++){
         
         interfaz = list_get(interfaces, i);
         
-        if (string_equals_ignore_case(interfaz->nombre, nombre)) {
+        if(string_equals_ignore_case(interfaz->nombre, nombre)){
             return i;
         }  
     }
+
     log_error(logger_kernel, "No se pudo encontrar la interfaz %s", nombre);
     return -1;
 }

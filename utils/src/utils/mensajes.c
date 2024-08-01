@@ -172,14 +172,13 @@ void enviar_memoria_solicitar_instruccion(t_pcb *pcb, int socket)
 }
 */
 
-void enviar_memoria_solicitar_instruccion(int pid,int program_counter, int socket)
-{
-  t_buffer* buffer = crear_buffer();
-  t_paquete* paquete = crear_paquete(CPU_SOLICITA_INSTRUCCION, buffer);
- cargar_int_al_buffer(paquete->buffer, pid);
-cargar_int_al_buffer(paquete->buffer, program_counter); 
- enviar_paquete(paquete, socket);
-  eliminar_paquete(paquete);
+void enviar_memoria_solicitar_instruccion(int pid,int program_counter, int socket){
+    t_buffer* buffer = crear_buffer();
+    t_paquete* paquete = crear_paquete(CPU_SOLICITA_INSTRUCCION, buffer);
+    cargar_int_al_buffer(paquete->buffer, pid);
+    cargar_int_al_buffer(paquete->buffer, program_counter); 
+    enviar_paquete(paquete, socket);
+    eliminar_paquete(paquete);
 }
 
 

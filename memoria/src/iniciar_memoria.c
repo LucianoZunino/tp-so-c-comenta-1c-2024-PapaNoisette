@@ -4,16 +4,21 @@ t_config *config_memoria;
 int cantidad_de_marcos;
 t_list *lista_de_tablas_de_paginas_por_proceso;
 t_list* lista_de_interfaces;
-pthread_mutex_t *mutex_instrucciones_proceso;
 void *memoria_RAM; // Memoria contigua
 t_list *lista_de_instrucciones_por_proceso;
 t_list *lista_de_frames;
 t_list *lista_procesos;
 
+pthread_mutex_t mutex_memoria_RAM;
+pthread_mutex_t mutex_lista_de_marcos;
+pthread_mutex_t mutex_lista_de_procesos;
+
+
 void iniciar_memoria(){
     iniciar_logger_memoria();
     iniciar_config_memoria();
     inicializar_estructuras_memoria();
+    inicializar_semaforos();
 }
 
 /// @brief Inicializa las estructuras de memoria
@@ -38,15 +43,28 @@ void inicializar_estructuras_memoria(){
         Frame *frame = malloc(sizeof(Frame));
         frame->ocupado = 0;
         frame->pid = -1;
+
+        pthread_mutex_lock(&mutex_lista_de_marcos);
         list_add(lista_de_frames, frame);
+        pthread_mutex_unlock(&mutex_lista_de_marcos);
     }
 }
 
 void inicializar_semaforos(){
-    if(pthread_mutex_init(&mutex_instrucciones_proceso, NULL) != 0){
-        log_error(logger_memoria, "No se pudo inicializar el semaforo para la lista lista_de_instrucciones_por_proceso");
+    
+    if (pthread_mutex_init(&mutex_memoria_RAM, NULL) != 0) {
+        log_error(logger_memoria, "No se pudo inicializar el mutex_memoria_RAM");
         exit(-1);
     }
+    if (pthread_mutex_init(&mutex_lista_de_marcos, NULL) != 0) {
+        log_error(logger_memoria, "No se pudo inicializar el mutex_lista_de_marcos");
+        exit(-1);
+    }
+    if (pthread_mutex_init(&mutex_lista_de_procesos, NULL) != 0) {
+        log_error(logger_memoria, "No se pudo inicializar el mutex_lista_de_procesos");
+        exit(-1);
+    }
+
 }
 
 /// @brief Inicializa la configuración de la memoria
@@ -99,7 +117,10 @@ void memoria_crear_proceso(int pid){
 
     printf("proceso->tabla_paginas  list size%d\n", list_size(proceso->tabla_paginas));
     printf("PID: %d - Tabla de páginas creada con 0 páginas\n", pid);
-    list_add(lista_procesos, proceso);
+    
+    pthread_mutex_lock(&mutex_lista_de_procesos);
+    list_add(lista_procesos, proceso);    
+    pthread_mutex_unlock(&mutex_lista_de_procesos);
 
     print_lista_de_frames("lista_de_frames_inicializado.txt");
     print_lista_procesos("lista_procesos_inicializado.txt");
@@ -137,7 +158,7 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
     if(numero_paginas_nuevo > numero_paginas_actual){
 
         // Ampliación de un proceso
-        log_info(logger_memoria, "Ampliación de Proceso PID: %d -Tamaño Actual:%d - Tamaño a Ampliar: %d", proceso->pid, numero_paginas_actual * tam_pagina, nuevo_tamano);
+        log_info(logger_memoria, "Ampliación de Proceso PID: %d - Tamaño Actual: %d - Tamaño a Ampliar: %d", proceso->pid, numero_paginas_actual * tam_pagina, nuevo_tamano);
 
         if(frames_disponibles >= paginas_a_agregar_o_quitar){
 
@@ -166,8 +187,8 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
     } // Reducción de un proceso
     else if(numero_paginas_nuevo < numero_paginas_actual){
 
-        log_info(logger_memoria, "Reduccion del Proceso PID: %d -Tamaño Actual:%d - Tamaño a reducir: %d", proceso->pid, numero_paginas_actual * tam_pagina, nuevo_tamano);
-        printf("numero_paginas_actual%d\n", numero_paginas_actual);
+        log_info(logger_memoria, "Reduccion del Proceso: PID: %d - Tamaño Actual: %d - Tamaño a reducir: %d", proceso->pid, numero_paginas_actual * tam_pagina, nuevo_tamano);
+
         int pagina;
         for(int i = numero_paginas_nuevo; i < numero_paginas_actual; i++){
             printf("list_get %d list_size %d\n", i, list_size(proceso->tabla_paginas));
@@ -196,7 +217,9 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
 int contar_frames_libres(){
     int cantidad_disponible = 0;
     for(int i = 0; i < cantidad_de_marcos; i++){
+        pthread_mutex_lock(&mutex_lista_de_marcos);
         Frame *frame = list_get(lista_de_frames, i);
+        pthread_mutex_unlock(&mutex_lista_de_marcos);
         if(!frame->ocupado){
             cantidad_disponible++;
         }
@@ -231,8 +254,9 @@ int asignar_y_marcar_frame_ocupado(int pid){
 /// @param pid, numero_pagina
 /// @return Frame
 int obtener_marco(int pid, int numero_pagina){
-
-    Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
+    pthread_mutex_lock(&mutex_lista_de_procesos);
+    Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);    
+    pthread_mutex_unlock(&mutex_lista_de_procesos);
 
     for(int pag = 0; pag < list_size(proceso_actual->tabla_paginas); pag++){
         if(pag == numero_pagina){
@@ -252,7 +276,10 @@ void liberar_frame(int numero_de_marco){
         frame->ocupado = 0;
         frame->pid = -1; // cargamos asi los frames libres
 
+        pthread_mutex_lock(&mutex_lista_de_marcos);
         list_replace(lista_de_frames, numero_de_marco, frame);
+        pthread_mutex_unlock(&mutex_lista_de_marcos);
+        
         log_info(logger_memoria, "Se libero el frame :%d\n", numero_de_marco);
     }
 }
@@ -273,12 +300,18 @@ Proceso *buscar_proceso(t_list *lista, int pid){
 void finalizar_proceso(int pid){
     
     for(int i = 0; i < cantidad_de_marcos; i++){
+        pthread_mutex_lock(&mutex_lista_de_marcos);
         Frame *frame = list_get(lista_de_frames, i);
-
+        pthread_mutex_unlock(&mutex_lista_de_marcos);
+        
         if(frame->pid == pid){
             frame->ocupado = 0;
             frame->pid = -1;
+
+            pthread_mutex_lock(&mutex_lista_de_marcos);
             list_replace(lista_de_frames, i, frame);
+            pthread_mutex_unlock(&mutex_lista_de_marcos);
+            
             log_info(logger_memoria, "Se libero el frame :%d\n", i);
         }
     }
@@ -386,7 +419,10 @@ void print_lista_de_frames(char *path_log){
         fprintf(archivo, "Frame %d ,Pid %d, Ocupado %d\n", num_frame, frame->pid, frame->ocupado);
         num_frame++;
     }
-    list_iterate(lista_de_frames, _closure_print_frame);
+    pthread_mutex_lock(&mutex_lista_de_marcos);
+    list_iterate(lista_de_frames, _closure_print_frame);    
+    pthread_mutex_unlock(&mutex_lista_de_marcos);
+    
 
     // Cierra el archivo
     fclose(archivo);
@@ -406,7 +442,10 @@ void print_lista_procesos(char *path_log){
     fprintf(archivo, "Print lista_procesos (%d procesos)\n\n", cant_procesos);
 
     for(int i = 0; i < cant_procesos; i++){ // itero todos los procesos
+        pthread_mutex_lock(&mutex_lista_de_marcos);
         Proceso *proceso = list_get(lista_procesos, i);
+        pthread_mutex_unlock(&mutex_lista_de_marcos);
+        
         fprintf(archivo, "{Proceso: %d, cantidad de paginas: %d}\n", proceso->pid, list_size(proceso->tabla_paginas));
 
         for(int j = 0; j < list_size(proceso->tabla_paginas); j++){

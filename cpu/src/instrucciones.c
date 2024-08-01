@@ -117,8 +117,6 @@ void ejecutar_copy_string(char *tamanio){
    int dir_fisica_si = (int) traducir_direccion_logica(EXEC->registros_cpu->SI);
    int dir_fisica_di = (int) traducir_direccion_logica(EXEC->registros_cpu->DI);
 
-   log_info(logger_cpu, "Ejecutando COPY_STRING");
-
    t_buffer *buffer_a_enviar_leer = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar_leer, EXEC->pid);
    cargar_int_al_buffer(buffer_a_enviar_leer, atoi(tamanio));
@@ -202,8 +200,7 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    memcpy(&datos_a_int, byte_datos, sizeof(int)); // Transforma lo obtenido por el void* en int para poder almacenarlo en el registro correspondiente
 
    // LOG OBLIGATORIO
-   //log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %d", EXEC->pid, dir_fisica, datos);
-   log_info(logger_cpu, "PID: %d - ACCION LEER - Direccion Fisica %d - Valor: %d", EXEC->pid, dir_fisica, datos_a_int);
+   log_info(logger_cpu, "Lectura en Memoria: \"PID: %d - Acción LEER - Direccion Física %d - Valor: %d\"", EXEC->pid, dir_fisica, datos_a_int);
 
    // guardo los datos recibidos en el registro indicado
    ejecutar_set(registro_datos, datos_a_int); // ANTES ESTABA registro_direccion y &datos
@@ -227,12 +224,11 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos){
 
    // obtengo  la dir fisica
    //t_dir_fisica* dir_fisica = traducir_direccion_logica(dir_logica); // NUEVO DE LUCHO - AGREGAR
-   printf("Antes de traduccion \n");
+
    uint32_t dir_fisica = traducir_direccion_logica(dir_logica); // VIEJO DE NACHO - BORRAR
-   printf("Despues de traduccion \n");
+
    // LOG OBLIGATORIO
-   //log_info(logger_cpu, "PID: %d - ACCION ESCRIBIR - Direccion Fisica %d- Valor: %d", EXEC->pid, dir_fisica->offset, datos_escribir); // NUEVO DE LUCHO - AGREGAR
-   log_info(logger_cpu, "PID: %d - ACCION ESCRIBIR - Direccion Fisica %d - Valor: %d", EXEC->pid, dir_fisica, datos_escribir); // VIEJO DE NACHO - BORRAR
+   log_info(logger_cpu, "Escritura en Memoria: \"PID: %d - Acción ESCRIBIR - Direccion Física %d - Valor: %d\"", EXEC->pid, dir_fisica, datos_escribir);
    
    int tam_registro = get_tamanio_registro(registro_datos); // Agregamos el tamanio para el memcpy en memoria
    // void* data = malloc(tam_registro);

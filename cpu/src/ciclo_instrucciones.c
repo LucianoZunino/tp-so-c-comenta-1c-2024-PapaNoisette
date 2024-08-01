@@ -23,7 +23,7 @@ void fetch(){
     char buffer[100];
     recv(fd_memoria, buffer, sizeof(100), MSG_DONTWAIT); //borro el buffer 
     //printf("buffer, %s\n", buffer);
-    log_info(logger_cpu, "Ejecutando FETCH PID: %i Program Counter: %i", EXEC->pid, EXEC->program_counter);
+    log_info(logger_cpu, "Fetch Instrucción: \"PID: %i - FETCH - Program Counter: %i\"", EXEC->pid, EXEC->program_counter);
 
    // enviar_memoria_solicitar_instruccion(EXEC, fd_memoria);
     enviar_memoria_solicitar_instruccion(EXEC->pid, EXEC->program_counter, fd_memoria);
@@ -59,13 +59,6 @@ void fetch(){
     strcpy(instr_arg3, array_instruccion[3]);
     strcpy(instr_arg4, array_instruccion[4]);
     strcpy(instr_arg5, array_instruccion[5]);
-
-   /* printf("instruccion    %s\n", instruccion);
-    printf("instr_arg1   %s\n", instr_arg1);
-    printf("instr_arg2   %s\n", instr_arg2);
-    printf("instr_arg3   %s\n", instr_arg3);
-    printf("instr_arg4   %s\n", instr_arg4);
-    printf("instr_arg5   %s\n", instr_arg5);*/
 }
 
 /// @brief Procesa una instruccion para un proceso
@@ -75,7 +68,8 @@ void fetch(){
 int decode_excute(){
     EXEC->program_counter += 1; // lo hago aca para que en tal caso el jnz lo sobreescriba
 
-    // loggear_ejecucion(instruccion);
+    //log_info(logger_cpu, "Instrucción Ejecutada: \“PID: % - Ejecutando: % - %\”\n", valor, registro);
+
     if (strcmp(instruccion, "SET") == 0)
     {
         ejecutar_set(instr_arg1, atoi(instr_arg2));

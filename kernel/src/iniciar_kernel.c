@@ -150,7 +150,6 @@ void iniciar_semaforos(){
     }
 }
 
-
 void iniciar_colas_estados() {
     NEW = list_create();
     READY = list_create();
@@ -179,14 +178,14 @@ void iniciar_recursos(){
         //t_list* cola_de_espera = list_create();
         t_queue * cola_de_espera = queue_create();
         t_list* pcb_asignados = list_create();
-        pthread_mutex_t mutex;
-        pthread_mutex_init(&mutex, NULL);
+        pthread_mutex_t* mutex = malloc(sizeof(pthread_mutex_t));
+        pthread_mutex_init(mutex, NULL);
 
         nuevo_recurso->nombre = nombre;
         nuevo_recurso->instancias = instancias;
         nuevo_recurso->cola_de_espera = cola_de_espera;
         nuevo_recurso->pcb_asignados = pcb_asignados;
-        nuevo_recurso->mutex = mutex;
+        nuevo_recurso->mutex = *mutex;
 
         list_add(recursos_disponibles, nuevo_recurso);
     }
