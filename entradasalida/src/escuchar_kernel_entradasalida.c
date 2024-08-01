@@ -162,6 +162,7 @@ void escuchar_instrucciones_dialfs(){
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
+		printf("\n\n\nDESPUES DE RECIBIR EL COD_OP: %i\n\n\n", cod_op);
 		switch(cod_op){
 			t_buffer* buffer = crear_buffer();
 			int pid;
@@ -185,8 +186,9 @@ void escuchar_instrucciones_dialfs(){
 				
 				char* path = string_duplicate(tomar_nombre_devolver_path(nombre));
 				
-				if(eliminar_segun(path) != NULL){ // Si el archivo ya existe y se crea otro con el mismo nombre se debería eliminar
+				if(eliminar_segun(path) != -1){ // Si el archivo ya existe y se crea otro con el mismo nombre se debería eliminar
 					liberar_archivo_bitmap(nombre);
+					printf("\nADENTRO DEL IF ELIMINAR SEGÚN\n");
 				}
 				
 				list_add(archivos_metadata, path);
@@ -205,7 +207,10 @@ void escuchar_instrucciones_dialfs(){
 
 				config_set_value(config, "BLOQUE_INICIAL", string_itoa(direccion));
 				config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(0));
+
 				config_save(config);
+
+				printf("\n-- TAMANIO DESDE EL CONFIG: %i --\n", config_get_int_value(config, "TAMANIO_ARCHIVO"));
 				// Sincronizar
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
 
@@ -213,7 +218,7 @@ void escuchar_instrucciones_dialfs(){
 				notificar_fin(fd_kernel, pid);
 
 				destruir_buffer(buffer);
-				config_destroy(config); //HAY QUE COMENTAR ESTE? O EL DE DELETE?
+				//config_destroy(config); //HAY QUE COMENTAR ESTE? O EL DE DELETE?
 				break;
 
 			case IO_FS_DELETE_FS:
@@ -239,6 +244,7 @@ void escuchar_instrucciones_dialfs(){
 				break;
 
 			case IO_FS_WRITE_FS:
+			 	printf("\nANTES DE DESERIALIZAR\n");
 				buffer = recibir_buffer_completo(fd_kernel);
 				
 				pid = extraer_int_del_buffer(buffer);
@@ -249,27 +255,32 @@ void escuchar_instrucciones_dialfs(){
 
 				usleep(tiempo_unidad_trabajo);
 
-				solicitar_lectura_memoria(pid ,reg_direccion ,reg_tamanio ,IO_STDOUT_WRITE_FS);
+				printf("\nANTES DE SOLICITAR ESCRITURA MEMORIA\n");
+				solicitar_lectura_memoria(pid, reg_direccion, reg_tamanio, IO_FS_WRITE_FS);
+				printf("\nDESPUES DE SOLICITAR ESCRITURA MEMORIA\n");
 				sem_wait(&sem_fs_write);
-
+				printf("\n despues de sem_fs_write \n");
 				if(!verificar_escritura_archivo(nombre, reg_tamanio, reg_puntero_archivo)){
 					log_error(logger_entradasalida, "Se intenta escribir por fuera del tamanio del archivo\n");
 					goto error_io;
 				}
 				
-				aux = bloques_dat + reg_puntero_archivo;
+				//aux = bloques_dat + reg_puntero_archivo;
 
-				printf("\nDatos a escribir en disco: %s\n", (char*)datos);
+				printf("\nDatos a escribir en disco: %s\n", datos);
 
-				memcpy(aux, datos, reg_tamanio); 
+				//void* datos_aux = datos;
 
+				memcpy(bloques_dat + reg_puntero_archivo, (void*)datos, reg_tamanio);
+				printf("\nABAJO DEL MEMCPY\n");
 				msync(bloques_dat, block_size*block_count, MS_SYNC);
 
 				// devolver
+				printf("\n FIN IO_FS_WRITE \n");
 				notificar_fin(fd_kernel, pid);
 
 				destruir_buffer(buffer);
-				config_destroy(config);
+				//config_destroy(config);
 
 				break;
 			
@@ -293,7 +304,7 @@ void escuchar_instrucciones_dialfs(){
 				char* leido = malloc(reg_tamanio);
 				aux = bloques_dat + reg_puntero_archivo;
 
-				memcpy(leido, aux, reg_tamanio);
+				memcpy((void*)leido, aux, reg_tamanio);
 
 				printf("\nString a pasar a memoria: %s\n", leido);
 
@@ -303,7 +314,7 @@ void escuchar_instrucciones_dialfs(){
 				notificar_fin(fd_kernel, pid);
 
 				destruir_buffer(buffer);
-				config_destroy(config);
+				//config_destroy(config);
 
 				break;
 
@@ -316,7 +327,7 @@ void escuchar_instrucciones_dialfs(){
 				int nuevo_tamanio = extraer_int_del_buffer(buffer);
 
 				printf("\nDESPUES DE EXTRAER A IO_FS_TRUNCATE_FS\n");
-
+				
 				usleep(tiempo_unidad_trabajo);
 
 				config = config_create(tomar_nombre_devolver_path(nombre));
@@ -343,9 +354,11 @@ void escuchar_instrucciones_dialfs(){
 				printf("\nDESPUES DE 1ER IF\n");
 				if(cantidad_actual_de_bloques > cantidad_nueva_de_bloques){
 					//si achicamos solo achicamos el archivo de metadata y marcamos los bloques restantes libres en el bitmap
+					printf("\n\nTAMAÑO NUEVO ARCHIVO -> %i\n\n", nuevo_tamanio);
 					config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
 					config_save(config);
 
+					//liberar_bloques_desde_hasta(inicio_archivo + cantidad_nueva_de_bloques, inicio_archivo + cantidad_actual_de_bloques);
 					liberar_bloques_desde_hasta(inicio_archivo + cantidad_nueva_de_bloques, inicio_archivo + cantidad_actual_de_bloques);
 					printf("\nDESPUES DE 2DO IFn");
 				}else{
@@ -361,7 +374,7 @@ void escuchar_instrucciones_dialfs(){
 					// verificar que haya espacio
 					// chequeamos si entra
 					int bloque_fin_archivo = inicio_archivo + redondear_up_con_cero(tamanio_archivo, block_size);
-					int i = 1;
+					int i = 0;
 
 					while(i <= diferencia){
 						if(bitarray_test_bit(bitmap, bloque_fin_archivo + i) == 1){
@@ -393,6 +406,7 @@ void escuchar_instrucciones_dialfs(){
 					finFs:
 				notificar_fin(fd_kernel, pid);
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
+				printf("\nANTES DEL CONFIG_DESTROY DE TRUNCATE\n");
 				config_destroy(config);
 				printf("\nFIN TRUNCANTE\n");
 				break;
@@ -445,7 +459,6 @@ void solicitar_lectura_memoria(int pid, int direccion, int tamanio, op_code cod_
 	enviar_paquete(paquete, fd_memoria);
 
 	eliminar_paquete(paquete);
-	//free(buffer);
 }
 
 void solicitar_almacen_memoria(int pid, int direccion, char* mensaje, op_code cod_op){ //MENSAJE NO DEBERIA SER UN VOID*??
@@ -481,7 +494,7 @@ int buscar_lugar_bitmap(int tamanio){
 					return i;
 				}
 				
-				return i - tamanio;
+				return i - tamanio + 1;
 			}
 		}
 		else{
@@ -535,30 +548,35 @@ void liberar_archivo_bitmap(char* nombre){
 	}
 }
 
-void liberar_bloques_desde_hasta(inicio, fin){
-	for(int i = 1; i <= fin - inicio; i++ ){
+void liberar_bloques_desde_hasta(int inicio, int fin){
+	for(int i = 0; i <= fin - inicio; i++ ){
 		bitarray_clean_bit(bitmap, inicio + i);
 	}
 }
 
 void* eliminar_segun(char* nombre){
 	for(int i = 0; i<list_size(archivos_metadata); i++){
-		char* path = list_get(archivos_metadata, i);
-		if(strcmp(path, tomar_nombre_devolver_path(nombre))){
+		
+		char* path = string_duplicate(list_get(archivos_metadata, i));
+		if(strcmp(path, tomar_nombre_devolver_path(nombre)) == 0){
 			return list_remove(archivos_metadata, i);
 		}
 	}
+	return -1;
 }
 
 void compactar(char* nombre, t_config* config, int nuevo_tamanio){
+	
 	// ELIMINAMOS EL ARCHIVO A AGRANDAR, LO AGREGAMOS AL FINAL
 	eliminar_segun(nombre);
 
 	int bloque_inicial = config_get_int_value(config, "BLOQUE_INICIAL");
+	
 	int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
-
+	
 	// Actualizamos el archivo de metadata del archivo a truncar
-	config_set_value(config, "TAMANIO_ARCHIVO", nuevo_tamanio);
+	config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
+	
 	config_save(config);
 	
 	// Guardamos los datos del archivo
@@ -568,20 +586,21 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 	*/
 
 	// Liberamos todos los bloques
-	liberar_bloques_desde_hasta(-1, block_count);
+	
+	liberar_bloques_desde_hasta(0, block_count);
 
 	// Creamos un buffer para guardar los datos del resto de los archivos
-	void* buffer_auxiliar = malloc(block_size * block_count);
+	void* buffer_auxiliar = calloc(block_size * block_count, 1);
 
 	// Agregamos el archivo a truncar al final de la lista
 	char* path_del_nombre = tomar_nombre_devolver_path(nombre);
 	list_add(archivos_metadata, path_del_nombre);
-	
+	printf("\nTAMANIO LISTA DE METADATAS %i\n", list_size(archivos_metadata));
 	int bloques_desplazados = 0;
 
 	for(int i = 0; i < list_size(archivos_metadata); i++){
 		// Tomamos cada arhivo de la lista de archivos en el FS
-		char* path_metadata = list_get(archivos_metadata, i);
+		char* path_metadata = string_duplicate(list_get(archivos_metadata, i));
 
 		// Abrimos el config de cada archivo en el FS
 		t_config* config_actual = config_create(path_metadata);
@@ -592,40 +611,40 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
         }
 
 		// Leemos el config actual
-		int bloque_inicial_actual = config_get_int_value(config, "BLOQUE_INICIAL");
-		int tamanio_archivo_actual = config_get_int_value(config, "TAMANIO_ARCHIVO"); 
+		int bloque_inicial_actual = config_get_int_value(config_actual, "BLOQUE_INICIAL");
+		int tamanio_archivo_actual = config_get_int_value(config_actual, "TAMANIO_ARCHIVO"); 
 
-		
+		printf("\n--ARCHIVO ACTUAL: %s\n--TAMANIO ARCHIVO: %i\n\n", path_metadata, tamanio_archivo_actual);
 
 		// Copiamos datos del archivo actual
-		if( strcmp(path_metadata, path_del_nombre) != 0){ // Verificamos que los datos a leer no pertenecen al archivo truncado en caso de que el nuevo tamanio se pase del espacio de memoria
+		if(strcmp(path_metadata, path_del_nombre) != 0){ // Verificamos que los datos a leer no pertenecen al archivo truncado en caso de que el nuevo tamanio se pase del espacio de memoria
 			memcpy(buffer_auxiliar + bloques_desplazados * block_size, bloques_dat + bloque_inicial_actual * block_size, tamanio_archivo_actual);
 		}else{
 			memcpy(buffer_auxiliar + bloques_desplazados * block_size, bloques_dat + bloque_inicial_actual * block_size, tamanio_archivo);
 		}
+		
 		char* desplazamiento_actual = string_itoa(bloques_desplazados);
         config_set_value(config_actual, "BLOQUE_INICIAL", desplazamiento_actual);
-        free(desplazamiento_actual);
+        //free(desplazamiento_actual);
 		config_save(config_actual);
+
 		config_destroy(config_actual);
 
 		bloques_desplazados += redondear_up(tamanio_archivo_actual, block_size);
 	}
-
+	printf("\n\nBLOQUES_DESPLAZADOS: %i\n\n", bloques_desplazados);
 	for(int i = 0; i < bloques_desplazados; i++){
 		bitarray_set_bit(bitmap, i); // bitarray_set_bit(bitmap, i);
 	}
-
-
-
+	
 	// Sincronizamos archivo de bloques
 	memcpy(bloques_dat, buffer_auxiliar, block_count * block_size);
 	msync(bloques_dat, block_size*block_count, MS_SYNC);
 
 	// Sincronizamos bitmap
-	msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
+	//msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
 
-	config_destroy(config);
+	//config_destroy(config);
+
 	usleep(retraso_compactacion);
 }
-

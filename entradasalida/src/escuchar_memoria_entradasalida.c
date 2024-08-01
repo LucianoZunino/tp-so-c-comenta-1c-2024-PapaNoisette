@@ -1,8 +1,10 @@
 #include "escuchar_memoria_entradasalida.h"
 
-void* datos;
+char* datos;
 
 void escuchar_mensajes_memoria_entradasalida(){
+	printf("\nHola estoy escuchando memoria desde el socket: %i\n", fd_memoria);
+	
     bool desconexion_memoria_entradasalida = 0;
 	while(!desconexion_memoria_entradasalida){
 		int cod_op = recibir_operacion(fd_memoria); // recv() es bloqueante por ende no queda loopeando infinitamente
@@ -25,11 +27,16 @@ void escuchar_mensajes_memoria_entradasalida(){
 				
 				buffer = recibir_buffer_completo(fd_memoria);
 
-				datos = extraer_datos_del_buffer(buffer);
+				pid = extraer_int_del_buffer(buffer);
+				datos = extraer_string_del_buffer(buffer);
+
+				printf("Datos recibidos de memoria: %s", datos);
 
 				destruir_buffer(buffer);
-				sem_post(&sem_fs_write);
 
+				printf("\nANTES DEL SEMAFORO\n");
+				sem_post(&sem_fs_write);
+				printf("\n despues del semaforo \n\n");
 				break;
 			case MEMORIA_ERROR:
 				

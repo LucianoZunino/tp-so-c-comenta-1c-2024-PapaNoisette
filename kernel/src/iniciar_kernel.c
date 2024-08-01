@@ -173,7 +173,7 @@ void iniciar_recursos(){
     recursos_disponibles = list_create();
     printf("Lista de Rescursos tamanio\n\n" );
     for (int i = 0; recursos[i] != NULL; i++){
-        t_recurso* nuevo_recurso = malloc (sizeof(t_recurso)); //HACER FREE CUANDO SE ELIMINA TODO
+        t_recurso* nuevo_recurso = malloc(sizeof(t_recurso)); //HACER FREE CUANDO SE ELIMINA TODO
         char* nombre = (char*)recursos[i];
         int instancias = atoi(instancias_recursos[i]);
         //t_list* cola_de_espera = list_create();
@@ -215,7 +215,7 @@ void esperar_clientes(){
         t_interfaz* interfaz = malloc(sizeof(t_interfaz));
         
         
-        interfaz->socket = *socket;
+        interfaz->socket = socket;
         printf("Antes de crear el hilo\n");
         interfaz->cola_espera = list_create();
         sem_init(&interfaz->sem_espera, 1, 0);

@@ -114,14 +114,14 @@ int ejecutar_resize(char *tamanio){
 }
 
 void ejecutar_copy_string(char *tamanio){
-   int dir_fisica_si = traducir_direccion_logica(EXEC->registros_cpu->SI);
-   int dir_fisica_di = traducir_direccion_logica(EXEC->registros_cpu->DI);
+   int dir_fisica_si = (int) traducir_direccion_logica(EXEC->registros_cpu->SI);
+   int dir_fisica_di = (int) traducir_direccion_logica(EXEC->registros_cpu->DI);
 
    log_info(logger_cpu, "Ejecutando COPY_STRING");
 
    t_buffer *buffer_a_enviar_leer = crear_buffer();
    cargar_int_al_buffer(buffer_a_enviar_leer, EXEC->pid);
-   cargar_int_al_buffer(buffer_a_enviar_leer, tamanio);
+   cargar_int_al_buffer(buffer_a_enviar_leer, atoi(tamanio));
    cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_si);
    cargar_int_al_buffer(buffer_a_enviar_leer, dir_fisica_di);
 
@@ -361,8 +361,6 @@ void ejecutar_io_fs_truncate(char *interfaz, char *nombre_archivo, char *reg_tam
 
    t_buffer *buffer = crear_buffer();
    t_paquete *paquete = crear_paquete(IO_FS_TRUNCATE_FS, buffer);
-   printf("\nENIVA DESDE CPU REGISTRO ECX: %i\n", EXEC->registros_cpu->ECX);
-   printf("\nENIVA DESDE CPU REGISTRO ECX: %i\n", get_registro("ECX"));
    agregar_pcb(paquete,EXEC);
    cargar_string_al_buffer(paquete->buffer, interfaz);
    cargar_string_al_buffer(paquete->buffer, nombre_archivo);

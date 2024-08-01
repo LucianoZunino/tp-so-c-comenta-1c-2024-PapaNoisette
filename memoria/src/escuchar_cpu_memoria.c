@@ -170,9 +170,11 @@ void escuchar_mensajes_cpu_memoria(){
 			tamanio = extraer_int_del_buffer(buffer);
 			int dir_fisica_origen = extraer_int_del_buffer(buffer); // Registro SI
 			int dir_fisica_destino = extraer_int_del_buffer(buffer); // Registro DI
-
+			
 			void* aux = ejecutar_mov_in(tamanio, dir_fisica_origen, pid);
 			ejecutar_mov_out(tamanio, dir_fisica_destino, pid, aux);
+
+			print_memoria_RAM("contenido_memoria_COPY_STRING.txt");
 
 			destruir_buffer(buffer);
 			break;
@@ -228,7 +230,7 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 		if(resto_de_escritura >= espacio_libre_en_pagina){
 			printf("\nMEMCOPY IF \n");
 			memcpy(memoria_RAM + dir_fisica, datos + base, espacio_libre_en_pagina);
-			base += espacio_libre_en_pagina + 1;
+			base += espacio_libre_en_pagina;
 			printf("\nPOST-MEMCOPY IF \n");
 		}else{
 			printf("\nMEMCOPY ELSE \n");
@@ -268,7 +270,7 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 
 void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 	int indice_de_marco;
-	void* datos = malloc(tamanio);
+	void* datos = calloc(tamanio, 1);
 
 	if(!validar_espacio_de_memoria(pid, dir_fisica, tamanio, &indice_de_marco)){
 		free(datos);
@@ -307,7 +309,7 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 
 			memcpy(datos + base, memoria_RAM + dir_fisica, espacio_libre_en_pagina);
 			//memcpy(1, memoria_RAM, espacio_libre_en_pagina);
-			base += espacio_libre_en_pagina + 1; // Porque más uno?
+			base += espacio_libre_en_pagina; // Porque más uno?
 		}
 		else{
 
@@ -345,7 +347,7 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 }
 
 bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de_marco){ // CAPAZ ROMPE
-	printf("vlag1\n");
+
 	bool contiene_direccion = false;
 
 	Proceso* proceso_actual = buscar_proceso(lista_procesos, pid);
@@ -353,23 +355,17 @@ bool validar_espacio_de_memoria(int pid, int dir_fisica, int tam, int* indice_de
 		log_error(logger_memoria, "No existe proceso con PID: %i", pid);
 		return contiene_direccion;
 	}
-	printf("vlag2\n");
+	
 	for(int i = 0; i < list_size(proceso_actual->tabla_paginas); i++){
-		printf("vlag3\n");
+
 		int pagina_actual = list_get(proceso_actual->tabla_paginas, i);
-		printf("vlag4\n");
 		int inicio_marco_actual = pagina_actual * tam_pagina;
-		printf("vlag4.1\n");
 		if(inicio_marco_actual <= dir_fisica && inicio_marco_actual + tam_pagina >= dir_fisica){ //DIRECCION DENTRO DE LAS PAGS DEL PROCESO
-			printf("vlag5\n");
 			contiene_direccion = true;
 			*indice_de_marco = i;
-			printf("vlag6\n");
 			return contiene_direccion;
 		}
 	}
-
-	printf("vlag7\n");
 	return contiene_direccion;
 }
 

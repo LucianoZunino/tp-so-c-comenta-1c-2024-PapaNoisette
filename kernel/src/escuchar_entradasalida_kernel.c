@@ -11,7 +11,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 	printf("Length interfaces: %i\n", list_size(interfaces));
 	if (list_size(interfaces) == 0) return;
 	t_interfaz* interfaz = list_get(interfaces, indice_interfaz);
-	int socket = interfaz->socket;
+	int socket = *interfaz->socket;
 
 	sem_init(&sem_ocupado, 1, 1);
 	 // HILO LISTA DE ESPERA
@@ -109,11 +109,10 @@ void esperar_entradasalida(int indice){
 
 		pthread_mutex_lock(&(interfaz->mutex_interfaz));
 		t_paquete* paquete = list_remove(interfaz->cola_espera, 0);
-		
 		pthread_mutex_unlock(&(interfaz->mutex_interfaz));
 
 		printf("\n\nCodigo de operacion instruccion IO:%i\n\n", paquete->codigo_operacion);
-		enviar_paquete(paquete, interfaz->socket);
+		enviar_paquete(paquete, *interfaz->socket);
 		eliminar_paquete(paquete); //Si rompe es esto
 	}
 }

@@ -148,7 +148,7 @@ typedef struct
 typedef struct
 {
 	char nombre[100];
-	int socket;
+	int* socket;
 	t_list* cola_espera;
 	sem_t sem_espera;
 	pthread_mutex_t mutex_interfaz;

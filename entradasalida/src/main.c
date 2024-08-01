@@ -35,7 +35,7 @@ int main(int argc, char* argv[]){
     // Escucha los mensajes Memoria-E/S
     if(tipo_de_interfaz != GENERICA){
         pthread_t hilo_memoria_entradasalida;
-	    pthread_create(&hilo_memoria_entradasalida, NULL, (void*)escuchar_mensajes_memoria_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
+	    pthread_create(&hilo_memoria_entradasalida, NULL, escuchar_mensajes_memoria_entradasalida, NULL); // Crea el hilo y le pasa la funcion a ejecutarse
 	    pthread_detach(hilo_memoria_entradasalida); // Hace que el hilo se desacople del principal y se ejecute en paralelo
     }
    

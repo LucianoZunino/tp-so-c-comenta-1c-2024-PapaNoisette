@@ -27,7 +27,7 @@ extern int retraso_compactacion;
 extern int fd_memoria;
 extern int fd_kernel;
 
-extern void* datos;
+extern char* datos;
 
 extern sem_t sem_stdout;
 extern sem_t sem_fs_write;
