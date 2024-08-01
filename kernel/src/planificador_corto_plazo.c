@@ -10,14 +10,18 @@ sem_t sem_EXEC;
 
 void planificador_corto_plazo(){
     while(true){
+
         sem_wait(&sem_READY);
+
         sem_wait(&sem_EXEC); // sem_signal deberia estar en EXEC (cpu) y que avise cuando desaloja el proceso en ejecucion
 
         if(flag_planificacion_detenido){
+        
             sem_wait(&sem_planificador_CP_detenido);
         }
 
         if(string_equals_ignore_case(algoritmo_planificacion,"RR") || string_equals_ignore_case(algoritmo_planificacion, "FIFO")){
+
             pthread_mutex_lock(&mutex_READY);
             t_pcb *pcb = list_remove(READY, 0);
             pthread_mutex_unlock(&mutex_READY);
@@ -26,16 +30,18 @@ void planificador_corto_plazo(){
             pthread_mutex_lock(&mutex_RUNNING);
             RUNNING = pcb;
             pthread_mutex_unlock(&mutex_RUNNING);
-            printf("if de FIFO\n");
-            
             enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
-            printf("Después de enviar proceso\n");
-            if(algoritmo_planificacion == "RR"){
-                esperar_a_cpu_round_robin(pcb);
+
+            if(string_equals_ignore_case(algoritmo_planificacion,"RR")){
+                    printf("\n ENTRO AL  IF DE RR \n");
+                    esperar_a_cpu_round_robin(pcb);
             }
-        } else if(string_equals_ignore_case(algoritmo_planificacion,"VRR")){
+                
+            }else if(string_equals_ignore_case(algoritmo_planificacion,"VRR")){
+                printf("\n ENTRO AL ELSE VRR \n");
             t_pcb* pcb;
             if(list_is_empty(PRIORIDAD)){
+                printf("\nENTRO AL IF DE READY\n");
                 pthread_mutex_lock(&mutex_READY);
                 pcb = list_remove(READY, 0);
                 pthread_mutex_unlock(&mutex_READY);
@@ -46,6 +52,7 @@ void planificador_corto_plazo(){
                 RUNNING = pcb;
                 pthread_mutex_unlock(&mutex_RUNNING);
             }else {
+                printf("\nENTRO AL IF DE PRIORIDAD\n");
                 pthread_mutex_lock(&mutex_PRIORIDAD);
                 pcb = list_remove(PRIORIDAD, 0);
                 pthread_mutex_lock(&mutex_PRIORIDAD);
@@ -57,37 +64,42 @@ void planificador_corto_plazo(){
                 RUNNING = pcb;
                 pthread_mutex_unlock(&mutex_RUNNING);
             }
-
-            enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
-
-            int64_t ms_transcurridos = esperar_a_cpu_virtual_round_robin(RUNNING);
             
+            enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
+           
+            int64_t ms_transcurridos = esperar_a_cpu_virtual_round_robin(RUNNING);
+            printf("\n ms_transcurridos: %i\n", ms_transcurridos);
             if(ms_transcurridos < RUNNING->quantum){
-                RUNNING->quantum -= ms_transcurridos;
+                printf(
+                "################################################################\n"
+                "###################ADENTRO DEL IF QUANTUM#######################\n"
+                "################################################################\n"
+                );
+                RUNNING->quantum = RUNNING->quantum - ms_transcurridos;
+                printf("\nRUNNING QUANTUM: %i\n", RUNNING->quantum);
             }
             
-        }
-        else {
+        }else {
             log_error(logger_kernel, "El Algoritmo de planificacion no es correcto");
         }
         // esperar_respuesta_de_CPU con: contexto, motivo_desalojo
-
-       
     }
 }
 
-void hilo_quantum(t_pcb* pcb){
+void hilo_quantum_funcion(t_pcb* pcb){
   usleep((pcb->quantum)* 1000);
   send_interrupt();
 }
 
 void esperar_a_cpu_round_robin(t_pcb* pcb){
+    printf("\nANTES DE CREAR HILO QUANTUM\n");
     pthread_t hilo_quantum;
-    pthread_create(&hilo_quantum, NULL, hilo_quantum, pcb);
+    pthread_create(&hilo_quantum, NULL, hilo_quantum_funcion, pcb);
     pthread_detach(hilo_quantum);
-
+    printf("\nANTES DEL SEM_DESALOJO\n");
     sem_wait(&sem_desalojo); //esperar_a_que_cpu_desaloje(pcb); por fin de Quantum o por otro motivo
-    
+    printf("\n DESP DEL SEM_DESALOJO \n\n");
+
     pthread_cancel(hilo_quantum);
 }
 
@@ -102,11 +114,14 @@ int64_t esperar_a_cpu_virtual_round_robin(t_pcb* pcb){
 }
 
 void send_interrupt(){
+    printf("\n INICIO DE SEND_INTERRUPT\n\n");
     t_buffer* buffer = crear_buffer();
-    t_paquete* paquete = crear_paquete(INTERRUPCION,buffer);
+    t_paquete* paquete = crear_paquete(FIN_DE_QUANTUM,buffer);
+    cargar_int_al_buffer(paquete->buffer, RUNNING->pid);
     cargar_int_al_buffer(paquete->buffer, FIN_DE_QUANTUM);
     enviar_paquete(paquete, fd_cpu_interrupt);
     eliminar_paquete(paquete);
+    printf("\n FIN DE SEND_INTERRUPT\n\n");
 }
 
 void pasar_proceso_a_ready(t_pcb* pcb){

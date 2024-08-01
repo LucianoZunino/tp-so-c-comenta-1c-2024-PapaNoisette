@@ -15,7 +15,7 @@ typedef struct{
 extern t_list* recursos_disponibles;
 extern char* estado_pcb_desc[6];
 
-void interrumpir_cpu(t_pcb *pcb, motivo_interrupcion motivo);
+void interrumpir_cpu(t_pcb *pcb, op_code motivo);
 void pcb_destruir(t_pcb *pcb);
 void enviar_proceso_cpu(t_pcb *pcb, int socket, op_code op_code);
 int buscar_index_por_pid(t_list* lista, int pid);

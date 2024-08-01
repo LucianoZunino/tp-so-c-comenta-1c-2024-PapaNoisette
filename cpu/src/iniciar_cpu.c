@@ -2,9 +2,9 @@
 
 t_config *config_cpu;
 t_list* tlb;
+sem_t sem_interrupt;
 
-void iniciar_cpu()
-{
+void iniciar_cpu(){
    iniciar_logger_cpu();
    iniciar_config_cpu();
    imprimir_config_cpu();
@@ -12,6 +12,12 @@ void iniciar_cpu()
 	EXEC=malloc(sizeof(t_pcb));
 	EXEC->registros_cpu=malloc(sizeof(t_registros_cpu));
 	EXEC->estado=malloc(sizeof(estado_pcb));
+   flag_interrupt = false;
+
+   if (sem_init(&sem_interrupt, 1, 0) != 0) {
+        log_error(logger_cpu, "Ocurrio un error al crear semaforo sem_EXEC");
+        exit(-1);
+   }
 	//iniciar_pcb(); //ESTA BIEN ESTO?
 }
 
@@ -34,8 +40,7 @@ void iniciar_cpu()
 	
 
 //}
-void iniciar_logger_cpu()
-{
+void iniciar_logger_cpu(){
    logger_cpu = iniciar_logger("cpu.log", "cpu");
 }
 

@@ -5,10 +5,7 @@ void escuchar_mensajes_memoria_kernel(){
 	while(!desconexion_memoria_kernel){
 		int cod_op = recibir_operacion(fd_memoria); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
-			//case PROTOCOLOS_A_DEFINIR:
-			//	break;
 			case KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS:
-				// :)
 				printf("nuevo case\n");
 				sem_post(&sem_estructuras_inicializadas);
 				break;
@@ -17,7 +14,7 @@ void escuchar_mensajes_memoria_kernel(){
 				desconexion_memoria_kernel = 1;
 				break;
 			default:
-				log_warning(logger_kernel, "Operacion desconocida de Memoria-Kernel.");
+				//log_warning(logger_kernel, "Operacion desconocida de Memoria-Kernel.");
 				break;
 			}
 	}

@@ -50,11 +50,13 @@ typedef enum
 	KERNEL_WAIT,   					// cpu-> KERNEL por dipatch
 	KERNEL_SIGNAL, 					// cpu-> KERNEL por dipatch
 	// CPU-MEMORIA
-	CPU_SOLICITA_INSTRUCCION,  // cpu->memoria 
+	CPU_SOLICITA_INSTRUCCION,  		// cpu->memoria 
 	MEMORIA_ENVIA_INSTRUCCION,	    // memoria->cpu 
 	MEMORIA_RESIZE,				    // cpu-> MEMORIA//mano pid y new_size
 	RESIZE_OK,					    // memoria ->cpu
-	OUT_OF_MEMORY,				    // memoria ->cpu
+	FIN_DE_QUANTUM,
+	ELIMINAR_PROCESO,
+	OUT_OF_MEMORY,			// memoria ->cpu
 	MEMORIA_LEER,				    // cpu-> MEMORIA
 	MEMORIA_ESCRIBIR,			    // cpu-> MEMORIA
 	CPU_CONSULTA_FRAME,			    // cpu<-> MEMORIA cuando hay tlb miss
@@ -127,13 +129,6 @@ typedef enum
 //
 // MOTIVOS DE INTERRUPCION o FIN DE PROCESO
 
-typedef enum
-{
-	FIN_DE_QUANTUM,
-	ENTRADA_SALIDA,
-	ELIMINAR_PROCESO,
-	PROCESO_OUT_OF_MEMORY
-} motivo_interrupcion;
 
 typedef struct
 {
@@ -142,7 +137,6 @@ typedef struct
 	t_registros_cpu *registros_cpu;
 	int quantum;
 	estado_pcb *estado;
-	//motivo_interrupcion motivo;
 } t_pcb;
 
 typedef struct

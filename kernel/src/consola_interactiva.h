@@ -11,6 +11,6 @@
 void iniciar_consola_interactiva();
 comando_consola validar_entrada(char* codigo);
 void ejecutar_instruccion(char** leido, comando_consola comando);
-void abrir_archivo(char** comandos[], char* path, int* j);
+int abrir_archivo(char** comandos, char* path);
 
 #endif

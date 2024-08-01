@@ -11,8 +11,8 @@ char instr_arg2[20];
 char instr_arg3[20];
 char instr_arg4[20];
 char instr_arg5[20];
-int pid_interrupcion = SIN_INTERRUPCION;
-motivo_interrupcion motivo;
+bool flag_interrupt;
+
 pthread_mutex_t interrupcion_mutex;
 
 /// @brief Solicita a memoria la siguiente instruccion
@@ -173,10 +173,10 @@ int decode_excute(){
     }
 }
 
-int ciclo_de_instruccion() // FETCH->EXECUTE
-{   
-    if 	(tamanio_pagina==-1){
-    tamanio_pagina=consultar_tamanio_pagina_memoria();//es un dato necesario en cpu y no viene en config
+int ciclo_de_instruccion(){ // FETCH->EXECUTE
+
+    if(tamanio_pagina == -1){
+        tamanio_pagina = consultar_tamanio_pagina_memoria();//es un dato necesario en cpu y no viene en config
     }
     // Recibo instruccion y la mando a ejecutar
     int estado_ciclo = 1; 
@@ -184,26 +184,32 @@ int ciclo_de_instruccion() // FETCH->EXECUTE
 
     fetch(); 
 
-
     estado_ciclo = decode_excute();
 
- /*
+    if(flag_interrupt){
+        printf("\nCAMBIO ESTADO_CICLO POR FLAG\n");
+        estado_ciclo = SALIR_DE_CICLO;
+        printf("\nASIGNA SALIR_DE_CICLO\n");
+        sem_post(&sem_interrupt);
+        printf("\nABAJO DE SEM_POST\n");
+    }
 
-        pthread_mutex_lock(&interrupcion_mutex);
-        if (pid_interrupcion == EXEC->pid)
-        {
-            estado_ciclo = SALIR_DE_CICLO;
-            pid_interrupcion = SIN_INTERRUPCION;
+    /*
+    pthread_mutex_lock(&interrupcion_mutex);
+
+    if(pid_interrupcion == EXEC->pid){
+        estado_ciclo = SALIR_DE_CICLO;
+        pid_interrupcion = SIN_INTERRUPCION;
+        pthread_mutex_unlock(&interrupcion_mutex);
+        motivo_interrupcion motivo = motivo;
+        enviar_kernel_interrupt(EXEC,motivo, fd_kernel_dispatch);
+    }
+    else{
+        if(pid_interrupcion != SIN_INTERRUPCION){
+            log_debug(logger_cpu, "Hubo interrupcion pero para otro pid. PID en ejeucion: %i - PID de interrupcion: %i", EXEC->pid, pid_interrupcion);
             pthread_mutex_unlock(&interrupcion_mutex);
-            motivo_interrupcion motivo = motivo;
-            enviar_kernel_interrupt(EXEC,motivo, fd_kernel_dispatch);
         }
-        else
-        {
-            if (pid_interrupcion != SIN_INTERRUPCION)
-                log_debug(logger_cpu, "Hubo interrupcion pero para otro pid. PID en ejeucion: %i - PID de interrupcion: %i", EXEC->pid, pid_interrupcion);
-            pthread_mutex_unlock(&interrupcion_mutex);
-        }
-    */
+    }
+*/
     return estado_ciclo;
 }

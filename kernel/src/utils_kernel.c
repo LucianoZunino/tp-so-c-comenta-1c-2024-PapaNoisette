@@ -4,13 +4,13 @@
 pthread_mutex_t mutex_recursos_disponibles;
 char* estado_pcb_desc[6] = {"NEW", "READY", "BLOCKED", "EXIT", "PRIORIDAD", "EXECUTE"};
 
-void interrumpir_cpu(t_pcb *pcb, motivo_interrupcion motivo){
+void interrumpir_cpu(t_pcb *pcb, op_code motivo){
     enviar_cpu_interrupt(pcb, motivo, fd_cpu_interrupt);
     log_trace(logger_kernel, "Interrumpo la ejecucion de PID %i", pcb->pid);
 }
 
 void pcb_destruir(t_pcb *pcb){
-    if (pcb != NULL){
+    if(pcb != NULL){
         free(pcb->registros_cpu);
         //free(pcb->quantum);
         //free(pcb->estado);
@@ -18,8 +18,7 @@ void pcb_destruir(t_pcb *pcb){
     }
 }
 
-void enviar_proceso_cpu(t_pcb *pcb, int socket, op_code op_code)
-{
+void enviar_proceso_cpu(t_pcb *pcb, int socket, op_code op_code){
     t_buffer* buffer_a_enviar = crear_buffer();
     t_paquete *paquete = crear_paquete(op_code, buffer_a_enviar);
     agregar_pcb(paquete, pcb);
@@ -27,10 +26,10 @@ void enviar_proceso_cpu(t_pcb *pcb, int socket, op_code op_code)
     eliminar_paquete(paquete);    
 }
 
-int buscar_index_por_pid(t_list* lista, int pid) {
-	for (unsigned int i = 0; i < list_size(lista); i++) {
+int buscar_index_por_pid(t_list* lista, int pid){
+	for(unsigned int i = 0; i < list_size(lista); i++){
 		t_pcb* pcb = list_get(lista, i);
-		if (pcb->pid == pid) {
+		if(pcb->pid == pid){
 			return i;
 		}
 	}
@@ -57,22 +56,21 @@ t_pcb* buscar_pcb_por_pid(int pid){
         pcb = list_remove(PRIORIDAD, index);
         pthread_mutex_unlock(&mutex_PRIORIDAD);
     }
-    return pcb;
 
+    return pcb;
 }
 
 void pasar_proceso_a_exit(int pid, char* motivo){
     t_pcb* pcb = buscar_pcb_por_pid(pid);
-    
     enviar_a_exit(pcb, motivo);
 }
-
 
 int buscar_recurso(char* recurso){
    
     for(unsigned int i = 0; i < list_size(recursos_disponibles); i++){
         t_recurso* recurso_aux = list_get(recursos_disponibles, i);
         char* nombre_recurso = string_duplicate(recurso_aux->nombre);
+        
         if(string_equals_ignore_case(nombre_recurso, recurso)){
             return i;
         }
@@ -92,51 +90,40 @@ void enviar_a_exit(t_pcb* pcb, char* motivo){
 }
 
 void restar_instancia(char* nombre_recurso, t_pcb *pcb){
-    printf("\n\n INICIAR_ RESTAR_INSTACIA \n\n");
-    printf("\n------------------ Nombre del recurso desde restar_instancia: %s\n", nombre_recurso);
     int index = buscar_recurso(nombre_recurso);
-    printf("\nIndice del recurso: %i\n", index);
     t_recurso* recurso = list_get(recursos_disponibles, index);
-    printf("\n\n ANTES: if(recurso->instancias <= 0) \n\n");
     if(recurso->instancias <= 0){ //caso en el que no hay recurso de instancia disponible
         
-        printf("\nLIST_ADD ANTES\n");
+        
         pthread_mutex_lock(&mutex_BLOCKED);
 	    list_add(BLOCKED, pcb);
         pthread_mutex_unlock(&mutex_BLOCKED);       
-        printf("\nLIST_ADD DESPUES\n");
+        
 	   
         cambio_de_estado(pcb, E_BLOCKED); //FALTABA CAMBIAR EL ESTADO
 
-        printf("\nQUEUE_PUSH ANTES\n");
+        
         pthread_mutex_lock(&recurso->mutex);
         queue_push(recurso->cola_de_espera, pcb);
         pthread_mutex_unlock(&recurso->mutex);
-        printf("\nQUEUE_PUSH DESPUES\n");
+        
 
-        printf("\n\n caso en el que no hay recurso de instancia disponible \n\n");
-        printf("\n TAMANIO DE COLA DE ESPERA: %i DEL RECURSO: %s \n", queue_size(recurso->cola_de_espera), recurso->nombre);
+        
         t_pcb* pcb_provisorio = list_get(recurso->pcb_asignados, list_size(recurso->pcb_asignados) - 1 );
-        printf("\n recurso asignado: %s al pcb: %i \n", recurso->nombre, pcb_provisorio->pid);
-        printf("\n TAMANIO RECURSOS ASIGNADOS: %i\n", list_size(recurso->pcb_asignados));
 
     }
     else{ //caso en el que hay recurso de instancia disponible
-        printf("\n####### ANTES DE recurso->mutex DENTRO DEL ELSE #######\n");
+       
         pthread_mutex_lock(&recurso->mutex);
         recurso->instancias --;
         pthread_mutex_unlock(&recurso->mutex);
-        printf("\n ANTES DE AGREGAR A PCB_ASIGNADOS\n");
+        
         pthread_mutex_lock(&recurso->mutex);
         t_list* lista_aux = recurso->pcb_asignados;
         list_add(lista_aux, pcb);
-        pthread_mutex_unlock(&recurso->mutex);
-        
-        printf("\nDENTRO DEL EEEEELSE:\n");
-        printf("\n TAMANIO DE COLA DE ESPERA: %i DEL RECURSO: %s \n", queue_size(recurso->cola_de_espera), recurso->nombre);
+        pthread_mutex_unlock(&recurso->mutex);  
+       
         t_pcb* pcb_provisorio = list_get(recurso->pcb_asignados, list_size(recurso->pcb_asignados) - 1 );
-        printf("\n recurso asignado: %s al pcb: %i \n", recurso->nombre, pcb_provisorio->pid);
-        printf("\n TAMANIO RECURSOS ASIGNADOS: %i\n", list_size(recurso->pcb_asignados));
         
         if(pcb->quantum != quantum){ // CUANDO SE UTILIZA VRR, SE CONTEMPLA EL CASO DE PRIORIDAD POR QUANTUM
             pthread_mutex_lock(&mutex_PRIORIDAD);
@@ -145,7 +132,6 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
             cambio_de_estado(pcb, E_PRIORIDAD);
             sem_post(&sem_READY);
             //sem_post(&sem_READY);
-            printf("\nDentro del IF\n");
         }
         else{
             pthread_mutex_lock(&mutex_READY);
@@ -154,26 +140,17 @@ void restar_instancia(char* nombre_recurso, t_pcb *pcb){
             sem_post(&sem_READY);
             cambio_de_estado(pcb, E_READY);
             //sem_post(&sem_READY);
-            printf("\nDentro del ELSE\n");
         }
-        // printf("\n\nflag1\n\n");
-        // list_remove(recursos_disponibles, index); //se actualiza la lista de recursos_disponibles
-        // printf("\n\nflag2\n\n");
-        // list_add_in_index(recursos_disponibles, index, &recurso);
-        // printf("\n\nflag3\n\n");
+  
     }
 }
 
 int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
-    printf("\n ### INICIO SUMAR INSTANCIA ### \n");
-    int index = buscar_recurso(nombre_recurso);
     
-    printf("\nDentro de sumar instancia -> INDEX: %i\n", index);
+    int index = buscar_recurso(nombre_recurso);
 
     if(index < 0){
-		printf("\nADENTRO DEL IF BUSCAR RECURSO ANTES DE ENVIAR A EXIT\n");
 		enviar_a_exit(pcb, "INVALID_RESOURCE");
-		printf("\nADENTRO DEL IF BUSCAR RECURSO DESPUES DE ENVIAR A EXIT\n");
 	}
 
     t_recurso* recurso = list_get(recursos_disponibles, index);
@@ -182,21 +159,16 @@ int sumar_instancia(char* nombre_recurso, t_pcb* pcb){
         return -1;
     }
 
-    printf("\n RECURSO: %s -- INTANCIAS: %i\n", recurso->nombre, recurso->instancias);
 
     if(recurso->instancias >= 0){
-        printf("\n IF INSTANCIAS => 0 \n");
         
         pthread_mutex_lock(&recurso->mutex);
         recurso->instancias++;
         pthread_mutex_unlock(&recurso->mutex);
         
         if(!queue_is_empty(recurso->cola_de_espera)){ // Verifico que haya procesos esperando el recurso
-            printf("\n TIENE COLA DE ESPERA EL RECURSO: %s \n", recurso->nombre);
             t_pcb* nuevo_pcb = queue_pop(recurso->cola_de_espera); // Tomo el primero
-                
-            // char* nombre = recurso.nombre;
-            printf("\n SE LE RESTA INSTANCIA AL PROCESO QUE ESTABA EN ESPERA: %i \n", nuevo_pcb->pid);
+            
             restar_instancia(recurso->nombre, nuevo_pcb); // Llamo a la funcion para asignarle las instancia al nuevo proceso
 
 
@@ -255,11 +227,11 @@ void cambio_de_estado(t_pcb* pcb, int estado_nuevo){
     log_info(logger_kernel, "PID: <%i> - Estado Anterior: <%s> - Estado Actual: <%s>", pcb->pid, string_estado_anterior, string_estado_actual);
 
     if(estado_nuevo == E_READY){
-        log_info(logger_kernel ,"Cola Ready: \n");
+        log_info(logger_kernel ,"Cola Ready: ");
         leer_pids_cola(E_READY);
     }
     if(estado_nuevo == E_PRIORIDAD){
-        log_info(logger_kernel ,"Cola prioridad: \n");
+        log_info(logger_kernel ,"Cola prioridad: ");
         leer_pids_cola(E_PRIORIDAD);
     }
     pcb->estado = estado_nuevo;
@@ -269,7 +241,7 @@ void leer_pids_cola(estado_pcb estado){
     t_list* lista = list_get(lista_de_estados, estado);
     for(int i = 0; i < list_size(lista); i++){
         t_pcb* pcb_actual = list_get(lista, i);
-        log_info(logger_kernel ,"   - PID: %i \n", pcb_actual->pid);
+        log_info(logger_kernel ,"   - PID: %i", pcb_actual->pid);
     }
 
 }

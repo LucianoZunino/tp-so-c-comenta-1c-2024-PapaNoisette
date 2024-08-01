@@ -2,12 +2,15 @@
 
 void guardar_instrucciones_en_memoria(int pid, char* path){
     t_instrucciones_por_proceso* instrucciones_proceso = malloc(sizeof(t_instrucciones_por_proceso));
-    //char *path_final=strcat(strcat(path_instrucciones,"/"),path);
-    char *path_final = "/home/utnso/scripts-pruebas/instrucciones.txt";
-    FILE* archivo = fopen(path_final, "r");
+    char* path_final = string_duplicate(path_instrucciones);
+
+    string_append(&path_final, path);
+    string_trim(&path_final);
+    
+    FILE* archivo = fopen(path_final, "rt");
 
     if(archivo == NULL){
-        log_error(logger_memoria, "No se pudo abrir el archivo %s",path_final);
+        log_error(logger_memoria, "No se pudo abrir el archivo %s", path_final);
         return;
     }
 

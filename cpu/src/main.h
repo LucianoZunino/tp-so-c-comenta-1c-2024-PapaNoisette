@@ -22,6 +22,7 @@ extern char * puerto_escucha_interrupt;
 extern int cantidad_entradas_tlb;
 extern char* algoritmo_tlb;
 extern int tamanio_pagina; //hay que consultarselo a memoria??
+extern bool flag_interrupt;
 
 //Variables de socket
 extern int fd_cpu_dispatch;
@@ -48,5 +49,7 @@ extern t_registros_cpu * registros_cpu;
 extern t_pcb* EXEC;
 
 extern  t_list * tlb;
+
+extern sem_t sem_interrupt;
 
 #endif

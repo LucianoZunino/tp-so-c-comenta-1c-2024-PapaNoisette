@@ -25,7 +25,7 @@ void escuchar_mensajes_cpu_memoria(){
 
 			break;
 		case CPU_SOLICITA_INSTRUCCION:
-			printf("CPU solicita instrucción:\n");
+			//printf("CPU solicita instrucción:\n");
 
 			buffer = recibir_buffer_completo(fd_cpu);
 			pid = extraer_int_del_buffer(buffer);

@@ -7,8 +7,6 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 //void escuchar_mensajes_entradasalida_kernel(){
     bool desconexion_entradasalida_kernel = 0;
 
-	printf("Indice interfaz: %i\n", indice_interfaz);
-	printf("Length interfaces: %i\n", list_size(interfaces));
 	if (list_size(interfaces) == 0) return;
 	t_interfaz* interfaz = list_get(interfaces, indice_interfaz);
 	int socket = *interfaz->socket;
@@ -33,26 +31,24 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				aceptar_handshake(logger_kernel, socket, cod_op);
 				break;
 			case FIN_IO:
-				printf("\n\n\nLLEGUE A FIN_IO\n\n\n");
+				
 				buffer = recibir_buffer_completo(socket);
 				pid = extraer_int_del_buffer(buffer);
-				//pid = recibir_int(socket); QUE MIERDA ES ESTA FUNCIÓN?
-				printf("\n\n\nRECIBIDO_BUFFER\n\n\n");
 				int index = buscar_index_por_pid(BLOCKED, pid);
-				printf("\n\n\nPOST_INDEX\n\n\n");
 
 				t_pcb* pcb = list_remove(BLOCKED, index);				
-
-				printf("\n\nDESPUES DE ELIMINAR DE BLOCKED\n\n\n");
+				printf("\nLLEGA PROCESO <%i> DESDE ENTRADASALIDA\n", pid);
+				
 				if(pcb->quantum < quantum){
+					printf("\nENTRO AL IF PRIORIDAD DE ENTRADASALIDA");
 					pcb->estado = E_PRIORIDAD;
                 	pthread_mutex_lock(&mutex_PRIORIDAD);
 					list_add(PRIORIDAD, pcb);
 					pthread_mutex_unlock(&mutex_PRIORIDAD);
 					cambio_de_estado(pcb, E_PRIORIDAD);
 					sem_post(&sem_READY);
-				}
-				else{
+				}else{
+					printf("\nENTRO AL IF READY DE ENTRADASALIDA");
 					//pcb->estado = E_READY;
                 	pthread_mutex_lock(&mutex_READY);
 					list_add(READY, pcb);
@@ -61,7 +57,7 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 					sem_post(&sem_READY);
 				}
 				
-				printf("\n\n\n PASA LOS IF DE FIN_IO\n\n\n");
+				
 				sem_post(&sem_ocupado);
 
 				break;
@@ -112,7 +108,6 @@ void esperar_entradasalida(int indice){
 		t_paquete* paquete = list_remove(interfaz->cola_espera, 0);
 		pthread_mutex_unlock(&(interfaz->mutex_interfaz));
 
-		printf("\n\nCodigo de operacion instruccion IO:%i\n\n", paquete->codigo_operacion);
 		enviar_paquete(paquete, *interfaz->socket);
 		eliminar_paquete(paquete); //Si rompe es esto
 	}

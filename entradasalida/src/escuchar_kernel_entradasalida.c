@@ -19,7 +19,7 @@ void escuchar_instrucciones_generica(){
 				int pid = extraer_int_del_buffer(buffer);
 				int unidades = extraer_int_del_buffer(buffer);
 
-                log_info(logger_entradasalida, "PID: %i - Operacion: IO_GEN_SLEEP");
+                log_info(logger_entradasalida, "PID: %i - Operacion: IO_GEN_SLEEP", pid);
 
 				
 				usleep(unidades * tiempo_unidad_trabajo);

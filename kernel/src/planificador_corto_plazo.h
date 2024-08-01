@@ -15,7 +15,6 @@ void desalojar_proceso_cpu(op_code motivo, t_pcb* pcb);
 
 void esperar_a_cpu_round_robin(t_pcb* pcb);
 int64_t esperar_a_cpu_virtual_round_robin(t_pcb* pcb);
-void hilo_quantum(t_pcb* pcb);
+void hilo_quantum_funcion(t_pcb* pcb);
 
-//void interrumpir_cpu(motivo_interrupcion motivo);
 #endif

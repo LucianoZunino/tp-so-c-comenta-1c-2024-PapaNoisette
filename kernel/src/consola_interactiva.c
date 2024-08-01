@@ -17,7 +17,7 @@ void iniciar_consola_interactiva(){
 	while(strcmp(leido, "\0") != 0){
 
         char** operacion = string_split(leido, " ");
-        //printf("Operacion[0]: %s\nOperacion[1]: %s\n", operacion[0], operacion[1]);
+        printf("Operacion[0]: %s\nOperacion[1]: %s\n", operacion[0], operacion[1]);
         
         comando = validar_entrada(operacion[0]);
         // printf("Comando: %i\n", comando);
@@ -36,22 +36,24 @@ void iniciar_consola_interactiva(){
 
 void imprimir_comandos_validos() {
     printf("\nComandos validos: \n");
-    for (unsigned i = 0; i < 9; i++) {
+    
+    for(unsigned i = 0; i < 9; i++){
         printf("%s ", comando_consola_desc[i]);
     }
-    printf("; \n\n");
+    
+    printf(";\n\n");
 }
 
 comando_consola validar_entrada(char* codigo){
+    
     for(int i=0; i < 9; i++){
-        if(!strcmp(codigo, comando_consola_desc[i])){
+        if(strcmp(codigo, comando_consola_desc[i]) == 0){
             return i;
         }
     }
+    
     return (-1);
 }
-
-
 
 // (["INICIAR_PROCESO", "path.txt"], 1)
 void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando){
@@ -59,67 +61,65 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
     // printf("Comando: %i\nComando desde consola: %s\n", comando, comando_desde_consola[1]);
 
     t_buffer* buffer_a_enviar = crear_buffer();
+    
     switch(comando){
-
         
         case EJECUTAR_SCRIPT:
-            log_info(logger_kernel,"HOLA ENTRASTE A EJECUTAR SCRIPT\n");
-            char* path = comando_desde_consola[1];
-            int* contador = 0;
-            char** comandos_de_script[100];
-            abrir_archivo(comandos_de_script, path, contador);
+            printf("\nQue mierda es comando_desde_consola[1]: %s\n", comando_desde_consola[1]);
+            //printf("\nQue mierda es comando_desde_consola[1][1]: %s\n", comando_desde_consola[1][1]);
+            char* path = string_duplicate(comando_desde_consola[1]);
+            //int* contador = 0;
+            //char** comandos_de_script[100] = malloc(sizeof(char)*100);
+            char** comandos_de_script = malloc(500);
+            int contador = abrir_archivo(comandos_de_script, path);
             
             for(int i = 0; i<contador ; i++){
-                ejecutar_instruccion(comandos_de_script[i], validar_entrada(comandos_de_script[i][0]));
+                char** instruccion = string_split(comandos_de_script[i], " ");
+                ejecutar_instruccion(instruccion, validar_entrada(instruccion[0]));
             }
-            break;
-        
+            free(comandos_de_script);
 
+            break;
         case INICIAR_PROCESO:
-            log_info(logger_kernel,"HOLA ENTRASTE A I.PROCESO\n");
+            
+            printf("\nQue mierda es comando_desde_consola[0]: %s\n", comando_desde_consola[0]);
+            printf("\nQue mierda es comando_desde_consola[1]: %s\n", comando_desde_consola[1]);
+            
             crear_proceso(comando_desde_consola[1]);
-            break;
-        
 
+            break;
         case FINALIZAR_PROCESO:
-            log_info(logger_kernel, "HOLA ENTRASTE A F.PROCESO");
             char* pid_char = comando_desde_consola[1];
             int pid = atoi(pid_char);
-            if (RUNNING->pid == pid){
+            printf("\nPID RUNNING: %i --- PID INTERRUPT: %i\n", RUNNING->pid, pid);
+            if(RUNNING->pid == pid){
                 interrumpir_cpu(RUNNING, ELIMINAR_PROCESO);
-            } else {
+            }
+            else{
                 pasar_proceso_a_exit(pid, "INTERRUPTED BY USER");
             }
-            break;
-        
 
+            break;
         case INICIAR_PLANIFICACION:
-            log_info(logger_kernel, "HOLA ENTRASTE A I.PLANI");
+
             if(flag_planificacion_detenido){
-                
                 sem_post(&sem_planificador_LP_detenido);
                 sem_post(&sem_planificador_CP_detenido);
                 flag_planificacion_detenido = false;
             }
-            break;
-        
 
+            break;
         case DETENER_PLANIFICACION:
-            log_info(logger_kernel, "HOLA ENTRASTE A D.PLANI");
+        
             if(!flag_planificacion_detenido){
                 flag_planificacion_detenido = true;
-                
             }
-            break;
-        
 
+            break;
         case PROCESO_ESTADO:
-            log_info(logger_kernel, "HOLA ENTRASTE A PROCESO ESTADO");
-            break;
-        
 
+            break;
         case MULTIPROGRAMACION:
-            log_info(logger_kernel, "HOLA ENTRASTE A MULTI");
             char* grado_char = comando_desde_consola[1];
             int nuevo_grado = atoi(grado_char);
 
@@ -129,43 +129,81 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
             pthread_mutex_lock(&mutex_multiprogramacion);
             grado_multiprogramacion = nuevo_grado;
             pthread_mutex_unlock(&mutex_multiprogramacion);
+
             break;
-        
         case MENSAJE_A_MEMORIA1:
-            log_info(logger_kernel, "HOLA ENVIANDO MENSAJE");
             cargar_string_al_buffer(buffer_a_enviar, comando_desde_consola[1]);
             t_paquete* paquete = crear_paquete(MENSAJE_A_MEMORIA, buffer_a_enviar);
             enviar_paquete(paquete, fd_memoria);
             eliminar_paquete(paquete);
-            break;
 
+            break;
         default:
             log_error(logger_kernel, "Comando no reconocido");
             //exit(EXIT_FAILURE);
             break;
-
     }
-
-
 }
 
-void abrir_archivo(char** comandos_de_script[],char* path, int* j){
+int abrir_archivo(char** comandos_de_script, char* path){
+
 
     FILE* archivo = fopen(path, "r+");
 
-    if (archivo == NULL) {
+    if(archivo == NULL){
         printf("No se pudo abrir el archivo %s\n", path);
         return 1;
     }
-    int i = 0;
     
-    while(!feof(archivo)){
-        char* linea;
+ 
+    int i = 0;
+    /*while(!feof(archivo)){
+        char* linea = malloc(100 * sizeof(char));
         fgets(linea, 100, archivo);
-        char** comando = string_split(linea, " ");
-        memcpy(comandos_de_script[i], comando, string_length(comando) + 1);
-        i++;
-    }
-    j = i;
-}
 
+        //printf("\nQue tiene comando: %s %s\n", comando[0] , comando[1]);
+        
+        printf("\n comando_de_script[%i] : %s \n", i, linea);
+        char* comando_actual = string_duplicate(linea);
+        memcpy(comandos_de_script[i], linea, string_length(linea));
+        //strcpy(comandos_de_script[i], linea);
+        
+        printf("\n desp de memcpy \n");
+        
+        free(linea);
+        i++;
+    }*/
+
+    while (!feof(archivo)) {
+        char* linea = malloc(100 * sizeof(char));
+        if (linea == NULL) {
+            perror("Error al asignar memoria para linea");
+            exit(EXIT_FAILURE);
+        }
+
+        fgets(linea, 100, archivo);
+        if (ferror(archivo)) {
+            perror("Error al leer el archivo");
+            free(linea);
+            break;
+        }
+
+        // Asignar memoria para almacenar la línea en comandos_de_script
+        comandos_de_script[i] = malloc((strlen(linea) + 1) * sizeof(char));
+        if (comandos_de_script[i] == NULL) {
+            perror("Error al asignar memoria para comandos_de_script[i]");
+            free(linea);
+            exit(EXIT_FAILURE);
+        }
+
+        // Copiar la línea leída en comandos_de_script[i]
+        strcpy(comandos_de_script[i], linea);
+
+        
+
+        i++;
+        free(linea);
+    }
+
+    return i;
+}

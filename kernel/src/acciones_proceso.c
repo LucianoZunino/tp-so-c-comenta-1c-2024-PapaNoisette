@@ -33,8 +33,9 @@ void imprimir_colas(){
 }
 
 void crear_proceso(char* path){
+    printf("\nDentro de crear proceso, path: %s\n", path);
     t_pcb *nuevo_pcb = crear_pcb();
-
+    
     nuevo_pcb->estado = E_NEW;
     pthread_mutex_lock(&mutex_NEW);
     list_add(NEW, nuevo_pcb);
@@ -49,10 +50,11 @@ void crear_proceso(char* path){
     eliminar_paquete(paquete);   
     // printf("Crear proceso\n");
     printf("Se inicializaron las estructuras\n");
-
+    sem_wait(&sem_estructuras_inicializadas);
+    
     log_info(logger_kernel, "Se crea el proceso %i en NEW", nuevo_pcb->pid);
     
-    sem_wait(&sem_estructuras_inicializadas);
+    
 
     sem_post(&sem_NEW);  // no deberia ser despues de recibir el ok de memoria? QUIEN HACE UN SEM_WAIT?
 
@@ -78,7 +80,7 @@ t_pcb *crear_pcb(){
     iniciar_registros(pcb);
     
 
-    //pcb->quantum = malloc(sizeof(int));
+    pcb->quantum = malloc(sizeof(int));
     
     pcb->quantum = quantum;
 
@@ -155,37 +157,30 @@ void liberar_recursos_de(t_pcb* pcb) {
 }
 
 void mostrar_procesos_por_estado(){
+
     for(int i = 0; i < list_size(lista_de_estados); i++){
         t_list* lista_actual = list_get(lista_de_estados, i);
         log_info(logger_kernel, "Procesos en estado de %s \n", estado_pcb_desc[i]);
         mostrar_procesos_de(lista_actual);
     }
+    
     log_info(logger_kernel, "Proceso en estado de EXEC \n");
     log_info(logger_kernel, "  - Proceso %i \n", RUNNING->pid);
 }
 
 void mostrar_procesos_de(t_list* lista_actual){
-    if(list_is_empty(lista_actual)){log_info(logger_kernel, "  No se encuentran procesos en este estado\n");}
+
+    if(list_is_empty(lista_actual)){
+        log_info(logger_kernel, "No se encuentran procesos en este estado\n");
+    }
+
     for(int i = 0;i < list_size(lista_actual); i++){
         t_pcb* pcb_actual = list_get(lista_actual, i);
-        log_info(logger_kernel, "  - Proceso %i \n", pcb_actual->pid);
+        log_info(logger_kernel, " - Proceso %i \n", pcb_actual->pid);
     }
 }
 
 void iniciar_registros(t_pcb* pcb){
-   /*
-    pcb->registros_cpu->AX  = malloc(sizeof(pcb->registros_cpu->AX));
-    pcb->registros_cpu->BX = malloc(sizeof(pcb->registros_cpu->BX));
-    pcb->registros_cpu->CX = malloc(sizeof(pcb->registros_cpu->CX));
-    pcb->registros_cpu->DX = malloc(sizeof(pcb->registros_cpu->DX));
-    pcb->registros_cpu->EAX = malloc(sizeof(pcb->registros_cpu->EAX));
-    pcb->registros_cpu->EBX = malloc(sizeof(pcb->registros_cpu->EBX));
-    pcb->registros_cpu->ECX = malloc(sizeof(pcb->registros_cpu->ECX));
-    pcb->registros_cpu->EDX = malloc(sizeof(pcb->registros_cpu->EDX));
-    pcb->registros_cpu->SI = malloc(sizeof(pcb->registros_cpu->SI));
-    pcb->registros_cpu->DI = malloc(sizeof(pcb->registros_cpu->DI));
-*/
-    
     pcb->registros_cpu->AX = 0;
     pcb->registros_cpu->BX = 0;
     pcb->registros_cpu->CX = 0;
@@ -196,5 +191,4 @@ void iniciar_registros(t_pcb* pcb){
     pcb->registros_cpu->EDX = 0;
     pcb->registros_cpu->SI = 0;
     pcb->registros_cpu->DI = 0;
-    
 }
