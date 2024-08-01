@@ -1,7 +1,7 @@
 #include "instrucciones.h"
 
 void ejecutar_set(char *registro, int valor){
-      log_info(logger_cpu,"ejecutando set,  valor: %d, registro destino %s\n", valor, registro);
+   //log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %a - Ejecutando: %d\”ejecutando set,  valor: %d, registro destino %s\n\"", valor, registro);
 
    if (strcmp(registro, "AX") == 0)
    {
@@ -200,7 +200,7 @@ void ejecutar_mov_in(char *registro_datos, char *registro_direccion){
    memcpy(&datos_a_int, byte_datos, sizeof(int)); // Transforma lo obtenido por el void* en int para poder almacenarlo en el registro correspondiente
 
    // LOG OBLIGATORIO
-   log_info(logger_cpu, "Lectura en Memoria: \"PID: %d - Acción LEER - Direccion Física %d - Valor: %d\"", EXEC->pid, dir_fisica, datos_a_int);
+   log_info(logger_cpu, "Acceso a espacio de usuario: \"PID: %d - Acción LEER - Direccion Física %d - Valor: %d\"", EXEC->pid, dir_fisica, datos_a_int);
 
    // guardo los datos recibidos en el registro indicado
    ejecutar_set(registro_datos, datos_a_int); // ANTES ESTABA registro_direccion y &datos
@@ -228,7 +228,7 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos){
    uint32_t dir_fisica = traducir_direccion_logica(dir_logica); // VIEJO DE NACHO - BORRAR
 
    // LOG OBLIGATORIO
-   log_info(logger_cpu, "Escritura en Memoria: \"PID: %d - Acción ESCRIBIR - Direccion Física %d - Valor: %d\"", EXEC->pid, dir_fisica, datos_escribir);
+   log_info(logger_cpu, "Acceso a espacio de usuario: \"PID: %d - Acción ESCRIBIR - Direccion Física %d - Valor: %d\"", EXEC->pid, dir_fisica, datos_escribir);
    
    int tam_registro = get_tamanio_registro(registro_datos); // Agregamos el tamanio para el memcpy en memoria
    // void* data = malloc(tam_registro);

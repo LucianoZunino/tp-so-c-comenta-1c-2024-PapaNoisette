@@ -4,12 +4,12 @@
 #include <math.h>
 
 void escuchar_instrucciones_generica(){
-	printf("\nENTRO DENTRO DE ESCUCHAR_INSTRUCCIONES_GENERICA()\n");
+	
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
-		printf("\n\n\nANTES DE RECIBIR COD_OP\n\n\n");
+		
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
-		printf("\n\n\nDESPUES DE RECIBIR EL COD_OP: %i\n\n\n", cod_op);
+		
 		switch(cod_op){
 			case IO_GEN_SLEEP_FS: // LLEGA COD_OP 8 ERRONEO Y TIENE QUE LLEGAR UN 9
 				
@@ -18,6 +18,9 @@ void escuchar_instrucciones_generica(){
 				
 				int pid = extraer_int_del_buffer(buffer);
 				int unidades = extraer_int_del_buffer(buffer);
+
+                log_info(logger_entradasalida, "PID: %i - Operacion: IO_GEN_SLEEP");
+
 				
 				usleep(unidades * tiempo_unidad_trabajo);
 				notificar_fin(fd_kernel, pid);
@@ -55,9 +58,9 @@ void escuchar_instrucciones_generica(){
 void escuchar_instrucciones_stdin(){
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
-		printf("\n\n\nANTES DE COD_OP EN ESCUCHAR_INSTRUCCIONES_STDIN\n\n\n");
+		
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
-		printf("\n\n\nCOD_OP DESDE ENTRADA SALIDA: %i\n\n\n", cod_op);
+		
 		
 		switch(cod_op){
 			t_buffer* buffer;
@@ -68,6 +71,8 @@ void escuchar_instrucciones_stdin(){
 				pid = extraer_int_del_buffer(buffer);
 				int reg_direccion = extraer_int_del_buffer(buffer);
 				int reg_tamanio = extraer_int_del_buffer(buffer);
+
+				log_info(logger_entradasalida, "PID: %i - Operacion: IO_STDIN_READ", pid);
 
 				printf("\nIngrese hasta %i caracteres\n", reg_tamanio);
 				char* input;
@@ -91,7 +96,7 @@ void escuchar_instrucciones_stdin(){
 				break;
 			default: // La instruccion es incorrecta
 				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
-				printf("\n\n\nCOD_OP DESDE ENTRADA SALIDA: %i\n\n\n", cod_op);
+				
 				buffer = recibir_buffer_completo(fd_kernel);
 				int process_id = extraer_int_del_buffer(buffer);
 				free(buffer);
@@ -116,12 +121,13 @@ void escuchar_instrucciones_stdout(){
 			t_buffer* buffer = crear_buffer();
 			int pid;
 			case IO_STDOUT_WRITE_FS:
-				printf("Dentro del case IO_STDOUT_WRITE_FS\n");
-				buffer = recibir_buffer_completo(fd_kernel);
 				
+				buffer = recibir_buffer_completo(fd_kernel);
 				pid = extraer_int_del_buffer(buffer);
 				int reg_direccion = extraer_int_del_buffer(buffer);
 				int reg_tamanio = extraer_int_del_buffer(buffer);
+
+                log_info(logger_entradasalida, "PID: %i - Operacion: IO_STDOUT_WRITE", pid);
 
 				printf("\n\nRecibido de kernel Tamanio: %i --- Direccion Fisica: %i\n\n", reg_tamanio, reg_direccion);
 
@@ -158,7 +164,6 @@ void escuchar_instrucciones_dialfs(){
 	bool desconexion_kernel_entradasalida = 0;
 	while(!desconexion_kernel_entradasalida){
 		int cod_op = recibir_operacion(fd_kernel); // recv() es bloqueante por ende no queda loopeando infinitamente
-		printf("\n\n\nDESPUES DE RECIBIR EL COD_OP: %i\n\n\n", cod_op);
 		switch(cod_op){
 			t_buffer* buffer = crear_buffer();
 			int pid;
@@ -170,21 +175,18 @@ void escuchar_instrucciones_dialfs(){
 			t_config* config;
 
 			case IO_FS_CREATE_FS:
-				
-				printf("ENTRO A IO_FS_CREATE_FS\n");
-
 				buffer = recibir_buffer_completo(fd_kernel);
-				
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 
+                log_info(logger_entradasalida, "PID: <%i> - Operacion: IO_FS_CREATE", pid);
 				usleep(tiempo_unidad_trabajo);
+				log_info(logger_entradasalida,"PID: <%i> - Crear Archivo: <%s>",pid, nombre );
 				
 				char* path = string_duplicate(tomar_nombre_devolver_path(nombre));
 				
 				if(eliminar_segun(path) != -1){ // Si el archivo ya existe y se crea otro con el mismo nombre se debería eliminar
 					liberar_archivo_bitmap(nombre);
-					printf("\nADENTRO DEL IF ELIMINAR SEGÚN\n");
 				}
 				
 				list_add(archivos_metadata, path);
@@ -206,7 +208,6 @@ void escuchar_instrucciones_dialfs(){
 
 				config_save(config);
 
-				printf("\n-- TAMANIO DESDE EL CONFIG: %i --\n", config_get_int_value(config, "TAMANIO_ARCHIVO"));
 				// Sincronizar
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
 
@@ -219,11 +220,13 @@ void escuchar_instrucciones_dialfs(){
 
 			case IO_FS_DELETE_FS:
 				buffer = recibir_buffer_completo(fd_kernel);
-				printf("ENTRO A IO_FS_DELETE_FS\n");
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 				char* path1 = tomar_nombre_devolver_path(nombre);
+
+				log_info(logger_entradasalida, "PID: <%i> - Operacion: IO_FS_DELETE", pid);
 				usleep(tiempo_unidad_trabajo);
+				log_info(logger_entradasalida,"PID: <%i> -  Eliminar Archivo: <%s>",pid, nombre );
 		
 				liberar_archivo_bitmap(nombre);
 				
@@ -240,22 +243,21 @@ void escuchar_instrucciones_dialfs(){
 				break;
 
 			case IO_FS_WRITE_FS:
-			 	printf("\nANTES DE DESERIALIZAR\n");
 				buffer = recibir_buffer_completo(fd_kernel);
-				
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 				reg_direccion = extraer_int_del_buffer(buffer);
 				reg_tamanio = extraer_int_del_buffer(buffer);
 				reg_puntero_archivo = extraer_int_del_buffer(buffer);
 
+				log_info(logger_entradasalida, "PID: <%i> - Operacion: IO_FS_WRITE", pid);
 				usleep(tiempo_unidad_trabajo);
-
-				printf("\nANTES DE SOLICITAR ESCRITURA MEMORIA\n");
+                log_info(logger_entradasalida,"PID: <%i> -  Escribir Archivo: <%s> -  Tamaño a Escribir: <%i> - Puntero Archivo: <%i>",pid, nombre, reg_tamanio, reg_puntero_archivo);
+				
 				solicitar_lectura_memoria(pid, reg_direccion, reg_tamanio, IO_FS_WRITE_FS);
-				printf("\nDESPUES DE SOLICITAR ESCRITURA MEMORIA\n");
+				
 				sem_wait(&sem_fs_write);
-				printf("\n despues de sem_fs_write \n");
+				
 				if(!verificar_escritura_archivo(nombre, reg_tamanio, reg_puntero_archivo)){
 					log_error(logger_entradasalida, "Se intenta escribir por fuera del tamanio del archivo\n");
 					goto error_io;
@@ -268,11 +270,11 @@ void escuchar_instrucciones_dialfs(){
 				//void* datos_aux = datos;
 
 				memcpy(bloques_dat + reg_puntero_archivo, (void*)datos, reg_tamanio);
-				printf("\nABAJO DEL MEMCPY\n");
+				
 				msync(bloques_dat, block_size*block_count, MS_SYNC);
 
 				// devolver
-				printf("\n FIN IO_FS_WRITE \n");
+				
 				notificar_fin(fd_kernel, pid);
 
 				destruir_buffer(buffer);
@@ -282,15 +284,15 @@ void escuchar_instrucciones_dialfs(){
 			
 			case IO_FS_READ_FS:
 				buffer = recibir_buffer_completo(fd_kernel);
-				
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
-
 				reg_direccion = extraer_int_del_buffer(buffer);
 				reg_tamanio = extraer_int_del_buffer(buffer);
 				reg_puntero_archivo = extraer_int_del_buffer(buffer);
 
+				log_info(logger_entradasalida, "PID: <%i> - Operacion: IO_FS_READ", pid);
 				usleep(tiempo_unidad_trabajo);
+				log_info(logger_entradasalida,"PID: <%i> -   Leer Archivo: <%s> -  Tamaño: <%i> - Puntero Archivo: <%i>",pid, nombre, reg_tamanio, reg_puntero_archivo);	
 
 				if(!verificar_escritura_archivo(nombre, reg_tamanio, reg_puntero_archivo)){
 					log_error(logger_entradasalida, "Se intenta leer por fuera del tamanio del archivo\n");
@@ -315,16 +317,14 @@ void escuchar_instrucciones_dialfs(){
 				break;
 
 			case IO_FS_TRUNCATE_FS:
-				printf("\nENTRO A IO_FS_TRUNCATE_FS\n");
 				buffer = recibir_buffer_completo(fd_kernel);
-				
 				pid = extraer_int_del_buffer(buffer);
 				nombre = extraer_string_del_buffer(buffer);
 				int nuevo_tamanio = extraer_int_del_buffer(buffer);
 
-				printf("\nDESPUES DE EXTRAER A IO_FS_TRUNCATE_FS\n");
-				
+				log_info(logger_entradasalida, "PID: <%i> - Operacion: IO_FS_TRUNCATE", pid);
 				usleep(tiempo_unidad_trabajo);
+				log_info(logger_entradasalida,"PID: <%i> -  Truncar Archivo: <%s> -  Tamaño: <%i>",pid, nombre, nuevo_tamanio);	
 
 				config = config_create(tomar_nombre_devolver_path(nombre));
 				if(config == NULL){
@@ -333,40 +333,37 @@ void escuchar_instrucciones_dialfs(){
 				}
 				int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
 				int inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
-				printf("\nDESPUES DE CARGAR CONFIG\n");
-				//TODO
-				//Queremos agrandar o achicar?
-
+				
+                
 				int cantidad_nueva_de_bloques = redondear_up(nuevo_tamanio, block_size);
 				int cantidad_actual_de_bloques = redondear_up(tamanio_archivo, block_size);
-				printf("\nredondear_up(%i, %i) = %i\n",tamanio_archivo, block_size, cantidad_actual_de_bloques);
+				
 
 				int diferencia = cantidad_actual_de_bloques - cantidad_nueva_de_bloques;
 
 				if(diferencia == 0){
-					log_info(logger_entradasalida, "Archivo de mismo tamanio en bloques, no hace falta truncar");
+					printf("Archivo de mismo tamaño, no hace falta truncar");
 					goto finFs;
 				}
-				printf("\nDESPUES DE 1ER IF\n");
+				
 				if(cantidad_actual_de_bloques > cantidad_nueva_de_bloques){
 					//si achicamos solo achicamos el archivo de metadata y marcamos los bloques restantes libres en el bitmap
-					printf("\n\nTAMAÑO NUEVO ARCHIVO -> %i\n\n", nuevo_tamanio);
+
 					config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
 					config_save(config);
 
-					//liberar_bloques_desde_hasta(inicio_archivo + cantidad_nueva_de_bloques, inicio_archivo + cantidad_actual_de_bloques);
 					liberar_bloques_desde_hasta(inicio_archivo + cantidad_nueva_de_bloques, inicio_archivo + cantidad_actual_de_bloques);
-					printf("\nDESPUES DE 2DO IFn");
+					
 				}else{
 					// si queremos agrandar
-					printf("\nDENTRO DEL ELSE\n");
+					
 					diferencia = abs(diferencia);
 
 					if(buscar_lugar_bitmap(diferencia) == -2){ // -2 seria como un codigo de error, pq -1 ya lo usamos para otro
 						log_error(logger_entradasalida, "No hay espacio suficiente en el FileSystem para truncar este archivo");
 						goto finFs;
 					}
-					printf("\nDESPUES DE ELSE-IF\n");
+					
 					// verificar que haya espacio
 					// chequeamos si entra
 					int bloque_fin_archivo = inicio_archivo + redondear_up_con_cero(tamanio_archivo, block_size);
@@ -374,20 +371,19 @@ void escuchar_instrucciones_dialfs(){
 
 					while(i <= diferencia){
 						if(bitarray_test_bit(bitmap, bloque_fin_archivo + i) == 1){
+							log_info(logger_entradasalida, "PID: <%i> - Inicio Compactacion.", pid);
 							compactar(nombre, config, nuevo_tamanio);
+							log_info(logger_entradasalida, "PID: <%i> - Fin Compactacion.", pid);
 							goto finFs;
 						}
 						i++;
 					}
-					printf("\nDESPUES DE ELSE-FOR\n");
+					
 
 					if(i >= diferencia){
-						printf("\nDIFERENCIA: %i\n", diferencia);
+						
 						config_set_value(config, "TAMANIO_ARCHIVO", string_itoa(nuevo_tamanio));
 						//Seteo los Bloques como ocupados
-						// for(int j = 1; j <= diferencia; j++){
-						// 	bitarray_set_bit(bitmap, bloque_fin_archivo + j); // bitarray_set_bit(bitmap, i);
-						// }
 						int j = 1;
 						while (j <= diferencia){
 							bitarray_set_bit(bitmap, bloque_fin_archivo + j);
@@ -396,35 +392,31 @@ void escuchar_instrucciones_dialfs(){
 
 						config_save(config);
 					}
-					printf("\nDESPUES DE ELSE-IF2\n");
+					
 				}
 
 					finFs:
 				notificar_fin(fd_kernel, pid);
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
-				printf("\nANTES DEL CONFIG_DESTROY DE TRUNCATE\n");
+				
 				config_destroy(config);
-				printf("\nFIN TRUNCANTE\n");
+				
 				break;
 			case -1:
 				log_error(logger_entradasalida, "El Kernel se desconecto de E/S.\n");
 				desconexion_kernel_entradasalida = 1;
 				break;
 			default: // La instruccion es incorrecta
-				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salidaaaaa");
+				log_warning(logger_entradasalida, "La instruccion no es valida para esta interfaz de entrada/salida");
 					error_io:
-				printf("b\n");
+				
 				buffer = recibir_buffer_completo(fd_kernel);
-				printf("c\n");
 				int process_id = extraer_int_del_buffer(buffer);
 				free(buffer);
 
-				//buffer = crear_buffer();
 				cargar_int_al_buffer(buffer, process_id);
-
 				t_paquete* paquete = crear_paquete(ERROR_IO, buffer);
 				enviar_paquete(paquete, fd_kernel);
-
 				eliminar_paquete(paquete);
 				break;
 		}
@@ -462,21 +454,19 @@ void solicitar_almacen_memoria(int pid, int direccion, char* mensaje, op_code co
 	cargar_int_al_buffer(buffer, pid);
 	cargar_int_al_buffer(buffer, direccion);
 	cargar_string_al_buffer(buffer, mensaje);
-	//cargar_datos_al_buffer(buffer, mensaje);
 
 	t_paquete* paquete = crear_paquete(cod_op, buffer);
 
 	enviar_paquete(paquete, fd_memoria);
 
 	eliminar_paquete(paquete);
-	//free(buffer);
 }
 
 int buscar_lugar_bitmap(int tamanio){
 	int i = 0;
 	int contador_libres = 0;
 	int contador_libres_continuo = 0;
-	printf("\n tamanio: %i\n", tamanio);
+	
 	
 	while(i < block_count){
 		if(bitarray_test_bit(bitmap, i) == 0){
@@ -485,7 +475,7 @@ int buscar_lugar_bitmap(int tamanio){
 			contador_libres_continuo ++;
 			
 			if(contador_libres_continuo >= tamanio){
-				printf("\n\nvalor i: %i ----- valor tamanio: %i ----- contador_libres_continuo: %i \n\n", i, tamanio, contador_libres_continuo);
+				
 				if(i == 0){
 					return i;
 				}
@@ -501,15 +491,11 @@ int buscar_lugar_bitmap(int tamanio){
 	}
 	
 	if(contador_libres >= tamanio){
-		// TODO: comprimir() -> buscar
-		printf("\n 1er if: contador_libres: %i\n", contador_libres);
-		printf("\n 1er if: contador_libres_continuo: %i\n", contador_libres_continuo);
+
 		return -1;
 	}
 	else{
-		// TODO: DEVUELVE ERROR, NO HAY ESPACIO.
-		printf("\n 2er if: contador_libres: %i\n", contador_libres);
-		printf("\n 2er if: contador_libres_continuo: %i\n", contador_libres_continuo);
+
 		return -2;
 	}
 }
@@ -575,11 +561,6 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 	
 	config_save(config);
 	
-	// Guardamos los datos del archivo
-	/*
-	void* buffer_archivo = malloc(nuevo_tamanio);
-	memcpy(buffer_archivo, bloques_dat + bloque_inicial * block_size, nuevo_tamanio);
-	*/
 
 	// Liberamos todos los bloques
 	
@@ -621,14 +602,12 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 		
 		char* desplazamiento_actual = string_itoa(bloques_desplazados);
         config_set_value(config_actual, "BLOQUE_INICIAL", desplazamiento_actual);
-        //free(desplazamiento_actual);
 		config_save(config_actual);
 
 		config_destroy(config_actual);
 
 		bloques_desplazados += redondear_up(tamanio_archivo_actual, block_size);
 	}
-	printf("\n\nBLOQUES_DESPLAZADOS: %i\n\n", bloques_desplazados);
 	for(int i = 0; i < bloques_desplazados; i++){
 		bitarray_set_bit(bitmap, i); // bitarray_set_bit(bitmap, i);
 	}
@@ -636,11 +615,6 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 	// Sincronizamos archivo de bloques
 	memcpy(bloques_dat, buffer_auxiliar, block_count * block_size);
 	msync(bloques_dat, block_size*block_count, MS_SYNC);
-
-	// Sincronizamos bitmap
-	//msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
-
-	//config_destroy(config);
 
 	usleep(retraso_compactacion);
 }

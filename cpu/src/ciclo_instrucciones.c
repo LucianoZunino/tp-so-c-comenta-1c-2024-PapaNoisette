@@ -68,114 +68,106 @@ void fetch(){
 int decode_excute(){
     EXEC->program_counter += 1; // lo hago aca para que en tal caso el jnz lo sobreescriba
 
-    //log_info(logger_cpu, "Instrucción Ejecutada: \“PID: % - Ejecutando: % - %\”\n", valor, registro);
-
-    if (strcmp(instruccion, "SET") == 0)
-    {
+    if(strcmp(instruccion, "SET") == 0){
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "SET", instr_arg1, instr_arg2);
         ejecutar_set(instr_arg1, atoi(instr_arg2));
         return CONTINUAR_CICLO;
     }  
-    else if (strcmp(instruccion, "MOV_IN") == 0)
-    {
+    else if(strcmp(instruccion, "MOV_IN") == 0){
         ejecutar_mov_in(instr_arg1, instr_arg2);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "MOV_IN", instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion, "MOV_OUT") == 0)
-    {
+    else if(strcmp(instruccion, "MOV_OUT") == 0){
         ejecutar_mov_out(instr_arg1, instr_arg2);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "MOV_OUT", instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion, "SUM") == 0)
-    {
+    else if(strcmp(instruccion, "SUM") == 0){
         ejecutar_sum(instr_arg1, instr_arg2);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "SUM", instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion, "SUB") == 0)
-    {
+    else if(strcmp(instruccion, "SUB") == 0){
         ejecutar_sub(instr_arg1, instr_arg2);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "SUB", instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion, "JNZ") == 0)
-    {
-        printf("entro en jnz\n");
+    else if(strcmp(instruccion, "JNZ") == 0){
         ejecutar_jnz(instr_arg1, instr_arg2);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "JNZ", instr_arg1, instr_arg2);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion, "RESIZE") == 0)
-    {
-        if (ejecutar_resize(instr_arg1) == 0)
-        {
+    else if(strcmp(instruccion, "RESIZE") == 0){
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s\”", EXEC->pid, "RESIZE", instr_arg1);
+        if(ejecutar_resize(instr_arg1) == 0){
             return CONTINUAR_CICLO;
         }
-        else
-        {
+        else{
             return SALIR_DE_CICLO;
         }
     }
-    else if (strcmp(instruccion, "COPY_STRING") == 0)
-    {
+    else if(strcmp(instruccion, "COPY_STRING") == 0){
         ejecutar_copy_string(instr_arg1);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s\”", EXEC->pid, "COPY_STRING", instr_arg1);
         return CONTINUAR_CICLO;
     }
-    else if (strcmp(instruccion, "WAIT") == 0)
-    {
+    else if(strcmp(instruccion, "WAIT") == 0){
         ejecutar_wait(instr_arg1);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s\”", EXEC->pid, "WAIT", instr_arg1);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "SIGNAL") == 0)
-    {
+    else if(strcmp(instruccion, "SIGNAL") == 0){
         ejecutar_signal(instr_arg1);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s\”", EXEC->pid, "SIGNAL", instr_arg1);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "IO_GEN_SLEEP") == 0)
-    {
-        printf("entro en IO_GEN_SLEEP\n");
-
+    else if(strcmp(instruccion, "IO_GEN_SLEEP") == 0){
         ejecutar_io_gen_sleep(instr_arg1, instr_arg2);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "IO_GEN_SLEEP", instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "IO_STDIN_READ") == 0)
-    {
+    else if(strcmp(instruccion, "IO_STDIN_READ") == 0){
         ejecutar_io_stdin_read(instr_arg1, instr_arg2, instr_arg3);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s\”", EXEC->pid, "IO_STDIN_READ", instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "IO_STDOUT_WRITE") == 0)
-    {
+    else if(strcmp(instruccion, "IO_STDOUT_WRITE") == 0){
         ejecutar_io_stdout_write(instr_arg1, instr_arg2, instr_arg3);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s\”", EXEC->pid, "IO_STDOUT_WRITE", instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "IO_FS_CREATE") == 0)
-    {
+    else if(strcmp(instruccion, "IO_FS_CREATE") == 0){
         ejecutar_io_fs_create(instr_arg1, instr_arg2);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "IO_FS_CREATE", instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "IO_FS_DELETE") == 0)
-    {
+    else if(strcmp(instruccion, "IO_FS_DELETE") == 0){
         ejecutar_io_fs_delete(instr_arg1, instr_arg2);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "IO_FS_DELETE", instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "IO_FS_TRUNCATE") == 0)
-    {
+    else if(strcmp(instruccion, "IO_FS_TRUNCATE") == 0){
         ejecutar_io_fs_truncate(instr_arg1, instr_arg2, instr_arg3);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s\”", EXEC->pid, "IO_FS_TRUNCATE", instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "IO_FS_WRITE") == 0)
-    {
+    else if(strcmp(instruccion, "IO_FS_WRITE") == 0){
         ejecutar_io_fs_write(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s %s %s\”", EXEC->pid, "IO_FS_WRITE", instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "IO_FS_READ") == 0)
-    {
+    else if(strcmp(instruccion, "IO_FS_READ") == 0){
         ejecutar_io_fs_read(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s %s %s\”", EXEC->pid, "IO_FS_READ", instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         return SALIR_DE_CICLO;
     }
-    else if (strcmp(instruccion, "EXIT") == 0)
-    {
+    else if(strcmp(instruccion, "EXIT") == 0){
         ejecutar_exit();
+        log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s\”", EXEC->pid, "EXIT");
         return SALIR_DE_CICLO;
     }
-    else
-    {
+    else{
         log_error(logger_cpu, "La intrucción no es válida");
         return -1; // supuestamente las instrucciones nunca vienen incorrectas, se deja para pruebas
     }

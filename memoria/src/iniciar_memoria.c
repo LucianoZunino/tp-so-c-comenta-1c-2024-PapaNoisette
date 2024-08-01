@@ -117,6 +117,8 @@ void memoria_crear_proceso(int pid){
 
     printf("proceso->tabla_paginas  list size%d\n", list_size(proceso->tabla_paginas));
     printf("PID: %d - Tabla de páginas creada con 0 páginas\n", pid);
+
+    log_info(logger_memoria, "Creación de Tabla de Páginas: \"PID: %d - Tamaño: %d\"\n", pid, 0);
     
     pthread_mutex_lock(&mutex_lista_de_procesos);
     list_add(lista_procesos, proceso);    
@@ -158,7 +160,7 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
     if(numero_paginas_nuevo > numero_paginas_actual){
 
         // Ampliación de un proceso
-        log_info(logger_memoria, "Ampliación de Proceso PID: %d - Tamaño Actual: %d - Tamaño a Ampliar: %d", proceso->pid, numero_paginas_actual * tam_pagina, nuevo_tamano);
+        log_info(logger_memoria, "Ampliación de Proceso: \"PID: %d - Tamaño Actual: %d - Tamaño a Ampliar: %d\"", proceso->pid, numero_paginas_actual * tam_pagina, nuevo_tamano);
 
         if(frames_disponibles >= paginas_a_agregar_o_quitar){
 
@@ -187,7 +189,7 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
     } // Reducción de un proceso
     else if(numero_paginas_nuevo < numero_paginas_actual){
 
-        log_info(logger_memoria, "Reduccion del Proceso: PID: %d - Tamaño Actual: %d - Tamaño a reducir: %d", proceso->pid, numero_paginas_actual * tam_pagina, nuevo_tamano);
+        log_info(logger_memoria, "Reduccion del Proceso: \"PID: %d - Tamaño Actual: %d - Tamaño a reducir: %d\"", proceso->pid, numero_paginas_actual * tam_pagina, nuevo_tamano);
 
         int pagina;
         for(int i = numero_paginas_nuevo; i < numero_paginas_actual; i++){

@@ -49,6 +49,9 @@ uint32_t traducir_direccion_logica(int dir_logica){
       if(cod_op == CPU_CONSULTA_FRAME){
          buffer = recibir_buffer_completo(fd_memoria);
          marco = extraer_int_del_buffer(buffer);
+
+         log_info(logger_cpu, "Obtener Marco: \"PID: %d - OBTENER MARCO - Página: %d - Marco: %d\"\n", pid, pagina, marco);
+
       }
    }
    

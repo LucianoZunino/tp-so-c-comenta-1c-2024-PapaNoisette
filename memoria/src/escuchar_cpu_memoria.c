@@ -53,7 +53,6 @@ void escuchar_mensajes_cpu_memoria(){
 			int pagina = extraer_int_del_buffer(buffer);
 			
 			marco = obtener_marco(pid, pagina);
-			log_info(logger_memoria, "Obtener Marco: \"PID: %d - OBTENER MARCO - Página: %d - Marco: %d\"\n", pid, pagina, marco);
 
 			buffer_a_enviar = crear_buffer();
 			paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
