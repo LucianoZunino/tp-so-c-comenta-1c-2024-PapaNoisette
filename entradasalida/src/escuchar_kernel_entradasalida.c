@@ -12,8 +12,6 @@ void escuchar_instrucciones_generica(){
 		printf("\n\n\nDESPUES DE RECIBIR EL COD_OP: %i\n\n\n", cod_op);
 		switch(cod_op){
 			case IO_GEN_SLEEP_FS: // LLEGA COD_OP 8 ERRONEO Y TIENE QUE LLEGAR UN 9
-
-				printf("\n\n\nENTRO A IO_GEN_SLEEP_FS\n\n\n");
 				
 				t_buffer* buffer = crear_buffer();
 				buffer = recibir_buffer_completo(fd_kernel);
@@ -21,12 +19,10 @@ void escuchar_instrucciones_generica(){
 				int pid = extraer_int_del_buffer(buffer);
 				int unidades = extraer_int_del_buffer(buffer);
 				
-				printf("\n\n\nENTRO A IO_GEN_SLEEP_FS\n\n\n");
 				usleep(unidades * tiempo_unidad_trabajo);
-				printf("\n\n\nENTRO A IO_GEN_SLEEP_FS\n\n\n");
 				notificar_fin(fd_kernel, pid);
-				printf("\n\n\nENTRO A IO_GEN_SLEEP_FS\n\n\n");
 				destruir_buffer(buffer);
+				
 				break;
 			case NUEVA_CONEXION_IO: // Puede ser qu e el ok llegue x acá en lugar de recibirlo en el recibir_ok()
 

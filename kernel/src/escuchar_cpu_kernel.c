@@ -379,7 +379,6 @@ void escuchar_mensajes_dispatch_kernel(){
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);
 				validar_desalojo();
-				//sem_post(&sem_desalojo);
 				sem_post(&sem_EXEC);
 				
 				enviar_a_exit(pcb, "SUCCESS");
@@ -391,16 +390,16 @@ void escuchar_mensajes_dispatch_kernel(){
 				printf("\n INICIAR KERNEL WAIT\n");
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);
-				printf("\n ANTES DE VALIDAR_DESALOJO\n");
-				validar_desalojo();
-				//sem_post(&sem_desalojo);
-				usleep(20);
-				//usleep(retardo_respuesta);
-				printf("\n ANTES QUANTUM\n");
-				pcb->quantum = RUNNING->quantum;
 				printf("\n ANTES DEL RECURSO_SOLICITADO\n");
 				// RECURSOS = ["RA", "RB", "RC"];
 				char *recurso_solicitado = extraer_string_del_buffer(buffer); // "RB"
+				printf("\n ANTES DE VALIDAR_DESALOJO\n");
+				pcb->quantum = RUNNING->quantum;
+				validar_desalojo(); //sem_post(&sem_desalojo);
+				
+				usleep(20);
+				//usleep(retardo_respuesta);
+				
 				printf("\n ANTES DEL IF \n");
 				if(buscar_recurso(recurso_solicitado) < 0){
 					printf("\nADENTRO DEL IF BUSCAR RECURSO ANTES DE ENVIAR A EXIT\n");
@@ -415,6 +414,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				printf("\n ANTES DEL SEM_EXEC \n");
 				sem_post(&sem_EXEC);
+				
 				printf("\n ANTES DEL DESTRUIR BUFFER \n");
 				destruir_buffer(buffer);
 				printf("\n FIN WAIT \n");

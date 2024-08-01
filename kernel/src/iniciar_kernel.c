@@ -174,7 +174,7 @@ void iniciar_recursos(){
     printf("Lista de Rescursos tamanio\n\n" );
     for (int i = 0; recursos[i] != NULL; i++){
         t_recurso* nuevo_recurso = malloc(sizeof(t_recurso)); //HACER FREE CUANDO SE ELIMINA TODO
-        char* nombre = (char*)recursos[i];
+        char* nombre = string_duplicate(recursos[i]);
         int instancias = atoi(instancias_recursos[i]);
         //t_list* cola_de_espera = list_create();
         t_queue * cola_de_espera = queue_create();

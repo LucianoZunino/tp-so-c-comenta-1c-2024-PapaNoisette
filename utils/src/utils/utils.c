@@ -406,10 +406,10 @@ void print_registros(t_registros_cpu *registros){
 
 print_pcb(t_pcb *pcb){
 	printf("\n============= PCB del Proceso =============\n");
-	printf(">> PCB - pid: %d\n", pcb->pid);
-	printf(">> PCB - program_counter: %d\n", pcb->program_counter);
-	printf(">> PCB - quantum: %d\n", pcb->quantum);
-	printf(">> PCB - estado: %d\n", pcb->estado);
+	printf(">> PCB - PID: %d\n", pcb->pid);
+	printf(">> PCB - Program Counter: %d\n", pcb->program_counter);
+	printf(">> PCB - Quantum: %d\n", pcb->quantum);
+	printf(">> PCB - Estado: %d\n", pcb->estado);
 	print_registros(pcb->registros_cpu);
 }
 
