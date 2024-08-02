@@ -13,7 +13,7 @@ void planificador_corto_plazo(){
 
         sem_wait(&sem_READY);
 
-        sem_wait(&sem_EXEC); // sem_signal deberia estar en EXEC (cpu) y que avise cuando desaloja el proceso en ejecucion
+        sem_wait(&sem_EXEC);
 
         if(flag_planificacion_detenido){
         
@@ -46,12 +46,11 @@ void planificador_corto_plazo(){
                 pcb = list_remove(READY, 0);
                 pthread_mutex_unlock(&mutex_READY);
                 cambio_de_estado(pcb, E_EXEC);
-                //pcb->estado = E_EXEC;
             
                 pthread_mutex_lock(&mutex_RUNNING);
                 RUNNING = pcb;
                 pthread_mutex_unlock(&mutex_RUNNING);
-            }else {
+            }else{
                 printf("\nENTRO AL IF DE PRIORIDAD\n");
                 pthread_mutex_lock(&mutex_PRIORIDAD);
                 pcb = list_remove(PRIORIDAD, 0);
@@ -64,7 +63,7 @@ void planificador_corto_plazo(){
                 RUNNING = pcb;
                 pthread_mutex_unlock(&mutex_RUNNING);
             }
-            
+            printf("\n ### sale de else prioridad ###\n");
             enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
            
             int64_t ms_transcurridos = esperar_a_cpu_virtual_round_robin(RUNNING);
@@ -87,14 +86,14 @@ void planificador_corto_plazo(){
 }
 
 void hilo_quantum_funcion(t_pcb* pcb){
-  usleep((pcb->quantum)* 1000);
+  usleep((pcb->quantum) * 1000);
   send_interrupt();
 }
 
 void esperar_a_cpu_round_robin(t_pcb* pcb){
     printf("\nANTES DE CREAR HILO QUANTUM\n");
     pthread_t hilo_quantum;
-    pthread_create(&hilo_quantum, NULL, hilo_quantum_funcion, pcb);
+    pthread_create(&hilo_quantum, NULL, (void*) hilo_quantum_funcion, pcb);
     pthread_detach(hilo_quantum);
     printf("\nANTES DEL SEM_DESALOJO\n");
     sem_wait(&sem_desalojo); //esperar_a_que_cpu_desaloje(pcb); por fin de Quantum o por otro motivo
@@ -122,14 +121,4 @@ void send_interrupt(){
     enviar_paquete(paquete, fd_cpu_interrupt);
     eliminar_paquete(paquete);
     printf("\n FIN DE SEND_INTERRUPT\n\n");
-}
-
-void pasar_proceso_a_ready(t_pcb* pcb){
-    
-    pthread_mutex_lock(&mutex_READY);
-    list_add(READY, pcb);
-    pthread_mutex_unlock(&mutex_READY);
-    
-    sem_post(&sem_READY);
-    sem_post(&sem_EXEC);
 }

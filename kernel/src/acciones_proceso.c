@@ -116,7 +116,7 @@ void eliminar_proceso() {
         }
 
         log_info(logger_kernel, "Se elimina el proceso <%i> en EXIT", pid);
-        //pcb_destruir(pcb);
+        pcb_destruir(pcb);
     }
 }
 
@@ -130,9 +130,12 @@ void solicitar_liberar_en_memoria(int pid) {
 
 void liberar_recursos_de(t_pcb* pcb) {
     // Recorremos todos los recursos de la lista de recursos disponibles
+
+    printf("--------------- Liberar_recursos_del PID: %i ---------------\n", pcb->pid);
+
     int length = list_size(recursos_disponibles);
 
-    for(int i = 0; i < list_size(recursos_disponibles); i++){
+    for(int i = 0; i < length; i++){
         // Tomamos un recurso
         t_recurso* recurso = list_get(recursos_disponibles, i);
         // Sumamos instancias por cada recurso que se le haya asignado al p
@@ -149,7 +152,7 @@ void liberar_recursos_de(t_pcb* pcb) {
             pthread_mutex_lock(&recurso->mutex);
             t_pcb* pcb_a_destruir = list_remove(recurso->cola_de_espera->elements, indice);
             pthread_mutex_unlock(&recurso->mutex);
-            pcb_destruir(pcb_a_destruir);
+            //pcb_destruir(pcb_a_destruir);
         }
        
     }

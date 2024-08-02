@@ -90,9 +90,9 @@ void escuchar_mensajes_kernel_interrupt(){
 				int pid = extraer_int_del_buffer(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				printf("\nMOTIVO DE INTERRUPCION: %i\n", motivo);
-				if(EXEC == NULL || pid != EXEC->pid){
-					break;
-				}
+				// if(EXEC == NULL || pid != EXEC->pid){
+				// 	break;
+				// }
 				flag_interrupt = true;
 				printf("\nDESP DEL FLAG_INTERRUPT\n");
 				sem_wait(&sem_interrupt);

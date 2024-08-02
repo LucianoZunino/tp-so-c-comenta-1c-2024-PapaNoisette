@@ -39,7 +39,8 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				
 				t_pcb* pcb = list_remove(BLOCKED, index);				
 				
-				if(string_equals_ignore_case("VRR", algoritmo_planificacion)){
+				if (pcb->quantum < quantum){
+				//if(string_equals_ignore_case("VRR", algoritmo_planificacion)){
                 	pthread_mutex_lock(&mutex_PRIORIDAD);
 					list_add(PRIORIDAD, pcb);
 					pthread_mutex_unlock(&mutex_PRIORIDAD);

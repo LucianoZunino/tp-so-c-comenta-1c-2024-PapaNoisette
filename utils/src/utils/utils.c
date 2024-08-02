@@ -50,7 +50,7 @@ int crear_conexion(char *ip, char *puerto, t_log *logger)
 
 	if (connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen) != 0)
 	{
-		log_error(logger, "Error conectando al Servidor,apagado o invalido");
+		log_error(logger, "Error conectando al Servidor, apagado o invalido");
 		socket_cliente = -1;
 	}
 

@@ -11,7 +11,7 @@ char** comando_consola_desc[9] = {"EJECUTAR_SCRIPT", "INICIAR_PROCESO", "FINALIZ
 
 void iniciar_consola_interactiva(){
     char* leido;
-    imprimir_comandos_validos();
+    //imprimir_comandos_validos();
 	leido = readline("> ");
     comando_consola comando;
 	while(strcmp(leido, "\0") != 0){
@@ -91,12 +91,10 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
         case FINALIZAR_PROCESO:
             char* pid_char = comando_desde_consola[1];
             int pid = atoi(pid_char);
-            printf("\nPID RUNNING: %i --- PID INTERRUPT: %i\n", RUNNING->pid, pid);
-            if(RUNNING->pid == pid){
+            //printf("\nPID RUNNING: %i --- PID INTERRUPT: %i\n", RUNNING->pid, pid);
+            
+            if(pasar_proceso_a_exit(pid, "INTERRUPTED BY USER") == NULL){
                 interrumpir_cpu(RUNNING, ELIMINAR_PROCESO);
-            }
-            else{
-                pasar_proceso_a_exit(pid, "INTERRUPTED BY USER");
             }
 
             break;
@@ -117,7 +115,16 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
 
             break;
         case PROCESO_ESTADO:
-
+            for(int i = 0; i < 5; i++){ 
+                log_info(logger_kernel, "Cola %s: ", estado_pcb_desc[i]);
+                leer_pids_cola(i);
+            }
+            
+            if(RUNNING != NULL){
+                log_info(logger_kernel ,"Proceso en Execute: ");
+                log_info(logger_kernel ,"   - PID: %i", RUNNING->pid);
+            }
+            
             break;
         case MULTIPROGRAMACION:
             char* grado_char = comando_desde_consola[1];

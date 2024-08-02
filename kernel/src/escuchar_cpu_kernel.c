@@ -30,12 +30,14 @@ void escuchar_mensajes_dispatch_kernel(){
 
 			
 			case FIN_DE_QUANTUM:
-				validar_desalojo();
+				
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer); // chequear si anda, sino usar deserealizar_pcb
 				
 
 				pcb->quantum = quantum;
+
+				RUNNING = NULL;
 
 				log_info(logger_kernel, "PID: <%i> - Desalojado por fin de Quantum", pcb->pid);
 
@@ -43,6 +45,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				list_add(READY, pcb);
 				pthread_mutex_unlock(&mutex_READY);
 				cambio_de_estado(pcb, E_READY);
+				validar_desalojo();
 				sem_post(&sem_READY);
 				sem_post(&sem_EXEC);
 				//pcb->estado = E_READY;
@@ -72,6 +75,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				bloquear_proceso(pcb, interfaz->nombre);
 
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				
 				sem_post(&sem_EXEC);
 				
@@ -133,6 +137,7 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
 
 				
@@ -174,6 +179,7 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
 
 				
@@ -215,6 +221,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				sem_post(&interfaz->sem_espera);
 				
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
 				
 
@@ -259,6 +266,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
 
 				break;
@@ -298,6 +306,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				sem_post(&interfaz->sem_espera);
 				
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
 
 				break;
@@ -329,6 +338,7 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
 
 				break;
@@ -365,6 +375,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
 				
 				//destruir_buffer(buffer);
@@ -375,6 +386,8 @@ void escuchar_mensajes_dispatch_kernel(){
 				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);
+
+				RUNNING = NULL;
 				
 				sem_post(&sem_EXEC);
 				
@@ -388,6 +401,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				pcb = deserializar_pcb(buffer);
 				
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
 				
 				enviar_a_exit(pcb, "SUCCESS");
@@ -407,7 +421,7 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				
 				pcb->quantum = RUNNING->quantum;
-				
+				RUNNING = NULL;
 				usleep(20);
 				//usleep(retardo_respuesta);
 				
@@ -445,8 +459,9 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 
 				pcb->quantum = RUNNING->quantum;
+				RUNNING = NULL;
 				sem_post(&sem_EXEC);
-
+				
 				if(pcb->estado == E_EXIT){
 					break;
 				}
@@ -468,13 +483,15 @@ void escuchar_mensajes_dispatch_kernel(){
 				printf("\n FIN SIGNAL \n");
 				break;
 			case OUT_OF_MEMORY:
+				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);
 				destruir_buffer(buffer);
-				
+				RUNNING = NULL; //ojoo
 				enviar_a_exit(pcb, "OUT_OF_MEMORY");
-				pcb_destruir(pcb);
-
+				// pcb_destruir(pcb);
+				
+				sem_post(&sem_EXEC);
 				break;
 			case -1:
 				log_error(logger_kernel, "El Dispatch se desconecto de Kernel. Terminando servidor.");

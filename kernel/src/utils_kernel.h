@@ -28,5 +28,6 @@ void enviar_a_exit(t_pcb* pcb, char* motivo);
 void leer_pids_cola(estado_pcb estado);
 bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb);
 void validar_desalojo();
+void* pasar_proceso_a_exit(int pid, char* motivo);
 
 #endif

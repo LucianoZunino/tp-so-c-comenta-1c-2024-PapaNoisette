@@ -135,7 +135,8 @@ void ejecutar_wait(char *recurso){
    t_buffer *buffer = crear_buffer();
    t_paquete *paquete = crear_paquete(KERNEL_WAIT, buffer);
   //devuelvo contexto por solicitar llamada a kernel
-   agregar_pcb (paquete,EXEC);
+   printf("---- PID a agregar en ejecutar_wait %i ----\n", EXEC->pid);
+   agregar_pcb(paquete, EXEC);
    cargar_string_al_buffer(paquete->buffer, recurso);
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);
@@ -148,7 +149,7 @@ void ejecutar_signal(char *recurso){
 
    t_buffer *buffer = crear_buffer();
    t_paquete *paquete = crear_paquete(KERNEL_SIGNAL, buffer);
-   agregar_pcb (paquete,EXEC);
+   agregar_pcb(paquete, EXEC);
    cargar_string_al_buffer(paquete->buffer, recurso);
    enviar_paquete(paquete, fd_kernel_dispatch);
    eliminar_paquete(paquete);

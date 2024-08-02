@@ -22,7 +22,7 @@ void escuchar_instrucciones_generica(){
                 log_info(logger_entradasalida, "PID: %i - Operacion: IO_GEN_SLEEP", pid);
 
 				
-				usleep(unidades * tiempo_unidad_trabajo);
+				usleep(unidades * tiempo_unidad_trabajo * 1000);
 				notificar_fin(fd_kernel, pid);
 				destruir_buffer(buffer);
 				

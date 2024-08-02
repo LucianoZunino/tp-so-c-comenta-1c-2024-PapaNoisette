@@ -52,7 +52,7 @@ void agregar_intrucciones(t_paquete *paquete, t_list* lista)
 //****MENSAJES QUE ENVIA KERNEL
 //******************************
 
-void agregar_pcb (t_paquete *paquete, t_pcb *pcb){
+void agregar_pcb(t_paquete *paquete, t_pcb *pcb){
     //cargar_datos_al_buffer(paquete->buffer, pcb->pid, sizeof(int));
     
     cargar_int_al_buffer(paquete->buffer, pcb->pid);
