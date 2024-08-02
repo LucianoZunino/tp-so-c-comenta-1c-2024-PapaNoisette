@@ -3,6 +3,7 @@
 t_config *config_cpu;
 t_list* tlb;
 sem_t sem_interrupt;
+sem_t sem_desalojo;
 
 void iniciar_cpu(){
    iniciar_logger_cpu();
@@ -16,6 +17,10 @@ void iniciar_cpu(){
 
    if (sem_init(&sem_interrupt, 1, 0) != 0) {
         log_error(logger_cpu, "Ocurrio un error al crear semaforo sem_EXEC");
+        exit(-1);
+   }
+   if (sem_init(&sem_desalojo, 1, 0) != 0) {
+        log_error(logger_cpu, "Ocurrio un error al crear semaforo sem_desalojo");
         exit(-1);
    }
 	//iniciar_pcb(); //ESTA BIEN ESTO?

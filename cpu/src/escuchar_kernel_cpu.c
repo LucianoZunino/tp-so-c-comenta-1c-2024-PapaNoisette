@@ -22,11 +22,15 @@ void escuchar_mensajes_kernel_dispatch(){
 				print_pcb(EXEC);
 				flag_interrupt = false;
     			//sleep(2);
+				int estado_ejecucion = 0;
 
-				while(ciclo_de_instruccion(EXEC) == 0){
+				while(estado_ejecucion == 0){
 					print_pcb(EXEC);
 					sleep(1);
 				};
+				if(flag_interrupt){
+					sem_post(&sem_desalojo);
+				}
 
  				break;
 			case -1:
@@ -100,6 +104,7 @@ void escuchar_mensajes_kernel_interrupt(){
 				buffer_a_enviar = crear_buffer();
 				paquete = crear_paquete(motivo, buffer_a_enviar);
 				agregar_pcb(paquete, EXEC);
+				sem_wait(&sem_desalojo);
 				EXEC = NULL;
 				enviar_paquete(paquete, fd_kernel_dispatch);
 				eliminar_paquete(paquete);

@@ -51,5 +51,6 @@ extern t_pcb* EXEC;
 extern  t_list * tlb;
 
 extern sem_t sem_interrupt;
+extern sem_t sem_desalojo;
 
 #endif
