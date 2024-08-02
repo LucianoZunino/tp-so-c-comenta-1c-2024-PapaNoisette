@@ -62,7 +62,7 @@ void imprimir_config_cpu(){
    printf("Puerto de escucha de Dispatch: %s\n", puerto_escucha_dispatch);
    printf("Puerto de escucha de Interrupt: %s\n", puerto_escucha_interrupt);
    printf("Cantidad de entradas de la TLB: %d\n", cantidad_entradas_tlb);
-   printf("Algortimo de la TLB: %s\n", algoritmo_tlb);
+   printf("Algoritmo de la TLB: %s\n", algoritmo_tlb);
    printf("============================================================\n\n");
 }
 

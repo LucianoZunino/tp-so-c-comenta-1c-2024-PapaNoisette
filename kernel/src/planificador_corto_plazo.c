@@ -33,8 +33,8 @@ void planificador_corto_plazo(){
             enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
 
             if(string_equals_ignore_case(algoritmo_planificacion,"RR")){
-                    printf("\n ENTRO AL  IF DE RR \n");
-                    esperar_a_cpu_round_robin(pcb);
+                printf("\n ENTRO AL  IF DE RR \n");
+                esperar_a_cpu_round_robin(pcb);
             }
                 
             }else if(string_equals_ignore_case(algoritmo_planificacion,"VRR")){
@@ -55,7 +55,7 @@ void planificador_corto_plazo(){
                 printf("\nENTRO AL IF DE PRIORIDAD\n");
                 pthread_mutex_lock(&mutex_PRIORIDAD);
                 pcb = list_remove(PRIORIDAD, 0);
-                pthread_mutex_lock(&mutex_PRIORIDAD);
+                pthread_mutex_unlock(&mutex_PRIORIDAD);
                 cambio_de_estado(pcb, E_EXEC);
         
                // pcb->estado = E_EXEC;
@@ -78,7 +78,7 @@ void planificador_corto_plazo(){
                 RUNNING->quantum = RUNNING->quantum - ms_transcurridos;
                 printf("\nRUNNING QUANTUM: %i\n", RUNNING->quantum);
             }
-            
+        sem_post(&sem_quantum);
         }else {
             log_error(logger_kernel, "El Algoritmo de planificacion no es correcto");
         }

@@ -3,14 +3,15 @@
   // for the documentation about the launch.json format
   "version": "0.2.0",
   "configurations": [
+    
     {
       "name": "run",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/bin/${workspaceFolderBasename}",
+      "program": "/home/utnso/tp-2024-1c-PapaNoisette/cpu/bin/cpu", 
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "/home/utnso/tp-2024-1c-PapaNoisette/cpu",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",

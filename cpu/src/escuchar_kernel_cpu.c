@@ -68,7 +68,7 @@ void escuchar_mensajes_kernel_interrupt(){
 				pcb = deserializar_pcb(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				printf("\nMOTIVO DE INTERRUPCION: %i\n", motivo);
-				if(pcb->pid != EXEC->pid){
+				if(EXEC == NULL || pcb->pid != EXEC->pid){
 					break;
 				}
 				flag_interrupt = true;
@@ -78,19 +78,19 @@ void escuchar_mensajes_kernel_interrupt(){
 				buffer_a_enviar = crear_buffer();
 				paquete = crear_paquete(motivo, buffer_a_enviar);
 				agregar_pcb(paquete, EXEC);
-				EXEC = NULL;
 				enviar_paquete(paquete, fd_kernel_dispatch);
 				eliminar_paquete(paquete);
+				EXEC = NULL;
 				printf("\nDESP DEL enviar_proceso_por_paquete\n");
 				break;
 			case FIN_DE_QUANTUM:
-				printf("\nENRTO A FIN DE QUANTUM\n");
+				printf("\nENTRO A FIN DE QUANTUM\n");
 				//t_buffer* buffer = crear_buffer();
 				buffer = recibir_buffer_completo(fd_kernel_interrupt);
 				int pid = extraer_int_del_buffer(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				printf("\nMOTIVO DE INTERRUPCION: %i\n", motivo);
-				if(pid != EXEC->pid){
+				if(EXEC == NULL || pid != EXEC->pid){
 					break;
 				}
 				flag_interrupt = true;

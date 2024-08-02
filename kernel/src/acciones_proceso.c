@@ -115,8 +115,8 @@ void eliminar_proceso() {
             diferencia_de_multiprogramacion--;
         }
 
-        log_info(logger_kernel, "Se elimina el proceso %i en EXIT", pid);
-        pcb_destruir(pcb);
+        log_info(logger_kernel, "Se elimina el proceso <%i> en EXIT", pid);
+        //pcb_destruir(pcb);
     }
 }
 

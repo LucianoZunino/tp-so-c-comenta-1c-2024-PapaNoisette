@@ -73,7 +73,7 @@ extern sem_t sem_EXIT;
 extern sem_t sem_estructuras_inicializadas;
 extern sem_t sem_planificador_LP_detenido;
 extern sem_t sem_planificador_CP_detenido;
-
+extern sem_t sem_quantum;
 extern sem_t sem_MULTIPROGRAMACION;
 extern sem_t sem_desalojo;
 

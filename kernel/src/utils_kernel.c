@@ -11,7 +11,7 @@ void interrumpir_cpu(t_pcb *pcb, op_code motivo){
 
 void pcb_destruir(t_pcb *pcb){
     if(pcb != NULL){
-        free(pcb->registros_cpu);
+        //free(pcb->registros_cpu);
         //free(pcb->quantum);
         //free(pcb->estado);
         free(pcb);
@@ -33,6 +33,9 @@ int buscar_index_por_pid(t_list* lista, int pid){
 			return i;
 		}
 	}
+    if (RUNNING->pid == pid){
+        return -2;
+    }
 	return -1;
 }
 
@@ -47,6 +50,7 @@ t_pcb* buscar_pcb_por_pid(int pid){
         pthread_mutex_lock(&mutex_READY);
         pcb = (t_pcb*) list_remove(READY, index);
         pthread_mutex_unlock(&mutex_READY);
+        sem_trywait(&sem_READY);
     } else if ((index = buscar_index_por_pid(BLOCKED, pid)) != -1){ 
         pthread_mutex_lock(&mutex_BLOCKED);
         pcb = list_remove(BLOCKED, index);
@@ -55,6 +59,12 @@ t_pcb* buscar_pcb_por_pid(int pid){
         pthread_mutex_lock(&mutex_PRIORIDAD);
         pcb = list_remove(PRIORIDAD, index);
         pthread_mutex_unlock(&mutex_PRIORIDAD);
+        sem_trywait(&sem_READY);
+    } else if (pid == RUNNING->pid){
+        pthread_mutex_lock(&mutex_PRIORIDAD);
+        interrumpir_cpu(RUNNING, ELIMINAR_PROCESO);
+        pthread_mutex_unlock(&mutex_PRIORIDAD);
+        pcb = NULL;
     }
 
     return pcb;
@@ -62,6 +72,9 @@ t_pcb* buscar_pcb_por_pid(int pid){
 
 void pasar_proceso_a_exit(int pid, char* motivo){
     t_pcb* pcb = buscar_pcb_por_pid(pid);
+    if (NULL == pcb){
+        return;
+    }
     enviar_a_exit(pcb, motivo);
 }
 
@@ -261,7 +274,9 @@ void validar_desalojo(){
     if(string_equals_ignore_case(algoritmo_planificacion, "RR") || string_equals_ignore_case(algoritmo_planificacion, "VRR")){
         
 		sem_post(&sem_desalojo);
-		
+		if(string_equals_ignore_case(algoritmo_planificacion, "VRR")){
+            sem_wait(&sem_quantum);
+        }
 	}
 }
 

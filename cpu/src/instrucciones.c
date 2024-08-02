@@ -88,7 +88,7 @@ int ejecutar_resize(char *tamanio){
 
    //--tiempo de retardo establecido 
    t_buffer *buffer = crear_buffer();
-   log_info(logger_cpu, " ESPERANDO RESPUESTA\n");
+
    sleep(2);
    int respuesta_resize = recibir_operacion(fd_memoria); // respuesta_resize deveria ser del tipo op_code?
    if (respuesta_resize == RESIZE_OK)
@@ -254,10 +254,7 @@ void ejecutar_mov_out(char *registro_direccion, char *registro_datos){
 void ejecutar_io_gen_sleep(char *interfaz, char *unidades_de_trabajo){
    // IO_GEN_SLEEP (Interfaz, Unidades de trabajo):
    // Esta instrucción solicita al Kernel que se envíe a una interfaz de I/O a que realice un sleep por una cantidad de unidades de trabajo.instruccion
-     printf("ejecutar_io_gen_sleep  \n");
-
-     printf("flag1 \n");
-   log_info(logger_cpu, " ENVIANDO solicitud de sleep A KERNEL");
+ 
 
    t_buffer *buffer= crear_buffer();
    t_paquete *paquete = crear_paquete(IO_GEN_SLEEP_FS, buffer);

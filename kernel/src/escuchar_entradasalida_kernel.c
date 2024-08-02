@@ -36,20 +36,17 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				pid = extraer_int_del_buffer(buffer);
 				int index = buscar_index_por_pid(BLOCKED, pid);
 
-				t_pcb* pcb = list_remove(BLOCKED, index);				
-				printf("\nLLEGA PROCESO <%i> DESDE ENTRADASALIDA\n", pid);
 				
-				if(pcb->quantum < quantum){
-					printf("\nENTRO AL IF PRIORIDAD DE ENTRADASALIDA");
-					pcb->estado = E_PRIORIDAD;
+				t_pcb* pcb = list_remove(BLOCKED, index);				
+				
+				if(string_equals_ignore_case("VRR", algoritmo_planificacion)){
                 	pthread_mutex_lock(&mutex_PRIORIDAD);
 					list_add(PRIORIDAD, pcb);
 					pthread_mutex_unlock(&mutex_PRIORIDAD);
 					cambio_de_estado(pcb, E_PRIORIDAD);
+
 					sem_post(&sem_READY);
 				}else{
-					printf("\nENTRO AL IF READY DE ENTRADASALIDA");
-					//pcb->estado = E_READY;
                 	pthread_mutex_lock(&mutex_READY);
 					list_add(READY, pcb);
 					pthread_mutex_unlock(&mutex_READY);

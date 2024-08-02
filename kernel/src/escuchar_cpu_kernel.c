@@ -51,15 +51,13 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				break;
 			case IO_GEN_SLEEP_FS:
+				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 // chequear si anda, sino usar deserealizar_pcb
-				validar_desalojo();
-				//sem_post(&sem_desalojo);
-				//bloquear_proceso(pcb, interfaz->nombre);
 	
 				nombre_interfaz = extraer_string_del_buffer(buffer);
 				tiempo = extraer_int_del_buffer(buffer);
-			
+
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
@@ -68,12 +66,15 @@ void escuchar_mensajes_dispatch_kernel(){
 					break;
 				}
 
+				
 				interfaz = list_get(interfaces, indice_interfaz);
-				printf("\n antes de actualizar quantum al valor: %i \n", RUNNING->quantum);
-				pcb->quantum = RUNNING->quantum;
-				printf("\n desp de actualizar quantum \n");
-				sem_post(&sem_EXEC);
 
+				bloquear_proceso(pcb, interfaz->nombre);
+
+				pcb->quantum = RUNNING->quantum;
+				
+				sem_post(&sem_EXEC);
+				
 				destruir_buffer(buffer);
 
 
@@ -92,16 +93,12 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				sem_post(&interfaz->sem_espera);	
 
-				bloquear_proceso(pcb, interfaz->nombre);
-
-		
-
 				break;
 			case IO_STDIN_READ_FS:
-
+				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
-				validar_desalojo();
+				
 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
 				registro_direccion = extraer_int_del_buffer(buffer);
@@ -116,6 +113,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				}
 				
 				interfaz = list_get(interfaces, indice_interfaz);
+				bloquear_proceso(pcb, interfaz->nombre);
 
 				destruir_buffer(buffer);
 				
@@ -137,19 +135,18 @@ void escuchar_mensajes_dispatch_kernel(){
 				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
-				bloquear_proceso(pcb, interfaz->nombre);
+				
 
 
 				break;
 			case IO_STDOUT_WRITE_FS:
+				validar_desalojo();//sem_post(&sem_desalojo);
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	
 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
 				registro_direccion = extraer_int_del_buffer(buffer);
 				registro_tamanio = extraer_int_del_buffer(buffer);
-
-				validar_desalojo();//sem_post(&sem_desalojo);
 
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 
@@ -160,7 +157,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				}
 
 				interfaz = list_get(interfaces, indice_interfaz);
-
+				bloquear_proceso(pcb, interfaz->nombre);
 				destruir_buffer(buffer);
 
 				buffer = crear_buffer();
@@ -179,9 +176,10 @@ void escuchar_mensajes_dispatch_kernel(){
 				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
-				bloquear_proceso(pcb, interfaz->nombre);
+				
 				break;
 			case IO_FS_READ_FS:
+				validar_desalojo();//sem_post(&sem_desalojo);
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
@@ -190,7 +188,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				tamanio = extraer_int_del_buffer(buffer);
 				puntero_archivo = extraer_int_del_buffer(buffer);
 
-				validar_desalojo();//sem_post(&sem_desalojo);
+				
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
@@ -200,7 +198,9 @@ void escuchar_mensajes_dispatch_kernel(){
 				}
 
 				interfaz = list_get(interfaces, indice_interfaz);
+				bloquear_proceso(pcb, interfaz->nombre);
 				destruir_buffer(buffer);
+
 				buffer = crear_buffer();
 				paquete = crear_paquete(IO_FS_READ_FS, buffer);
 				cargar_int_al_buffer(paquete->buffer, pcb->pid);
@@ -216,11 +216,11 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
-				bloquear_proceso(pcb, interfaz->nombre);
+				
 
 				break;
 			case IO_FS_WRITE_FS:
-				
+				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
@@ -229,7 +229,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				tamanio = extraer_int_del_buffer(buffer);
 				puntero_archivo = extraer_int_del_buffer(buffer);
 				
-				validar_desalojo();
+				
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
@@ -239,6 +239,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				}
 				
 				interfaz = list_get(interfaces, indice_interfaz);
+				bloquear_proceso(pcb, interfaz->nombre);
 
 				destruir_buffer(buffer);
 				buffer = crear_buffer();
@@ -260,18 +261,16 @@ void escuchar_mensajes_dispatch_kernel(){
 				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
-				bloquear_proceso(pcb, interfaz->nombre);
-
 				break;
 			case IO_FS_TRUNCATE_FS:
-				
+				validar_desalojo(); //sem_post(&sem_desalojo);
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
 				nombre_archivo = extraer_string_del_buffer(buffer);
 				tamanio = extraer_int_del_buffer(buffer);
 
-				validar_desalojo(); //sem_post(&sem_desalojo);
+				
 
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 				
@@ -282,6 +281,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				}
 				
 				interfaz = list_get(interfaces, indice_interfaz);
+				bloquear_proceso(pcb, interfaz->nombre);
 				
 				destruir_buffer(buffer);
 				buffer = crear_buffer();
@@ -300,16 +300,13 @@ void escuchar_mensajes_dispatch_kernel(){
 				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 
-				bloquear_proceso(pcb, interfaz->nombre);
-
 				break;
 			case IO_FS_CREATE_FS:
+				validar_desalojo(); // sem_post(&sem_desalojo);
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
 				nombre_interfaz = extraer_string_del_buffer(buffer);
 				nombre_archivo = extraer_string_del_buffer(buffer);
-				validar_desalojo(); // sem_post(&sem_desalojo);
-
 				
 				indice_interfaz = buscar_interfaz(nombre_interfaz);
 				if(!verificar_existencia_de_interfaz(indice_interfaz, pcb)){
@@ -318,6 +315,7 @@ void escuchar_mensajes_dispatch_kernel(){
 					break;
 				}
 				interfaz = list_get(interfaces, indice_interfaz);
+				bloquear_proceso(pcb, interfaz->nombre);
 				
 				paquete = crear_paquete(IO_FS_CREATE_FS, buffer);
 				cargar_int_al_buffer(paquete->buffer, pcb->pid);
@@ -332,8 +330,6 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
-				bloquear_proceso(pcb, interfaz->nombre);
-				
 
 				break;
 			case IO_FS_DELETE_FS:
@@ -351,7 +347,8 @@ void escuchar_mensajes_dispatch_kernel(){
 					break;
 				}
 				interfaz = list_get(interfaces, indice_interfaz);
-				
+				bloquear_proceso(pcb, interfaz->nombre);
+
 				destruir_buffer(buffer);
 				buffer = crear_buffer();
 
@@ -366,7 +363,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				sem_post(&interfaz->sem_espera);
 
 				
-				bloquear_proceso(pcb, interfaz->nombre);
+				
 				pcb->quantum = RUNNING->quantum;
 				sem_post(&sem_EXEC);
 				
