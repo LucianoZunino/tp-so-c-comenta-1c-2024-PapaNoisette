@@ -203,7 +203,6 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
             printf("list_remove\n");
             list_remove(proceso->tabla_paginas, list_size(proceso->tabla_paginas) - 1); // el size -1 es para que saque el ultimo de la lista
             printf("list_remove done \n");
-            free(pagina);
         }
 
         printf("PID: %d - Redimensionado a %d páginas\n", proceso->pid, numero_paginas_nuevo);
@@ -281,8 +280,6 @@ void liberar_frame(int numero_de_marco){
         pthread_mutex_lock(&mutex_lista_de_marcos);
         list_replace(lista_de_frames, numero_de_marco, frame);
         pthread_mutex_unlock(&mutex_lista_de_marcos);
-        
-        log_info(logger_memoria, "Se libero el frame :%d\n", numero_de_marco);
     }
 }
 
