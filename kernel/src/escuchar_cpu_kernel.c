@@ -435,7 +435,6 @@ void escuchar_mensajes_dispatch_kernel(){
                 RUNNING = NULL;
 				pthread_mutex_unlock(&mutex_RUNNING);
 				
-				usleep(20);
 				//usleep(retardo_respuesta);
 				
 				printf("\n ANTES DEL IF \n");

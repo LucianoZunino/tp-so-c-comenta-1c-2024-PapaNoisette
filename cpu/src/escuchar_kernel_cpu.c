@@ -29,7 +29,7 @@ void escuchar_mensajes_kernel_dispatch(){
 				while(estado_ejecucion == 0){
 					estado_ejecucion = ciclo_de_instruccion();
 					print_pcb(EXEC);
-					sleep(1);
+					// sleep(1);
 					if(flag_interrupt){
 						if(flag_desalojo){
 							sem_post(&sem_desalojo);
@@ -94,8 +94,6 @@ void escuchar_mensajes_kernel_interrupt(){
 					enviar_paquete(paquete, fd_kernel_dispatch);
 					eliminar_paquete(paquete);
 				}
-				// EXEC = NULL;
-				printf("\nDESP DEL enviar_proceso_por_paquete\n");
 				break;
 			case FIN_DE_QUANTUM:
 				printf("\nENTRO A FIN DE QUANTUM\n");

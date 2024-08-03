@@ -193,16 +193,10 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
 
         int pagina;
         for(int i = numero_paginas_nuevo; i < numero_paginas_actual; i++){
-            printf("list_get %d list_size %d\n", i, list_size(proceso->tabla_paginas));
-            pagina = list_get(proceso->tabla_paginas, list_size(proceso->tabla_paginas) - 1); // el size -1 es para que saque el ultimo de la lista
-            printf("liberar_frame\n");
-
+            pagina = list_get(proceso->tabla_paginas, list_size(proceso->tabla_paginas) - 1); // el size -1 es para que saque el ultimo de la list
             liberar_frame(pagina);
-            printf("liberar_frame done\n");
-
-            printf("list_remove\n");
             list_remove(proceso->tabla_paginas, list_size(proceso->tabla_paginas) - 1); // el size -1 es para que saque el ultimo de la lista
-            printf("list_remove done \n");
+            
         }
 
         printf("PID: %d - Redimensionado a %d páginas\n", proceso->pid, numero_paginas_nuevo);

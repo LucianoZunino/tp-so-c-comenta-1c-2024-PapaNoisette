@@ -10,6 +10,8 @@ void escuchar_mensajes_cpu_memoria(){
 		int pagina;
 		int marco;
 		int cod_op = recibir_operacion(fd_cpu);
+		usleep(retardo_respuesta * 1000);
+		
 		t_paquete *paquete;
 		t_paquete *paquete2;
 		t_buffer *buffer_a_enviar2;
@@ -18,182 +20,183 @@ void escuchar_mensajes_cpu_memoria(){
 		t_buffer *buffer;
 		int tamanio;
 		int dir_fisica;
+
 		switch (cod_op){
 
-		case HANDSHAKE_CPU:
-			aceptar_handshake(logger_memoria, fd_cpu, cod_op);
+			case HANDSHAKE_CPU:
+				aceptar_handshake(logger_memoria, fd_cpu, cod_op);
 
-			break;
-		case CPU_SOLICITA_INSTRUCCION:
-			//printf("CPU solicita instrucción:\n");
+				break;
+			case CPU_SOLICITA_INSTRUCCION:
+				//printf("CPU solicita instrucción:\n");
 
-			buffer = recibir_buffer_completo(fd_cpu);
-			pid = extraer_int_del_buffer(buffer);
-			int program_counter = extraer_int_del_buffer(buffer);
+				buffer = recibir_buffer_completo(fd_cpu);
+				pid = extraer_int_del_buffer(buffer);
+				int program_counter = extraer_int_del_buffer(buffer);
 
-			usleep(retardo_respuesta);
-			enviar_instruccion_a_cpu(pid, program_counter, fd_cpu);
-			destruir_buffer(buffer);
+				// usleep(retardo_respuesta * 1000);
+				enviar_instruccion_a_cpu(pid, program_counter, fd_cpu);
+				destruir_buffer(buffer);
 
-			break;
-		case CPU_CONSULTA_TAM_PAGINA:
-			printf("-CASE-- CPU consulta tamaño de página:\n");
+				break;
+			case CPU_CONSULTA_TAM_PAGINA:
+				printf("-CASE-- CPU consulta tamaño de página:\n");
 
-			buffer_a_enviar2 = crear_buffer();
-			paquete = crear_paquete(CPU_CONSULTA_TAM_PAGINA, buffer_a_enviar2);
-			cargar_int_al_buffer(paquete->buffer, tam_pagina);
-			enviar_paquete(paquete, fd_cpu);
-			eliminar_paquete(paquete);
+				buffer_a_enviar2 = crear_buffer();
+				paquete = crear_paquete(CPU_CONSULTA_TAM_PAGINA, buffer_a_enviar2);
+				cargar_int_al_buffer(paquete->buffer, tam_pagina);
+				enviar_paquete(paquete, fd_cpu);
+				eliminar_paquete(paquete);
 
-			break;
-		case CPU_CONSULTA_FRAME:
-			usleep(retardo_respuesta);
-			buffer = recibir_buffer_completo(fd_cpu);
-			pid = extraer_int_del_buffer(buffer);
-			int pagina = extraer_int_del_buffer(buffer);
-			
-			marco = obtener_marco(pid, pagina);
-
-			buffer_a_enviar = crear_buffer();
-			paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
-			cargar_int_al_buffer(paquete->buffer, marco);
-			enviar_paquete(paquete, fd_cpu);
-			eliminar_paquete(paquete);
-
-			// LOG OBLIGATORIO
-			log_info(logger_memoria, "Acceso a Tabla de Páginas \"PID: %d - Página: %d - Marco: %d\"\n", pid, pagina, marco);
-			destruir_buffer(buffer);
-
-			break;
-		case MEMORIA_RESIZE:
-			buffer = recibir_buffer_completo(fd_cpu);
-			pid = extraer_int_del_buffer(buffer);
-			int nuevo_tamano = extraer_int_del_buffer(buffer);
-
-			usleep(retardo_respuesta);
-
-			int resultado = resize_tamano_proceso(pid, nuevo_tamano);
-			if(resultado == 0){
-			 // 0 -> Ok | -1 -> OUT_OF_MEMORY
-			 	log_info(logger_memoria, "RESIZE OK");
+				break;
+			case CPU_CONSULTA_FRAME:
+				//usleep(retardo_respuesta * 1000);
+				buffer = recibir_buffer_completo(fd_cpu);
+				pid = extraer_int_del_buffer(buffer);
+				int pagina = extraer_int_del_buffer(buffer);
+				
+				marco = obtener_marco(pid, pagina);
 
 				buffer_a_enviar = crear_buffer();
-				paquete2 = crear_paquete(RESIZE_OK, buffer_a_enviar);
-				enviar_paquete(paquete2, fd_cpu);
-				eliminar_paquete(paquete2);
-				// RESOLVER ESTA PARTE QUE QUEDA PEGAD EL BUFFER
-			}
-			else{
-				log_info(logger_memoria, "RESIZE NOT OK OUT_OF_MEMORY");
-				buffer_a_enviar = crear_buffer();
-				paquete2 = crear_paquete(OUT_OF_MEMORY, buffer_a_enviar);
-				enviar_paquete(paquete2, fd_cpu);
-				eliminar_paquete(paquete2);
-			}
+				paquete = crear_paquete(CPU_CONSULTA_FRAME, buffer_a_enviar);
+				cargar_int_al_buffer(paquete->buffer, marco);
+				enviar_paquete(paquete, fd_cpu);
+				eliminar_paquete(paquete);
 
-			break;
-		case MEMORIA_MOV_OUT: //LECTURA
-			log_info(logger_memoria, "MOV_OUT");
+				// LOG OBLIGATORIO
+				log_info(logger_memoria, "Acceso a Tabla de Páginas \"PID: %d - Página: %d - Marco: %d\"\n", pid, pagina, marco);
+				destruir_buffer(buffer);
 
-			buffer = recibir_buffer_completo(fd_cpu);
-			pid = extraer_int_del_buffer(buffer);
-			tamanio = extraer_int_del_buffer(buffer);
-			dir_fisica = extraer_int_del_buffer(buffer);
-			int datos = extraer_int_del_buffer(buffer);
-			
-			printf("\n### Llega del MOV_OUT -> Datos a escribir en memoria: %i #####\n\n", datos);
+				break;
+			case MEMORIA_RESIZE:
+				buffer = recibir_buffer_completo(fd_cpu);
+				pid = extraer_int_del_buffer(buffer);
+				int nuevo_tamano = extraer_int_del_buffer(buffer);
 
-			void* datos_aux = malloc(sizeof(int)); // Utilizado para la conversión
-			*(int *)datos_aux = datos; // Transforma un int en un void*
+				// //usleep(retardo_respuesta * 1000);
 
-			ejecutar_mov_out(tamanio, dir_fisica, pid, datos_aux);
-			usleep(retardo_respuesta);
-			
-			print_lista_de_frames("lista_de_frames_resize_MOV_OUT.txt");
-        	print_lista_procesos("lista_de_procesos_resize_MOV_OUT.txt");
-			print_memoria_RAM("contenido_memoria_RAM_MOV_OUT.txt");
+				int resultado = resize_tamano_proceso(pid, nuevo_tamano);
+				if(resultado == 0){
+				// 0 -> Ok | -1 -> OUT_OF_MEMORY
+					log_info(logger_memoria, "RESIZE OK");
 
-			free(datos_aux); // Libera el void pedido para la conversión
-
-			destruir_buffer(buffer);
-
-			break;
-		case MEMORIA_MOV_IN: //ESCRITURA
-			log_info(logger_memoria, "MOV_IN");
-
-			buffer = recibir_buffer_completo(fd_cpu);
-			pid = extraer_int_del_buffer(buffer);
-			tamanio = extraer_int_del_buffer(buffer);
-			dir_fisica = extraer_int_del_buffer(buffer);
-			
-			buffer_a_enviar = crear_buffer();
-
-			void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica, pid);
-
-			// ES UN PRINT PARA VER LOS DATOS A ENVIAR EN BYTES POR EL VOID*
-			if(datos_a_devolver != NULL){
-				printf("##### DATOS A DEVOLVER DEL MOV_IN: #####\n");
-				unsigned char* byte_datos = (unsigned char*)datos_a_devolver;
-				for(int i = 0; i < tamanio; i++){
-					printf("byte %d: %02X\n", i, byte_datos[i]);
+					buffer_a_enviar = crear_buffer();
+					paquete2 = crear_paquete(RESIZE_OK, buffer_a_enviar);
+					enviar_paquete(paquete2, fd_cpu);
+					eliminar_paquete(paquete2);
+					// RESOLVER ESTA PARTE QUE QUEDA PEGAD EL BUFFER
 				}
-				printf("\n");
-			}
-			// --------------------------------------------------------------
+				else{
+					log_info(logger_memoria, "RESIZE NOT OK OUT_OF_MEMORY");
+					buffer_a_enviar = crear_buffer();
+					paquete2 = crear_paquete(OUT_OF_MEMORY, buffer_a_enviar);
+					enviar_paquete(paquete2, fd_cpu);
+					eliminar_paquete(paquete2);
+				}
 
-			if(datos_a_devolver == NULL){
-				log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para leer %i bytes \n", tamanio);
-				cargar_int_al_buffer(buffer_a_enviar, -1);
-				paquete = crear_paquete(MEMORIA_ERROR, buffer_a_enviar);
-			}
-			else{
-				cargar_datos_al_buffer(buffer_a_enviar, datos_a_devolver, tamanio);
-				paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
-			}
-			//ejemplo_MOV_IN();
-			
-			//cargar_int_al_buffer(pid); CREO QUE NO ES NECESARIO ENVIARLO
-			
-			//paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar); //SI COLISIONA CAMBIAR COD_OP
-			enviar_paquete(paquete, fd_cpu);
-			usleep(retardo_respuesta);
-			eliminar_paquete(paquete);
-			free(datos_a_devolver);
+				break;
+			case MEMORIA_MOV_OUT: //LECTURA
+				log_info(logger_memoria, "MOV_OUT");
 
-			print_lista_de_frames("lista_de_frames_MOV_IN.txt");
-        	print_lista_procesos("lista_de_procesos_MOV_IN.txt");
-			print_memoria_RAM("contenido_memoria_RAM_MOV_IN.txt");
+				buffer = recibir_buffer_completo(fd_cpu);
+				pid = extraer_int_del_buffer(buffer);
+				tamanio = extraer_int_del_buffer(buffer);
+				dir_fisica = extraer_int_del_buffer(buffer);
+				int datos = extraer_int_del_buffer(buffer);
+				
+				printf("\n### Llega del MOV_OUT -> Datos a escribir en memoria: %i #####\n\n", datos);
 
-			break;
-		case MEMORIA_COPY_STRING: //DESDE CPU SE HACE DICHA LOGICA. SOLICITAS UNA LECTURA, CON EL DATO QUE TE DEVUELVE, REALIZAR UNA ESCRITURA.
-			log_info(logger_memoria, "COPY_STRING");
+				void* datos_aux = malloc(sizeof(int)); // Utilizado para la conversión
+				*(int *)datos_aux = datos; // Transforma un int en un void*
 
-			usleep(retardo_respuesta);
+				ejecutar_mov_out(tamanio, dir_fisica, pid, datos_aux);
+				//usleep(retardo_respuesta * 1000);
+				
+				print_lista_de_frames("lista_de_frames_resize_MOV_OUT.txt");
+				print_lista_procesos("lista_de_procesos_resize_MOV_OUT.txt");
+				print_memoria_RAM("contenido_memoria_RAM_MOV_OUT.txt");
 
-			buffer = recibir_buffer_completo(fd_cpu);
+				free(datos_aux); // Libera el void pedido para la conversión
 
-			pid = extraer_int_del_buffer(buffer);
-			tamanio = extraer_int_del_buffer(buffer);
-			int dir_fisica_origen = extraer_int_del_buffer(buffer); // Registro SI
-			int dir_fisica_destino = extraer_int_del_buffer(buffer); // Registro DI
-			
-			void* aux = ejecutar_mov_in(tamanio, dir_fisica_origen, pid);
-			ejecutar_mov_out(tamanio, dir_fisica_destino, pid, aux);
+				destruir_buffer(buffer);
 
-			print_memoria_RAM("contenido_memoria_COPY_STRING.txt");
+				break;
+			case MEMORIA_MOV_IN: //ESCRITURA
+				log_info(logger_memoria, "MOV_IN");
 
-			destruir_buffer(buffer);
+				buffer = recibir_buffer_completo(fd_cpu);
+				pid = extraer_int_del_buffer(buffer);
+				tamanio = extraer_int_del_buffer(buffer);
+				dir_fisica = extraer_int_del_buffer(buffer);
+				
+				buffer_a_enviar = crear_buffer();
 
-			break;
-		case -1:
-			log_error(logger_memoria, "La CPU se desconecto de Memoria. Terminando servidor.");
-			desconexion_cpu_memoria = 1;
+				void* datos_a_devolver = ejecutar_mov_in(tamanio, dir_fisica, pid);
 
-			break;
-		default:
-			log_warning(logger_memoria, "Operacion desconocida de CPU-Memoria. cod_op:%d", cod_op);
-			
-			break;
+				// ES UN PRINT PARA VER LOS DATOS A ENVIAR EN BYTES POR EL VOID*
+				if(datos_a_devolver != NULL){
+					printf("##### DATOS A DEVOLVER DEL MOV_IN: #####\n");
+					unsigned char* byte_datos = (unsigned char*)datos_a_devolver;
+					for(int i = 0; i < tamanio; i++){
+						printf("byte %d: %02X\n", i, byte_datos[i]);
+					}
+					printf("\n");
+				}
+				// --------------------------------------------------------------
+
+				if(datos_a_devolver == NULL){
+					log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para leer %i bytes \n", tamanio);
+					cargar_int_al_buffer(buffer_a_enviar, -1);
+					paquete = crear_paquete(MEMORIA_ERROR, buffer_a_enviar);
+				}
+				else{
+					cargar_datos_al_buffer(buffer_a_enviar, datos_a_devolver, tamanio);
+					paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar);
+				}
+				//ejemplo_MOV_IN();
+				
+				//cargar_int_al_buffer(pid); CREO QUE NO ES NECESARIO ENVIARLO
+				
+				//paquete = crear_paquete(MEMORIA_MOV_IN, buffer_a_enviar); //SI COLISIONA CAMBIAR COD_OP
+				enviar_paquete(paquete, fd_cpu);
+				//usleep(retardo_respuesta * 1000);
+				eliminar_paquete(paquete);
+				free(datos_a_devolver);
+
+				print_lista_de_frames("lista_de_frames_MOV_IN.txt");
+				print_lista_procesos("lista_de_procesos_MOV_IN.txt");
+				print_memoria_RAM("contenido_memoria_RAM_MOV_IN.txt");
+
+				break;
+			case MEMORIA_COPY_STRING: //DESDE CPU SE HACE DICHA LOGICA. SOLICITAS UNA LECTURA, CON EL DATO QUE TE DEVUELVE, REALIZAR UNA ESCRITURA.
+				log_info(logger_memoria, "COPY_STRING");
+
+				// usleep(retardo_respuesta * 1000);
+
+				buffer = recibir_buffer_completo(fd_cpu);
+
+				pid = extraer_int_del_buffer(buffer);
+				tamanio = extraer_int_del_buffer(buffer);
+				int dir_fisica_origen = extraer_int_del_buffer(buffer); // Registro SI
+				int dir_fisica_destino = extraer_int_del_buffer(buffer); // Registro DI
+				
+				void* aux = ejecutar_mov_in(tamanio, dir_fisica_origen, pid);
+				ejecutar_mov_out(tamanio, dir_fisica_destino, pid, aux);
+
+				print_memoria_RAM("contenido_memoria_COPY_STRING.txt");
+
+				destruir_buffer(buffer);
+
+				break;
+			case -1:
+				log_error(logger_memoria, "La CPU se desconecto de Memoria. Terminando servidor.");
+				desconexion_cpu_memoria = 1;
+
+				break;
+			default:
+				log_warning(logger_memoria, "Operacion desconocida de CPU-Memoria. cod_op:%d", cod_op);
+				
+				break;
 		}
 	}
 }

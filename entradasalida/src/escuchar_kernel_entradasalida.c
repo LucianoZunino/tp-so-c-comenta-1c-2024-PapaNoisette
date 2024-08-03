@@ -227,12 +227,14 @@ void escuchar_instrucciones_dialfs(){
 				log_info(logger_entradasalida, "PID: <%i> - Operacion: IO_FS_DELETE", pid);
 				usleep(tiempo_unidad_trabajo);
 				log_info(logger_entradasalida,"PID: <%i> -  Eliminar Archivo: <%s>",pid, nombre );
-		
+
 				liberar_archivo_bitmap(nombre);
 				
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC); //dudoso, pero creo que va
-
-				remove(path1);
+				
+				if(remove(path1) != 0){
+					log_error(logger_entradasalida, "No se pudo encontrar el archivo %s", nombre);
+				}
 
 				// devolver
 				notificar_fin(fd_kernel, pid);
@@ -399,7 +401,7 @@ void escuchar_instrucciones_dialfs(){
 				notificar_fin(fd_kernel, pid);
 				msync(bitmap->bitarray, redondear_up(block_count, 8), MS_SYNC);
 				
-				config_destroy(config);
+				//config_destroy(config);
 				
 				break;
 			case -1:
@@ -520,6 +522,7 @@ void liberar_archivo_bitmap(char* nombre){
 	
 	if(config == NULL){
 		log_error(logger_entradasalida, "Error, no se encontro el archivo en el path.\n");
+		return;
 	}
 
 	int inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
@@ -591,7 +594,7 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 		int bloque_inicial_actual = config_get_int_value(config_actual, "BLOQUE_INICIAL");
 		int tamanio_archivo_actual = config_get_int_value(config_actual, "TAMANIO_ARCHIVO"); 
 
-		printf("\n--ARCHIVO ACTUAL: %s\n--TAMANIO ARCHIVO: %i\n\n", path_metadata, tamanio_archivo_actual);
+		//printf("\n--ARCHIVO ACTUAL: %s\n--TAMANIO ARCHIVO: %i\n\n", path_metadata, tamanio_archivo_actual);
 
 		// Copiamos datos del archivo actual
 		if(strcmp(path_metadata, path_del_nombre) != 0){ // Verificamos que los datos a leer no pertenecen al archivo truncado en caso de que el nuevo tamanio se pase del espacio de memoria
