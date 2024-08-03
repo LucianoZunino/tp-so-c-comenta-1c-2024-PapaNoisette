@@ -101,6 +101,7 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				break;
 			case IO_STDIN_READ_FS:
+			printf("ADENTRO DE STDIN READ");
 				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
