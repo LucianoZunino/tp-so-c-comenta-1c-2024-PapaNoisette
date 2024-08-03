@@ -12,5 +12,6 @@ void iniciar_semaforos();
 void iniciar_recursos();
 void iniciar_colas_estados();
 void finalizar_kernel();
+void enviar_datos_cpu();
 void esperar_clientes();
 #endif

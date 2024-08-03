@@ -289,7 +289,7 @@ Proceso *buscar_proceso(t_list *lista, int pid){
 }
 
 void finalizar_proceso(int pid){
-    
+    int j = 0;
     for(int i = 0; i < cantidad_de_marcos; i++){
         pthread_mutex_lock(&mutex_lista_de_marcos);
         Frame *frame = list_get(lista_de_frames, i);
@@ -302,11 +302,11 @@ void finalizar_proceso(int pid){
             pthread_mutex_lock(&mutex_lista_de_marcos);
             list_replace(lista_de_frames, i, frame);
             pthread_mutex_unlock(&mutex_lista_de_marcos);
-            
-            log_info(logger_memoria, "Se libero el frame :%d\n", i);
+            j++;
+            //log_info(logger_memoria, "Se libero el frame :%d\n", i);
         }
     }
-    log_info(logger_memoria, "Se finalizo el proceso :%d", pid);
+    log_info(logger_memoria, "Destruccion de Tabla de Páginas: \"PID: <%d> - Tamaño: <%i>\"", pid, j);
 }
 
 void esperar_clientes(){

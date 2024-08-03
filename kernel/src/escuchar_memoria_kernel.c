@@ -6,7 +6,6 @@ void escuchar_mensajes_memoria_kernel(){
 		int cod_op = recibir_operacion(fd_memoria); // recv() es bloqueante por ende no queda loopeando infinitamente
 		switch(cod_op){
 			case KERNEL_RESPUESTA_INICIALIZAR_ESTRUCTURAS:
-				printf("nuevo case\n");
 				sem_post(&sem_estructuras_inicializadas);
 				break;
 			case -1:

@@ -129,7 +129,7 @@ void escuchar_instrucciones_stdout(){
 
                 log_info(logger_entradasalida, "PID: %i - Operacion: IO_STDOUT_WRITE", pid);
 
-				printf("\n\nRecibido de kernel Tamanio: %i --- Direccion Fisica: %i\n\n", reg_tamanio, reg_direccion);
+				//printf("\n\nRecibido de kernel Tamanio: %i --- Direccion Fisica: %i\n\n", reg_tamanio, reg_direccion);
 
 				solicitar_lectura_memoria(pid, reg_direccion, reg_tamanio, IO_STDOUT_WRITE_FS);
 
@@ -575,7 +575,7 @@ void compactar(char* nombre, t_config* config, int nuevo_tamanio){
 	// Agregamos el archivo a truncar al final de la lista
 	char* path_del_nombre = tomar_nombre_devolver_path(nombre);
 	list_add(archivos_metadata, path_del_nombre);
-	printf("\nTAMANIO LISTA DE METADATAS %i\n", list_size(archivos_metadata));
+
 	int bloques_desplazados = 0;
 
 	for(int i = 0; i < list_size(archivos_metadata); i++){

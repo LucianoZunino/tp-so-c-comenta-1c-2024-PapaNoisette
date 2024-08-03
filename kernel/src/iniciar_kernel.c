@@ -204,6 +204,14 @@ void finalizar_kernel(){
     // TODO: Destruir listas, hilos, etc
 }
 
+void enviar_datos_cpu(){
+    t_buffer *buffer = crear_buffer();
+    cargar_string_al_buffer(buffer, algoritmo_planificacion); // Ver orden parametros consola, argv[0] es el nombre de interfaz a crear
+    t_paquete *paquete = crear_paquete(NUEVA_CONEXION_IO, buffer);
+    enviar_paquete(paquete, fd_cpu_dispatch);
+    eliminar_paquete(paquete);
+}
+
 
 void esperar_clientes(){
     int i = 0;

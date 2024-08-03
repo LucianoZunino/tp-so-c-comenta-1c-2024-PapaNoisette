@@ -68,6 +68,8 @@ int main(int argc, char* argv[]){
         return EXIT_FAILURE;
     }
 
+    enviar_datos_cpu();
+
     // HANDSHAKE KERNEL - MEMORIA
     if (realizar_handshake(logger_kernel, fd_memoria, HANDSHAKE_KERNEL) == -1){
         return EXIT_FAILURE;

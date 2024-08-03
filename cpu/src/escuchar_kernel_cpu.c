@@ -6,6 +6,7 @@ bool flag_interrupt;
 void escuchar_mensajes_kernel_dispatch(){
 	t_buffer * buffer=crear_buffer();
     bool desconexion_kernel_dispatch = 0;
+	char* rolando_robin;
 
 	while(!desconexion_kernel_dispatch){
 		int cod_op = recibir_operacion(fd_kernel_dispatch); // recv() es bloqueante por ende no queda loopeando infinitamente
@@ -17,7 +18,9 @@ void escuchar_mensajes_kernel_dispatch(){
 
 				break;
 			case KERNEL_ENVIA_PROCESO:
-				//flag_interrupt = false;
+				if(string_equals_ignore_case(rolando_robin, "VRR") != true){
+					flag_interrupt = false; // no comentado -> FIFO y RR | comentado -> VRR
+				}
 				flag_desalojo = true;
 				buffer = recibir_buffer_completo(fd_kernel_dispatch);
 			    //EXEC=malloc(sizeof(t_pcb));
@@ -34,16 +37,20 @@ void escuchar_mensajes_kernel_dispatch(){
 					print_pcb(EXEC);
 					// sleep(1);
 					if(flag_interrupt){
-						printf("\nSOY %i en interrupt\n", EXEC->pid);
+
 						if(flag_desalojo){
-							printf("\nSOY %i en desalojo\n", EXEC->pid);
 							sem_post(&sem_desalojo);
 						}
+						
 						estado_ejecucion = 1;
 					}
 				}
 				
  				break;
+			case 40:
+				buffer = recibir_buffer_completo(fd_kernel_dispatch);
+				rolando_robin = extraer_string_del_buffer(buffer);
+				break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Dispatch. Terminando servidor.");
 				desconexion_kernel_dispatch = 1;
@@ -80,7 +87,7 @@ void escuchar_mensajes_kernel_interrupt(){
 				pcb = deserializar_pcb(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				if(/*EXEC == NULL ||*/ pcb->pid != EXEC->pid){
-					printf("\nNO ME INTERRUMPO UN ACRAJO\n");
+					
 					break;
 				}
 				flag_interrupt = true;
@@ -102,7 +109,7 @@ void escuchar_mensajes_kernel_interrupt(){
 				int pid = extraer_int_del_buffer(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				if(/*EXEC == NULL ||*/ pid != EXEC->pid){
-					printf("\nNO ME INTERRUMPO UN ACRAJO\n");
+					
 					break;
 				}
 				flag_interrupt = true;

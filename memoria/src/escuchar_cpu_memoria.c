@@ -314,12 +314,12 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 		if(resto_de_lectura >= espacio_libre_en_pagina){
 
 			// ES UN PRINT PARA VER LOS DATOS ENVIADOS EN BYTES POR EL VOID*
-			unsigned char* byte_memoria = (unsigned char*)memoria_RAM;
+			/*unsigned char* byte_memoria = (unsigned char*)memoria_RAM;
 			printf("\nContenido de memoria desde la dirección física %d:\n", dir_fisica);
 			for(int i = 0; i < tamanio; i++){
 				printf("byte %d: %02X\n", dir_fisica + i, byte_memoria[dir_fisica + i]);
 			}
-			printf("\n");
+			printf("\n");*/
 			// --------------------------------------------------------------
 			pthread_mutex_lock(&mutex_memoria_RAM);
 			memcpy(datos + base, memoria_RAM + dir_fisica, espacio_libre_en_pagina);
@@ -330,12 +330,12 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 		else{
 
 			// ES UN PRINT PARA VER LOS DATOS ENVIADOS EN BYTES POR EL VOID*
-			unsigned char* byte_memoria = (unsigned char*)memoria_RAM;
+			/*unsigned char* byte_memoria = (unsigned char*)memoria_RAM;
 			printf("\nContenido de memoria desde la dirección física %d:\n", dir_fisica);
 			for(int i = 0; i < tamanio; i++){
 				printf("byte %d: %02X\n", dir_fisica + i, byte_memoria[dir_fisica + i]);
 			}
-			printf("\n");
+			printf("\n");*/
 			// --------------------------------------------------------------
 			pthread_mutex_lock(&mutex_memoria_RAM);
 			memcpy(datos + base, memoria_RAM + dir_fisica, resto_de_lectura);
