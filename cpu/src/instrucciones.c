@@ -131,7 +131,7 @@ void ejecutar_copy_string(char *tamanio){
 
 void ejecutar_wait(char *recurso){
    log_info(logger_cpu, "ENVIANDO WAIT A KERNEL");
-
+   
    t_buffer *buffer = crear_buffer();
    t_paquete *paquete = crear_paquete(KERNEL_WAIT, buffer);
   //devuelvo contexto por solicitar llamada a kernel

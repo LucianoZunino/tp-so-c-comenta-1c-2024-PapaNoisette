@@ -2,7 +2,7 @@
 
 t_config *config_cpu;
 t_list* tlb;
-sem_t sem_interrupt;
+sem_t sem_desalojado;
 sem_t sem_desalojo;
 
 void iniciar_cpu(){
@@ -13,12 +13,12 @@ void iniciar_cpu(){
 	EXEC=malloc(sizeof(t_pcb));
 	EXEC->registros_cpu=malloc(sizeof(t_registros_cpu));
 	EXEC->estado=malloc(sizeof(estado_pcb));
-   flag_interrupt = false;
+   flag_desalojo = true;
 
-   if (sem_init(&sem_interrupt, 1, 0) != 0) {
-        log_error(logger_cpu, "Ocurrio un error al crear semaforo sem_EXEC");
-        exit(-1);
-   }
+   // if (sem_init(&sem_desalojado, 1, 0) != 0) {
+   //      log_error(logger_cpu, "Ocurrio un error al crear semaforo sem_EXEC");
+   //      exit(-1);
+   // }
    if (sem_init(&sem_desalojo, 1, 0) != 0) {
         log_error(logger_cpu, "Ocurrio un error al crear semaforo sem_desalojo");
         exit(-1);

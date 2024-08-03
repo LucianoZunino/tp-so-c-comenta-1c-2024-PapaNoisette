@@ -1,6 +1,7 @@
 #include "escuchar_kernel_cpu.h"
 
 t_pcb* EXEC;
+bool flag_interrupt;
 
 void escuchar_mensajes_kernel_dispatch(){
 	t_buffer * buffer=crear_buffer();
@@ -16,22 +17,27 @@ void escuchar_mensajes_kernel_dispatch(){
 
 				break;
 			case KERNEL_ENVIA_PROCESO:
+
 				buffer = recibir_buffer_completo(fd_kernel_dispatch);
 			    //EXEC=malloc(sizeof(t_pcb));
 				EXEC = deserializar_pcb(buffer); 
 				print_pcb(EXEC);
-				flag_interrupt = false;
+				flag_desalojo = true;
     			//sleep(2);
 				int estado_ejecucion = 0;
 
 				while(estado_ejecucion == 0){
+					estado_ejecucion = ciclo_de_instruccion();
 					print_pcb(EXEC);
 					sleep(1);
-				};
-				if(flag_interrupt){
-					sem_post(&sem_desalojo);
+					if(flag_interrupt){
+						if(flag_desalojo){
+							sem_post(&sem_desalojo);
+						}
+						estado_ejecucion = 1;
+					}
 				}
-
+				
  				break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Dispatch. Terminando servidor.");
@@ -72,19 +78,23 @@ void escuchar_mensajes_kernel_interrupt(){
 				pcb = deserializar_pcb(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				printf("\nMOTIVO DE INTERRUPCION: %i\n", motivo);
-				if(EXEC == NULL || pcb->pid != EXEC->pid){
+				if(/*EXEC == NULL ||*/ pcb->pid != EXEC->pid){
 					break;
 				}
 				flag_interrupt = true;
 				printf("\nDESP DEL FLAG_INTERRUPT\n");
-				sem_wait(&sem_interrupt);
+				// sem_wait(&sem_interrupt);
 				
-				buffer_a_enviar = crear_buffer();
-				paquete = crear_paquete(motivo, buffer_a_enviar);
-				agregar_pcb(paquete, EXEC);
-				enviar_paquete(paquete, fd_kernel_dispatch);
-				eliminar_paquete(paquete);
-				EXEC = NULL;
+				if(flag_desalojo){
+					sem_wait(&sem_desalojo);
+					buffer_a_enviar = crear_buffer();
+					paquete = crear_paquete(motivo, buffer_a_enviar);
+					agregar_pcb(paquete, EXEC);
+					
+					enviar_paquete(paquete, fd_kernel_dispatch);
+					eliminar_paquete(paquete);
+				}
+				// EXEC = NULL;
 				printf("\nDESP DEL enviar_proceso_por_paquete\n");
 				break;
 			case FIN_DE_QUANTUM:
@@ -94,20 +104,26 @@ void escuchar_mensajes_kernel_interrupt(){
 				int pid = extraer_int_del_buffer(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				printf("\nMOTIVO DE INTERRUPCION: %i\n", motivo);
-				// if(EXEC == NULL || pid != EXEC->pid){
-				// 	break;
-				// }
+				if(/*EXEC == NULL ||*/ pid != EXEC->pid){
+					printf("\n··· ENTRO AL BREAK EN CPU FIN_DE_QUANTUM ··· \n\n");
+					break;
+				}
 				flag_interrupt = true;
 				printf("\nDESP DEL FLAG_INTERRUPT\n");
-				sem_wait(&sem_interrupt);
+				//sem_wait(&sem_interrupt);
 				
-				buffer_a_enviar = crear_buffer();
-				paquete = crear_paquete(motivo, buffer_a_enviar);
-				agregar_pcb(paquete, EXEC);
-				sem_wait(&sem_desalojo);
-				EXEC = NULL;
-				enviar_paquete(paquete, fd_kernel_dispatch);
-				eliminar_paquete(paquete);
+				if(flag_desalojo){
+					sem_wait(&sem_desalojo);
+					buffer_a_enviar = crear_buffer();
+					paquete = crear_paquete(motivo, buffer_a_enviar);
+					agregar_pcb(paquete, EXEC);
+					
+					enviar_paquete(paquete, fd_kernel_dispatch);
+					eliminar_paquete(paquete);
+				}
+				// EXEC = NULL;
+				
+				
 				printf("\nDESP DEL enviar_proceso_por_paquete\n");
 				break;
 			case -1:

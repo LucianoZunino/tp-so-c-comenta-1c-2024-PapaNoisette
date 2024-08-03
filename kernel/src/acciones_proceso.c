@@ -116,7 +116,7 @@ void eliminar_proceso() {
         }
 
         log_info(logger_kernel, "Se elimina el proceso <%i> en EXIT", pid);
-        pcb_destruir(pcb);
+        //pcb_destruir(pcb);
     }
 }
 
@@ -140,6 +140,7 @@ void liberar_recursos_de(t_pcb* pcb) {
         t_recurso* recurso = list_get(recursos_disponibles, i);
         // Sumamos instancias por cada recurso que se le haya asignado al p
         int instancias = 0;
+        
         while(instancias >= 0){
             //sacamos de la lista de asignadoos
             instancias = sumar_instancia(recurso->nombre, pcb);

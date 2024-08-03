@@ -22,6 +22,7 @@ extern char * puerto_escucha_interrupt;
 extern int cantidad_entradas_tlb;
 extern char* algoritmo_tlb;
 extern int tamanio_pagina; //hay que consultarselo a memoria??
+extern bool flag_desalojo;
 extern bool flag_interrupt;
 
 //Variables de socket

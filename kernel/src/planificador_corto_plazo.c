@@ -37,9 +37,11 @@ void planificador_corto_plazo(){
                 esperar_a_cpu_round_robin(pcb);
             }
                 
-            }else if(string_equals_ignore_case(algoritmo_planificacion,"VRR")){
-                printf("\n ENTRO AL ELSE VRR \n");
+        }
+        else if(string_equals_ignore_case(algoritmo_planificacion,"VRR")){
+            printf("\n ENTRO AL ELSE VRR \n");
             t_pcb* pcb;
+
             if(list_is_empty(PRIORIDAD)){
                 printf("\nENTRO AL IF DE READY\n");
                 pthread_mutex_lock(&mutex_READY);
@@ -50,7 +52,8 @@ void planificador_corto_plazo(){
                 pthread_mutex_lock(&mutex_RUNNING);
                 RUNNING = pcb;
                 pthread_mutex_unlock(&mutex_RUNNING);
-            }else{
+            }
+            else{
                 printf("\nENTRO AL IF DE PRIORIDAD\n");
                 pthread_mutex_lock(&mutex_PRIORIDAD);
                 pcb = list_remove(PRIORIDAD, 0);
@@ -63,22 +66,30 @@ void planificador_corto_plazo(){
                 RUNNING = pcb;
                 pthread_mutex_unlock(&mutex_RUNNING);
             }
+            
             printf("\n ### sale de else prioridad ###\n");
             enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
            
             int64_t ms_transcurridos = esperar_a_cpu_virtual_round_robin(RUNNING);
             printf("\n ms_transcurridos: %i\n", ms_transcurridos);
-            if(ms_transcurridos < RUNNING->quantum){
+
+            if(RUNNING && ms_transcurridos < RUNNING->quantum){
                 printf(
                 "################################################################\n"
                 "###################ADENTRO DEL IF QUANTUM#######################\n"
                 "################################################################\n"
                 );
+                
+                pthread_mutex_lock(&mutex_RUNNING);
                 RUNNING->quantum = RUNNING->quantum - ms_transcurridos;
+                pthread_mutex_unlock(&mutex_RUNNING);
+                
                 printf("\nRUNNING QUANTUM: %i\n", RUNNING->quantum);
             }
-        sem_post(&sem_quantum);
-        }else {
+
+            sem_post(&sem_quantum);
+        }
+        else{
             log_error(logger_kernel, "El Algoritmo de planificacion no es correcto");
         }
         // esperar_respuesta_de_CPU con: contexto, motivo_desalojo
@@ -86,8 +97,8 @@ void planificador_corto_plazo(){
 }
 
 void hilo_quantum_funcion(t_pcb* pcb){
-  usleep((pcb->quantum) * 1000);
-  send_interrupt();
+    usleep((pcb->quantum) * 1000);
+    send_interrupt();
 }
 
 void esperar_a_cpu_round_robin(t_pcb* pcb){
@@ -95,11 +106,17 @@ void esperar_a_cpu_round_robin(t_pcb* pcb){
     pthread_t hilo_quantum;
     pthread_create(&hilo_quantum, NULL, (void*) hilo_quantum_funcion, pcb);
     pthread_detach(hilo_quantum);
+    
     printf("\nANTES DEL SEM_DESALOJO\n");
     sem_wait(&sem_desalojo); //esperar_a_que_cpu_desaloje(pcb); por fin de Quantum o por otro motivo
     printf("\n DESP DEL SEM_DESALOJO \n\n");
 
-    pthread_cancel(hilo_quantum);
+    if(pthread_cancel(hilo_quantum) == 0){
+        printf("\nSE CANCELO EL HILO DE QUANTUM\n");
+    }
+    else{
+        printf("\nNO SE CANCELO EL HILO\n");
+    }
 }
 
 int64_t esperar_a_cpu_virtual_round_robin(t_pcb* pcb){

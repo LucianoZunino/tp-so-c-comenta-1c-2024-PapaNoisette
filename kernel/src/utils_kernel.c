@@ -283,9 +283,9 @@ bool verificar_existencia_de_interfaz(int indice_de_interfaz, t_pcb* pcb){
 
 void validar_desalojo(){
     if(string_equals_ignore_case(algoritmo_planificacion, "RR") || string_equals_ignore_case(algoritmo_planificacion, "VRR")){
-        
+        printf("\n ···· HAGO POST (SEM_DESALOJO)1 \n\n");
 		sem_post(&sem_desalojo);
-        
+        printf("\n···· HAGO POST (SEM_DESALOJO)2 \n\n");
 		if(string_equals_ignore_case(algoritmo_planificacion, "VRR")){
             sem_wait(&sem_quantum);
         }

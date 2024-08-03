@@ -36,8 +36,9 @@ void escuchar_mensajes_entradasalida_kernel(int indice_interfaz){
 				pid = extraer_int_del_buffer(buffer);
 				int index = buscar_index_por_pid(BLOCKED, pid);
 
-				
-				t_pcb* pcb = list_remove(BLOCKED, index);				
+				pthread_mutex_lock(&mutex_BLOCKED);
+				t_pcb* pcb = list_remove(BLOCKED, index);
+				pthread_mutex_unlock(&mutex_BLOCKED);			
 				
 				if (pcb->quantum < quantum){
 				//if(string_equals_ignore_case("VRR", algoritmo_planificacion)){

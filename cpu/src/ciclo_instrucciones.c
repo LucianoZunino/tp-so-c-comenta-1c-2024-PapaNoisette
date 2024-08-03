@@ -11,7 +11,7 @@ char instr_arg2[20];
 char instr_arg3[20];
 char instr_arg4[20];
 char instr_arg5[20];
-bool flag_interrupt;
+bool flag_desalojo;
 
 pthread_mutex_t interrupcion_mutex;
 
@@ -23,11 +23,13 @@ void fetch(){
     char buffer[100];
     recv(fd_memoria, buffer, sizeof(100), MSG_DONTWAIT); //borro el buffer 
     //printf("buffer, %s\n", buffer);
-    log_info(logger_cpu, "Fetch Instrucción: \"PID: %i - FETCH - Program Counter: %i\"", EXEC->pid, EXEC->program_counter);
+    
+    if(EXEC != NULL){
+        log_info(logger_cpu, "Fetch Instrucción: \"PID: %i - FETCH - Program Counter: %i\"", EXEC->pid, EXEC->program_counter);
 
-   // enviar_memoria_solicitar_instruccion(EXEC, fd_memoria);
-    enviar_memoria_solicitar_instruccion(EXEC->pid, EXEC->program_counter, fd_memoria);
-
+        // enviar_memoria_solicitar_instruccion(EXEC, fd_memoria);
+        enviar_memoria_solicitar_instruccion(EXEC->pid, EXEC->program_counter, fd_memoria);
+    }
     // la instruccion sin parsear tipo "IO_FS_READ Int4 notas.txt BX ECX EDX"
     char *cpu_respuesta_instruccion = malloc(100);
 
@@ -104,6 +106,7 @@ int decode_excute(){
             return CONTINUAR_CICLO;
         }
         else{
+            
             return SALIR_DE_CICLO;
         }
     }
@@ -113,56 +116,68 @@ int decode_excute(){
         return CONTINUAR_CICLO;
     }
     else if(strcmp(instruccion, "WAIT") == 0){
+        flag_desalojo = false;
         ejecutar_wait(instr_arg1);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s\”", EXEC->pid, "WAIT", instr_arg1);
         return SALIR_DE_CICLO;
+
     }
     else if(strcmp(instruccion, "SIGNAL") == 0){
+        flag_desalojo = false;
         ejecutar_signal(instr_arg1);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s\”", EXEC->pid, "SIGNAL", instr_arg1);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "IO_GEN_SLEEP") == 0){
+        flag_desalojo = false;
         ejecutar_io_gen_sleep(instr_arg1, instr_arg2);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "IO_GEN_SLEEP", instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "IO_STDIN_READ") == 0){
+        flag_desalojo = false;
         ejecutar_io_stdin_read(instr_arg1, instr_arg2, instr_arg3);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s\”", EXEC->pid, "IO_STDIN_READ", instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "IO_STDOUT_WRITE") == 0){
+        flag_desalojo = false;
         ejecutar_io_stdout_write(instr_arg1, instr_arg2, instr_arg3);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s\”", EXEC->pid, "IO_STDOUT_WRITE", instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "IO_FS_CREATE") == 0){
+        flag_desalojo = false;
         ejecutar_io_fs_create(instr_arg1, instr_arg2);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "IO_FS_CREATE", instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "IO_FS_DELETE") == 0){
+        flag_desalojo = false;
         ejecutar_io_fs_delete(instr_arg1, instr_arg2);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s\”", EXEC->pid, "IO_FS_DELETE", instr_arg1, instr_arg2);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "IO_FS_TRUNCATE") == 0){
+        flag_desalojo = false;
         ejecutar_io_fs_truncate(instr_arg1, instr_arg2, instr_arg3);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s\”", EXEC->pid, "IO_FS_TRUNCATE", instr_arg1, instr_arg2, instr_arg3);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "IO_FS_WRITE") == 0){
+        flag_desalojo = false;
         ejecutar_io_fs_write(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s %s %s\”", EXEC->pid, "IO_FS_WRITE", instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "IO_FS_READ") == 0){
+        flag_desalojo = false;
         ejecutar_io_fs_read(instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s - %s %s %s %s %s\”", EXEC->pid, "IO_FS_READ", instr_arg1, instr_arg2, instr_arg3, instr_arg4, instr_arg5);
         return SALIR_DE_CICLO;
     }
     else if(strcmp(instruccion, "EXIT") == 0){
+        flag_desalojo = false;
         ejecutar_exit();
         log_info(logger_cpu, "Instrucción Ejecutada: \“PID: %i - Ejecutando: %s\”", EXEC->pid, "EXIT");
         return SALIR_DE_CICLO;
@@ -186,13 +201,13 @@ int ciclo_de_instruccion(){ // FETCH->EXECUTE
 
     estado_ciclo = decode_excute();
 
-    if(flag_interrupt){
-        printf("\nCAMBIO ESTADO_CICLO POR FLAG\n");
-        estado_ciclo = SALIR_DE_CICLO;
-        printf("\nASIGNA SALIR_DE_CICLO\n");
-        sem_post(&sem_interrupt);
-        printf("\nABAJO DE SEM_POST\n");
-    }
+    // if(flag_desalojo){
+    //     printf("\nCAMBIO ESTADO_CICLO POR FLAG\n");
+    //     estado_ciclo = SALIR_DE_CICLO;
+    //     printf("\nASIGNA SALIR_DE_CICLO\n");
+    //     sem_post(&sem_interrupt);
+    //     printf("\nABAJO DE SEM_POST\n");
+    // }
 
     /*
     pthread_mutex_lock(&interrupcion_mutex);
