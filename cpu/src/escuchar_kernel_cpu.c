@@ -17,12 +17,15 @@ void escuchar_mensajes_kernel_dispatch(){
 
 				break;
 			case KERNEL_ENVIA_PROCESO:
-
+				//flag_interrupt = false;
+				flag_desalojo = true;
 				buffer = recibir_buffer_completo(fd_kernel_dispatch);
 			    //EXEC=malloc(sizeof(t_pcb));
 				EXEC = deserializar_pcb(buffer); 
+				
+				
 				print_pcb(EXEC);
-				flag_desalojo = true;
+				
     			//sleep(2);
 				int estado_ejecucion = 0;
 
@@ -31,7 +34,9 @@ void escuchar_mensajes_kernel_dispatch(){
 					print_pcb(EXEC);
 					// sleep(1);
 					if(flag_interrupt){
+						printf("\nSOY %i en interrupt\n", EXEC->pid);
 						if(flag_desalojo){
+							printf("\nSOY %i en desalojo\n", EXEC->pid);
 							sem_post(&sem_desalojo);
 						}
 						estado_ejecucion = 1;
@@ -75,6 +80,7 @@ void escuchar_mensajes_kernel_interrupt(){
 				pcb = deserializar_pcb(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				if(/*EXEC == NULL ||*/ pcb->pid != EXEC->pid){
+					printf("\nNO ME INTERRUMPO UN ACRAJO\n");
 					break;
 				}
 				flag_interrupt = true;
@@ -96,6 +102,7 @@ void escuchar_mensajes_kernel_interrupt(){
 				int pid = extraer_int_del_buffer(buffer);
 				motivo = extraer_int_del_buffer(buffer);
 				if(/*EXEC == NULL ||*/ pid != EXEC->pid){
+					printf("\nNO ME INTERRUMPO UN ACRAJO\n");
 					break;
 				}
 				flag_interrupt = true;
@@ -111,7 +118,6 @@ void escuchar_mensajes_kernel_interrupt(){
 					eliminar_paquete(paquete);
 				}
 				// EXEC = NULL;
-				
 				
 				break;
 			case -1:

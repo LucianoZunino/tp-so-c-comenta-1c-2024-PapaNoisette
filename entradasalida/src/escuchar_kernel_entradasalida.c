@@ -181,7 +181,7 @@ void escuchar_instrucciones_dialfs(){
 
                 log_info(logger_entradasalida, "PID: <%i> - Operacion: IO_FS_CREATE", pid);
 				usleep(tiempo_unidad_trabajo);
-				log_info(logger_entradasalida,"PID: <%i> - Crear Archivo: <%s>",pid, nombre );
+				log_info(logger_entradasalida,"PID: <%i> - Crear Archivo: <%s>",pid, nombre);
 				
 				char* path = string_duplicate(tomar_nombre_devolver_path(nombre));
 				

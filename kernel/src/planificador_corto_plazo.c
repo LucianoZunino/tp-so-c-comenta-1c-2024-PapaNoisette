@@ -33,17 +33,16 @@ void planificador_corto_plazo(){
             enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
 
             if(string_equals_ignore_case(algoritmo_planificacion,"RR")){
-                printf("\n ENTRO AL  IF DE RR \n");
                 esperar_a_cpu_round_robin(pcb);
             }
                 
         }
         else if(string_equals_ignore_case(algoritmo_planificacion,"VRR")){
-            printf("\n ENTRO AL ELSE VRR \n");
+            
             t_pcb* pcb;
 
             if(list_is_empty(PRIORIDAD)){
-                printf("\nENTRO AL IF DE READY\n");
+                
                 pthread_mutex_lock(&mutex_READY);
                 pcb = list_remove(READY, 0);
                 pthread_mutex_unlock(&mutex_READY);
@@ -54,7 +53,6 @@ void planificador_corto_plazo(){
                 pthread_mutex_unlock(&mutex_RUNNING);
             }
             else{
-                printf("\nENTRO AL IF DE PRIORIDAD\n");
                 pthread_mutex_lock(&mutex_PRIORIDAD);
                 pcb = list_remove(PRIORIDAD, 0);
                 pthread_mutex_unlock(&mutex_PRIORIDAD);
@@ -67,24 +65,17 @@ void planificador_corto_plazo(){
                 pthread_mutex_unlock(&mutex_RUNNING);
             }
             
-            printf("\n ### sale de else prioridad ###\n");
             enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
            
             int64_t ms_transcurridos = esperar_a_cpu_virtual_round_robin(RUNNING);
             printf("\n ms_transcurridos: %i\n", ms_transcurridos);
 
             if(RUNNING && ms_transcurridos < RUNNING->quantum){
-                printf(
-                "################################################################\n"
-                "###################ADENTRO DEL IF QUANTUM#######################\n"
-                "################################################################\n"
-                );
-                
+ 
                 pthread_mutex_lock(&mutex_RUNNING);
                 RUNNING->quantum = RUNNING->quantum - ms_transcurridos;
                 pthread_mutex_unlock(&mutex_RUNNING);
                 
-                printf("\nRUNNING QUANTUM: %i\n", RUNNING->quantum);
             }
 
             sem_post(&sem_quantum);

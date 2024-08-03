@@ -17,6 +17,7 @@ void escuchar_mensajes_memoria_entradasalida(){
 
 				pid = extraer_int_del_buffer(buffer);
 				char* mensaje = extraer_string_del_buffer(buffer);
+				//string_append(&mensaje, '\0');
 				printf("\n%s\n\n", mensaje);
 
 				notificar_fin(fd_kernel, pid);
