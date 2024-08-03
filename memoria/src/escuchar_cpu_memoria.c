@@ -213,9 +213,6 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 	pthread_mutex_lock(&mutex_lista_de_marcos);
     int pagina_actual = list_get(proceso_actual->tabla_paginas, indice_de_marco);    
     pthread_mutex_unlock(&mutex_lista_de_marcos);
-	
-
-	printf("\n\nPAGINA ACTUAL: %i\n\n", pagina_actual);
 
 	while(base <= tamanio){
 
@@ -223,18 +220,18 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 		int espacio_libre_en_pagina = direccion_fin_pagina - dir_fisica;
 		int resto_de_escritura = tamanio - base;
 
-		printf("------------\n");
+		/*printf("------------\n");
 		printf("Direccion fin de pagina: %i\n", direccion_fin_pagina);
 		printf("Espacio libre en pagina: %i\n", espacio_libre_en_pagina);
 		printf("Resto de escritura: %i\n", resto_de_escritura);
 		printf("Resto de TAMANIO: %i\n", tamanio);
-		printf("------------\n");
+		printf("------------\n");*/
 
 		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
 
 		// ES UN PRINT PARA VER LOS DATOS A ENVIAR EN BYTES POR EL VOID*
 		if(datos != NULL){
-			printf("##### DATOS LEIDOS DEL STDIN_READ: #####\n");
+			//printf("##### DATOS LEIDOS DEL STDIN_READ: #####\n");
 			unsigned char* byte_datos = (unsigned char*)datos;
 			for(int i = 0; i < tamanio; i++){
 				printf("byte %d: %02X\n", i, byte_datos[i]);
@@ -243,28 +240,24 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 		}
 
 		if(resto_de_escritura >= espacio_libre_en_pagina){
-			printf("\nMEMCOPY IF \n");
 			pthread_mutex_lock(&mutex_memoria_RAM);
 			memcpy(memoria_RAM + dir_fisica, datos + base, espacio_libre_en_pagina);
 			pthread_mutex_unlock(&mutex_memoria_RAM);
 			base += espacio_libre_en_pagina;
-			printf("\nPOST-MEMCOPY IF \n");
 		}else{
-			printf("\nMEMCOPY ELSE \n");
 			pthread_mutex_lock(&mutex_memoria_RAM);
 			memcpy(memoria_RAM + dir_fisica, datos + base, resto_de_escritura);
 			pthread_mutex_unlock(&mutex_memoria_RAM);
 			base += resto_de_escritura;
-			printf("\nPOST-MEMCOPY ELSE \n");
 			print_memoria_RAM("contenido_memoria_RAM_STDIN_READ.txt");
 			return;
 		}
 		indice_de_marco++;
 
-		printf("------------\n");
+		/*printf("------------\n");
 		printf("Indice de marco: %i\n", indice_de_marco);
 		printf("Tamaño de tabla de paginas del proceso: %i\n", list_size(proceso_actual->tabla_paginas));
-		printf("------------\n");
+		printf("------------\n");*/
 
 		if(indice_de_marco >= list_size(proceso_actual->tabla_paginas)){
 
@@ -281,9 +274,9 @@ void ejecutar_mov_out(int tamanio, int dir_fisica, int pid, void *datos){
 
 		dir_fisica = pagina_actual * tam_pagina;
 
-		printf("------------\n");
+		/*printf("------------\n");
 		printf("Direccion fisica: %i\n", dir_fisica);
-		printf("------------\n");
+		printf("------------\n");*/
 	}
 }
 
@@ -308,14 +301,14 @@ void* ejecutar_mov_in(int tamanio, int dir_fisica, int pid){
 		int espacio_libre_en_pagina = direccion_fin_pagina - dir_fisica;
 		int resto_de_lectura = tamanio - base;
 
-		printf("------------\n");
+		/*printf("------------\n");
 		printf("Direccion fin de pagina: %i\n", direccion_fin_pagina);
 		printf("Espacio libre en pagina: %i\n", espacio_libre_en_pagina);
 		printf("Resto de lectura: %i\n", resto_de_lectura);
 		printf("############\n");
 		//printf("Datos: %d\n", *(int*)datos);
 		printf("Base: %i\n", base);
-		printf("------------\n");
+		printf("------------\n");*/
 
 		// el tamanio restante que queda por escribir/leer sea igual o mayor --> hacer el memcpy || si es menor tendriamos que poner el tamanio de lo que resta escribir
 		if(resto_de_lectura >= espacio_libre_en_pagina){

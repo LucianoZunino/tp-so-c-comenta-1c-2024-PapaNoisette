@@ -15,7 +15,6 @@ void escuchar_mensajes_entradasalida_memoria(int socket_entradasalida){
 	
 	while(!desconexion_entradasalida_memoria){
 		int cod_op = recibir_operacion(socket_entradasalida); // recv() es bloqueante por ende no queda loopeando infinitamente
-		printf("\n\n\nDESPUES DE RECIBIR EL COD_OP: %i\n\n\n", cod_op);
 
 		switch(cod_op){
 			case HANDSHAKE_ENTRADASALIDA:
@@ -25,14 +24,10 @@ void escuchar_mensajes_entradasalida_memoria(int socket_entradasalida){
 				log_info(logger_memoria, "IO_STDIN_READ_FS");
 				
 				buffer = recibir_buffer_completo(socket_entradasalida);
-				printf("\n\nRECIBE BUFFER\n\n");
 				pid = extraer_int_del_buffer(buffer);
 				dir_fisica = extraer_int_del_buffer(buffer);
 
-				printf("\nDirección fisica recibida de entrada y salida: %i\n", dir_fisica);
-
 				//tamanio = extraer_int_del_buffer(buffer); //no se si no hace falta el tamaño
-				printf("\n\nANTES DE EXTRAR CHAR* DATOS\n\n");
 				char* datos = extraer_string_del_buffer(buffer);
 
 				printf("\nMensaje recibido de entrada y salida: %s\n", datos);
@@ -43,7 +38,6 @@ void escuchar_mensajes_entradasalida_memoria(int socket_entradasalida){
 				break;
 			case IO_STDOUT_WRITE_FS:
 				log_info(logger_memoria, "IO_STDOUT_WRITE_FS");
-				printf("\nSOCKET ENTRADASALIDA: %i\n", socket_entradasalida);
 				buffer = recibir_buffer_completo(socket_entradasalida);
 				pid = extraer_int_del_buffer(buffer);
 				dir_fisica = extraer_int_del_buffer(buffer);
@@ -53,13 +47,10 @@ void escuchar_mensajes_entradasalida_memoria(int socket_entradasalida){
 				break;
 			case IO_FS_WRITE_FS:
 				log_info(logger_memoria, "IO_FS_WRITE_FS");
-				printf("\nSOCKET DENTRO DE IO_FS_WRITE_FS: %i\n", socket_entradasalida);
 				buffer = recibir_buffer_completo(socket_entradasalida);
-				printf("\n\nRECIBE BUFFER\n\n");
 				pid = extraer_int_del_buffer(buffer);
 				dir_fisica = extraer_int_del_buffer(buffer);
 				tamanio = extraer_int_del_buffer(buffer);
-				printf("\nANTES DE EJECUTAR_STDOUT_WRITE\n");
 				ejecutar_stdout_write(socket_entradasalida, pid, tamanio, dir_fisica, IO_FS_WRITE_FS);
 				destruir_buffer(buffer);
 				break;
@@ -75,20 +66,18 @@ void escuchar_mensajes_entradasalida_memoria(int socket_entradasalida){
 }
 
 void ejecutar_stdin_read(int socket_entradasalida, int pid, int tamanio , int dir_fisica, char* datos){
-	printf("\n\n\n ENTRA A STDIN_READ, ANTES DE VOID* \n\n\n");
+
 	void* datos_aux = (void*)datos; //posible malloc
-	printf("\n\nCopia Void* datos - llegara el HOLA?\n");
+
 	ejecutar_mov_out(tamanio, dir_fisica, pid, datos_aux);
 }
 
 void ejecutar_stdout_write(int socket_entradasalida, int pid, int tamanio, int dir_fisica, int cod_op){
-	printf("\nDENTRO DE EJECUTAR_STDOUT_WRITE\n");
+
 	void* datos_aux = ejecutar_mov_in(tamanio, dir_fisica, pid);
 	char* datos_a_devolver = malloc(tamanio);
 	t_buffer* buffer = crear_buffer();
 	t_paquete* paquete;
-
-	printf("\nDENTRO DE EJECUTAR_STDOUT_WRITE1\n");
 
 	if(datos_aux == NULL){
 		log_error(logger_memoria, "El proceso no tiene suficientes paginas asignadas para leer %i bytes \n", tamanio);

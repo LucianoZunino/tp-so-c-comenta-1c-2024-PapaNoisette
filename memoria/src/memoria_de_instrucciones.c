@@ -29,7 +29,7 @@ void guardar_instrucciones_en_memoria(int pid, char* path){
     }
 
     fclose(archivo);
-    printf("Archivo cerrado\n");
+    
     printf("Size de instrucciones_proceso: %i\n", list_size(lista_de_instrucciones_por_proceso));
     // PONER HILO MUTEX PARA LISTA_dE_instrucciones_proceso
     list_add(lista_de_instrucciones_por_proceso, instrucciones_proceso ); 

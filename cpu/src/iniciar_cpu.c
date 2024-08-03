@@ -167,7 +167,7 @@ int consultar_tamanio_pagina_memoria()
    }
       log_info(logger_cpu, "SE RECIBIO DE MEMORIA EL TAMAÑO DE PAGINA= %d", nuevo_tam_pagina);
       destruir_buffer(buffer);
-      printf("destruir_buffer\n");
+    
 
    return nuevo_tam_pagina;
 }

@@ -173,7 +173,7 @@ void iniciar_recursos(){
     //int length = sizeof(instancias_recursos);
 
     recursos_disponibles = list_create();
-    printf("Lista de Rescursos tamanio\n\n" );
+    
     for (int i = 0; recursos[i] != NULL; i++){
         t_recurso* nuevo_recurso = malloc(sizeof(t_recurso)); //HACER FREE CUANDO SE ELIMINA TODO
         char* nombre = string_duplicate(recursos[i]);
@@ -193,7 +193,7 @@ void iniciar_recursos(){
         list_add(recursos_disponibles, nuevo_recurso);
     }
 
-    printf("Lista de Rescursos tamanio: %i\n\n", list_size(recursos_disponibles));
+   
 
     flag_planificacion_detenido = 0;
 }
@@ -218,18 +218,15 @@ void esperar_clientes(){
         
         
         interfaz->socket = socket;
-        printf("Antes de crear el hilo\n");
         interfaz->cola_espera = list_create();
         sem_init(&interfaz->sem_espera, 1, 0);
         pthread_mutex_init(&interfaz->mutex_interfaz, NULL);
 
         list_add(interfaces, interfaz);
-        printf("tam interfaces: %i\n", list_size(interfaces));
 
         pthread_t hilo_interfaz;
         pthread_create(&hilo_interfaz, NULL, (void*)escuchar_mensajes_entradasalida_kernel, i);
         pthread_detach(hilo_interfaz);
-        printf("FIN DEL WHILE esperar_clientes \n");
         
         i++;
     }

@@ -101,7 +101,7 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				break;
 			case IO_STDIN_READ_FS:
-			printf("ADENTRO DE STDIN READ");
+			
 				validar_desalojo();
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);	 
@@ -421,14 +421,14 @@ void escuchar_mensajes_dispatch_kernel(){
 				destruir_buffer(buffer);
 				break;
 			case KERNEL_WAIT: // ponernos de acuerdo con nacho como envia el recurso solicitado
-				printf("\n INICIAR KERNEL WAIT\n");
+				
 				validar_desalojo();//sem_post(&sem_desalojo)
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
 				pcb = deserializar_pcb(buffer);
-				printf("\n ANTES DEL RECURSO_SOLICITADO\n");
+				
 				// RECURSOS = ["RA", "RB", "RC"];
 				char *recurso_solicitado = extraer_string_del_buffer(buffer); // "RB"
-				printf("\n ANTES DE VALIDAR_DESALOJO\n");
+				
 				
 				pthread_mutex_lock(&mutex_RUNNING);
                 pcb->quantum = RUNNING->quantum;
@@ -437,26 +437,25 @@ void escuchar_mensajes_dispatch_kernel(){
 				
 				//usleep(retardo_respuesta);
 				
-				printf("\n ANTES DEL IF \n");
+				
 				if(buscar_recurso(recurso_solicitado) < 0){
-					printf("\nADENTRO DEL IF BUSCAR RECURSO ANTES DE ENVIAR A EXIT\n");
+					
 					enviar_a_exit(pcb, "INVALID_RESOURCE");
-					printf("\nADENTRO DEL IF BUSCAR RECURSO DESPUES DE ENVIAR A EXIT\n");
+					
 				}
 				else{
-					printf("\n ANTES DEL RESTAR INSTANCIA\n");
+					
 					restar_instancia(recurso_solicitado, pcb);
-					printf("\n DESP DEL RESTAR INSTANCIA\n");
+					
 				}
 				
-				printf("\n ANTES DEL SEM_EXEC \n");
+				
 				
 				sem_post(&sem_EXEC);
 				
-				printf("\n ANTES DEL DESTRUIR BUFFER \n");
+				
 				destruir_buffer(buffer);
-				printf("\n FIN WAIT \n");
-
+				
 				break;
 			case KERNEL_SIGNAL:
 				buffer = recibir_buffer_completo(fd_cpu_dispatch);
@@ -465,9 +464,9 @@ void escuchar_mensajes_dispatch_kernel(){
 
 				validar_desalojo();//sem_post(&sem_desalojo);
 
-				printf("\n ####### ANTES DE SUMAR INSTANCIA A: %s ######\n", recurso);
+				
 				sumar_instancia(recurso, pcb);
-				printf("\n ####### DESP DE SUMAR INSTANCIA ######\n");
+				
 				
 				
 				pthread_mutex_lock(&mutex_RUNNING);
@@ -498,7 +497,7 @@ void escuchar_mensajes_dispatch_kernel(){
 				}
 
 				destruir_buffer(buffer);
-				printf("\n FIN SIGNAL \n");
+			
 
 				break;
 			case OUT_OF_MEMORY:

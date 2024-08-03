@@ -122,7 +122,7 @@ void iniciar_estructuras(){
         
         //int size = ceil(block_count/8);
         int size = redondear_up(block_count, 8);
-        printf("\nTAMANIO DEL BITMAP %i\n", size);
+
         bitmap = bitarray_create_with_mode(bitarray, size, MSB_FIRST);
         if (lseek(fd_bitmap, 0, SEEK_END) == 0) { 
             for(int i = 0; i < bitarray_get_max_bit(bitmap); i++) {

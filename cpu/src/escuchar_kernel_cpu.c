@@ -52,15 +52,13 @@ void escuchar_mensajes_kernel_dispatch(){
 		}
 	}
 	
-	printf("FINALIZA HILO: escuchar_mensajes_kernel_dispatch= ");
+	
 }
 
 void escuchar_mensajes_kernel_interrupt(){
     bool desconexion_kernel_interrupt = 0;
-	printf("\n ESCUCHAR INTERRUPT DESDE CPU \n");
 	while(!desconexion_kernel_interrupt){
 		int cod_op = recibir_operacion(fd_kernel_interrupt); // recv() es bloqueante por ende no queda loopeando infinitamente
-		printf("\n COP_OP EN INTERRUPT: %i \n", cod_op);
 		switch(cod_op){
 			t_buffer* buffer;
 			t_pcb* pcb;
@@ -72,17 +70,14 @@ void escuchar_mensajes_kernel_interrupt(){
 
 				break;
 			case ELIMINAR_PROCESO:
-				printf("\nENRTO A ELIMINAR PROCESO CPU\n");
 				//t_buffer* buffer = crear_buffer();
 				buffer = recibir_buffer_completo(fd_kernel_interrupt);
 				pcb = deserializar_pcb(buffer);
 				motivo = extraer_int_del_buffer(buffer);
-				printf("\nMOTIVO DE INTERRUPCION: %i\n", motivo);
 				if(/*EXEC == NULL ||*/ pcb->pid != EXEC->pid){
 					break;
 				}
 				flag_interrupt = true;
-				printf("\nDESP DEL FLAG_INTERRUPT\n");
 				// sem_wait(&sem_interrupt);
 				
 				if(flag_desalojo){
@@ -96,18 +91,14 @@ void escuchar_mensajes_kernel_interrupt(){
 				}
 				break;
 			case FIN_DE_QUANTUM:
-				printf("\nENTRO A FIN DE QUANTUM\n");
 				//t_buffer* buffer = crear_buffer();
 				buffer = recibir_buffer_completo(fd_kernel_interrupt);
 				int pid = extraer_int_del_buffer(buffer);
 				motivo = extraer_int_del_buffer(buffer);
-				printf("\nMOTIVO DE INTERRUPCION: %i\n", motivo);
 				if(/*EXEC == NULL ||*/ pid != EXEC->pid){
-					printf("\n··· ENTRO AL BREAK EN CPU FIN_DE_QUANTUM ··· \n\n");
 					break;
 				}
 				flag_interrupt = true;
-				printf("\nDESP DEL FLAG_INTERRUPT\n");
 				//sem_wait(&sem_interrupt);
 				
 				if(flag_desalojo){
@@ -122,7 +113,6 @@ void escuchar_mensajes_kernel_interrupt(){
 				// EXEC = NULL;
 				
 				
-				printf("\nDESP DEL enviar_proceso_por_paquete\n");
 				break;
 			case -1:
 				log_error(logger_cpu, "El Kernel se desconecto de Interrupt. Terminando servidor.");

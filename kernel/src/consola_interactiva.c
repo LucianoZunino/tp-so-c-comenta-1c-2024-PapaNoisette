@@ -11,13 +11,12 @@ char** comando_consola_desc[9] = {"EJECUTAR_SCRIPT", "INICIAR_PROCESO", "FINALIZ
 
 void iniciar_consola_interactiva(){
     char* leido;
-    //imprimir_comandos_validos();
+
 	leido = readline("> ");
     comando_consola comando;
 	while(strcmp(leido, "\0") != 0){
 
         char** operacion = string_split(leido, " ");
-        printf("Operacion[0]: %s\nOperacion[1]: %s\n", operacion[0], operacion[1]);
         
         comando = validar_entrada(operacion[0]);
         // printf("Comando: %i\n", comando);
@@ -32,16 +31,6 @@ void iniciar_consola_interactiva(){
 		leido = readline("> ");
 	}
 	free(leido);
-}
-
-void imprimir_comandos_validos() {
-    printf("\nComandos validos: \n");
-    
-    for(unsigned i = 0; i < 9; i++){
-        printf("%s ", comando_consola_desc[i]);
-    }
-    
-    printf(";\n\n");
 }
 
 comando_consola validar_entrada(char* codigo){
@@ -65,8 +54,8 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
     switch(comando){
         
         case EJECUTAR_SCRIPT:
-            printf("\nQue mierda es comando_desde_consola[1]: %s\n", comando_desde_consola[1]);
-            //printf("\nQue mierda es comando_desde_consola[1][1]: %s\n", comando_desde_consola[1][1]);
+            
+            
             char* path = string_duplicate(comando_desde_consola[1]);
             //int* contador = 0;
             //char** comandos_de_script[100] = malloc(sizeof(char)*100);
@@ -81,9 +70,6 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
 
             break;
         case INICIAR_PROCESO:
-            
-            printf("\nQue mierda es comando_desde_consola[0]: %s\n", comando_desde_consola[0]);
-            printf("\nQue mierda es comando_desde_consola[1]: %s\n", comando_desde_consola[1]);
             
             crear_proceso(comando_desde_consola[1]);
 
@@ -137,6 +123,11 @@ void ejecutar_instruccion(char** comando_desde_consola, comando_consola comando)
             grado_multiprogramacion = nuevo_grado;
             pthread_mutex_unlock(&mutex_multiprogramacion);
 
+            if(viejo_grado < nuevo_grado){
+                for(int i = 0; i < nuevo_grado - viejo_grado; i++){
+                    sem_post(&sem_MULTIPROGRAMACION);
+                }
+            }
             break;
         case MENSAJE_A_MEMORIA1:
             cargar_string_al_buffer(buffer_a_enviar, comando_desde_consola[1]);

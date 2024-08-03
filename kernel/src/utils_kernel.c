@@ -73,9 +73,7 @@ t_pcb* buscar_pcb_por_pid(int pid){
     }
     else if(pid == RUNNING->pid){
         pthread_mutex_lock(&mutex_PRIORIDAD);
-        printf("\nANTES DE INTERRUMPIR EN buscar_pcb_por_pid\n");
         interrumpir_cpu(RUNNING, ELIMINAR_PROCESO);
-        printf("\nDESP DE INTERRUMPIR EN buscar_pcb_por_pid\n");
         pthread_mutex_unlock(&mutex_PRIORIDAD);
         pcb = NULL;
     }

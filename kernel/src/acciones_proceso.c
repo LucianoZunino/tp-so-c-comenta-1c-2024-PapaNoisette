@@ -33,7 +33,7 @@ void imprimir_colas(){
 }
 
 void crear_proceso(char* path){
-    printf("\nDentro de crear proceso, path: %s\n", path);
+    
     t_pcb *nuevo_pcb = crear_pcb();
     
     nuevo_pcb->estado = E_NEW;
@@ -48,13 +48,10 @@ void crear_proceso(char* path){
     cargar_string_al_buffer(paquete->buffer, path);
     enviar_paquete(paquete, fd_memoria);
     eliminar_paquete(paquete);   
-    // printf("Crear proceso\n");
-    printf("Se inicializaron las estructuras\n");
+
     sem_wait(&sem_estructuras_inicializadas);
     
     log_info(logger_kernel, "Se crea el proceso %i en NEW", nuevo_pcb->pid);
-    
-    
 
     sem_post(&sem_NEW);  // no deberia ser despues de recibir el ok de memoria? QUIEN HACE UN SEM_WAIT?
 
@@ -131,7 +128,7 @@ void solicitar_liberar_en_memoria(int pid) {
 void liberar_recursos_de(t_pcb* pcb) {
     // Recorremos todos los recursos de la lista de recursos disponibles
 
-    printf("--------------- Liberar_recursos_del PID: %i ---------------\n", pcb->pid);
+    //printf("--------------- Liberar_recursos_del PID: %i ---------------\n", pcb->pid);
 
     int length = list_size(recursos_disponibles);
 

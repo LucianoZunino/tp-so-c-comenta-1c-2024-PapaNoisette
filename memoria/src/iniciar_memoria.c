@@ -137,13 +137,12 @@ void memoria_crear_proceso(int pid){
 int resize_tamano_proceso(int pid, int nuevo_tamano){
 
     Proceso *proceso = buscar_proceso(lista_procesos, pid);
-    printf("flag proceso\n");
     if(proceso->tabla_paginas == NULL){
         log_error(logger_memoria, "No se creo correctamente la tabla de paginas\n");
         exit(EXIT_FAILURE);
     }
     int numero_paginas_actual = list_size(proceso->tabla_paginas);
-    printf("flag numero_paginas_actual %d\n", numero_paginas_actual);
+    
 
     // Calcula el número de páginas necesarias
     //(La cuenta rara es por si el proceso necesita 1 página y 1byte mas de otra necesitaria 2 páginas)
@@ -155,7 +154,6 @@ int resize_tamano_proceso(int pid, int nuevo_tamano){
 
     int paginas_a_agregar_o_quitar = numero_paginas_nuevo - numero_paginas_actual;
     int frames_disponibles = contar_frames_libres();
-    printf(" numero_paginas_nuevo %d\n", numero_paginas_nuevo);
 
     if(numero_paginas_nuevo > numero_paginas_actual){
 

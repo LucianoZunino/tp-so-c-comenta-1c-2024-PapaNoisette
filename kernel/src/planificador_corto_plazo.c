@@ -102,21 +102,17 @@ void hilo_quantum_funcion(t_pcb* pcb){
 }
 
 void esperar_a_cpu_round_robin(t_pcb* pcb){
-    printf("\nANTES DE CREAR HILO QUANTUM\n");
+    
     pthread_t hilo_quantum;
     pthread_create(&hilo_quantum, NULL, (void*) hilo_quantum_funcion, pcb);
     pthread_detach(hilo_quantum);
     
-    printf("\nANTES DEL SEM_DESALOJO\n");
+    
     sem_wait(&sem_desalojo); //esperar_a_que_cpu_desaloje(pcb); por fin de Quantum o por otro motivo
-    printf("\n DESP DEL SEM_DESALOJO \n\n");
+   
 
-    if(pthread_cancel(hilo_quantum) == 0){
-        printf("\nSE CANCELO EL HILO DE QUANTUM\n");
-    }
-    else{
-        printf("\nNO SE CANCELO EL HILO\n");
-    }
+    pthread_cancel(hilo_quantum);
+  
 }
 
 int64_t esperar_a_cpu_virtual_round_robin(t_pcb* pcb){
@@ -130,12 +126,11 @@ int64_t esperar_a_cpu_virtual_round_robin(t_pcb* pcb){
 }
 
 void send_interrupt(){
-    printf("\n INICIO DE SEND_INTERRUPT\n\n");
+   
     t_buffer* buffer = crear_buffer();
     t_paquete* paquete = crear_paquete(FIN_DE_QUANTUM,buffer);
     cargar_int_al_buffer(paquete->buffer, RUNNING->pid);
     cargar_int_al_buffer(paquete->buffer, FIN_DE_QUANTUM);
     enviar_paquete(paquete, fd_cpu_interrupt);
     eliminar_paquete(paquete);
-    printf("\n FIN DE SEND_INTERRUPT\n\n");
 }

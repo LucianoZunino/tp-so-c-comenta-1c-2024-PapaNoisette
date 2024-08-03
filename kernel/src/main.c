@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
         log_error(logger_kernel, "No se pudo crear el hilo de escucha E/S.");
         return EXIT_FAILURE;
     }
-    printf("\n");
+    
     pthread_detach(hilo_escucha_io);
 
    // fd_entradasalida = esperar_cliente(fd_kernel, logger_kernel, "E/S");
