@@ -173,6 +173,7 @@ void escuchar_instrucciones_dialfs(){
 			void* aux;
 			char* nombre;
 			t_config* config;
+			int inicio_archivo;
 
 			case IO_FS_CREATE_FS:
 				buffer = recibir_buffer_completo(fd_kernel);
@@ -252,11 +253,17 @@ void escuchar_instrucciones_dialfs(){
 				reg_tamanio = extraer_int_del_buffer(buffer);
 				reg_puntero_archivo = extraer_int_del_buffer(buffer);
 
+				printf("\n----NUMERO DE PROCESO: %i, REG_DIRECCCION: %i, REG_TAMAÑO: %i, REG_PUNTERO_ARCHIVO: %i-----\n", pid, reg_direccion, reg_tamanio, reg_puntero_archivo);
+
 				log_info(logger_entradasalida, "PID: <%i> - Operacion: IO_FS_WRITE", pid);
 				usleep(tiempo_unidad_trabajo);
                 log_info(logger_entradasalida,"PID: <%i> -  Escribir Archivo: <%s> -  Tamaño a Escribir: <%i> - Puntero Archivo: <%i>",pid, nombre, reg_tamanio, reg_puntero_archivo);
 				
 				solicitar_lectura_memoria(pid, reg_direccion, reg_tamanio, IO_FS_WRITE_FS);
+
+				config = config_create(tomar_nombre_devolver_path(nombre));
+
+				inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
 				
 				sem_wait(&sem_fs_write);
 				
@@ -268,12 +275,13 @@ void escuchar_instrucciones_dialfs(){
 				//aux = bloques_dat + reg_puntero_archivo;
 
 				printf("\nDatos a escribir en disco: %s\n", datos);
+				printf("\nEN: %i\n", inicio_archivo * block_size + reg_puntero_archivo);
 
 				//void* datos_aux = datos;
 
-				memcpy(bloques_dat + reg_puntero_archivo, (void*)datos, reg_tamanio);
+				memcpy(bloques_dat + inicio_archivo*block_size + reg_puntero_archivo, (void*)datos, reg_tamanio);
 				
-				msync(bloques_dat, block_size*block_count, MS_SYNC);
+				msync(bloques_dat, block_size * block_count, MS_SYNC);
 
 				// devolver
 				
@@ -301,8 +309,12 @@ void escuchar_instrucciones_dialfs(){
 					goto error_io;
 				}
 
+				config = config_create(path);
+
+				inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
+
 				char* leido = malloc(reg_tamanio);
-				aux = bloques_dat + reg_puntero_archivo;
+				aux = bloques_dat + inicio_archivo*block_size + reg_puntero_archivo;
 
 				memcpy((void*)leido, aux, reg_tamanio);
 
@@ -334,7 +346,7 @@ void escuchar_instrucciones_dialfs(){
 					goto finFs;
 				}
 				int tamanio_archivo = config_get_int_value(config, "TAMANIO_ARCHIVO");
-				int inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
+				 inicio_archivo = config_get_int_value(config, "BLOQUE_INICIAL");
 				
                 
 				int cantidad_nueva_de_bloques = redondear_up(nuevo_tamanio, block_size);

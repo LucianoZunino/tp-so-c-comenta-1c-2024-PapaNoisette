@@ -18,9 +18,9 @@ void escuchar_mensajes_kernel_dispatch(){
 
 				break;
 			case KERNEL_ENVIA_PROCESO:
-				if(string_equals_ignore_case(rolando_robin, "VRR") != true){
+				//if(string_equals_ignore_case(rolando_robin, "VRR") != true){
 					flag_interrupt = false; // no comentado -> FIFO y RR | comentado -> VRR
-				}
+				//}
 				flag_desalojo = true;
 				buffer = recibir_buffer_completo(fd_kernel_dispatch);
 			    //EXEC=malloc(sizeof(t_pcb));

@@ -59,7 +59,7 @@ t_pcb* buscar_pcb_por_pid(int pid){
         pthread_mutex_lock(&mutex_READY);
         pcb = (t_pcb*) list_remove(READY, index);
         pthread_mutex_unlock(&mutex_READY);
-        sem_wait(&sem_READY);
+        sem_trywait(&sem_READY);
     }
     else if((index = buscar_index_por_pid(BLOCKED, pid)) > -1){ 
         pthread_mutex_lock(&mutex_BLOCKED);
@@ -70,7 +70,7 @@ t_pcb* buscar_pcb_por_pid(int pid){
         pthread_mutex_lock(&mutex_PRIORIDAD);
         pcb = list_remove(PRIORIDAD, index);
         pthread_mutex_unlock(&mutex_PRIORIDAD);
-        sem_wait(&sem_READY);
+        sem_trywait(&sem_READY);
     }
     else if(pid == RUNNING->pid){
         pthread_mutex_lock(&mutex_PRIORIDAD);
