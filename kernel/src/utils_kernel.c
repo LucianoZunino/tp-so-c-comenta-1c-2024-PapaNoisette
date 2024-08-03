@@ -22,7 +22,8 @@ void enviar_proceso_cpu(t_pcb *pcb, int socket, op_code op_code){
     t_paquete *paquete = crear_paquete(op_code, buffer_a_enviar);
     agregar_pcb(paquete, pcb);
     enviar_paquete(paquete, socket);
-    eliminar_paquete(paquete);    
+    eliminar_paquete(paquete);
+    sem_post(&sem_paqueteCPU);
 }
 
 int buscar_index_por_pid(t_list* lista, int pid){

@@ -20,6 +20,7 @@ sem_t sem_estructuras_inicializadas;
 sem_t sem_planificador_LP_detenido;
 sem_t sem_planificador_CP_detenido;
 sem_t sem_quantum;
+sem_t sem_paqueteCPU;
 t_list* lista_de_estados;
 t_list* recursos_disponibles;
 
@@ -149,6 +150,10 @@ void iniciar_semaforos(){
     }
     if (sem_init(&sem_quantum, 1, 0) != 0) {
         log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_quantum");
+        exit(-1);
+    }
+    if (sem_init(&sem_paqueteCPU, 1, 0) != 0) {
+        log_error(logger_kernel, "Ocurrio un error al crear semaforo sem_planificador_CP_detenido");
         exit(-1);
     }
 }

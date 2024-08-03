@@ -76,6 +76,8 @@ extern sem_t sem_planificador_CP_detenido;
 extern sem_t sem_quantum;
 extern sem_t sem_MULTIPROGRAMACION;
 extern sem_t sem_desalojo;
+extern sem_t sem_paqueteCPU;
+extern sem_t sem_antes_paqueteCPU;
 
 // SE USA PARA EL CREAR_PROCESO
 extern pthread_mutex_t socket_memoria_mutex;

@@ -65,7 +65,8 @@ void planificador_corto_plazo(){
                 pthread_mutex_unlock(&mutex_RUNNING);
             }
             
-            enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);
+            pthread_t hilo_paquete_cpu;
+            enviar_proceso_cpu(pcb, fd_cpu_dispatch, KERNEL_ENVIA_PROCESO);// Pasar a un hilo
            
             int64_t ms_transcurridos = esperar_a_cpu_virtual_round_robin(RUNNING);
             printf("\n ms_transcurridos: %i\n", ms_transcurridos);
@@ -88,6 +89,7 @@ void planificador_corto_plazo(){
 }
 
 void hilo_quantum_funcion(t_pcb* pcb){
+    sem_wait(&sem_paqueteCPU);
     usleep((pcb->quantum) * 1000);
     send_interrupt();
 }
